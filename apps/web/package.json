@@ -1,0 +1,51 @@
+{
+  "name": "@semantic-web/web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --port 3001",
+    "build": "next build",
+    "start": "next start --port 3001",
+    "lint": "eslint app features providers lib controllers composers stores tests",
+    "typecheck": "next typegen && tsc --noEmit --incremental false",
+    "test": "vitest run && playwright test",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test",
+    "auth:emulator": "firebase emulators:start --only auth"
+  },
+  "dependencies": {
+    "@semantic-web/api-sdk": "workspace:*",
+    "@semantic-web/core": "workspace:*",
+    "@semantic-web/ui": "workspace:*",
+    "@sentry/nextjs": "^9.9.0",
+    "@tanstack/react-query": "^5.66.0",
+    "@tanstack/react-query-devtools": "^5.66.0",
+    "firebase": "^11.4.0",
+    "firebase-admin": "^13.1.0",
+    "jose": "^5.9.6",
+    "next": "^15.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zustand": "^5.0.3",
+    "zod": "^3.24.2",
+    "@tailwindcss/postcss": "^4.1.18",
+    "tailwindcss": "^4.1.18",
+    "tailwindcss-animate": "^1.0.7",
+    "tailwindcss-react-aria-components": "^2.0.1"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@playwright/test": "^1.51.0",
+    "@semantic-web/config": "workspace:*",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "eslint": "^9.22.0",
+    "firebase-tools": "^13.34.0",
+    "jsdom": "^26.0.0",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.8"
+  }
+}

@@ -1,0 +1,250 @@
+@import "tailwindcss";
+@import "./theme.css";
+@import "./semantic-tokens.css";
+
+@plugin "tailwindcss-react-aria-components";
+@plugin "tailwindcss-animate";
+
+@source "../../../packages/ui/src";
+
+@custom-variant dark (&:where(.dark-mode, .dark-mode *));
+
+html,
+body {
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-variant-ligatures: contextual;
+  font-variant-ligatures: contextual;
+  -webkit-font-kerning: normal;
+  font-kerning: normal;
+}
+
+body {
+  min-height: 100vh;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+@keyframes auth-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes auth-drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(0, -18px, 0) scale(1.05);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes auth-grid-pan {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(28px, 22px, 0);
+  }
+}
+
+.auth-scene {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.auth-grid-glow {
+  position: absolute;
+  inset: -12%;
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--color-alpha-white) 92%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--color-alpha-white) 94%, transparent) 1px, transparent 1px);
+  background-size: 56px 56px;
+  opacity: 0.35;
+  mask-image: radial-gradient(circle at center, black 32%, transparent 78%);
+  animation: auth-grid-pan 26s linear infinite alternate;
+  pointer-events: none;
+}
+
+.auth-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(14px);
+  opacity: 0.55;
+  animation: auth-drift 11s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.auth-orb-delay {
+  animation-delay: 1.8s;
+}
+
+.auth-reveal {
+  animation: auth-fade-up 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.auth-reveal-delay-1 {
+  animation-delay: 0.12s;
+}
+
+.auth-reveal-delay-2 {
+  animation-delay: 0.22s;
+}
+
+.auth-reveal-delay-3 {
+  animation-delay: 0.32s;
+}
+
+.auth-card-enter {
+  animation: auth-fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.16s;
+}
+
+.auth-panel-hover {
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease,
+    border-color 220ms ease;
+}
+
+.auth-panel-hover:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 48px color-mix(in srgb, var(--color-gray-950) 10%, transparent);
+}
+
+@keyframes experience-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.experience-reveal {
+  opacity: 0;
+  transform: translateY(24px) scale(0.99);
+  transition:
+    opacity 560ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 560ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.experience-reveal[data-visible='true'] {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  animation: experience-fade-up 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-panel {
+  opacity: 0;
+  transform: translateY(26px) scale(0.985);
+  transition:
+    opacity 540ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 540ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-panel[data-visible='true'] {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.hero-panel-delay {
+  transition-delay: 140ms;
+}
+
+.bouncy-button {
+  transition:
+    transform 180ms cubic-bezier(0.2, 0.9, 0.3, 1),
+    opacity 180ms ease,
+    box-shadow 180ms ease,
+    filter 180ms ease;
+  transform-origin: center;
+}
+
+.bouncy-button:hover {
+  transform: translateY(-2px);
+}
+
+.bouncy-button:active {
+  transform: scale(0.96);
+  opacity: 0.88;
+}
+
+.bouncy-button:focus-visible {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-grid-glow,
+  .auth-orb,
+  .auth-reveal,
+  .auth-card-enter {
+    animation: none !important;
+  }
+
+  .auth-panel-hover {
+    transition: none;
+  }
+
+  .auth-panel-hover:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .experience-reveal,
+  .experience-reveal[data-visible='true'] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .hero-panel,
+  .hero-panel[data-visible='true'] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .bouncy-button,
+  .bouncy-button:hover,
+  .bouncy-button:active {
+    transform: none !important;
+    opacity: 1 !important;
+    transition: none !important;
+  }
+}

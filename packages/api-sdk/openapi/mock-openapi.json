@@ -1,0 +1,366 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Semantic Web Mock API",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/users": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Users list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedUsers"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": {
+          "200": {
+            "description": "User detail",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserTransport" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UserMutationTransport" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated user",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserTransport" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/feature-requests": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Feature request list",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PaginatedFeatureRequests" }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/FeatureRequestMutationTransport" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created feature request",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/FeatureRequestTransport" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/feature-requests/{id}": {
+      "get": {
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": {
+          "200": {
+            "description": "Feature request detail",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/FeatureRequestTransport" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/FeatureRequestMutationTransport" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated feature request",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/FeatureRequestTransport" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": {
+          "204": { "description": "Deleted" }
+        }
+      }
+    },
+    "/dashboard/overview": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Dashboard overview",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/DashboardOverviewTransport" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dashboard/models": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Dashboard model summaries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "models": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/DashboardModelSummaryTransport" }
+                    }
+                  },
+                  "required": ["models"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dashboard/models/{modelKey}": {
+      "get": {
+        "parameters": [{ "name": "modelKey", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": {
+          "200": {
+            "description": "Dashboard model detail",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/DashboardModelMetaTransport" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dashboard/records": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Dashboard records",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PaginatedDashboardRecords" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserTransport": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "external_id": { "type": "string" },
+          "first_name": { "type": "string" },
+          "last_name": { "type": "string" },
+          "email": { "type": "string", "format": "email" },
+          "phone_number": { "type": ["string", "null"] },
+          "date_of_birth": { "type": ["string", "null"], "format": "date-time" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" },
+          "deleted": { "type": "boolean" }
+        },
+        "required": ["id", "external_id", "first_name", "last_name", "email", "created_at", "updated_at", "deleted"]
+      },
+      "UserMutationTransport": {
+        "type": "object",
+        "properties": {
+          "first_name": { "type": "string" },
+          "last_name": { "type": "string" },
+          "email": { "type": "string", "format": "email" },
+          "phone_number": { "type": ["string", "null"] },
+          "date_of_birth": { "type": ["string", "null"], "format": "date-time" }
+        },
+        "required": ["first_name", "last_name", "email"]
+      },
+      "FeatureRequestTransport": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "user_id": { "type": "string", "format": "uuid" },
+          "message": { "type": "string" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" },
+          "deleted": { "type": "boolean" },
+          "user": { "$ref": "#/components/schemas/UserTransport" }
+        },
+        "required": ["id", "user_id", "message", "created_at", "updated_at", "deleted"]
+      },
+      "FeatureRequestMutationTransport": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string" }
+        },
+        "required": ["message"]
+      },
+      "PaginatedUsers": {
+        "type": "object",
+        "properties": {
+          "data": { "type": "array", "items": { "$ref": "#/components/schemas/UserTransport" } },
+          "total": { "type": "integer" },
+          "limit": { "type": "integer" },
+          "offset": { "type": "integer" }
+        },
+        "required": ["data", "total", "limit", "offset"]
+      },
+      "PaginatedFeatureRequests": {
+        "type": "object",
+        "properties": {
+          "data": { "type": "array", "items": { "$ref": "#/components/schemas/FeatureRequestTransport" } },
+          "total": { "type": "integer" },
+          "limit": { "type": "integer" },
+          "offset": { "type": "integer" }
+        },
+        "required": ["data", "total", "limit", "offset"]
+      },
+      "DashboardOverviewTransport": {
+        "type": "object",
+        "properties": {
+          "models": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "model": { "type": "string" },
+                "display_name": { "type": "string" },
+                "total_count": { "type": "integer" },
+                "period_count": { "type": "integer" },
+                "growth_percent": { "type": ["number", "null"] }
+              },
+              "required": ["model", "display_name", "total_count", "period_count"]
+            }
+          },
+          "date_range": {
+            "type": "object",
+            "properties": {
+              "from": { "type": "string", "format": "date-time" },
+              "to": { "type": "string", "format": "date-time" }
+            },
+            "required": ["from", "to"]
+          }
+        },
+        "required": ["models", "date_range"]
+      },
+      "DashboardModelSummaryTransport": {
+        "type": "object",
+        "properties": {
+          "key": { "type": "string" },
+          "display_name": { "type": "string" },
+          "field_count": { "type": "integer" },
+          "record_count": { "type": "integer" }
+        },
+        "required": ["key", "display_name", "field_count", "record_count"]
+      },
+      "DashboardModelMetaTransport": {
+        "type": "object",
+        "properties": {
+          "key": { "type": "string" },
+          "display_name": { "type": "string" },
+          "display_name_singular": { "type": "string" },
+          "total_records": { "type": "integer" },
+          "date_field": { "type": "string" },
+          "label_field": { "type": "string" },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "type": { "type": "string" },
+                "display_name": { "type": "string" },
+                "displayable": { "type": "boolean" },
+                "filterable": { "type": "boolean" },
+                "searchable": { "type": "boolean" },
+                "sensitive": { "type": "boolean" },
+                "sortable": { "type": "boolean" },
+                "aggregatable": { "type": "boolean" }
+              },
+              "required": ["name", "type", "display_name", "displayable", "filterable", "searchable", "sensitive", "sortable", "aggregatable"]
+            }
+          },
+          "relations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "model": { "type": "string" },
+                "type": { "type": "string" },
+                "foreign_key": { "type": "string" },
+                "display_field": { "type": "string" }
+              },
+              "required": ["name", "model", "type", "foreign_key", "display_field"]
+            }
+          }
+        },
+        "required": ["key", "display_name", "display_name_singular", "total_records", "date_field", "label_field", "fields", "relations"]
+      },
+      "PaginatedDashboardRecords": {
+        "type": "object",
+        "properties": {
+          "data": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+          "total": { "type": "integer" },
+          "limit": { "type": "integer" },
+          "offset": { "type": "integer" }
+        },
+        "required": ["data", "total", "limit", "offset"]
+      }
+    }
+  }
+}

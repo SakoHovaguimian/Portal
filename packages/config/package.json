@@ -1,0 +1,17 @@
+{
+  "name": "@semantic-web/config",
+  "private": true,
+  "version": "0.0.0",
+  "devDependencies": {
+    "@playwright/test": "^1.51.0",
+    "vitest": "^3.0.8"
+  },
+  "exports": {
+    "./tsconfig/base": "./tsconfig/base.json",
+    "./tsconfig/next": "./tsconfig/next.json",
+    "./eslint/base": "./eslint/base.mjs",
+    "./prettier": "./prettier/index.json",
+    "./vitest/base": "./vitest/base.ts",
+    "./playwright/base": "./playwright/base.ts"
+  }
+}
