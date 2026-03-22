@@ -31,8 +31,12 @@ Follow this structure:
 - Convert low-level failures into meaningful domain errors.
 - Avoid leaking raw implementation details into UI copy.
 
-7. Verify
-- Run `pnpm typecheck` and relevant tests.
+7. Input validation
+- Validate inputs using the `validateInput()` helper with Zod schemas.
+- This provides defense-in-depth at the service boundary.
+
+8. Verify
+- Run `pnpm typecheck` after changes.
 - Confirm the service can be mocked/swapped cleanly through the container.
 
 ## Reference patterns in this repo

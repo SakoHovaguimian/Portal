@@ -42,7 +42,7 @@ Follow these rules exactly:
 
 8. Verification
 - Run `pnpm typecheck` after changes.
-- Confirm no services/controllers/components are now depending on transport-specific details.
+- Confirm no services/controllers/components depend on transport-specific details.
 
 ## Expected output format
 - List files changed.

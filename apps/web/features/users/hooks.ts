@@ -8,7 +8,7 @@ import { appEnv } from '../../lib/auth/env';
 export function useUsers(query = '') {
   const container = useServiceContainer();
   return useQuery({
-    queryKey: queryKeys.users.list(query),
+    queryKey: queryKeys.users.list(query).queryKey,
     queryFn: () =>
       container.services.userService.listUsers({
         query,
@@ -22,7 +22,7 @@ export function useUsers(query = '') {
 export function useUser(userId: string) {
   const container = useServiceContainer();
   return useQuery({
-    queryKey: queryKeys.users.detail(userId),
+    queryKey: queryKeys.users.detail(userId).queryKey,
     queryFn: () => container.services.userService.getUserById(userId),
     staleTime: staleTimes.users,
   });
@@ -46,8 +46,8 @@ export function useUpdateCurrentUser(userId: string) {
       return user;
     },
     onSuccess: (user) => {
-      queryClient.setQueryData(queryKeys.users.detail(userId), user);
-      void queryClient.invalidateQueries({ queryKey: queryKeys.users.lists() });
+      queryClient.setQueryData(queryKeys.users.detail(userId).queryKey, user);
+      void queryClient.invalidateQueries({ queryKey: queryKeys.users._def });
     },
   });
 }

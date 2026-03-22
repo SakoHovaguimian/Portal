@@ -13,7 +13,7 @@ export async function composeUsersPage(searchParams?: Record<string, string | st
   const container = createServerServiceContainer(session);
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
-    queryKey: queryKeys.users.list(String(searchParams?.query ?? '')),
+    queryKey: queryKeys.users.list(String(searchParams?.query ?? '')).queryKey,
     queryFn: () => getUsersPageData(container, searchParams),
   });
   return { session, dehydratedState: dehydrate(queryClient) };
@@ -24,7 +24,7 @@ export async function composeUserDetailPage(userId: string) {
   const container = createServerServiceContainer(session);
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
-    queryKey: queryKeys.users.detail(userId),
+    queryKey: queryKeys.users.detail(userId).queryKey,
     queryFn: () => getUserDetailPageData(container, userId),
   });
   return { session, dehydratedState: dehydrate(queryClient) };
@@ -36,7 +36,7 @@ export async function composeProfilePage() {
   const queryClient = new QueryClient();
   if (session) {
     await queryClient.prefetchQuery({
-      queryKey: queryKeys.users.detail(session.user.id),
+      queryKey: queryKeys.users.detail(session.user.id).queryKey,
       queryFn: () => getProfilePageData(container),
     });
   }
@@ -48,7 +48,7 @@ export async function composeFeatureRequestsPage(searchParams?: Record<string, s
   const container = createServerServiceContainer(session);
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
-    queryKey: queryKeys.featureRequests.list(String(searchParams?.query ?? '')),
+    queryKey: queryKeys.featureRequests.list(String(searchParams?.query ?? '')).queryKey,
     queryFn: () => getFeatureRequestsPageData(container, searchParams),
   });
   return { session, dehydratedState: dehydrate(queryClient) };
@@ -59,7 +59,7 @@ export async function composeFeatureRequestDetailPage(featureRequestId: string) 
   const container = createServerServiceContainer(session);
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
-    queryKey: queryKeys.featureRequests.detail(featureRequestId),
+    queryKey: queryKeys.featureRequests.detail(featureRequestId).queryKey,
     queryFn: () => getFeatureRequestDetailPageData(container, featureRequestId),
   });
   return { session, dehydratedState: dehydrate(queryClient) };
@@ -71,15 +71,15 @@ export async function composeDashboardPage(searchParams?: Record<string, string 
   const queryClient = new QueryClient();
   await Promise.all([
     queryClient.prefetchQuery({
-      queryKey: queryKeys.dashboard.overview,
+      queryKey: queryKeys.dashboard.overview.queryKey,
       queryFn: () => getDashboardPageData(container).then((value) => value.overview),
     }),
     queryClient.prefetchQuery({
-      queryKey: queryKeys.dashboard.models,
+      queryKey: queryKeys.dashboard.models.queryKey,
       queryFn: () => getDashboardPageData(container).then((value) => value.models),
     }),
     queryClient.prefetchQuery({
-      queryKey: queryKeys.dashboard.records(String(searchParams?.model ?? 'featureRequest'), String(searchParams?.search ?? '')),
+      queryKey: queryKeys.dashboard.records(String(searchParams?.model ?? 'featureRequest'), String(searchParams?.search ?? '')).queryKey,
       queryFn: () => getDashboardRecordsPageData(container, searchParams),
     }),
   ]);
@@ -91,7 +91,7 @@ export async function composeAppearancePage() {
   const container = createServerServiceContainer(session);
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
-    queryKey: queryKeys.appearance.preference,
+    queryKey: queryKeys.appearance.preference.queryKey,
     queryFn: () => getAppearancePageData(container),
   });
   return { session, dehydratedState: dehydrate(queryClient) };

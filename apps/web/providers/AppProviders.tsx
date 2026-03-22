@@ -11,7 +11,7 @@ import {
   type AppSession,
   type ServiceContainer,
 } from '@semantic-web/core';
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { createBrowserServiceContainer } from '../lib/client/container';
 import { createQueryClient } from '../lib/client/queryClient';
 import { PresentationProvider } from '../presentation/PresentationProvider';
@@ -38,7 +38,17 @@ export function AppProviders({
 }) {
   const [queryClient] = useState(() => createQueryClient());
   const [sessionState, setSessionState] = useState<AppSession | null>(session);
-  const container = useMemo(() => createBrowserServiceContainer(sessionState), [sessionState]);
+
+  // Use a ref to hold the current session so the container's session getter
+  // always returns the latest session without recreating the container
+  const sessionRef = useRef<AppSession | null>(sessionState);
+  sessionRef.current = sessionState;
+
+  // Create container once with a getter that reads from the ref
+  const [container] = useState(() =>
+    createBrowserServiceContainer(() => sessionRef.current),
+  );
+
   const [preference, setPreferenceState] = useState(() =>
     AppearancePreferenceSchema.parse({ mode: 'light', accent: 'aqua' }),
   );

@@ -7,7 +7,7 @@ import { useServiceContainer } from '../../providers/AppProviders';
 export function useFeatureRequests(query = '') {
   const container = useServiceContainer();
   return useQuery({
-    queryKey: queryKeys.featureRequests.list(query),
+    queryKey: queryKeys.featureRequests.list(query).queryKey,
     queryFn: () =>
       container.services.featureRequestService.listFeatureRequests({
         query,
@@ -21,7 +21,7 @@ export function useFeatureRequests(query = '') {
 export function useFeatureRequest(featureRequestId: string) {
   const container = useServiceContainer();
   return useQuery({
-    queryKey: queryKeys.featureRequests.detail(featureRequestId),
+    queryKey: queryKeys.featureRequests.detail(featureRequestId).queryKey,
     queryFn: () => container.services.featureRequestService.getFeatureRequestById(featureRequestId),
     staleTime: staleTimes.featureRequests,
   });
@@ -34,8 +34,8 @@ export function useCreateFeatureRequest() {
     mutationFn: (input: FeatureRequestMutationInput) =>
       container.services.featureRequestService.createFeatureRequest(input),
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: queryKeys.featureRequests.all });
-      void queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.overview });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.featureRequests._def });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.overview.queryKey });
     },
   });
 }
@@ -47,9 +47,9 @@ export function useUpdateFeatureRequest(featureRequestId: string) {
     mutationFn: (input: FeatureRequestMutationInput) =>
       container.services.featureRequestService.updateFeatureRequest(featureRequestId, input),
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: queryKeys.featureRequests.detail(featureRequestId) });
-      void queryClient.invalidateQueries({ queryKey: queryKeys.featureRequests.all });
-      void queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.overview });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.featureRequests.detail(featureRequestId).queryKey });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.featureRequests._def });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.overview.queryKey });
     },
   });
 }
@@ -60,8 +60,8 @@ export function useDeleteFeatureRequest(featureRequestId: string) {
   return useMutation({
     mutationFn: () => container.services.featureRequestService.deleteFeatureRequest(featureRequestId),
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: queryKeys.featureRequests.all });
-      void queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.overview });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.featureRequests._def });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.overview.queryKey });
     },
   });
 }

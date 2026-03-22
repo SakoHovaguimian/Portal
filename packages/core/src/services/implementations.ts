@@ -1,9 +1,16 @@
-import { AuthError, NotFoundError, OwnershipError } from '../errors/domainErrors';
+import { AuthError, NotFoundError, OwnershipError, ValidationError } from '../errors/domainErrors';
 import type { AppSession } from '../models/auth';
-import type { FeatureRequestMutationInput } from '../models/featureRequest';
-import type { DashboardRecordsQuery, FeatureRequestQuery, UsersQuery } from '../models/query';
-import type { AppearancePreference } from '../theme/contracts';
-import type { UserMutationInput } from '../models/user';
+import { FeatureRequestMutationInputSchema, type FeatureRequestMutationInput } from '../models/featureRequest';
+import {
+  DashboardRecordsQuerySchema,
+  FeatureRequestQuerySchema,
+  UsersQuerySchema,
+  type DashboardRecordsQuery,
+  type FeatureRequestQuery,
+  type UsersQuery,
+} from '../models/query';
+import { AppearancePreferenceSchema, type AppearancePreference } from '../theme/contracts';
+import { UserMutationInputSchema, type UserMutationInput } from '../models/user';
 import type {
   AppearancePreferenceRepositoryInterface,
   AuthSessionRepositoryInterface,
@@ -18,6 +25,22 @@ import type {
   ThemePreferenceServiceInterface,
   UserServiceInterface,
 } from './interfaces';
+import { ZodError } from 'zod';
+
+/**
+ * Validates input against a Zod schema and throws a ValidationError on failure.
+ * Provides defense-in-depth validation at the service layer.
+ */
+function validateInput<T>(schema: { parse: (data: unknown) => T }, data: unknown): T {
+  try {
+    return schema.parse(data);
+  } catch (error) {
+    if (error instanceof ZodError) {
+      throw new ValidationError('Invalid input', error.issues);
+    }
+    throw error;
+  }
+}
 
 export class AuthService implements AuthServiceInterface {
   constructor(private readonly repository: AuthSessionRepositoryInterface) {}
@@ -42,7 +65,8 @@ export class UserService implements UserServiceInterface {
   ) {}
 
   async listUsers(query: UsersQuery) {
-    return this.repository.listUsers(query);
+    const validated = validateInput(UsersQuerySchema, query);
+    return this.repository.listUsers(validated);
   }
 
   async getUserById(userId: string) {
@@ -54,11 +78,12 @@ export class UserService implements UserServiceInterface {
   }
 
   async updateCurrentUser(userId: string, input: UserMutationInput) {
+    const validated = validateInput(UserMutationInputSchema, input);
     const session = await this.authService.assertAuthenticated();
     if (session.user.id !== userId) {
       throw new OwnershipError();
     }
-    return this.repository.updateUser(userId, input);
+    return this.repository.updateUser(userId, validated);
   }
 }
 
@@ -69,8 +94,9 @@ export class FeatureRequestService implements FeatureRequestServiceInterface {
   ) {}
 
   async listFeatureRequests(query: FeatureRequestQuery) {
+    const validated = validateInput(FeatureRequestQuerySchema, query);
     const session = await this.authService.assertAuthenticated();
-    return this.repository.listFeatureRequests({ ...query, userId: session.user.id });
+    return this.repository.listFeatureRequests({ ...validated, userId: session.user.id });
   }
 
   async getFeatureRequestById(featureRequestId: string) {
@@ -86,11 +112,13 @@ export class FeatureRequestService implements FeatureRequestServiceInterface {
   }
 
   async createFeatureRequest(input: FeatureRequestMutationInput) {
+    const validated = validateInput(FeatureRequestMutationInputSchema, input);
     const session = await this.authService.assertAuthenticated();
-    return this.repository.createFeatureRequest(session.user.id, input);
+    return this.repository.createFeatureRequest(session.user.id, validated);
   }
 
   async updateFeatureRequest(featureRequestId: string, input: FeatureRequestMutationInput) {
+    const validated = validateInput(FeatureRequestMutationInputSchema, input);
     const session = await this.authService.assertAuthenticated();
     const existing = await this.repository.getFeatureRequestById(featureRequestId);
     if (!existing) {
@@ -99,7 +127,7 @@ export class FeatureRequestService implements FeatureRequestServiceInterface {
     if (existing.userId !== session.user.id) {
       throw new OwnershipError();
     }
-    return this.repository.updateFeatureRequest(featureRequestId, session.user.id, input);
+    return this.repository.updateFeatureRequest(featureRequestId, session.user.id, validated);
   }
 
   async deleteFeatureRequest(featureRequestId: string) {
@@ -141,8 +169,9 @@ export class DashboardService implements DashboardServiceInterface {
   }
 
   async listRecords(query: DashboardRecordsQuery) {
+    const validated = validateInput(DashboardRecordsQuerySchema, query);
     await this.authService.assertAuthenticated();
-    return this.repository.listRecords(query);
+    return this.repository.listRecords(validated);
   }
 }
 
@@ -154,6 +183,7 @@ export class ThemePreferenceService implements ThemePreferenceServiceInterface {
   }
 
   async savePreference(preference: AppearancePreference): Promise<AppearancePreference> {
-    return this.repository.savePreference(preference);
+    const validated = validateInput(AppearancePreferenceSchema, preference);
+    return this.repository.savePreference(validated);
   }
 }

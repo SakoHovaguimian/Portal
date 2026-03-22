@@ -1,33 +1,54 @@
-export const queryKeys = {
+import { createQueryKeyStore } from '@lukemorales/query-key-factory';
+
+/**
+ * Typed query key store for React Query.
+ *
+ * This provides compile-time safety for query keys, preventing typos and
+ * enabling IDE autocomplete. All query keys should be defined here.
+ *
+ * @example
+ * // In a hook:
+ * useQuery({
+ *   queryKey: queryKeys.users.detail(userId).queryKey,
+ *   queryFn: () => fetchUser(userId),
+ * });
+ *
+ * @example
+ * // For invalidation:
+ * queryClient.invalidateQueries({ queryKey: queryKeys.users._def });
+ */
+export const queryKeys = createQueryKeyStore({
   auth: {
-    session: ['auth', 'session'] as const,
+    session: null,
   },
   users: {
-    all: ['users'] as const,
-    lists: () => ['users', 'list'] as const,
-    list: (query: string) => ['users', 'list', query] as const,
-    detail: (userId: string) => ['users', 'detail', userId] as const,
+    all: null,
+    list: (query: string) => [query],
+    detail: (userId: string) => [userId],
   },
   featureRequests: {
-    all: ['featureRequests'] as const,
-    lists: () => ['featureRequests', 'list'] as const,
-    list: (query: string) => ['featureRequests', 'list', query] as const,
-    detail: (featureRequestId: string) => ['featureRequests', 'detail', featureRequestId] as const,
+    all: null,
+    list: (query: string) => [query],
+    detail: (featureRequestId: string) => [featureRequestId],
   },
   dashboard: {
-    overview: ['dashboard', 'overview'] as const,
-    models: ['dashboard', 'models'] as const,
-    modelDetail: (modelKey: string) => ['dashboard', 'models', modelKey] as const,
-    records: (modelKey: string, search: string) => ['dashboard', 'records', modelKey, search] as const,
+    overview: null,
+    models: null,
+    modelDetail: (modelKey: string) => [modelKey],
+    records: (modelKey: string, search: string) => [modelKey, search],
   },
   appearance: {
-    preference: ['appearance', 'preference'] as const,
+    preference: null,
   },
-};
+});
 
+/**
+ * Stale time configuration for different query types.
+ * Values are in milliseconds.
+ */
 export const staleTimes = {
-  authSession: 1000 * 60 * 5,
-  users: 1000 * 60,
-  featureRequests: 1000 * 30,
-  dashboard: 1000 * 15,
-};
+  authSession: 1000 * 60 * 5, // 5 minutes
+  users: 1000 * 60, // 1 minute
+  featureRequests: 1000 * 30, // 30 seconds
+  dashboard: 1000 * 15, // 15 seconds
+} as const;

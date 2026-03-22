@@ -2,58 +2,81 @@
 
 Use this prompt when adding a brand new feature module to this template.
 
-## Prompt
-Implement a new feature module named `<ModuleName>` in this semantic frontend template.
+## Quick Start: Use the Generator
 
-Use this exact sequence and semantics:
+For most new features, start with the code generator:
 
-1. Canonical domain model
-- Add canonical schemas/types in `packages/core/src/models`.
-- Add query/filter/mutation contracts when needed.
-- Keep one canonical entity model whenever possible.
+```bash
+pnpm generate:feature <feature-name>
+```
 
-2. Repository interface
-- Add repository interface methods in `packages/core/src/repositories/interfaces.ts`.
-- Keep contracts transport-agnostic.
+This creates boilerplate for:
+- Domain model (`packages/core/src/models/<feature>.ts`)
+- Feature screens and hooks (`apps/web/features/<feature>s/`)
+- Controller adapter (`apps/web/controllers/<feature>sController.ts`)
+- Route pages (`apps/web/app/(protected)/<feature>s/`)
+- Barrel export (`apps/web/features/<feature>s/index.ts`)
 
-3. Repository implementation
-- Add transport mapping and implementation in `packages/api-sdk/src/repositories`.
-- Keep transport-to-domain translation isolated there.
+Then follow the generated `_INSTRUCTIONS.md` file for manual integration steps.
 
-4. Service interface + service
-- Add service contract and implementation in `packages/core/src/services`.
-- Services own business rules, orchestration, and ownership invariants.
+## Manual Implementation Sequence
 
-5. Query standards
-- Add query keys and stale-time/invalidation guidance in `packages/core/src/queries/queryKeys.ts`.
-- Add query hooks in `apps/web/features/<module>/hooks.ts`.
+If not using the generator, follow this sequence:
 
-6. Controller adapter
-- Add route/search/input parsing in `apps/web/controllers`.
-- Normalize UI input before calling services.
+1. **Canonical domain model**
+   - Add Zod schemas in `packages/core/src/models/<feature>.ts`
+   - Add query schema in `packages/core/src/models/query.ts`
+   - Export from `packages/core/src/index.ts`
 
-7. Composer
-- Add route-level prefetch composition in `apps/web/composers`.
-- Prefetch through controllers/services, not directly through repositories.
+2. **Repository interface**
+   - Add interface in `packages/core/src/repositories/interfaces.ts`
 
-8. UI
-- Add screens/components in `apps/web/features/<module>`.
-- Use canonical models only.
-- Use semantic tokens/components from `@semantic-web/ui`.
+3. **Repository implementation**
+   - Add implementation in `packages/api-sdk/src/repositories/`
+   - Include domain mapper functions
 
-9. Routing
-- Add route segments in `apps/web/app`.
-- Keep page files thin and composition-only.
+4. **Service**
+   - Add interface in `packages/core/src/services/interfaces.ts`
+   - Add implementation in `packages/core/src/services/implementations.ts`
+   - Include input validation with `validateInput()` helper
 
-10. Docs update
-- Update `README.md` route/module summary when the surface is user-visible.
-- Add or update prompts if the module introduces a repeatable architecture pattern.
+5. **Query keys (typed)**
+   - Add to `packages/core/src/queries/queryKeys.ts` using the query-key-factory pattern:
+   ```typescript
+   featureName: {
+     all: null,
+     list: (query: string) => [query],
+     detail: (id: string) => [id],
+   },
+   ```
+   - Add stale time in `staleTimes` object
 
-11. Verify
-- Run `pnpm typecheck`, `pnpm build`, and relevant tests.
+6. **Service container**
+   - Wire repository and service in `packages/core/src/container/serviceContainer.ts`
+   - Update client container in `apps/web/lib/client/container.ts`
+   - Update server container in `apps/web/lib/server/container.ts`
 
-## Non-negotiable template semantics
-- Do not call repositories from React components.
-- Do not trust mutable ownership fields from UI payloads.
-- Do not let transport types leak into UI or services.
-- New module work is not complete unless query keys, controller/composer wiring, and docs are updated.
+7. **Feature folder**
+   - Create `apps/web/features/<feature>s/`
+   - Add `index.ts` barrel export
+   - Add `hooks.ts` with typed query keys (use `.queryKey` property)
+   - Add screens using `<QueryBoundary>` for error handling
+
+8. **Controller + Composer**
+   - Add controller in `apps/web/controllers/`
+   - Add composer functions in `apps/web/composers/serverQueries.ts`
+
+9. **Routes**
+   - Add pages in `apps/web/app/(protected)/<feature>s/`
+
+10. **Verify**
+    - Run `pnpm typecheck` and `pnpm build`
+
+## Non-negotiable Semantics
+
+- Features must have a barrel export (`index.ts`)
+- Features cannot import from other features (enforced by ESLint)
+- Use `<QueryBoundary>` for consistent error handling
+- Use typed query keys with `.queryKey` property
+- Validate service inputs with `validateInput()` helper
+- Never call repositories from React components

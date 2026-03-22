@@ -24,10 +24,19 @@ async function setAppearancePreference(preference: AppearancePreference): Promis
   }
 }
 
-export function createBrowserServiceContainer(session: AppSession | null) {
+/**
+ * Creates a browser-side service container.
+ *
+ * @param sessionGetter - A function that returns the current session. This is called
+ *                        dynamically when the auth service needs the session, ensuring
+ *                        the container doesn't need to be recreated when session changes.
+ */
+export function createBrowserServiceContainer(
+  sessionGetter: () => AppSession | null,
+) {
   const apiClient = new MockApiClient();
   return createServiceContainer({
-    authSessionRepository: new DelegatedAuthSessionRepository(async () => session),
+    authSessionRepository: new DelegatedAuthSessionRepository(async () => sessionGetter()),
     userRepository: new MockUserRepository(apiClient),
     featureRequestRepository: new MockFeatureRequestRepository(apiClient),
     dashboardRepository: new MockDashboardRepository(apiClient),

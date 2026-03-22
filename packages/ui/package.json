@@ -21,8 +21,17 @@
     "react-aria-components": "^1.15.1",
     "tailwind-merge": "^3.4.0"
   },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@tanstack/react-query": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@semantic-web/config": "workspace:*",
+    "@tanstack/react-query": "^5.66.0",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "eslint": "^9.22.0",

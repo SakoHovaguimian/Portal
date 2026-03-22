@@ -4,6 +4,7 @@ export * from './components/Card';
 export * from './components/DataTable';
 export * from './components/Input';
 export * from './components/MetricCard';
+export * from './components/QueryBoundary';
 export * from './components/SheetPanel';
 export * from './components/States';
 export * from './components/Tabs';

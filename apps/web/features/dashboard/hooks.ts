@@ -7,7 +7,7 @@ import { useServiceContainer } from '../../providers/AppProviders';
 export function useDashboardOverview() {
   const container = useServiceContainer();
   return useQuery({
-    queryKey: queryKeys.dashboard.overview,
+    queryKey: queryKeys.dashboard.overview.queryKey,
     queryFn: () => container.services.dashboardService.getOverview(),
     staleTime: staleTimes.dashboard,
   });
@@ -16,7 +16,7 @@ export function useDashboardOverview() {
 export function useDashboardModels() {
   const container = useServiceContainer();
   return useQuery({
-    queryKey: queryKeys.dashboard.models,
+    queryKey: queryKeys.dashboard.models.queryKey,
     queryFn: () => container.services.dashboardService.listModels(),
     staleTime: staleTimes.dashboard,
   });
@@ -25,7 +25,7 @@ export function useDashboardModels() {
 export function useDashboardRecords(model = 'featureRequest', search = '') {
   const container = useServiceContainer();
   return useQuery({
-    queryKey: queryKeys.dashboard.records(model, search),
+    queryKey: queryKeys.dashboard.records(model, search).queryKey,
     queryFn: () =>
       container.services.dashboardService.listRecords({
         model,
