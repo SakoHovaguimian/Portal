@@ -1,4 +1,5 @@
-# Semantic Web Template
+# Portal
+<img width="1024" height="1024" alt="ChatGPT Image Mar 21, 2026 at 10_22_40 PM" src="https://github.com/user-attachments/assets/c88cee85-ad1c-4319-94ce-20dc8f98aee6" />
 
 TypeScript frontend starter built on Next.js App Router, TanStack Query, Zustand, and a handwritten service container.
 
