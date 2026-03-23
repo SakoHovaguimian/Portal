@@ -28,10 +28,10 @@ export function AppearanceScreen() {
   return (
     <Card className="grid gap-6">
       <div className="grid gap-2">
-        <p className="m-0 text-xs font-semibold uppercase tracking-[0.16em] text-brand-secondary">Appearance Studio</p>
-        <h2 className="m-0 text-3xl font-semibold tracking-tight text-primary">Tune light/dark and brand accents from semantic tokens.</h2>
+        <p className="m-0 text-xs font-semibold uppercase tracking-[0.16em] text-brand-secondary">Appearance</p>
+        <h2 className="m-0 text-3xl font-semibold tracking-tight text-primary">Tune light, dark, and accent behavior from one token layer.</h2>
         <p className="m-0 max-w-3xl text-sm leading-6 text-secondary">
-          This starter now includes expanded Glow-inspired accents and a softer charcoal dark mode.
+          Neutral grays and whites carry the layout, while the selected accent stays concentrated in active states, badges, and key actions.
         </p>
       </div>
 
@@ -39,26 +39,40 @@ export function AppearanceScreen() {
         <button
           type="button"
           onClick={() => void setPreference({ mode: 'light', accent })}
-          className={`rounded-3xl border p-4 text-left transition ${
+          className={`rounded-2xl border p-5 text-left transition ${
             mode === 'light'
-              ? 'border-brand bg-brand-primary/25 shadow-xs'
+              ? 'border-brand bg-brand-primary shadow-[var(--dashboard-shell-shadow)]'
               : 'border-secondary bg-secondary_subtle hover:border-primary'
           }`}
         >
-          <div className="text-sm font-semibold text-primary">Light</div>
-          <p className="mt-1 m-0 text-sm text-secondary">Bright surfaces with soft teal-gray depth.</p>
+          <div className="flex items-center justify-between gap-3">
+            <div className="text-sm font-semibold text-primary">Light</div>
+            <div className="flex items-center gap-1">
+              <span className="h-3 w-3 rounded-full bg-white ring-1 ring-slate-200" />
+              <span className="h-3 w-3 rounded-full bg-slate-100 ring-1 ring-slate-200" />
+              <span className="h-3 w-3 rounded-full bg-slate-300 ring-1 ring-slate-300" />
+            </div>
+          </div>
+          <p className="mt-2 m-0 text-sm text-secondary">Bright shell background, white cards, and soft-gray separators.</p>
         </button>
         <button
           type="button"
           onClick={() => void setPreference({ mode: 'dark', accent })}
-          className={`rounded-3xl border p-4 text-left transition ${
+          className={`rounded-2xl border p-5 text-left transition ${
             mode === 'dark'
-              ? 'border-brand bg-brand-primary/25 shadow-xs'
+              ? 'border-brand bg-brand-primary shadow-[var(--dashboard-shell-shadow)]'
               : 'border-secondary bg-secondary_subtle hover:border-primary'
           }`}
         >
-          <div className="text-sm font-semibold text-primary">Dark</div>
-          <p className="mt-1 m-0 text-sm text-secondary">Charcoal-first palette with cleaner contrast.</p>
+          <div className="flex items-center justify-between gap-3">
+            <div className="text-sm font-semibold text-primary">Dark</div>
+            <div className="flex items-center gap-1">
+              <span className="h-3 w-3 rounded-full bg-slate-950 ring-1 ring-slate-700" />
+              <span className="h-3 w-3 rounded-full bg-slate-800 ring-1 ring-slate-700" />
+              <span className="h-3 w-3 rounded-full bg-slate-600 ring-1 ring-slate-600" />
+            </div>
+          </div>
+          <p className="mt-2 m-0 text-sm text-secondary">Deep slate shell, elevated panels, and restrained contrast that still reads clearly.</p>
         </button>
       </div>
 
@@ -72,9 +86,9 @@ export function AppearanceScreen() {
               key={option}
               type="button"
               onClick={() => void setPreference({ mode, accent: option })}
-              className={`rounded-3xl border p-4 text-left transition ${
+              className={`rounded-2xl border p-4 text-left transition ${
                 active
-                  ? 'border-brand bg-brand-primary/25 shadow-xs'
+                  ? 'border-brand bg-brand-primary shadow-[var(--dashboard-shell-shadow)]'
                   : 'border-secondary bg-primary hover:border-primary hover:bg-secondary_subtle'
               }`}
             >

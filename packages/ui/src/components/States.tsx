@@ -3,7 +3,7 @@ import { Button } from './Button';
 
 function Badge({ children }: { children: string }) {
   return (
-    <span className="inline-flex w-fit items-center rounded-full bg-secondary_subtle px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-brand-secondary">
+    <span className="inline-flex w-fit items-center rounded-full bg-brand-primary px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-brand-secondary">
       {children}
     </span>
   );

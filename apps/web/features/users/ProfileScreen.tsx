@@ -78,31 +78,25 @@ export function ProfileScreen() {
 
   if (!hasHydratedFromQuery) {
     return (
-      <Card>
-        <div style={{ display: 'grid', gap: '0.5rem' }}>
-          <p style={{ margin: 0, textTransform: 'uppercase', letterSpacing: '0.12em', fontSize: '0.75rem' }}>
-            Profile
-          </p>
-          <h1 style={{ margin: 0 }}>Current user settings</h1>
-          <p style={{ margin: 0 }}>Loading your canonical profile data...</p>
-        </div>
+      <Card className="grid gap-2">
+        <p className="m-0 text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-secondary">Profile</p>
+        <h1 className="m-0 text-2xl font-semibold tracking-tight text-primary">Current user settings</h1>
+        <p className="m-0 text-sm text-secondary">Loading your canonical profile data...</p>
       </Card>
     );
   }
 
   return (
-    <Card>
-      <div style={{ display: 'grid', gap: '0.5rem' }}>
-        <p style={{ margin: 0, textTransform: 'uppercase', letterSpacing: '0.12em', fontSize: '0.75rem' }}>
-          Profile
-        </p>
-        <h1 style={{ margin: 0 }}>Current user settings</h1>
-        <p style={{ margin: 0 }}>
+    <Card className="grid gap-6">
+      <div className="grid gap-2">
+        <p className="m-0 text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-secondary">Profile</p>
+        <h1 className="m-0 text-2xl font-semibold tracking-tight text-primary">Current user settings</h1>
+        <p className="m-0 text-sm leading-6 text-secondary">
           Update the canonical user record and keep the active session in sync for name and email changes.
         </p>
       </div>
-      <div style={{ display: 'grid', gap: '1rem' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
+      <div className="grid gap-4">
+        <div className="grid gap-4 md:grid-cols-2">
           <Field labelText="First name">
             <Input
               value={formState.firstName}
@@ -123,7 +117,7 @@ export function ProfileScreen() {
             onChange={(event) => setFormState((current) => ({ ...current, email: event.target.value }))}
           />
         </Field>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
+        <div className="grid gap-4 md:grid-cols-2">
           <Field labelText="Phone number">
             <Input
               value={formState.phoneNumber}
@@ -138,7 +132,7 @@ export function ProfileScreen() {
             />
           </Field>
         </div>
-        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+        <div className="flex flex-wrap gap-3">
           <Button type="button" disabled={disabled || updateMutation.isPending} onClick={() => void handleSaveProfile()}>
             {updateMutation.isPending ? 'Saving profile...' : 'Save profile'}
           </Button>
@@ -147,6 +141,6 @@ export function ProfileScreen() {
           </Button>
         </div>
       </div>
-    </Card>
-  );
+      </Card>
+    );
 }

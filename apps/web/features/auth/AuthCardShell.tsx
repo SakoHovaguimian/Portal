@@ -24,9 +24,9 @@ export function AuthCardShell({
   mockHint,
 }: AuthCardShellProps) {
   return (
-    <Card className="auth-card-enter overflow-hidden border-white/60 bg-primary/92 p-0 shadow-[0_24px_80px_rgba(10,13,18,0.12)] backdrop-blur-xl">
-      <div className="border-b border-secondary bg-linear-to-br from-brand-secondary/70 via-primary to-primary px-6 py-6 sm:px-8">
-        <div className="auth-reveal mb-4 inline-flex rounded-full border border-brand-secondary bg-primary/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-brand-secondary">
+    <Card className="auth-card-enter overflow-hidden p-0 shadow-[var(--dashboard-shell-shadow-lg)]">
+      <div className="border-b border-secondary bg-secondary_subtle px-6 py-6 sm:px-8">
+        <div className="auth-reveal mb-4 inline-flex rounded-full border border-brand/40 bg-brand-primary px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-brand-secondary">
           {badge}
         </div>
         <h1 className="auth-reveal auth-reveal-delay-1 font-display text-3xl font-semibold tracking-tight text-primary">

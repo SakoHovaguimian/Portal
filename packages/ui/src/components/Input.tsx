@@ -7,16 +7,16 @@ type InputProps = InputHTMLAttributes<HTMLInputElement> & {
 
 export function Input({ id, className, leadingIcon, ...props }: InputProps) {
   return (
-    <div className="relative">
+    <div className="group relative">
       {leadingIcon ? (
-        <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-tertiary">
+        <span className="pointer-events-none absolute inset-y-0 left-0 z-10 flex items-center pl-3 text-tertiary transition-colors group-hover:text-secondary group-focus-within:text-brand-secondary">
           {leadingIcon}
         </span>
       ) : null}
       <input
         id={id}
         className={cn(
-          'w-full rounded-xl border border-secondary bg-primary px-4 py-2.5 text-sm text-primary shadow-xs outline-none transition placeholder:text-placeholder focus:border-brand focus:ring-4 focus:ring-brand/15 disabled:cursor-not-allowed disabled:bg-disabled_subtle disabled:text-disabled',
+          'w-full rounded-xl border border-secondary bg-primary px-4 py-2.5 text-sm text-primary shadow-none outline-none transition placeholder:text-placeholder focus:border-brand focus:ring-4 focus:ring-brand/12 disabled:cursor-not-allowed disabled:bg-disabled_subtle disabled:text-disabled',
           leadingIcon ? 'pl-11' : null,
           className,
         )}

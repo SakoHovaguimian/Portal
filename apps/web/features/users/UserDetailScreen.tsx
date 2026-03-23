@@ -19,11 +19,18 @@ export function UserDetailScreen({ userId }: { userId: string }) {
   }
 
   return (
-    <Card>
-      <h2>{data.firstName} {data.lastName}</h2>
-      <p>{data.email}</p>
-      <p>External ID: {data.externalId}</p>
-      <p>Created: {new Date(data.createdAt).toLocaleString()}</p>
+    <Card className="grid gap-4">
+      <div className="grid gap-2">
+        <p className="m-0 text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-secondary">User detail</p>
+        <h2 className="m-0 text-2xl font-semibold tracking-tight text-primary">
+          {data.firstName} {data.lastName}
+        </h2>
+      </div>
+      <div className="grid gap-3 rounded-xl border border-secondary bg-secondary_subtle p-4 text-sm text-secondary">
+        <p className="m-0"><span className="font-semibold text-primary">Email:</span> {data.email}</p>
+        <p className="m-0"><span className="font-semibold text-primary">External ID:</span> {data.externalId}</p>
+        <p className="m-0"><span className="font-semibold text-primary">Created:</span> {new Date(data.createdAt).toLocaleString()}</p>
+      </div>
     </Card>
   );
 }

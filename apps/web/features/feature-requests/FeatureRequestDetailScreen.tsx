@@ -27,20 +27,23 @@ export function FeatureRequestDetailScreen({ featureRequestId }: { featureReques
   const currentMessage = message || data.message;
 
   return (
-    <Card>
-      <h2>Feature request detail</h2>
+    <Card className="grid gap-5">
+      <div className="grid gap-2">
+        <p className="m-0 text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-secondary">Request detail</p>
+        <h2 className="m-0 text-2xl font-semibold tracking-tight text-primary">Feature request detail</h2>
+      </div>
       <form
         onSubmit={async (event) => {
           event.preventDefault();
           await updateMutation.mutateAsync({ message: currentMessage });
           setMessage('');
         }}
-        style={{ display: 'grid', gap: '0.75rem' }}
+        className="grid gap-3"
       >
         <Field labelText="Message">
           <Input value={currentMessage} onChange={(event) => setMessage(event.target.value)} />
         </Field>
-        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+        <div className="flex flex-wrap gap-3">
           <Button type="submit" disabled={updateMutation.isPending}>
             {updateMutation.isPending ? 'Saving...' : 'Save changes'}
           </Button>

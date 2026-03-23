@@ -18,7 +18,7 @@ export function SegmentedTabs<T extends string>({
   onValueChange: (value: T) => void;
 }) {
   return (
-    <div className="inline-flex flex-wrap items-center gap-2 rounded-[1.5rem] border border-secondary bg-primary/90 p-2 shadow-xs">
+    <div className="inline-flex flex-wrap items-center gap-2 rounded-xl border border-secondary bg-secondary_subtle p-1.5">
       {tabs.map((tab) => {
         const active = tab.value === value;
         return (
@@ -27,9 +27,9 @@ export function SegmentedTabs<T extends string>({
             type="button"
             onClick={() => onValueChange(tab.value)}
             className={cn(
-              'rounded-2xl px-4 py-2 text-left text-sm transition',
+              'rounded-lg px-4 py-2 text-left text-sm transition',
               active
-                ? 'bg-brand-solid text-white shadow-xs-skeumorphic'
+                ? 'bg-primary text-primary shadow-[var(--dashboard-shell-shadow)] ring-1 ring-secondary'
                 : 'text-secondary hover:bg-secondary_subtle hover:text-primary',
             )}
           >

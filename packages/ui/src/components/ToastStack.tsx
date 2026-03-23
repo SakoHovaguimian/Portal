@@ -33,10 +33,10 @@ const positionClasses: Record<ToastPosition, string> = {
 };
 
 const intentClasses: Record<ToastIntent, string> = {
-  info: 'bg-primary/95',
-  success: 'bg-primary/95',
-  warning: 'bg-primary/95',
-  danger: 'bg-primary/95',
+  info: 'bg-primary',
+  success: 'bg-primary',
+  warning: 'bg-primary',
+  danger: 'bg-primary',
 };
 
 const intentAccentClasses: Record<ToastIntent, { bar: string; iconBg: string; iconFg: string }> = {
@@ -135,7 +135,7 @@ export function ToastStack({
               <div
                 key={toast.id}
                 className={cn(
-                  'pointer-events-auto relative overflow-hidden rounded-2xl border border-secondary/90 p-0 shadow-[0_16px_32px_rgba(10,13,18,0.16)]',
+                  'pointer-events-auto relative overflow-hidden rounded-xl border border-secondary p-0 shadow-[var(--dashboard-shell-shadow-lg)]',
                   toast.motionEnabled !== false &&
                     `animate-in fade-in-0 ${getEntryAnimationClass(toast.position)}`,
                   intentClasses[toast.intent],
@@ -188,7 +188,7 @@ export function ToastStack({
                         onClick={() => {
                           void toast.onAction?.();
                         }}
-                        className="mt-2 inline-flex items-center rounded-full bg-secondary_subtle px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-primary transition hover:bg-primary_hover"
+                        className="mt-2 inline-flex items-center rounded-lg bg-secondary_subtle px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-primary transition hover:bg-primary_hover"
                       >
                         {toast.actionLabel}
                       </button>

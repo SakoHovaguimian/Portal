@@ -27,9 +27,9 @@ const accentClasses: Record<SheetTone, string> = {
 };
 
 const sideClasses: Record<SheetSide, string> = {
-  left: 'left-0 top-0 h-screen rounded-none rounded-r-[2rem]',
-  right: 'right-0 top-0 h-screen rounded-none rounded-l-[2rem]',
-  bottom: 'bottom-0 left-1/2 w-[min(96vw,72rem)] -translate-x-1/2 rounded-t-[2rem] rounded-b-none',
+  left: 'left-0 top-0 h-screen rounded-none rounded-r-2xl',
+  right: 'right-0 top-0 h-screen rounded-none rounded-l-2xl',
+  bottom: 'bottom-0 left-1/2 w-[min(96vw,72rem)] -translate-x-1/2 rounded-t-2xl rounded-b-none',
 };
 
 const sizeClasses: Record<SheetSide, Record<SheetSize, string>> = {
@@ -86,14 +86,14 @@ export function SheetPanel({
       <Dialog.Portal>
         <Dialog.Overlay
           className={cn(
-            'fixed inset-0 z-[80] bg-black/45 backdrop-blur-sm',
+            'fixed inset-0 z-[80] bg-[var(--dashboard-shell-overlay)] backdrop-blur-sm',
             motionEnabled && 'data-[state=open]:animate-in data-[state=open]:fade-in-0',
           )}
           style={motionEnabled ? { animationDuration: `${motionDurationMs}ms` } : undefined}
         />
         <Dialog.Content
           className={cn(
-            'fixed z-[90] flex border bg-primary/98 shadow-[0_30px_90px_rgba(10,13,18,0.24)] backdrop-blur-xl outline-none',
+            'fixed z-[90] flex border bg-primary shadow-[var(--dashboard-shell-shadow-lg)] outline-none',
             motionEnabled && 'data-[state=open]:animate-in data-[state=open]:fade-in-0',
             motionEnabled && side === 'left' && 'data-[state=open]:slide-in-from-left-8',
             motionEnabled && side === 'right' && 'data-[state=open]:slide-in-from-right-8',
@@ -128,7 +128,7 @@ export function SheetPanel({
             </div>
 
             {details ? (
-              <div className="rounded-3xl border border-secondary bg-secondary_subtle/70 p-4 text-sm text-secondary">
+              <div className="rounded-xl border border-secondary bg-secondary_subtle p-4 text-sm text-secondary">
                 {details}
               </div>
             ) : null}

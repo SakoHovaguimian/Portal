@@ -5,7 +5,7 @@ export function Card({ children, className, ...props }: PropsWithChildren<HTMLAt
   return (
     <div
       className={cn(
-        'rounded-[1.75rem] border border-secondary/90 bg-primary/95 p-6 shadow-[0_14px_34px_rgba(16,31,30,0.1)] backdrop-blur-sm',
+        'rounded-2xl border border-secondary bg-primary p-6 shadow-[var(--dashboard-shell-shadow)]',
         className,
       )}
       {...props}

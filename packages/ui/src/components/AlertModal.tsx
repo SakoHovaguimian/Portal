@@ -25,9 +25,9 @@ const accentClasses: Record<AlertTone, string> = {
 };
 
 const layoutClasses: Record<AlertAlignment, string> = {
-  center: 'left-1/2 top-1/2 w-[min(92vw,34rem)] -translate-x-1/2 -translate-y-1/2 rounded-[2rem]',
-  top: 'left-1/2 top-6 w-[min(92vw,40rem)] -translate-x-1/2 rounded-[2rem]',
-  right: 'right-0 top-0 h-screen w-[min(94vw,34rem)] rounded-none rounded-l-[2rem]',
+  center: 'left-1/2 top-1/2 w-[min(92vw,34rem)] -translate-x-1/2 -translate-y-1/2 rounded-2xl',
+  top: 'left-1/2 top-6 w-[min(92vw,40rem)] -translate-x-1/2 rounded-2xl',
+  right: 'right-0 top-0 h-screen w-[min(94vw,34rem)] rounded-none rounded-l-2xl',
 };
 
 export function AlertModal({
@@ -62,14 +62,14 @@ export function AlertModal({
       <Dialog.Portal>
         <Dialog.Overlay
           className={cn(
-            'fixed inset-0 z-[80] bg-black/55 backdrop-blur-sm',
+            'fixed inset-0 z-[80] bg-[var(--dashboard-shell-overlay)] backdrop-blur-sm',
             motionEnabled && 'data-[state=open]:animate-in data-[state=open]:fade-in-0',
           )}
           style={motionEnabled ? { animationDuration: `${motionDurationMs}ms` } : undefined}
         />
         <Dialog.Content
           className={cn(
-            'fixed z-[90] border bg-primary/98 p-6 shadow-[0_30px_90px_rgba(10,13,18,0.24)] backdrop-blur-xl outline-none',
+            'fixed z-[90] border bg-primary p-6 shadow-[var(--dashboard-shell-shadow-lg)] outline-none',
             motionEnabled && 'data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
             toneClasses[tone],
             layoutClasses[alignment],
@@ -77,7 +77,7 @@ export function AlertModal({
           style={motionEnabled ? { animationDuration: `${motionDurationMs}ms` } : undefined}
         >
           <div className="flex h-full flex-col gap-5">
-            <div className="flex items-start gap-4">
+            <div className="flex flex-col items-start gap-4 text-left">
               <div
                 className={cn(
                   'inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]',
@@ -87,7 +87,7 @@ export function AlertModal({
                 <span className="h-2 w-2 rounded-full bg-current opacity-70" />
                 {tone}
               </div>
-              <div className="min-w-0 flex-1">
+              <div className="min-w-0">
                 <Dialog.Title className="font-display text-2xl font-semibold tracking-tight text-primary">
                   {title}
                 </Dialog.Title>
@@ -97,11 +97,11 @@ export function AlertModal({
               </div>
             </div>
             {details ? (
-              <div className="rounded-3xl border border-secondary bg-secondary_subtle/70 p-4 text-sm text-secondary">
+              <div className="rounded-xl border border-secondary bg-secondary_subtle p-4 text-sm text-secondary">
                 {details}
               </div>
             ) : null}
-            <div className="mt-auto flex flex-wrap justify-end gap-3 border-t border-secondary pt-5">
+            <div className="mt-auto flex flex-wrap justify-center gap-3 border-t border-secondary pt-5">
               <Button variant="secondary" onClick={onCancel}>
                 {cancelLabel}
               </Button>

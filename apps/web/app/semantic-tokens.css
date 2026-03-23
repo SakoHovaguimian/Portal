@@ -1,61 +1,60 @@
 /*
-  Glow-inspired semantic token layer.
+  Dashboard semantic token layer.
   Keep feature code on semantic class names (bg-primary, text-secondary, border-secondary, etc).
 */
 
 :root {
-  --glow-surface-canvas: color-mix(in srgb, var(--color-brand-100) 8%, white);
-  --glow-surface-base: color-mix(in srgb, var(--color-brand-50) 3%, white);
-  --glow-surface-raised: color-mix(in srgb, var(--color-brand-100) 6%, white);
-  --glow-surface-soft: color-mix(in srgb, var(--color-brand-100) 11%, white);
+  --dashboard-shell-bg: rgb(243 246 251);
+  --dashboard-shell-bg-emphasis: rgb(236 241 248);
+  --dashboard-shell-panel: rgb(255 255 255 / 0.9);
+  --dashboard-shell-panel-solid: rgb(255 255 255);
+  --dashboard-shell-border: rgb(226 232 240);
+  --dashboard-shell-border-strong: rgb(203 213 225);
+  --dashboard-shell-shadow: 0 1px 2px rgb(15 23 42 / 0.04), 0 10px 18px rgb(15 23 42 / 0.04);
+  --dashboard-shell-shadow-lg: 0 18px 36px rgb(15 23 42 / 0.06);
+  --dashboard-shell-topbar: rgb(248 250 252 / 0.92);
+  --dashboard-shell-overlay: rgb(15 23 42 / 0.58);
+  --dashboard-accent-soft: color-mix(in srgb, var(--color-brand-500) 12%, white);
+  --dashboard-accent-soft-strong: color-mix(in srgb, var(--color-brand-500) 18%, white);
 
-  --glow-border-strong: color-mix(in srgb, var(--color-brand-300) 22%, rgb(178 188 196));
-  --glow-border-soft: color-mix(in srgb, var(--color-brand-200) 18%, rgb(210 220 228));
+  --color-bg-primary: var(--dashboard-shell-panel-solid);
+  --color-bg-primary_alt: var(--dashboard-shell-panel);
+  --color-bg-primary_hover: rgb(248 250 252);
+  --color-bg-secondary: var(--dashboard-shell-bg);
+  --color-bg-secondary_alt: var(--dashboard-shell-bg-emphasis);
+  --color-bg-secondary_subtle: rgb(248 250 252);
+  --color-bg-secondary_hover: rgb(241 245 249);
+  --color-bg-tertiary: rgb(241 245 249);
+  --color-bg-quaternary: rgb(226 232 240);
+  --color-bg-active: var(--dashboard-accent-soft);
+  --color-bg-overlay: var(--dashboard-shell-overlay);
 
-  --glow-text-primary: rgb(17 35 34);
-  --glow-text-secondary: rgb(56 80 77);
-  --glow-text-tertiary: rgb(95 120 116);
+  --color-text-primary: rgb(15 23 42);
+  --color-text-secondary: rgb(71 85 105);
+  --color-text-secondary_hover: rgb(30 41 59);
+  --color-text-tertiary: rgb(100 116 139);
+  --color-text-tertiary_hover: rgb(71 85 105);
 
-  --glow-overlay: rgb(14 24 24 / 0.7);
+  --color-fg-primary: var(--color-text-primary);
+  --color-fg-secondary: var(--color-text-secondary);
+  --color-fg-tertiary: var(--color-text-tertiary);
+  --color-fg-secondary_hover: var(--color-text-secondary_hover);
+  --color-fg-tertiary_hover: var(--color-text-tertiary_hover);
 
-  --color-bg-primary: var(--glow-surface-base);
-  --color-bg-primary_alt: var(--glow-surface-base);
-  --color-bg-primary_hover: var(--glow-surface-raised);
-  --color-bg-secondary: var(--glow-surface-raised);
-  --color-bg-secondary_alt: var(--glow-surface-raised);
-  --color-bg-secondary_subtle: var(--glow-surface-soft);
-  --color-bg-secondary_hover: var(--glow-surface-soft);
-  --color-bg-tertiary: var(--glow-surface-soft);
-  --color-bg-quaternary: var(--glow-border-soft);
-  --color-bg-active: var(--glow-surface-soft);
-  --color-bg-overlay: var(--glow-overlay);
-
-  --color-text-primary: var(--glow-text-primary);
-  --color-text-secondary: var(--glow-text-secondary);
-  --color-text-secondary_hover: rgb(39 62 59);
-  --color-text-tertiary: var(--glow-text-tertiary);
-  --color-text-tertiary_hover: rgb(74 99 95);
-
-  --color-fg-primary: var(--glow-text-primary);
-  --color-fg-secondary: var(--glow-text-secondary);
-  --color-fg-tertiary: var(--glow-text-tertiary);
-  --color-fg-secondary_hover: rgb(39 62 59);
-  --color-fg-tertiary_hover: rgb(74 99 95);
-
-  --color-border-primary: var(--glow-border-strong);
-  --color-border-secondary: var(--glow-border-soft);
-  --color-border-secondary_alt: rgb(188 209 204 / 0.78);
-  --color-border-tertiary: rgb(225 236 233);
-  --color-border-brand: var(--color-brand-500);
+  --color-border-primary: var(--dashboard-shell-border-strong);
+  --color-border-secondary: var(--dashboard-shell-border);
+  --color-border-secondary_alt: rgb(203 213 225 / 0.76);
+  --color-border-tertiary: rgb(241 245 249);
+  --color-border-brand: color-mix(in srgb, var(--color-brand-500) 56%, rgb(148 163 184));
   --color-border-brand_alt: var(--color-brand-600);
 
-  --color-bg-brand-primary: color-mix(in srgb, var(--color-brand-500) 16%, white);
-  --color-bg-brand-primary_alt: color-mix(in srgb, var(--color-brand-500) 10%, white);
-  --color-bg-brand-secondary: color-mix(in srgb, var(--color-brand-500) 24%, white);
+  --color-bg-brand-primary: var(--dashboard-accent-soft);
+  --color-bg-brand-primary_alt: color-mix(in srgb, var(--color-brand-500) 8%, white);
+  --color-bg-brand-secondary: var(--dashboard-accent-soft-strong);
   --color-bg-brand-solid: var(--color-brand-600);
   --color-bg-brand-solid_hover: var(--color-brand-700);
 
-  --color-text-brand-primary: var(--color-brand-800);
+  --color-text-brand-primary: color-mix(in srgb, var(--color-brand-700) 82%, rgb(15 23 42));
   --color-text-brand-secondary: var(--color-brand-700);
   --color-text-brand-secondary_hover: var(--color-brand-800);
   --color-text-brand-tertiary: var(--color-brand-600);
@@ -68,59 +67,58 @@
 }
 
 .dark-mode {
-  --glow-surface-canvas: color-mix(in srgb, var(--color-brand-950) 8%, rgb(46 52 59));
-  --glow-surface-base: color-mix(in srgb, var(--color-brand-900) 8%, rgb(56 63 72));
-  --glow-surface-raised: color-mix(in srgb, var(--color-brand-900) 11%, rgb(65 74 84));
-  --glow-surface-soft: color-mix(in srgb, var(--color-brand-800) 14%, rgb(75 85 96));
+  --dashboard-shell-bg: rgb(15 23 42);
+  --dashboard-shell-bg-emphasis: rgb(17 24 39);
+  --dashboard-shell-panel: rgb(30 41 59 / 0.92);
+  --dashboard-shell-panel-solid: rgb(30 41 59);
+  --dashboard-shell-border: rgb(51 65 85);
+  --dashboard-shell-border-strong: rgb(71 85 105);
+  --dashboard-shell-shadow: 0 1px 2px rgb(2 8 23 / 0.3), 0 14px 30px rgb(2 8 23 / 0.18);
+  --dashboard-shell-shadow-lg: 0 20px 40px rgb(2 8 23 / 0.24);
+  --dashboard-shell-topbar: rgb(15 23 42 / 0.92);
+  --dashboard-shell-overlay: rgb(2 8 23 / 0.72);
+  --dashboard-accent-soft: color-mix(in srgb, var(--color-brand-500) 24%, rgb(30 41 59));
+  --dashboard-accent-soft-strong: color-mix(in srgb, var(--color-brand-500) 36%, rgb(30 41 59));
 
-  --glow-border-strong: color-mix(in srgb, var(--color-brand-600) 24%, rgb(112 124 139));
-  --glow-border-soft: color-mix(in srgb, var(--color-brand-700) 18%, rgb(92 104 118));
+  --color-bg-primary: var(--dashboard-shell-panel-solid);
+  --color-bg-primary_alt: var(--dashboard-shell-panel);
+  --color-bg-primary_hover: rgb(51 65 85);
+  --color-bg-secondary: var(--dashboard-shell-bg);
+  --color-bg-secondary_alt: var(--dashboard-shell-bg-emphasis);
+  --color-bg-secondary_subtle: rgb(22 31 49);
+  --color-bg-secondary_hover: rgb(36 46 67);
+  --color-bg-tertiary: rgb(51 65 85);
+  --color-bg-quaternary: rgb(71 85 105);
+  --color-bg-active: var(--dashboard-accent-soft);
+  --color-bg-overlay: var(--dashboard-shell-overlay);
 
-  --glow-text-primary: rgb(234 240 241);
-  --glow-text-secondary: rgb(199 211 213);
-  --glow-text-tertiary: rgb(164 179 183);
+  --color-text-primary: rgb(226 232 240);
+  --color-text-secondary: rgb(148 163 184);
+  --color-text-secondary_hover: rgb(226 232 240);
+  --color-text-tertiary: rgb(100 116 139);
+  --color-text-tertiary_hover: rgb(148 163 184);
 
-  --glow-overlay: rgb(8 12 16 / 0.72);
+  --color-fg-primary: var(--color-text-primary);
+  --color-fg-secondary: var(--color-text-secondary);
+  --color-fg-tertiary: var(--color-text-tertiary);
+  --color-fg-secondary_hover: var(--color-text-secondary_hover);
+  --color-fg-tertiary_hover: var(--color-text-tertiary_hover);
 
-  --color-bg-primary: var(--glow-surface-base);
-  --color-bg-primary_alt: var(--glow-surface-raised);
-  --color-bg-primary_hover: color-mix(in srgb, var(--glow-surface-soft) 84%, white);
-  --color-bg-secondary: var(--glow-surface-raised);
-  --color-bg-secondary_alt: var(--glow-surface-base);
-  --color-bg-secondary_subtle: var(--glow-surface-soft);
-  --color-bg-secondary_hover: color-mix(in srgb, var(--glow-surface-soft) 92%, white);
-  --color-bg-tertiary: var(--glow-surface-soft);
-  --color-bg-quaternary: var(--glow-border-soft);
-  --color-bg-active: var(--glow-surface-soft);
-  --color-bg-overlay: var(--glow-overlay);
+  --color-border-primary: var(--dashboard-shell-border-strong);
+  --color-border-secondary: var(--dashboard-shell-border);
+  --color-border-secondary_alt: rgb(71 85 105 / 0.9);
+  --color-border-tertiary: rgb(51 65 85 / 0.65);
 
-  --color-text-primary: var(--glow-text-primary);
-  --color-text-secondary: var(--glow-text-secondary);
-  --color-text-secondary_hover: rgb(222 231 233);
-  --color-text-tertiary: var(--glow-text-tertiary);
-  --color-text-tertiary_hover: rgb(193 208 211);
-
-  --color-fg-primary: var(--glow-text-primary);
-  --color-fg-secondary: var(--glow-text-secondary);
-  --color-fg-tertiary: var(--glow-text-tertiary);
-  --color-fg-secondary_hover: rgb(222 231 233);
-  --color-fg-tertiary_hover: rgb(193 208 211);
-
-  --color-border-primary: var(--glow-border-strong);
-  --color-border-secondary: var(--glow-border-soft);
-  --color-border-secondary_alt: rgb(122 136 151 / 0.7);
-  --color-border-tertiary: rgb(111 126 141 / 0.6);
-
-  --color-bg-brand-primary: color-mix(in srgb, var(--color-brand-500) 28%, black);
-  --color-bg-brand-primary_alt: color-mix(in srgb, var(--color-brand-500) 18%, black);
-  --color-bg-brand-secondary: color-mix(in srgb, var(--color-brand-500) 36%, black);
+  --color-bg-brand-primary: var(--dashboard-accent-soft);
+  --color-bg-brand-primary_alt: color-mix(in srgb, var(--color-brand-500) 16%, rgb(15 23 42));
+  --color-bg-brand-secondary: var(--dashboard-accent-soft-strong);
   --color-bg-brand-solid: var(--color-brand-500);
   --color-bg-brand-solid_hover: var(--color-brand-400);
 
-  --color-text-brand-primary: rgb(221 246 242);
-  --color-text-brand-secondary: rgb(191 236 230);
-  --color-text-brand-secondary_hover: rgb(226 250 247);
-  --color-text-brand-tertiary: rgb(145 218 207);
+  --color-text-brand-primary: rgb(239 246 255);
+  --color-text-brand-secondary: color-mix(in srgb, var(--color-brand-300) 72%, white);
+  --color-text-brand-secondary_hover: white;
+  --color-text-brand-tertiary: color-mix(in srgb, var(--color-brand-200) 62%, white);
 }
 
 :root[data-accent='aqua'] {
