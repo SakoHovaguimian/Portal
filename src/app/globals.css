@@ -1,0 +1,192 @@
+@layer reset, theme, base, astryx-base, astryx-theme, components, utilities;
+
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/preflight.css' layer(base);
+@import '@astryxdesign/core/reset.css';
+@import '@astryxdesign/core/astryx.css';
+@import '../theme/generated/portalTheme.css';
+@import '@astryxdesign/core/tailwind-theme.css';
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-brand-sky: #E4DFFF;
+  --color-brand-deep: #3E318E;
+  --radius-sm: var(--radius-inner);
+  --radius-md: var(--radius-element);
+  --radius-lg: var(--radius-container);
+  --radius-xl: var(--radius-container);
+  --radius-2xl: var(--radius-page);
+  --shadow-sm: var(--shadow-low);
+  --shadow-md: var(--shadow-med);
+  --shadow-lg: var(--shadow-high);
+  --shadow-xl: var(--shadow-high);
+}
+
+html[data-initial-theme='light'] [data-astryx-theme='portal'] {
+  color-scheme: light;
+}
+
+html[data-initial-theme='dark'] [data-astryx-theme='portal'] {
+  color-scheme: dark;
+}
+
+:root {
+  --landing-grid: color-mix(in srgb, var(--color-border) 70%, transparent);
+  --landing-glow: color-mix(in srgb, var(--color-accent) 15%, transparent);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-gutter: stable;
+}
+
+body {
+  min-width: 320px;
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--color-background-body);
+}
+
+.portal-shell-background {
+  background: var(--color-background-body);
+}
+
+.portal-header-canvas {
+  background: var(--color-background-body);
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  color: var(--color-on-accent);
+  background: var(--color-accent);
+}
+
+.focus-ring:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--color-accent) 38%, transparent);
+  outline-offset: 2px;
+}
+
+@layer components {
+  .astryx-button {
+    --_button-radius: var(--radius-full);
+  }
+
+  .astryx-toast {
+    overflow: clip;
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-emphasized);
+    background-color: var(--color-background-popover);
+    box-shadow: var(--shadow-low);
+  }
+
+  [data-toast-id] > div {
+    border-radius: var(--radius-container);
+  }
+
+  .astryx-toast[data-type='error'] {
+    border-color: color-mix(in srgb, var(--color-error) 38%, var(--color-border));
+    background-color: color-mix(in srgb, var(--color-background-popover) 92%, var(--color-error) 8%);
+  }
+
+  .astryx-toast [data-astryx-media] {
+    --color-text-primary: light-dark(var(--color-on-light), var(--color-on-dark));
+    --color-icon-primary: light-dark(var(--color-on-light), var(--color-on-dark));
+    --color-accent: light-dark(#0E9F6E, #34D399);
+  }
+
+  html[data-theme='light'] .astryx-toast [data-astryx-media] {
+    color-scheme: light;
+  }
+
+  html[data-theme='dark'] .astryx-toast [data-astryx-media] {
+    color-scheme: dark;
+  }
+
+  .astryx-dialog,
+  .astryx-alert-dialog {
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-emphasized);
+    background-color: var(--color-background-surface);
+    box-shadow: var(--shadow-high);
+  }
+
+  .astryx-dialog::backdrop,
+  .astryx-alert-dialog::backdrop {
+    background-color: var(--color-overlay);
+    backdrop-filter: blur(4px);
+  }
+
+  @media (prefers-color-scheme: light) {
+    html:not([data-theme]) .astryx-toast [data-astryx-media] {
+      color-scheme: light;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    html:not([data-theme]) .astryx-toast [data-astryx-media] {
+      color-scheme: dark;
+    }
+  }
+}
+
+.landing-grid {
+  background-image:
+    linear-gradient(to right, var(--landing-grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--landing-grid) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: linear-gradient(to bottom, black 12%, transparent 92%);
+}
+
+.text-gradient {
+  color: transparent;
+  background: linear-gradient(110deg, var(--color-text-primary) 12%, var(--color-accent) 88%);
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+.glass-surface {
+  border: 1px solid color-mix(in srgb, var(--color-border-emphasized) 45%, transparent);
+  background: color-mix(in srgb, var(--color-background-surface) 82%, transparent);
+  box-shadow: 0 24px 80px color-mix(in srgb, var(--color-shadow) 38%, transparent);
+  backdrop-filter: blur(22px);
+}
+
+.portal-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-emphasized) transparent;
+}
+
+.portal-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.portal-scrollbar::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: var(--color-border-emphasized);
+  background-clip: content-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

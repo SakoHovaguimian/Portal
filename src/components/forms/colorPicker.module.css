@@ -1,0 +1,42 @@
+.colorPicker {
+  --color-picker-size: 2.25rem;
+
+  display: block;
+  position: relative;
+  width: var(--color-picker-size);
+  height: var(--color-picker-size);
+  flex: 0 0 var(--color-picker-size);
+  overflow: hidden;
+  padding: 2px;
+  border: 2px solid var(--color-border-emphasized);
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+}
+
+.colorPicker[data-size='sm'] {
+  --color-picker-size: 2rem;
+}
+
+.colorPicker:has(.input:focus-visible) {
+  outline: 3px solid color-mix(in srgb, var(--color-accent) 38%, transparent);
+  outline-offset: 2px;
+}
+
+.swatch {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--color-picker-value);
+}
+
+.input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  opacity: 0;
+}

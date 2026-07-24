@@ -1,0 +1,7 @@
+.dialog :global(.astryx-layout-content) {
+  text-align: center;
+}
+
+.dialog :global(.astryx-layout-footer) :global(.astryx-stack) {
+  justify-content: center !important;
+}
