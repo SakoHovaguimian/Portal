@@ -1,5 +1,7 @@
 # Portal
 
+<img width="1024" height="1024" alt="Portal" src="https://github.com/user-attachments/assets/c88cee85-ad1c-4319-94ce-20dc8f98aee6" />
+
 A reusable, production-minded Next.js portal template. Portal starts as a self-contained demo and exposes clear integration boundaries for authentication, APIs, realtime events, notifications, persistence, uploads, analytics, email, and deployment.
 
 ## What ships
