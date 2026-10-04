@@ -1,0 +1,53 @@
+import { Slot } from '@radix-ui/react-slot';
+import type { ButtonHTMLAttributes, PropsWithChildren } from 'react';
+import { cn } from '../lib/cn';
+
+const buttonVariants = {
+  primary:
+    'bg-brand-solid text-white shadow-[var(--dashboard-shell-shadow)] ring-1 ring-transparent ring-inset hover:bg-brand-solid_hover disabled:bg-disabled disabled:text-fg-disabled disabled:ring-disabled_subtle',
+  secondary:
+    'bg-primary text-secondary shadow-none ring-1 ring-secondary ring-inset hover:bg-primary_hover hover:text-secondary_hover disabled:bg-disabled_subtle disabled:text-fg-disabled disabled:ring-disabled',
+  destructive:
+    'bg-error-solid text-white shadow-[var(--dashboard-shell-shadow)] ring-1 ring-transparent ring-inset hover:bg-error-solid_hover disabled:bg-disabled disabled:text-fg-disabled disabled:ring-disabled_subtle',
+  ghost:
+    'bg-transparent text-secondary ring-1 ring-transparent hover:bg-secondary_subtle hover:text-primary disabled:text-fg-disabled',
+} as const;
+
+export function buttonClassName(
+  variant: keyof typeof buttonVariants = 'primary',
+  className?: string,
+) {
+  return cn(
+    'bouncy-button group inline-flex h-max items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition duration-100 ease-linear focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-not-allowed',
+    buttonVariants[variant],
+    className,
+  );
+}
+
+type ButtonProps = PropsWithChildren<
+  ButtonHTMLAttributes<HTMLButtonElement> & {
+    variant?: keyof typeof buttonVariants;
+    asChild?: boolean;
+  }
+>;
+
+export function Button({
+  children,
+  variant = 'primary',
+  asChild = false,
+  className,
+  type,
+  ...props
+}: ButtonProps) {
+  const Comp = asChild ? Slot : 'button';
+
+  return (
+    <Comp
+      className={buttonClassName(variant, className)}
+      {...(!asChild ? { type: type ?? 'button' } : {})}
+      {...props}
+    >
+      {children}
+    </Comp>
+  );
+}

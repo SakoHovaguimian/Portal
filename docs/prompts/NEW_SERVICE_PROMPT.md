@@ -1,45 +1,9 @@
-# New Service Prompt
+# New service
 
-Use this prompt when adding a new foundational or domain service.
+Read [architecture](../ARCHITECTURE.md) and inspect the closest service before creating another abstraction.
 
-## Prompt
-Implement a new service named `<ServiceName>` in this template using interface + concrete implementation.
+Domain services belong to their module. Infrastructure integrations belong in `src/services/<capability>`. Inject dependencies through the matching client/server container. Use a service interface when multiple implementations exist, as for live and demo authentication.
 
-Follow this structure:
+Server services import `server-only`. Never import environment, private session models, credentials, or the server container into client components. Public config is explicitly projected by `getRuntimeConfig`.
 
-1. Define interface
-- Add the public service contract in `packages/core/src/services/interfaces.ts`.
-- Keep input/output types explicit and canonical.
-
-2. Implement service
-- Add the implementation in `packages/core/src/services/implementations.ts` or split into a dedicated file when the service grows.
-- Services own orchestration, business rules, ownership enforcement, and error branching.
-
-3. Repository dependencies
-- Inject repository interfaces only.
-- Do not import transport implementations directly into services.
-
-4. Container wiring
-- Register the service in `packages/core/src/container/serviceContainer.ts`.
-- Keep dependency resolution explicit and discoverable.
-
-5. UI exposure
-- If the service is used by routes, add controller/composer/query hook updates in the app layer.
-- Do not resolve services ad hoc deep inside components.
-
-6. Error semantics
-- Convert low-level failures into meaningful domain errors.
-- Avoid leaking raw implementation details into UI copy.
-
-7. Input validation
-- Validate inputs using the `validateInput()` helper with Zod schemas.
-- This provides defense-in-depth at the service boundary.
-
-8. Verify
-- Run `pnpm typecheck` after changes.
-- Confirm the service can be mocked/swapped cleanly through the container.
-
-## Reference patterns in this repo
-- Auth/session service
-- Feature request ownership service
-- Dashboard orchestration service
+Document initialization, cancellation, retries, failure handling, ownership, cleanup, and demo behavior. Every external side effect must be disabled or simulated under DEMO_MODE. Put independent models in separate files and messages in strings catalogs. Verify the actual container wiring, then update focused docs and the agent index.

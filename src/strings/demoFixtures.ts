@@ -1,0 +1,31 @@
+export const demoFixturesStrings = {
+  sako: 'Sako',
+  template: 'Template',
+  ada: 'Ada',
+  operator: 'Operator',
+  mina: 'Mina',
+  signals: 'Signals',
+  addSemanticDashboardSavedViewsWithSharableFilters:
+    'Add semantic dashboard saved views with sharable filters.',
+  exposeFeatureRequestOwnershipHistoryForAuditTrails:
+    'Expose feature request ownership history for audit trails.',
+  supportCompactTableModeWithPinnedColumns:
+    'Support compact table mode with pinned columns.',
+  users: 'Users',
+  featureRequests: 'Feature Requests',
+  dashboardViews: 'Dashboard Views',
+  user: 'User',
+  id: 'ID',
+  email: 'Email',
+  firstName: 'First Name',
+  lastName: 'Last Name',
+  featureRequest: 'Feature Request',
+  userId: 'User ID',
+  message: 'Message',
+  createdAt: 'Created At',
+  sakoExampleCom: 'sako@example.com',
+  value15551110001: '+1 555 111 0001',
+  adaExampleCom: 'ada@example.com',
+  value15551110002: '+1 555 111 0002',
+  minaExampleCom: 'mina@example.com',
+} as const;

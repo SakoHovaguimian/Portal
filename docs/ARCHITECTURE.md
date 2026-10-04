@@ -1,0 +1,40 @@
+# Architecture
+
+Portal is one npm application. There are no workspace packages, generated API SDK, controller adapters, or repositories.
+
+```text
+src/app                   route composition, layouts, auth handlers, backend proxy
+src/modules/<domain>      screens, hooks, domain services, domain-specific models
+src/services              API, auth, session, demo, realtime, notifications, analytics, privacy
+src/models                shared, independent domain schemas and types
+src/clientContainer.ts    browser service construction
+src/container.ts          server service construction and demo/live selection
+src/components/ui         shared components and shell
+src/presentation          canonical toast, alert, sheet service
+src/strings               all authored display copy
+```
+
+## Browser data flow
+
+Screen → query/mutation hook → domain service → `BrowserApiClient` → `/api/backend/*` → session verification/refresh → live API or `DemoApiClient`.
+
+Domain services validate mutation inputs, encode paths/query parameters, and map transport data to domain models. The proxy supplies authentication; browser-supplied ownership or authorization headers are never forwarded. The real backend remains authoritative for permissions. The demo API enforces current-user ownership itself.
+
+The browser calls Firebase only for opt-in Messaging. It never receives access/refresh tokens or calls Firebase Authentication. Client code imports public session models, never server containers or environment.
+
+## Server composition
+
+Root layout passes only a public runtime configuration to `RuntimeProvider`. Protected layouts read the encrypted cookie and pass a token-free `AppSession` to `AppProviders`. They never write cookies. Query loading occurs through the browser proxy, which can safely refresh cookies in a Route Handler. `proxy.ts` provides navigation gating; API routes independently verify sessions.
+
+`container.ts` wires live Firebase REST auth or demo auth plus `SessionService`. `/api/backend/*` chooses live forwarding or demo state using the same server-only `DEMO_MODE` value. No client build flag selects mock behavior.
+
+## State ownership
+
+- TanStack Query: server data, request status, cache and mutation invalidation.
+- URL: committed filters, selected dashboard model, list query.
+- Component state: forms, disclosure, pending UI.
+- Zustand: existing dashboard density/chrome only; do not duplicate server data there.
+- Local storage: appearance, consent choice, per-user push opt-in and FCM registration identifier. Never auth tokens.
+- Server process: demo records and demo credentials. Live data lives on the backend.
+
+The existing custom UI system remains in `src/components/ui`; this migration does not replace it with Astryx. See [migration decisions](MIGRATION.md).

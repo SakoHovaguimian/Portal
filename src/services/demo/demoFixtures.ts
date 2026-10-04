@@ -1,0 +1,211 @@
+import { strings } from '@/strings';
+import type {
+  DashboardModelMetaTransport,
+  FeatureRequestTransport,
+  UserTransport,
+} from '../api/models';
+
+const now = new Date();
+const daysAgo = (days: number) =>
+  new Date(now.getTime() - days * 86400000).toISOString();
+
+export const users: UserTransport[] = [
+  {
+    id: '11111111-1111-4111-8111-111111111111',
+    external_id: 'firebase-demo-user-1',
+    first_name: strings.ui.demoFixtures.sako,
+    last_name: strings.ui.demoFixtures.template,
+    email: strings.ui.demoFixtures.sakoExampleCom,
+    phone_number: strings.ui.demoFixtures.value15551110001,
+    date_of_birth: daysAgo(12000),
+    created_at: daysAgo(120),
+    updated_at: daysAgo(1),
+    deleted: false,
+  },
+  {
+    id: '22222222-2222-4222-8222-222222222222',
+    external_id: 'firebase-demo-user-2',
+    first_name: strings.ui.demoFixtures.ada,
+    last_name: strings.ui.demoFixtures.operator,
+    email: strings.ui.demoFixtures.adaExampleCom,
+    phone_number: strings.ui.demoFixtures.value15551110002,
+    date_of_birth: daysAgo(10000),
+    created_at: daysAgo(90),
+    updated_at: daysAgo(2),
+    deleted: false,
+  },
+  {
+    id: '33333333-3333-4333-8333-333333333333',
+    external_id: 'firebase-demo-user-3',
+    first_name: strings.ui.demoFixtures.mina,
+    last_name: strings.ui.demoFixtures.signals,
+    email: strings.ui.demoFixtures.minaExampleCom,
+    phone_number: null,
+    date_of_birth: null,
+    created_at: daysAgo(45),
+    updated_at: daysAgo(7),
+    deleted: false,
+  },
+];
+
+export const featureRequests: FeatureRequestTransport[] = [
+  {
+    id: '44444444-4444-4444-8444-444444444444',
+    user_id: users[0].id,
+    message:
+      strings.ui.demoFixtures.addSemanticDashboardSavedViewsWithSharableFilters,
+    created_at: daysAgo(20),
+    updated_at: daysAgo(3),
+    deleted: false,
+    user: users[0],
+  },
+  {
+    id: '55555555-5555-4555-8555-555555555555',
+    user_id: users[0].id,
+    message:
+      strings.ui.demoFixtures
+        .exposeFeatureRequestOwnershipHistoryForAuditTrails,
+    created_at: daysAgo(10),
+    updated_at: daysAgo(2),
+    deleted: false,
+    user: users[0],
+  },
+  {
+    id: '66666666-6666-4666-8666-666666666666',
+    user_id: users[1].id,
+    message: strings.ui.demoFixtures.supportCompactTableModeWithPinnedColumns,
+    created_at: daysAgo(5),
+    updated_at: daysAgo(1),
+    deleted: false,
+    user: users[1],
+  },
+];
+
+export const dashboardModelMeta: Record<string, DashboardModelMetaTransport> = {
+  user: {
+    key: 'user',
+    display_name: strings.ui.demoFixtures.users,
+    display_name_singular: strings.ui.demoFixtures.user,
+    total_records: users.length,
+    date_field: 'created_at',
+    label_field: 'email',
+    fields: [
+      {
+        name: 'id',
+        type: 'uuid',
+        display_name: strings.ui.demoFixtures.id,
+        displayable: true,
+        filterable: false,
+        searchable: false,
+        sensitive: false,
+        sortable: false,
+        aggregatable: false,
+      },
+      {
+        name: 'email',
+        type: 'string',
+        display_name: strings.ui.demoFixtures.email,
+        displayable: true,
+        filterable: true,
+        searchable: true,
+        sensitive: true,
+        sortable: true,
+        aggregatable: false,
+      },
+      {
+        name: 'first_name',
+        type: 'string',
+        display_name: strings.ui.demoFixtures.firstName,
+        displayable: true,
+        filterable: true,
+        searchable: true,
+        sensitive: false,
+        sortable: true,
+        aggregatable: false,
+      },
+      {
+        name: 'last_name',
+        type: 'string',
+        display_name: strings.ui.demoFixtures.lastName,
+        displayable: true,
+        filterable: true,
+        searchable: true,
+        sensitive: false,
+        sortable: true,
+        aggregatable: false,
+      },
+    ],
+    relations: [
+      {
+        name: 'feature_requests',
+        model: 'featureRequest',
+        type: 'hasMany',
+        foreign_key: 'user_id',
+        display_field: 'message',
+      },
+    ],
+  },
+  featureRequest: {
+    key: 'featureRequest',
+    display_name: strings.ui.demoFixtures.featureRequests,
+    display_name_singular: strings.ui.demoFixtures.featureRequest,
+    total_records: featureRequests.length,
+    date_field: 'created_at',
+    label_field: 'message',
+    fields: [
+      {
+        name: 'id',
+        type: 'uuid',
+        display_name: strings.ui.demoFixtures.id,
+        displayable: true,
+        filterable: false,
+        searchable: false,
+        sensitive: false,
+        sortable: false,
+        aggregatable: false,
+      },
+      {
+        name: 'user_id',
+        type: 'uuid',
+        display_name: strings.ui.demoFixtures.userId,
+        displayable: true,
+        filterable: true,
+        searchable: false,
+        sensitive: false,
+        sortable: false,
+        aggregatable: false,
+      },
+      {
+        name: 'message',
+        type: 'string',
+        display_name: strings.ui.demoFixtures.message,
+        displayable: true,
+        filterable: false,
+        searchable: true,
+        sensitive: false,
+        sortable: false,
+        aggregatable: false,
+      },
+      {
+        name: 'created_at',
+        type: 'date',
+        display_name: strings.ui.demoFixtures.createdAt,
+        displayable: true,
+        filterable: true,
+        searchable: false,
+        sensitive: false,
+        sortable: true,
+        aggregatable: true,
+      },
+    ],
+    relations: [
+      {
+        name: 'user',
+        model: 'user',
+        type: 'belongsTo',
+        foreign_key: 'user_id',
+        display_field: 'email',
+      },
+    ],
+  },
+};

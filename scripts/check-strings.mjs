@@ -1,0 +1,32 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import ts from 'typescript';
+import { displayLiteral, sourceFile } from './string-literals.mjs';
+function files(dir) {
+  return fs
+    .readdirSync(dir, { withFileTypes: true })
+    .flatMap((entry) =>
+      entry.isDirectory()
+        ? files(path.join(dir, entry.name))
+        : /\.tsx?$/.test(entry.name)
+          ? [path.join(dir, entry.name)]
+          : [],
+    );
+}
+let failures = 0;
+for (const file of files('src')) {
+  if (file.startsWith('src/strings/')) continue;
+  const source = fs.readFileSync(file, 'utf8');
+  const sf = sourceFile(file, source);
+  function visit(node) {
+    if (displayLiteral(node)) {
+      const { line } = sf.getLineAndCharacterOfPosition(node.getStart(sf));
+      console.error(`${file}:${line + 1}: Move display copy into src/strings.`);
+      failures++;
+    }
+    ts.forEachChild(node, visit);
+  }
+  visit(sf);
+}
+if (failures) process.exitCode = 1;
+else console.log('Display strings check passed.');
