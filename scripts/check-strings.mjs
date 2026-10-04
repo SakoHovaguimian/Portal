@@ -15,13 +15,15 @@ function files(dir) {
 }
 let failures = 0;
 for (const file of files('src')) {
-  if (file.startsWith('src/strings/')) continue;
+  if (file === path.join('src', 'strings.ts')) continue;
   const source = fs.readFileSync(file, 'utf8');
   const sf = sourceFile(file, source);
   function visit(node) {
     if (displayLiteral(node)) {
       const { line } = sf.getLineAndCharacterOfPosition(node.getStart(sf));
-      console.error(`${file}:${line + 1}: Move display copy into src/strings.`);
+      console.error(
+        `${file}:${line + 1}: Move display copy into src/strings.ts.`,
+      );
       failures++;
     }
     ts.forEachChild(node, visit);

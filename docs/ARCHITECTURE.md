@@ -11,7 +11,7 @@ src/clientContainer.ts    browser service construction
 src/container.ts          server service construction and demo/live selection
 src/components/ui         shared components and shell
 src/presentation          canonical toast, alert, sheet service
-src/strings               all authored display copy
+src/strings.ts            all authored display copy
 ```
 
 ## Browser data flow

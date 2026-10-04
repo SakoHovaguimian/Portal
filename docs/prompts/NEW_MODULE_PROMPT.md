@@ -6,6 +6,6 @@ Create `src/modules/<domain>/` with screens/components, query hooks, a domain se
 
 The service accepts `ApiClientInterface`, validates inputs, encodes route/query values, and maps transport responses to domain schemas. Register it in `ClientServiceContainer`. Routes only compose screens. Do not add repositories, controller adapters, or workspace packages.
 
-Define stable query keys, pass cancellation where supported, invalidate related summaries after mutations, and provide loading/error/empty/success states. Put every authored label, error, metadata value, and accessible name in `src/strings`.
+Define stable query keys, pass cancellation where supported, invalidate related summaries after mutations, and provide loading/error/empty/success states. Put every authored label, error, metadata value, and accessible name in `src/strings.ts`.
 
 Add matching demo endpoints with ownership, validation, paging, mutations, and current counts. Document live contracts and update AGENTS.md. Run static checks, demo build, and manual flows; do not write tests.

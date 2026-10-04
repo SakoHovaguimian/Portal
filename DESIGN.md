@@ -42,7 +42,7 @@ Light surfaces use `colors.surface`, `colors.background`, `colors.text`, `colors
 
 ## Typography
 
-IBM Plex Sans owns body and headings through Next font variables in `src/app/layout.tsx`; IBM Plex Mono owns technical values. Use restrained semibold headings and readable body text. User-visible text comes from `src/strings`. Do not expose architectural jargon in routine tasks.
+IBM Plex Sans owns body and headings through Next font variables in `src/app/layout.tsx`; IBM Plex Mono owns technical values. Use restrained semibold headings and readable body text. User-visible text comes from `src/strings.ts`. Do not expose architectural jargon in routine tasks.
 
 ## Layout
 

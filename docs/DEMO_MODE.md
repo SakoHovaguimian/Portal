@@ -17,4 +17,4 @@ Demo cookies include the mode so switching to live invalidates demo sessions. A 
 
 ## Extending the demo
 
-Add domain models and copy in separate files. Implement the same route, query parsing, validation, ownership, response shape, mutation behavior, and error status that the live backend exposes. Update dependent counts/caches. Do not add client-only fixture arrays for business data or a second demo flag.
+Add independent domain models in separate files and authored copy in `src/strings.ts`. Implement the same route, query parsing, validation, ownership, response shape, mutation behavior, and error status that the live backend exposes. Update dependent counts/caches. Do not add client-only fixture arrays for business data or a second demo flag.

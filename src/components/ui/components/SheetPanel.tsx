@@ -1,7 +1,6 @@
 'use client';
-import { labels } from '@/strings/labels';
 
-import { strings } from '@/strings';
+import { labels, strings } from '@/strings';
 import * as Dialog from '@radix-ui/react-dialog';
 import type { ReactNode } from 'react';
 import { Button } from './Button';

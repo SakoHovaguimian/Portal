@@ -1,6 +1,5 @@
 'use client';
-import { labels } from '@/strings/labels';
-import { strings } from '@/strings';
+import { labels, strings } from '@/strings';
 import { NotificationControls } from '@/services/notifications/components/NotificationControls';
 import { CookieConsentControls } from '@/services/privacy/components/CookieConsentControls';
 

@@ -41,6 +41,6 @@ The repository contains no tests by instruction. `check` runs ESLint, route-awar
 - [AGENTS.md](AGENTS.md): concise agent landing page and task index.
 - [Architecture](docs/ARCHITECTURE.md): modules, services, browser/server boundaries, state ownership.
 - [Demo mode](docs/DEMO_MODE.md), [authentication](docs/AUTH.md), [realtime](docs/REALTIME.md), [analytics](docs/ANALYTICS.md).
-- [Strings](docs/STRINGS.md): all display copy is centralized in `src/strings`.
+- [Strings](docs/STRINGS.md): all display copy is centralized in `src/strings.ts`.
 - [New project checklist](docs/NEW_PROJECT_CHECKLIST.md), [migration notes](docs/MIGRATION.md).
 - [Design](DESIGN.md), [UX contract](UX-CONTRACT.md), [verification](docs/VERIFICATION.md).

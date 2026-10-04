@@ -13,7 +13,7 @@ The October 2026 migration adopts the JobLens-style runtime architecture while p
 | Signed semantic_web_session cookie | Encrypted portal_session cookie; old sessions sign in again |
 | NEXT_PUBLIC_ENABLE_MOCK_AUTH and browser API base | DEMO_MODE and server-only PORTAL_API_URL |
 | Frontend Sentry | Consent-gated Amplitude; monitoring remains on backend |
-| Inline copy | Focused src/strings catalogs and a static check |
+| Inline copy | One src/strings.ts file and a static check |
 
 ## Deliberate continuity decisions
 

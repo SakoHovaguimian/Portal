@@ -1,0 +1,703 @@
+// All authored display copy belongs in this file. See docs/STRINGS.md.
+export const strings = {
+  common: {
+    loading: 'Loading…',
+    saving: 'Saving…',
+    pendingValue: '…',
+  },
+  app: {
+    backToWorkspace: 'Back to workspace',
+    name: 'Portal',
+    description: 'Your workspace for people, requests, and conversations.',
+  },
+  errors: {
+    invalidInput: 'Check your entries and try again.',
+    requestFailed: 'The request could not be completed. Try again.',
+    unavailable: 'The service is temporarily unavailable. Try again shortly.',
+    forbidden: 'You do not have permission to perform this action.',
+    sessionExpired: 'Your session has expired. Sign in again.',
+    notFound: 'This item could not be found.',
+    untrusted: 'This request did not originate from Portal.',
+    invalidPath: 'Invalid API path.',
+    configuration: 'Portal is not configured for this service.',
+    unexpected: 'Something went wrong. Please try again.',
+    provider: 'This component must be rendered inside its provider.',
+  },
+  auth: {
+    showPassword: 'Show password',
+    hidePassword: 'Hide password',
+    invalidCredentials: 'The email or password is incorrect.',
+    emailExists: 'An account already exists with this email.',
+    invalidEmail: 'Enter a valid email address.',
+    password: 'Use at least eight characters for your password.',
+    name: 'Enter your name.',
+    disabled: 'This account is disabled. Contact your administrator.',
+    tooMany: 'Too many attempts. Please wait before trying again.',
+    failed: 'Unable to sign in. Please try again.',
+    signupFailed: 'Unable to create your account. Please try again.',
+    sessionTooLarge: 'Unable to save this session. Contact your administrator.',
+    loggedOut: 'Signed out',
+    logoutFailed: 'Unable to sign out. Please try again.',
+  },
+  privacy: {
+    title: 'Analytics preferences',
+    description:
+      'Essential cookies keep you signed in. Optional Amplitude analytics helps us understand which screens are useful. It stays off until you accept.',
+    accept: 'Accept analytics',
+    decline: 'Essential only',
+    saved: 'Your analytics preference has been saved.',
+    settings: 'Analytics preferences',
+    demo: 'Analytics is disabled in this demo.',
+  },
+  notifications: {
+    title: 'Browser notifications',
+    enable: 'Enable notifications',
+    disable: 'Disable notifications',
+    enabled: 'Notifications enabled',
+    available: 'Receive chat and workspace alerts in this browser.',
+    denied:
+      'Notifications are blocked. Change this site’s permission in your browser settings to enable them.',
+    unsupported: 'Browser notifications are unavailable on this device.',
+    demo: 'Notifications are simulated in demo mode.',
+    unconfigured:
+      'Browser notifications are not configured for this workspace.',
+    failed: 'Could not update notifications. Please try again.',
+    busy: 'Updating notifications…',
+    alert: 'Workspace alert',
+    disabled: 'Notifications disabled',
+  },
+  chat: {
+    title: 'Chat',
+    description: 'A shared workspace conversation.',
+    placeholder: 'Write a message…',
+    send: 'Send message',
+    sending: 'Sending…',
+    empty: 'No messages yet. Start the conversation.',
+    failed: 'Your message was not sent. Please try again.',
+    demo: 'Demo conversation',
+    connected: 'Connected',
+    connecting: 'Connecting…',
+    offline: 'Live updates unavailable',
+    simulate: 'Simulate alert',
+    simulatedTitle: 'Demo alert',
+    simulatedBody: 'Your workspace is up to date.',
+    author: 'Portal team',
+    seed: 'Welcome to Portal. Use this conversation to try out chat.',
+  },
+  environment: {
+    missing: (name: string) => `Missing required environment variable: ${name}`,
+    secret: 'SESSION_SECRET must contain at least 32 characters in live mode.',
+    invalid: 'Invalid Portal environment configuration.',
+  },
+
+  ui: {
+    error: {
+      applicationError: 'Application error',
+      thisPageCouldNotBeLoadedPleaseTryAgain:
+        'This page could not be loaded. Please try again.',
+    },
+    shellActions: {
+      logOut: 'Log out',
+    },
+    alertModal: {
+      confirm: 'Confirm',
+      cancel: 'Cancel',
+    },
+    metricCard: {
+      live: 'Live',
+    },
+    queryBoundary: {
+      error: 'Error',
+      somethingWentWrong: 'Something went wrong',
+      tryAgain: 'Try again',
+      youNeedToBeLoggedInToViewThis:
+        'You need to be logged in to view this content.',
+      youDoNotHavePermissionToAccessThisResource:
+        'You do not have permission to access this resource.',
+      theRequestedResourceCouldNotBeFound:
+        'The requested resource could not be found.',
+      anUnexpectedErrorOccurred: 'An unexpected error occurred.',
+    },
+    sheetPanel: {
+      continue: 'Continue',
+      close: 'Close',
+    },
+    states: {
+      empty: 'Empty',
+      error: 'Error',
+      retry: 'Retry',
+    },
+    toastStack: {
+      dismissToast: (title: string) => `Dismiss ${title} toast`,
+      text: '×',
+    },
+    appShell: {
+      dashboard: 'Dashboard',
+      users: 'Users',
+      featureRequests: 'Feature Requests',
+      chat: 'Chat',
+      text: '↗',
+      profile: 'Profile',
+      appearance: 'Appearance',
+      workspace: 'Workspace',
+      portal: 'Portal',
+      pages: 'Pages',
+      signedInAs: 'Signed in as',
+      adminWorkspace: 'Admin workspace',
+    },
+    domainErrors: {
+      apiRequestFailed: 'API request failed',
+      authenticationRequired: 'Authentication required',
+      validationFailed: 'Validation failed',
+      youDoNotHavePermissionToPerformThisAction:
+        'You do not have permission to perform this action',
+      resourceNotFound: 'Resource not found',
+      unknownApplicationError: 'Unknown application error',
+    },
+    loginScreen: {
+      loginFailed: 'Login failed',
+      access: 'Access',
+      welcomeBack: 'Welcome back',
+      signInToKeepUpWithYourPeopleRequests:
+        'Sign in to keep up with your people, requests, and conversations.',
+      needAnAccount: 'Need an account?',
+      createAccount: 'Create account',
+      email: 'Email',
+      youCompanyCom: 'you@company.com',
+      password: 'Password',
+      enterYourPassword: 'Enter your password',
+      signingIn: 'Signing in...',
+      signIn: 'Sign in',
+      sakoExampleCom: 'sako@example.com',
+      password123: 'password123',
+      demoModeIsEnabledSignInWithSakoExample:
+        'Demo mode is enabled. Sign in with sako@example.com and password123, or create a demo account.',
+    },
+    signupScreen: {
+      unableToCreateAccount: 'Unable to create account',
+      onboarding: 'Onboarding',
+      createYourWorkspaceAccount: 'Create your workspace account',
+      createYourAccountToJoinTheWorkspace:
+        'Create your account to join the workspace.',
+      alreadyHaveAnAccount: 'Already have an account?',
+      backToLogin: 'Back to login',
+      firstName: 'First name',
+      sako: 'Sako',
+      lastName: 'Last name',
+      hovaguimian: 'Hovaguimian',
+      email: 'Email',
+      youCompanyCom: 'you@company.com',
+      password: 'Password',
+      atLeast8Characters: 'At least 8 characters',
+      creatingAccount: 'Creating account...',
+      createAccount: 'Create account',
+      demoAccountsAndChangesLastUntilTheDemoServer:
+        'Demo accounts and changes last until the demo server restarts.',
+    },
+    dashboardScreen: {
+      githubCom: 'Github.com',
+      facebook: 'Facebook',
+      googleOrganic: 'Google (organic)',
+      vimeoCom: 'Vimeo.com',
+      indiehackersCom: 'Indiehackers.com',
+      havingDifficultiesUsingTheProduct:
+        'Having difficulties using the product',
+      missingFeaturesINeed: 'Missing features I need',
+      notSatisfiedAboutTheQualityOfTheProduct:
+        'Not satisfied about the quality of the product',
+      theProductDoesnTLookAsAdvertised:
+        "The product doesn't look as advertised",
+      other: 'Other',
+      value17k: '$1.7K',
+      direct: ' Direct',
+      value24k: '$2.4K',
+      indirect: ' Indirect',
+      unitedStates: 'United States',
+      italy: 'Italy',
+      source: 'Source',
+      visitors: 'Visitors',
+      revenue: 'Revenue',
+      sales: 'Sales',
+      conversion: 'Conversion',
+      breakdown: 'Breakdown',
+      reasonForRefunds: 'Reason for refunds',
+      text: '%',
+      overview: 'Overview',
+      dashboard: 'Dashboard',
+      openShowcase: 'Open showcase',
+      reviewYourWorkspaceActivityBrowseRecordsAndManageIncoming:
+        'Review your workspace activity, browse records, and manage incoming requests.',
+      loadingWorkspaceData: 'Loading workspace data…',
+      workspaceDataUnavailable: 'Workspace data unavailable',
+      pleaseTryLoadingYourWorkspaceAgain:
+        'Please try loading your workspace again.',
+      newInRange: (count: number) => `${count} new in range`,
+      density: 'Density',
+      modelExplorer: 'Model explorer',
+      chooseHowMuchSpaceToUseForEachRecord:
+        'Choose how much space to use for each record.',
+      comfortable: 'Comfortable',
+      compact: 'Compact',
+      selectedModel: 'Selected model',
+      visibleRecordsInTheCurrentQuery: ' visible records in the current query.',
+      sampleAnalyticsDemoData: 'Sample analytics · demo data',
+      directVsIndirect: 'Direct VS Indirect',
+      orderValue: 'Order value',
+      avgOrderValue: 'AVG Order Value',
+      current: 'Current',
+      previous: 'Previous',
+      audience: 'Audience',
+      topCountries: 'Top Countries',
+      acquisition: 'Acquisition',
+      topChannels: 'Top Channels',
+      stores: 'Stores',
+      salesOverTime: 'Sales Over Time',
+      forecast: 'Forecast',
+      finance: 'Finance',
+      salesVsRefunds: 'Sales VS Refunds',
+      records: 'Records',
+      primaryDataTable: 'Primary data table',
+      rows: ' rows',
+      noRecordsAvailable: 'No records available.',
+      registry: 'Registry',
+      registeredModels: 'Registered models',
+      recordsAvailableForOperationalViews:
+        'Records available for operational views.',
+      dec20: 'Dec 20',
+      jan21: 'Jan 21',
+      feb21: 'Feb 21',
+      mar21: 'Mar 21',
+      apr21: 'Apr 21',
+      may21: 'May 21',
+      value24k2: '2.4K',
+      value3877: '$3,877',
+      value267: '267',
+      value47: '4.7%',
+      value22k: '2.2K',
+      value3426: '$3,426',
+      value249: '249',
+      value44: '4.4%',
+      value20k: '2.0K',
+      value2444: '$2,444',
+      value224: '224',
+      value42: '4.2%',
+      value19k: '1.9K',
+      value2236: '$2,236',
+      value220: '220',
+      value17k2: '1.7K',
+      value2034: '$2,034',
+      value204: '204',
+      value39: '3.9%',
+      value17k3: '$1.7K',
+      value72: '$72',
+      value34: '+34%',
+      value1482: '1,482',
+      value22: '-22%',
+      value6796: '+$6,796',
+      value342: '-34%',
+    },
+    experienceScreen: {
+      overview: 'Overview',
+      system: 'System',
+      workflow: 'Workflow',
+      showcase: 'Showcase',
+      motion: 'Motion',
+      contact: 'Contact',
+      faq: 'FAQ',
+      dashboardFirstSurfaces: 'Dashboard-first surfaces',
+      cardsListsFormsAndSideNavigationAllUseThe:
+        'Cards, lists, forms, and side navigation all use the same flatter treatment so the app feels cohesive instead of mixing visual languages.',
+      accentColorAsSupport: 'Accent color as support',
+      selectedThemeColorsHighlightActiveStatesPillsAndKey:
+        'Selected theme colors highlight active states, pills, and key actions while neutral grays and whites carry most of the layout.',
+      darkModeThatStaysReadable: 'Dark mode that stays readable',
+      theDarkThemeUsesLayeredSlatePanelsAndRestrained:
+        'The dark theme uses layered slate panels and restrained contrast instead of glossy black surfaces and heavy blur.',
+      overlayControlsPreserved: 'Overlay controls preserved',
+      toastsAlertsAndSheetsStillRunThroughOnePresentation:
+        'Toasts, alerts, and sheets still run through one presentation service, but now inherit the same flat dashboard styling.',
+      selectedTheme: 'Selected theme',
+      accentAware: 'Accent aware',
+      surfaceLanguage: 'Surface language',
+      flatPanels: 'Flat panels',
+      navigationStyle: 'Navigation style',
+      dashboardShell: 'Dashboard shell',
+      canWeStillLaunchHeroOnly: 'Can we still launch hero-only?',
+      yesThisShowcaseRouteIsOptionalAndCanStay:
+        'Yes. This showcase route is optional and can stay separate from the protected shell.',
+      canWeKeepAuthOptional: 'Can we keep auth optional?',
+      yesTheVisualRestyleDoesNotChangeTheScaffold:
+        'Yes. The visual restyle does not change the scaffold-time auth decisions.',
+      canTheSelectedAccentStaySubtle: 'Can the selected accent stay subtle?',
+      yesTheNewSystemDeliberatelyLimitsAccentUsageTo:
+        'Yes. The new system deliberately limits accent usage to active states and emphasis points.',
+      areTheChartsRealYet: 'Are the charts real yet?',
+      theAnalyticsWidgetsInTheRedesignedDashboardUseMock:
+        'The analytics widgets in the redesigned dashboard use mock data for now while the existing records and registry panels still use live app data.',
+      doesDarkModeKeepTheSameStructure:
+        'Does dark mode keep the same structure?',
+      yesTheSameCardAndShellHierarchyCarriesThrough:
+        'Yes. The same card and shell hierarchy carries through; only the tonal palette changes.',
+      canWeSwapTheAccentThemePerUser: 'Can we swap the accent theme per user?',
+      yesAccentChoiceStillLivesInAppearancePreferencesAnd:
+        'Yes. Accent choice still lives in appearance preferences and propagates through the semantic token layer.',
+      willFormControlsMatchTheDashboard:
+        'Will form controls match the dashboard?',
+      yesInputsButtonsTabsAndOverlaysNowInheritThe:
+        'Yes. Inputs, buttons, tabs, and overlays now inherit the same flatter styling rules.',
+      areTheSideNavigationItemsReusable:
+        'Are the side navigation items reusable?',
+      yesTheSidebarIsStillDrivenFromOneShared:
+        'Yes. The sidebar is still driven from one shared shell component and can be extended centrally.',
+      canWeAddMoreDashboardWidgetsLater:
+        'Can we add more dashboard widgets later?',
+      yesTheCurrentMockedCardsAreIntentionallyBuiltFrom:
+        'Yes. The current mocked cards are intentionally built from simple primitives so we can swap in real charts incrementally.',
+      willRecordsAndRegistryStayInTheDashboard:
+        'Will records and registry stay in the dashboard?',
+      yesThoseExistingOperationalPanelsRemainInPlaceAnd:
+        'Yes. Those existing operational panels remain in place and now sit beneath the mocked analytics surface.',
+      doOverlayAnimationsStillWork: 'Do overlay animations still work?',
+      yesAlertToastAndSheetTimingControlsAreUntouched:
+        'Yes. Alert, toast, and sheet timing controls are untouched and still configurable through the presentation service.',
+      canTheFooterBeBrandSpecific: 'Can the footer be brand-specific?',
+      yesTheFullWidthFooterIsJustContentAnd:
+        'Yes. The full-width footer is just content and layout, so we can tailor links and messaging easily.',
+      willTheAuthPagesKeepThisStyle: 'Will the auth pages keep this style?',
+      yesLoginAndSignupNowUseTheSameFlatter:
+        'Yes. Login and signup now use the same flatter card and accent treatment as the protected app.',
+      canWeTurnSomeSectionsOff: 'Can we turn some sections off?',
+      yesTheShowcaseRouteIsModularAndSectionsCan:
+        'Yes. The showcase route is modular and sections can be removed without affecting the rest of the application shell.',
+      isThisMeantToReplaceTheOldGlossyLook:
+        'Is this meant to replace the old glossy look entirely?',
+      yesTheGoalOfThisPassIsToMove:
+        'Yes. The goal of this pass is to move the whole project to a more credible flat dashboard aesthetic.',
+      dashboardSurfacePreset: 'Dashboard surface preset',
+      primaryCardsMutedPanelsAndFlatterDataRowsStay:
+        'Primary cards, muted panels, and flatter data rows stay aligned from shell to detail pages.',
+      looksGood: 'Looks good',
+      close: 'Close',
+      accentUsageGuardrails: 'Accent usage guardrails',
+      useTheSelectedAccentForActiveStatesChipsAnd:
+        'Use the selected accent for active states, chips, and primary actions.',
+      keepLargeBackgroundsMostlyNeutral:
+        'Keep large backgrounds mostly neutral.',
+      letBrandColorShowUpInNavigationStateTags:
+        'Let brand color show up in navigation state, tags, and emphasis.',
+      darkModeNotes: 'Dark mode notes',
+      layeredSlateSurfacesReplaceThePreviousGlossyLook:
+        'Layered slate surfaces replace the previous glossy look.',
+      cardsStayLiftedThroughBordersAndPanelContrastNot:
+        'Cards stay lifted through borders and panel contrast, not blur.',
+      textHierarchyStaysConsistentBetweenLightAndDarkThemes:
+        'Text hierarchy stays consistent between light and dark themes.',
+      presentationStylingUpdated: 'Presentation styling updated',
+      toastsAlertsAndSheetsNowInheritTheSameFlatter:
+        'Toasts, alerts, and sheets now inherit the same flatter chrome as the rest of the app.',
+      great: 'Great',
+      dashboardStylingPreview: 'Dashboard Styling Preview',
+      backToDashboard: 'Back to dashboard',
+      restyledSystem: 'Restyled system',
+      fromGlossyPrototypeToACalmerDashboardProductSurface:
+        'From glossy prototype to a calmer dashboard product surface.',
+      thisRouteShowsTheNewDirectionAcrossHeroContent:
+        'This route shows the new direction across hero content, operational panels, accent behavior, and overlay styling without drifting away from the existing application architecture.',
+      flatCardLanguage: 'Flat card language',
+      layeredDarkMode: 'Layered dark mode',
+      sharedSystemTokens: 'Shared system tokens',
+      enterPortal: 'Enter portal',
+      exploreTheSystem: 'Explore the system',
+      previewSurface: 'Preview surface',
+      liveDashboardMock: 'Live dashboard mock',
+      active: 'Active',
+      conversion: 'Conversion',
+      tickets: 'Tickets',
+      retention: 'Retention',
+      trafficOverview: 'Traffic overview',
+      last7Days: 'Last 7 days',
+      systemDirection: 'System direction',
+      aFlatDashboardLanguageLayeredOnTopOfArchitecture:
+        'A flat dashboard language layered on top of architecture-safe defaults.',
+      theRestyleKeepsYourAppStructureDataContractsAnd:
+        'The restyle keeps your app structure, data contracts, and interaction model intact while giving the whole product a more credible admin UI feel.',
+      value0: '0',
+      openPreview: 'Open preview',
+      theVisualUpdateStillRespectsTheSystemUnderneath:
+        'The visual update still respects the system underneath.',
+      routesStayThinServicesKeepOrchestrationAndPresentationFlows:
+        'Routes stay thin, services keep orchestration, and presentation flows remain centralized. The redesign focuses on the product layer, not the ownership model.',
+      themeChoicePropagatesThroughOneSemanticTokenLayer:
+        'Theme choice propagates through one semantic token layer.',
+      sharedUiPrimitivesKeepDetailPagesAlignedAutomatically:
+        'Shared UI primitives keep detail pages aligned automatically.',
+      whatChanged: 'What changed',
+      surfaces: 'Surfaces',
+      reducedBlurRemovedGlossyCardsAndStandardizedWhiteOr:
+        'Reduced blur, removed glossy cards, and standardized white or slate panels.',
+      navigation: 'Navigation',
+      sidebarAndTopChromeNowMatchTheFlatterDashboard:
+        'Sidebar and top chrome now match the flatter dashboard reference instead of a floating glass shell.',
+      darkMode: 'Dark mode',
+      panelsStayDistinctThroughLayeringBordersAndShadowRestraint:
+        'Panels stay distinct through layering, borders, and shadow restraint.',
+      theSameDesignLanguageScalesFromHeroSectionsTo:
+        'The same design language scales from hero sections to operational widgets.',
+      dashboardPreview: 'Dashboard preview',
+      neutralCanvasSelectiveAccent: 'Neutral canvas, selective accent',
+      preview: 'Preview',
+      revenueMix: 'Revenue mix',
+      topChannels: 'Top channels',
+      product: 'Product',
+      support: 'Support',
+      growth: 'Growth',
+      text: '%',
+      recentActivity: 'Recent activity',
+      sidebarChromeUpdatedToFlatterCardTreatment:
+        'Sidebar chrome updated to flatter card treatment.',
+      tablesNowUseSofterRowHoverAndCleanerSeparators:
+        'Tables now use softer row hover and cleaner separators.',
+      themeAccentsDriveSelectedStateWithoutFloodingSurfaces:
+        'Theme accents drive selected state without flooding surfaces.',
+      activeStateNowLivesInNavigationPillsAndPrimary:
+        'Active state now lives in navigation, pills, and primary controls.',
+      cardsRelyOnBorderContrastAndSpacingMoreThan:
+        'Cards rely on border contrast and spacing more than drop shadows.',
+      theDarkPaletteUsesSlateLayersInsteadOfGlossy:
+        'The dark palette uses slate layers instead of glossy charcoal glow.',
+      featurePagesInheritTheNewSystemThroughSharedPrimitives:
+        'Feature pages inherit the new system through shared primitives.',
+      presentationMotion: 'Presentation motion',
+      motionIsStillConfigurableButTheChromeAroundIt:
+        'Motion is still configurable, but the chrome around it is cleaner.',
+      useTheSameControlsAsBeforeToChangeToast:
+        'Use the same controls as before to change toast, alert, and sheet timing while previewing the updated flat styling.',
+      fastMotionPreset: 'Fast motion preset',
+      presentationOverlaysNowAnimateAtASnappierPace:
+        'Presentation overlays now animate at a snappier pace.',
+      fast: 'Fast',
+      relaxedMotionPreset: 'Relaxed motion preset',
+      transitionsNowRunWithSlowerTimingForACalmer:
+        'Transitions now run with slower timing for a calmer feel.',
+      relaxed: 'Relaxed',
+      motionDisabled: 'Motion disabled',
+      allPresentationAnimationsAreNowTurnedOff:
+        'All presentation animations are now turned off.',
+      disableMotion: 'Disable motion',
+      defaultMotionRestored: 'Default motion restored',
+      toastAlertAndSheetTimingsAreBackToDefault:
+        'Toast, alert, and sheet timings are back to default.',
+      done: 'Done',
+      dismiss: 'Dismiss',
+      resetDefaults: 'Reset defaults',
+      mockHandoffDetailsInTheSameDashboardVisualSystem:
+        'Mock handoff details in the same dashboard visual system.',
+      contactDetails: 'Contact details',
+      ariBennett: 'Ari Bennett',
+      founderSemanticStudio: 'Founder, Semantic Studio',
+      supportSemanticstudioDev: 'support@semanticstudio.dev',
+      value14155550199: '+1 (415) 555-0199',
+      officeHours: 'Office hours',
+      monThu900Am600PmPt: 'Mon-Thu: 9:00 AM - 6:00 PM PT',
+      fri900Am300PmPt: 'Fri: 9:00 AM - 3:00 PM PT',
+      responseSlaUnder1BusinessDay: 'Response SLA: under 1 business day',
+      mockAddress: 'Mock address',
+      value410MarketStreet: '410 Market Street',
+      sanFranciscoCa: 'San Francisco, CA',
+      builtForFrontendBackendSemanticParity:
+        'Built for frontend/backend semantic parity.',
+      portalTemplate: 'Portal Template',
+      operationalSoftwareImmersiveRoutesAndFrontendArchitectureThatStay:
+        'Operational software, immersive routes, and frontend architecture that stay aligned while the product surface looks more like a polished dashboard.',
+      pricing: 'Pricing',
+      roadmap: 'Roadmap',
+      changelog: 'Changelog',
+      solutions: 'Solutions',
+      clinicSites: 'Clinic Sites',
+      providerPortals: 'Provider Portals',
+      operationsHub: 'Operations Hub',
+      educationPages: 'Education Pages',
+      resources: 'Resources',
+      guides: 'Guides',
+      apiDocs: 'API Docs',
+      playbooks: 'Playbooks',
+      company: 'Company',
+      about: 'About',
+      careers: 'Careers',
+      terms: 'Terms',
+      privacy: 'Privacy',
+      accentAwareStates: 'Accent-aware states',
+      promptFirstSetupStillDrivesShellAndRouteDecisions:
+        'Prompt-first setup still drives shell and route decisions.',
+    },
+    featureRequestDetailScreen: {
+      loadingFeatureRequest: 'Loading feature request...',
+      featureRequestUnavailable: 'Feature request unavailable',
+      weCouldNotLoadThisRequest: 'We could not load this request.',
+      missingFeatureRequest: 'Missing feature request',
+      thisFeatureRequestCouldNotBeFound:
+        'This feature request could not be found.',
+      requestDetail: 'Request detail',
+      featureRequestDetail: 'Feature request detail',
+      requestUpdated: 'Request updated',
+      message: 'Message',
+      saveChanges: 'Save changes',
+      deleteThisRequest: 'Delete this request?',
+      thisRequestWillBeRemovedFromYourQueue:
+        'This request will be removed from your queue.',
+      deleteRequest: 'Delete request',
+      keepRequest: 'Keep request',
+    },
+    featureRequestsScreen: {
+      intake: 'Intake',
+      featureRequestQueue: 'Feature request queue',
+      shareIdeasForImprovingYourWorkspaceAndFollowYour:
+        'Share ideas for improving your workspace and follow your requests below.',
+      newFeatureRequest: 'New feature request',
+      describeTheWorkflowGapOrIdea: 'Describe the workflow gap or idea',
+      createRequest: 'Create request',
+      loadingFeatureRequests: 'Loading feature requests...',
+      featureRequestsUnavailable: 'Feature requests unavailable',
+      weCouldNotLoadTheRequestQueue: 'We could not load the request queue.',
+      noRequestsYet: 'No requests yet',
+      createTheFirstFeatureRequestToSeedTheWorkflow:
+        'Create the first feature request to seed the workflow.',
+      message: 'Message',
+      updated: 'Updated',
+    },
+    appearanceScreen: {
+      appearance: 'Appearance',
+      tuneLightDarkAndAccentBehaviorFromOneToken:
+        'Tune light, dark, and accent behavior from one token layer.',
+      neutralGraysAndWhitesCarryTheLayoutWhileThe:
+        'Neutral grays and whites carry the layout, while the selected accent stays concentrated in active states, badges, and key actions.',
+      light: 'Light',
+      brightShellBackgroundWhiteCardsAndSoftGraySeparators:
+        'Bright shell background, white cards, and soft-gray separators.',
+      dark: 'Dark',
+      deepSlateShellElevatedPanelsAndRestrainedContrastThat:
+        'Deep slate shell, elevated panels, and restrained contrast that still reads clearly.',
+      activeAccent: 'Active accent',
+      setAccent: 'Set accent',
+    },
+    profileScreen: {
+      yourProfile: 'Your profile',
+      profileUpdated: 'Profile updated',
+      firstName: 'First name',
+      lastName: 'Last name',
+      email: 'Email',
+      phoneNumber: 'Phone number',
+      dateOfBirth: 'Date of birth',
+      savingProfile: 'Saving profile…',
+      saveProfile: 'Save profile',
+    },
+    userDetailScreen: {
+      loadingUserProfile: 'Loading user profile...',
+      userUnavailable: 'User unavailable',
+      weCouldNotLoadThisUserProfile: 'We could not load this user profile.',
+      missingUser: 'Missing user',
+      thisUserRecordCouldNotBeFound: 'This user record could not be found.',
+      userDetail: 'User detail',
+      email: 'Email:',
+      externalId: 'External ID:',
+      created: 'Created:',
+    },
+    usersScreen: {
+      loadingUsers: 'Loading users...',
+      usersUnavailable: 'Users unavailable',
+      weCouldNotLoadUsersRightNow: 'We could not load users right now.',
+      noUsersFound: 'No users found',
+      tryADifferentSearch: 'Try a different search.',
+      directory: 'Directory',
+      userRecords: 'User records',
+      findPeopleInYourWorkspaceAndViewTheirProfiles:
+        'Find people in your workspace and view their profiles.',
+      name: 'Name',
+      email: 'Email',
+      created: 'Created',
+    },
+    presentationProvider: {
+      presentationServiceNotAvailable: 'Presentation service not available',
+    },
+    demoApiClient: {
+      users: 'Users',
+      featureRequests: 'Feature Requests',
+    },
+    demoFixtures: {
+      sako: 'Sako',
+      template: 'Template',
+      ada: 'Ada',
+      operator: 'Operator',
+      mina: 'Mina',
+      signals: 'Signals',
+      addSemanticDashboardSavedViewsWithSharableFilters:
+        'Add semantic dashboard saved views with sharable filters.',
+      exposeFeatureRequestOwnershipHistoryForAuditTrails:
+        'Expose feature request ownership history for audit trails.',
+      supportCompactTableModeWithPinnedColumns:
+        'Support compact table mode with pinned columns.',
+      users: 'Users',
+      featureRequests: 'Feature Requests',
+      dashboardViews: 'Dashboard Views',
+      user: 'User',
+      id: 'ID',
+      email: 'Email',
+      firstName: 'First Name',
+      lastName: 'Last Name',
+      featureRequest: 'Feature Request',
+      userId: 'User ID',
+      message: 'Message',
+      createdAt: 'Created At',
+      sakoExampleCom: 'sako@example.com',
+      value15551110001: '+1 555 111 0001',
+      adaExampleCom: 'ada@example.com',
+      value15551110002: '+1 555 111 0002',
+      minaExampleCom: 'mina@example.com',
+    },
+    sessionClient: {
+      unableToEstablishSession: 'Unable to establish session',
+    },
+    webNotificationService: {
+      notification: 'Notification',
+    },
+    demoState: {
+      password123: 'password123',
+    },
+    errorHandling: {
+      unexpectedNonErrorThrown: 'Unexpected non-error thrown',
+    },
+  },
+} as const;
+
+export const labels = {
+  accents: {
+    aqua: 'Aqua',
+    blue: 'Blue',
+    indigo: 'Indigo',
+    mint: 'Mint',
+    salmon: 'Salmon',
+    violet: 'Violet',
+    amber: 'Amber',
+    teal: 'Teal',
+    rose: 'Rose',
+    sky: 'Sky',
+    emerald: 'Emerald',
+    seafoam: 'Seafoam',
+    coral: 'Coral',
+    sunset: 'Sunset',
+    orchid: 'Orchid',
+  },
+  tones: {
+    neutral: 'Notice',
+    info: 'Information',
+    success: 'Success',
+    warning: 'Warning',
+    danger: 'Delete',
+  },
+  sides: {
+    left: 'Left panel',
+    right: 'Right panel',
+    top: 'Top panel',
+    bottom: 'Bottom panel',
+  },
+} as const;

@@ -2,7 +2,7 @@
 
 1. Read [AGENTS.md](../AGENTS.md) and [architecture](ARCHITECTURE.md). Use Node 22 and npm.
 2. Copy `.env.example` to `.env.local`; run the demo before adding external dependencies.
-3. Update product identity and all copy through `src/strings`. Keep token ownership in [DESIGN.md](../DESIGN.md).
+3. Update product identity and all copy through `src/strings.ts`. Keep token ownership in [DESIGN.md](../DESIGN.md).
 4. Set a strong live session secret and Firebase web API key. Never add Firebase Admin to the frontend or browser auth tokens.
 5. Align the backend with [BACKEND_CONTRACT.md](BACKEND_CONTRACT.md); adapt domain services and demo routes together.
 6. Add domain modules with independent models and query keys. Register services in the correct container.

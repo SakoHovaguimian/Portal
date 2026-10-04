@@ -38,7 +38,7 @@ English-language workspace for operators managing people, requests, and conversa
 
 ## State and navigation
 
-Lists use server paging contracts (default 25), URL query filters, and stable domain query keys. Empty, loading, and failure states are visible; failure offers retry. Profile forms load only after their query succeeds. Protected routes independently require a session on the server and API. Route metadata uses strings catalogs.
+Lists use server paging contracts (default 25), URL query filters, and stable domain query keys. Empty, loading, and failure states are visible; failure offers retry. Profile forms load only after their query succeeds. Protected routes independently require a session on the server and API. Route metadata uses the single `src/strings.ts` catalog.
 
 Tables preserve horizontal access on narrow screens. Navigation remains reachable before main content on mobile. Query and mutation errors preserve safe input. Do not persist passwords/tokens or private form drafts in browser storage.
 

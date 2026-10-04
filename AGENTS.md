@@ -7,7 +7,7 @@ Portal is a Node 22 / TypeScript web template using Next.js 16.2.10, React 19.2.
 - Do not create a worktree unless explicitly requested.
 - Do not write tests. Do not run Xcode builds unless explicitly requested. Verify with static checks, the web build, and focused manual workflows.
 - Split independent models into separate files. Keep each schema, inferred type, and directly derived input schema together.
-- All user-visible strings belong in [src/strings](src/strings/), including labels, metadata, validation, errors, accessibility text, notifications, and static demo copy. Use named formatters for interpolation. Never place new display copy inline.
+- All user-visible strings belong in the single [src/strings.ts](src/strings.ts) file, including labels, metadata, validation, errors, accessibility text, notifications, and static demo copy. Use named formatters for interpolation. Never place new display copy inline or create separate string catalogs.
 - Follow domain service → API client → authenticated Next.js backend proxy. Never call the backend or Firebase Authentication from browser components.
 - Keep credentials and tokens server-only. Client session models contain user information only. The Firebase browser SDK is used for Messaging, never authentication.
 - `DEMO_MODE=true` must work without a backend, Firebase, Socket.IO, Messaging, or Amplitude. Preserve demo ownership and validation rules when adding endpoints.
@@ -31,7 +31,7 @@ Choose the matching rows below. Read the guide and nearest implementation, then 
 | Query hooks, caching, mutations | [Query guide](docs/prompts/NEW_QUERY_HOOK_FAMILY_PROMPT.md), [query keys](src/queries/queryKeys.ts), [feature hooks](src/modules/feature-requests/hooks.ts) |
 | Chat, alerts, browser push | [Realtime guide](docs/REALTIME.md), [provider](src/services/realtime/RealtimeProvider.tsx), [notification service](src/services/notifications/webNotificationService.ts) |
 | Analytics and consent | [Analytics guide](docs/ANALYTICS.md), [privacy services](src/services/privacy/), [analytics service](src/services/analytics/analyticsService.ts) |
-| Copy, errors, accessibility labels | [Strings rules](docs/STRINGS.md), [strings entry](src/strings/index.ts), [static checker](scripts/check-strings.mjs) |
+| Copy, errors, accessibility labels | [Strings rules](docs/STRINGS.md), [strings file](src/strings.ts), [static checker](scripts/check-strings.mjs) |
 | UI, themes, shared controls | [Design context](DESIGN.md), [behavior contract](UX-CONTRACT.md), [shared UI](src/components/ui/), [presentation](src/presentation/) |
 | Verification and continuity | [Conventions](docs/CONVENTIONS.md), [migration notes](docs/MIGRATION.md), [verification record](docs/VERIFICATION.md) |
 
