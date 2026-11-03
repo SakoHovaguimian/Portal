@@ -38,6 +38,7 @@ export function Combobox({
   onRetry,
   className,
 }: ComboboxProps) {
+
   const { contains } = useFilter({ sensitivity: 'base' });
   const input = useRef<HTMLInputElement>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -48,27 +49,43 @@ export function Combobox({
   const [previous, setPrevious] = useState(value);
   const id = useId();
   if (previous !== value) {
+
     setPrevious(value);
     setText(options.find((option) => option.id === value)?.label ?? '');
+
   }
-  useEffect(() => () => clearTimeout(timer.current), []);
+  useEffect(() => {
+
+    const cleanup = () => clearTimeout(timer.current);
+    return cleanup;
+
+  }, []);
   const search = (query: string, immediate = false) => {
+
     clearTimeout(timer.current);
-    if (!onSearchChange || composing.current) return;
-    if (immediate || !query) onSearchChange(query);
-    else
+    if (!onSearchChange || composing.current) { return; }
+    if (immediate || !query) { onSearchChange(query); } else {
+
       timer.current = setTimeout(
         () => onSearchChange(query),
         Math.max(0, debounceMs),
       );
+
+    }
+
   };
   const items = onSearchChange
     ? options
     : options.filter(
-        (option) =>
-          contains(option.label, text) ||
+      (option) =>
+        contains(option.label, text) ||
           (value === option.id && text === option.label),
-      );
+    );
+
+  const disabledOptionKeys = options
+    .filter((option) => option.disabled)
+    .map((option) => option.id);
+
   return (
     <AriaComboBox
       name={name}
@@ -76,25 +93,27 @@ export function Combobox({
       inputValue={text}
       items={items}
       onSelectionChange={(key) => {
+
         clearTimeout(timer.current);
         const next = key === null ? null : String(key);
         // React Aria also invokes this when reverting text to the same committed ID.
         // Sync the text even when the caller's selected value does not change.
         setText(options.find((option) => option.id === next)?.label ?? '');
         onValueChange(next);
+
       }}
       onInputChange={(next) => {
+
         setText(next);
         search(next);
+
       }}
       isDisabled={disabled}
       isReadOnly={readOnly}
       isRequired={required}
       isInvalid={Boolean(error)}
       validationBehavior="aria"
-      disabledKeys={options
-        .filter((option) => option.disabled)
-        .map((option) => option.id)}
+      disabledKeys={disabledOptionKeys}
       allowsEmptyCollection
       className={cn('grid min-w-0 gap-1.5', className)}
     >
@@ -106,12 +125,16 @@ export function Combobox({
           aria-describedby={error ? `${id}-error` : undefined}
           className="min-w-0 flex-1 bg-transparent py-2.5 text-sm text-primary outline-none disabled:text-disabled"
           onCompositionStart={() => {
+
             composing.current = true;
             clearTimeout(timer.current);
+
           }}
           onCompositionEnd={(event) => {
+
             composing.current = false;
             search(event.currentTarget.value);
+
           }}
         />
         {loading && <Spinner />}
@@ -122,11 +145,13 @@ export function Combobox({
             aria-label={copy.combobox.clear(label)}
             className="inline-flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-control text-tertiary outline-none hover:bg-secondary_subtle focus-visible:ring-2 focus-visible:ring-brand disabled:cursor-not-allowed"
             onPress={() => {
+
               clearTimeout(timer.current);
               setText('');
               onValueChange(null);
               search('', true);
               input.current?.focus();
+
             }}
           >
             <UiIcon name="close" className="size-4" />
@@ -205,4 +230,5 @@ export function Combobox({
       </Popover>
     </AriaComboBox>
   );
+
 }

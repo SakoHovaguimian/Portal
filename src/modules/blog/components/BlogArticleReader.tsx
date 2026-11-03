@@ -1,29 +1,28 @@
 import { portalPublishingStrings } from '@/strings';
-const copy = portalPublishingStrings.article;
 import { blogCategoryLabel } from '../models/blogCategory';
 import Image from 'next/image';
 import { MarkdownContent } from '@/components/ui';
-import type { BlogArticle } from '../models/blogArticle';
-import { isBlogImageUrl } from '../models/blogContentUrl';
+import { isBlogImageUrl } from '../models/blogImageUrl';
 import { blogCoverSource } from '../models/blogCover';
 import styles from '../Blog.module.css';
 import { BlogDate } from './BlogDate';
 import { BlogContentReader } from './BlogContentReader';
 import { blogContentText } from '../content/blogContentText';
-import type { ReactNode } from 'react';
+import type { BlogArticleReaderProps } from '../models/blogArticleReaderProps';
+
+const copy = portalPublishingStrings.article;
 
 export function BlogArticleReader({
   article,
   preview = false,
   accountActions,
-}: {
-  article: BlogArticle;
-  preview?: boolean;
-  accountActions?: ReactNode;
-}) {
+}: BlogArticleReaderProps) {
+
   const date = article.publishedAt || article.updatedAt;
-  return (
-    <article className={styles.reader}>
+
+  function renderArticleHeader() {
+
+    return (
       <header className={styles.readerHeader}>
         <p className={styles.topic}>
           {preview
@@ -49,20 +48,32 @@ export function BlogArticleReader({
           </span>
         </div>
       </header>
-      {!preview && accountActions}
-      {isBlogImageUrl(article.cover) && (
-        <div className={styles.readerCover} data-cover={article.cover}>
-          <Image
-            priority
-            src={blogCoverSource(article.cover)}
-            unoptimized
-            width={1000}
-            height={600}
-            alt={copy.coverAlt(article.title)}
-            sizes="(max-width: 900px) 94vw, 900px"
-          />
-        </div>
-      )}
+    );
+
+  }
+
+  function renderArticleCover() {
+
+    if (!isBlogImageUrl(article.cover)) { return null; }
+    return (
+      <div className={styles.readerCover} data-cover={article.cover}>
+        <Image
+          priority
+          src={blogCoverSource(article.cover)}
+          unoptimized
+          width={1000}
+          height={600}
+          alt={copy.coverAlt(article.title)}
+          sizes="(max-width: 900px) 94vw, 900px"
+        />
+      </div>
+    );
+
+  }
+
+  function renderArticleBody() {
+
+    return (
       <div className={styles.readerBody}>
         {article.content.length ? (
           <BlogContentReader content={article.content} />
@@ -73,6 +84,17 @@ export function BlogArticleReader({
           <MarkdownContent value={article.body} headingContext="article" />
         )}
       </div>
+    );
+
+  }
+
+  return (
+    <article className={styles.reader}>
+      {renderArticleHeader()}
+      {!preview && accountActions}
+      {renderArticleCover()}
+      {renderArticleBody()}
     </article>
   );
+
 }

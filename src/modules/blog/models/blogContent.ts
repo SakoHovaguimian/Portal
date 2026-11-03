@@ -1,5 +1,4 @@
 import { portalPublishingStrings } from '@/strings';
-const copy = portalPublishingStrings.builder;
 import { z } from 'zod';
 import { BlogHeaderContentSchema } from './blogHeaderContent';
 import { BlogSectionContentSchema } from './blogSectionContent';
@@ -14,6 +13,8 @@ import { BlogGalleryThreeContentSchema } from './blogGalleryThreeContent';
 import { BlogGalleryFourContentSchema } from './blogGalleryFourContent';
 import { BlogCalloutContentSchema } from './blogCalloutContent';
 import { BlogLinkContentSchema } from './blogLinkContent';
+
+const copy = portalPublishingStrings.builder;
 
 export const BlogContentSchema = z.discriminatedUnion('contentType', [
   BlogHeaderContentSchema,
@@ -30,13 +31,15 @@ export const BlogContentSchema = z.discriminatedUnion('contentType', [
   BlogCalloutContentSchema,
   BlogLinkContentSchema,
 ]);
+
 export type BlogContent = z.infer<typeof BlogContentSchema>;
+
 export const BlogContentsSchema = z
   .array(BlogContentSchema)
   .max(100, copy.tooManyBlocks)
   .superRefine((items, context) => {
-    if (new Set(items.map((item) => item.id)).size !== items.length)
-      context.addIssue({ code: 'custom', message: copy.duplicateBlocks });
-    if (new TextEncoder().encode(JSON.stringify(items)).length > 250000)
-      context.addIssue({ code: 'custom', message: copy.invalidContentSize });
+
+    if (new Set(items.map((item) => item.id)).size !== items.length) { context.addIssue({ code: 'custom', message: copy.duplicateBlocks }); }
+    if (new TextEncoder().encode(JSON.stringify(items)).length > 250000) { context.addIssue({ code: 'custom', message: copy.invalidContentSize }); }
+
   });

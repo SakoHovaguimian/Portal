@@ -1,23 +1,12 @@
 'use client';
 
-import { useId, type Ref } from 'react';
+import type { LocationDateTimeFieldProps } from '../models/locationDateTimeFieldProps';
+import { useId } from 'react';
 import { strings } from '@/strings';
 import { localDateTimeInstants } from '@/utils/locationDateTime';
 import { Field } from './Field';
 import { Input } from './Input';
 import { Select } from './Select';
-
-interface LocationDateTimeFieldProps {
-  label: string;
-  value: string;
-  timezone: string;
-  preferredInstant?: string;
-  disabled: boolean;
-  error?: string;
-  describedBy?: string;
-  inputRef: Ref<HTMLInputElement>;
-  onChange: (value: string, instant?: string) => void;
-}
 
 export function LocationDateTimeField({
   label,
@@ -30,6 +19,7 @@ export function LocationDateTimeField({
   inputRef,
   onChange,
 }: LocationDateTimeFieldProps) {
+
   const id = useId();
   const copy = strings.scheduleEditor;
   const instants = localDateTimeInstants(value, timezone);
@@ -40,6 +30,47 @@ export function LocationDateTimeField({
     preferredInstant && instants.includes(preferredInstant)
       ? preferredInstant
       : instants[0];
+
+  function renderRepeatedTime() {
+
+    if (!repeated) {
+      return null;
+    }
+
+    function renderOccurrence(instant: string, index: number) {
+
+      return (
+        <option key={instant} value={instant}>
+          {copy.occurrence(
+            index === 0,
+            new Intl.DateTimeFormat('en-US', {
+              timeZone: timezone,
+              hour: 'numeric',
+              minute: '2-digit',
+              timeZoneName: 'longOffset',
+            }).format(new Date(instant)),
+          )}
+        </option>
+      );
+
+    }
+
+    const occurrences = instants.map(renderOccurrence);
+
+    return (
+      <Field labelText={copy.repeatedTime}>
+        <Select
+          value={selected}
+          disabled={disabled}
+          onValueChange={(instant) => onChange(value, instant)}
+        >
+          {occurrences}
+        </Select>
+      </Field>
+    );
+
+  }
+
   return (
     <div className="grid min-w-0 content-start gap-2">
       <Field labelText={label}>
@@ -65,29 +96,8 @@ export function LocationDateTimeField({
           {message}
         </p>
       )}
-      {repeated && (
-        <Field labelText={copy.repeatedTime}>
-          <Select
-            value={selected}
-            disabled={disabled}
-            onValueChange={(instant) => onChange(value, instant)}
-          >
-            {instants.map((instant, index) => (
-              <option key={instant} value={instant}>
-                {copy.occurrence(
-                  index === 0,
-                  new Intl.DateTimeFormat('en-US', {
-                    timeZone: timezone,
-                    hour: 'numeric',
-                    minute: '2-digit',
-                    timeZoneName: 'longOffset',
-                  }).format(new Date(instant)),
-                )}
-              </option>
-            ))}
-          </Select>
-        </Field>
-      )}
+      {renderRepeatedTime()}
     </div>
   );
+
 }

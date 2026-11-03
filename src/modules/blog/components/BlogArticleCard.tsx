@@ -1,24 +1,22 @@
 import { portalPublishingStrings } from '@/strings';
-const copy = portalPublishingStrings.article;
 import { blogCategoryLabel } from '../models/blogCategory';
 import Image from 'next/image';
 import Link from 'next/link';
 import { UiIcon } from '@/components/ui';
-import type { BlogArticle } from '../models/blogArticle';
-import { isBlogImageUrl } from '../models/blogContentUrl';
+import type { BlogArticleCardProps } from '../models/blogArticleCardProps';
+import { isBlogImageUrl } from '../models/blogImageUrl';
 import { blogCoverSource } from '../models/blogCover';
 import styles from '../Blog.module.css';
 import { BlogDate } from './BlogDate';
+
+const copy = portalPublishingStrings.article;
 
 export function BlogArticleCard({
   article,
   headingLevel = 'h2',
   variant = 'journal',
-}: {
-  article: BlogArticle;
-  headingLevel?: 'h2' | 'h3';
-  variant?: 'journal' | 'related';
-}) {
+}: BlogArticleCardProps) {
+
   const Heading = headingLevel;
   return (
     <article
@@ -66,4 +64,5 @@ export function BlogArticleCard({
       </Link>
     </article>
   );
+
 }

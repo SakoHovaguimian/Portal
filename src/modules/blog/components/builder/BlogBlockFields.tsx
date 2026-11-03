@@ -1,18 +1,12 @@
 'use client';
+
 import { portalPublishingStrings } from '@/strings';
+import { Field, Input, MarkdownEditor, TextArea } from '@/components/ui';
+import { BlogImageFields } from './BlogImageFields';
+import type { BlogBlockFieldsProps } from '../../models/blogBlockFieldsProps';
+
 const copy = portalPublishingStrings.builder;
 
-import { Field, Input, MarkdownEditor, TextArea } from '@/components/ui';
-import type { BlogReadableContent } from '../../models/blogReadableContent';
-import { BlogImageFields } from './BlogImageFields';
-
-interface BlogBlockFieldsProps {
-  block: BlogReadableContent;
-  disabled: boolean;
-  errorPaths?: string[];
-  onChangeAction: (block: BlogReadableContent) => void;
-  onUploadStateChangeAction: (busy: boolean) => void;
-}
 export function BlogBlockFields({
   block,
   disabled,
@@ -20,9 +14,21 @@ export function BlogBlockFields({
   onChangeAction,
   onUploadStateChangeAction,
 }: BlogBlockFieldsProps) {
+
   const id = `blog-block-${block.id}`;
-  const invalid = (key: string) =>
-    errorPaths.some((path) => path === key || path.startsWith(`${key}.`));
+  const invalid = (key: string) => {
+
+    const hasMatchingErrorPath = errorPaths.some((path) => {
+
+      const matchesErrorPath =
+        path === key || path.startsWith(`${key}.`);
+      return matchesErrorPath;
+
+    });
+
+    return hasMatchingErrorPath;
+
+  };
   const invalidProps = (key: string) => ({
     'aria-invalid': invalid(key),
     'aria-describedby': invalid(key) ? `${id}-error` : undefined,
@@ -65,20 +71,37 @@ export function BlogBlockFields({
     </Field>
   );
   switch (block.contentType) {
-    case 'header':
-      return input('text', copy.headingLabel, block.metaData.text, (value) =>
-        onChangeAction({
+
+    case 'header': {
+
+      const headingInput = input(
+        'text',
+        copy.headingLabel,
+        block.metaData.text,
+        (value) => onChangeAction({
           ...block,
           metaData: { ...block.metaData, text: value },
         }),
       );
-    case 'footer':
-      return text('text', copy.textLabel, block.metaData.text, (value) =>
-        onChangeAction({
+
+      return headingInput;
+
+    }
+    case 'footer': {
+
+      const footerText = text(
+        'text',
+        copy.textLabel,
+        block.metaData.text,
+        (value) => onChangeAction({
           ...block,
           metaData: { ...block.metaData, text: value },
         }),
       );
+
+      return footerText;
+
+    }
     case 'section':
       return (
         <>
@@ -239,18 +262,26 @@ export function BlogBlockFields({
                 errorId={`${id}-error`}
                 disabled={disabled}
                 onUploadStateChangeAction={onUploadStateChangeAction}
-                onChangeAction={(next) =>
-                  onChangeAction({
+                onChangeAction={(next) => {
+
+                  const images = block.metaData.images.map(
+                    (current, currentIndex) => {
+
+                      const image = currentIndex === index ? next : current;
+                      return image;
+
+                    },
+                  );
+                  const nextBlock = {
                     ...block,
                     metaData: {
                       ...block.metaData,
-                      images: block.metaData.images.map(
-                        (current, currentIndex) =>
-                          currentIndex === index ? next : current,
-                      ),
+                      images,
                     },
-                  })
-                }
+                  };
+                  onChangeAction(nextBlock);
+
+                }}
               />
             </fieldset>
           ))}
@@ -310,5 +341,7 @@ export function BlogBlockFields({
           )}
         </>
       );
+
   }
+
 }

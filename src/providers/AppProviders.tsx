@@ -1,8 +1,10 @@
 'use client';
+
+import type { AppProvidersProps } from './models/appProvidersProps';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { type AppSession } from '@/models';
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import type { SessionContextValue } from './models/sessionContextValue';
+import { createContext, useContext, useState } from 'react';
 import { ClientServiceContainer } from '@/clientContainer';
 import { createQueryClient } from '@/lib/client/queryClient';
 import { PresentationProvider } from '@/presentation/PresentationProvider';
@@ -16,19 +18,15 @@ import { FloatingAssistantProvider } from '@/components/ui/components/FloatingAs
 import { OnboardingGate } from '@/modules/onboarding/OnboardingGate';
 import { NotificationTimezoneSync } from '@/modules/notification-inbox/components/NotificationTimezoneSync';
 import { portalModules } from '@/config/portalModules';
+
 export { useThemePreference } from './ThemePreferenceProvider';
 const ContainerContext = createContext<ClientServiceContainer | null>(null);
-const SessionContext = createContext<{
-  session: AppSession | null;
-  setSession: (session: AppSession | null) => void;
-} | null>(null);
+const SessionContext = createContext<SessionContextValue | null>(null);
 export function AppProviders({
   children,
   session,
-}: {
-  children: ReactNode;
-  session: AppSession | null;
-}) {
+}: AppProvidersProps) {
+
   const [queryClient] = useState(createQueryClient);
   const [sessionState, setSession] = useState(session);
   const [container] = useState(() => new ClientServiceContainer());
@@ -64,14 +62,21 @@ export function AppProviders({
       </ContainerContext.Provider>
     </SessionContext.Provider>
   );
+
 }
+
 export function useServiceContainer() {
+
   const value = useContext(ContainerContext);
-  if (!value) throw new Error(strings.errors.provider);
+  if (!value) { throw new Error(strings.errors.provider); }
   return value;
+
 }
+
 export function useSessionState() {
+
   const value = useContext(SessionContext);
-  if (!value) throw new Error(strings.errors.provider);
+  if (!value) { throw new Error(strings.errors.provider); }
   return value;
+
 }

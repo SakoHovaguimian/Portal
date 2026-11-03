@@ -1,6 +1,4 @@
 import { portalPublishingStrings } from '@/strings';
-const copy = portalPublishingStrings.article;
-const builderCopy = portalPublishingStrings.builder;
 import {
   Button,
   Field,
@@ -10,10 +8,13 @@ import {
   Select,
   UiIcon,
 } from '@/components/ui';
-import { BlogCoverPresetSchema } from '../models/blogCover';
-import type { BlogCoverChoice } from '../models/blogCoverChoice';
+import { BlogCoverPresetSchema } from '../models/blogCoverPreset';
+import type { BlogCoverFieldProps } from '../models/blogCoverFieldProps';
 import { blogImageMimeTypes } from '../models/blogMedia';
 import { useBlogImageUpload } from '../useBlogImageUpload';
+
+const copy = portalPublishingStrings.article;
+const builderCopy = portalPublishingStrings.builder;
 
 export function BlogCoverField({
   value,
@@ -22,14 +23,8 @@ export function BlogCoverField({
   invalid,
   onChange,
   onUploadStateChange,
-}: {
-  value: string;
-  covers: BlogCoverChoice[];
-  disabled: boolean;
-  invalid: boolean;
-  onChange: (value: string) => void;
-  onUploadStateChange: (busy: boolean) => void;
-}) {
+}: BlogCoverFieldProps) {
+
   const { picker, trigger, uploading, failure, upload, setFailure, cancel } =
     useBlogImageUpload({ disabled, onUploaded: onChange, onUploadStateChange });
   const custom = !BlogCoverPresetSchema.safeParse(value).success;
@@ -42,8 +37,7 @@ export function BlogCoverField({
         .map((cover) => [cover.value, cover]),
     ).values(),
   ];
-  if (custom && !choices.some((cover) => cover.value === value))
-    choices.unshift({ value, title: copy.decorativeAlt });
+  if (custom && !choices.some((cover) => cover.value === value)) { choices.unshift({ value, title: copy.decorativeAlt }); }
   return (
     <div className="grid min-w-0 gap-2">
       <Field labelText={copy.coverLabel}>
@@ -54,8 +48,10 @@ export function BlogCoverField({
           aria-invalid={invalid}
           aria-describedby={invalid ? 'blog-cover-error' : undefined}
           onValueChange={(next) => {
+
             setFailure('');
             onChange(next);
+
           }}
         >
           {BlogCoverPresetSchema.options.map((cover) => (
@@ -111,8 +107,10 @@ export function BlogCoverField({
               aria-invalid={invalid}
               aria-describedby={invalid ? 'blog-cover-error' : undefined}
               onChange={(event) => {
+
                 setFailure('');
                 onChange(event.target.value);
+
               }}
             />
           </Field>
@@ -130,10 +128,12 @@ export function BlogCoverField({
           className="justify-self-start px-2 py-1"
           disabled={disabled}
           onClick={() => {
+
             onChange('');
             requestAnimationFrame(() =>
               document.getElementById('blog-cover-url')?.focus(),
             );
+
           }}
         >
           <UiIcon name="plus" className="size-4" />
@@ -142,4 +142,5 @@ export function BlogCoverField({
       )}
     </div>
   );
+
 }

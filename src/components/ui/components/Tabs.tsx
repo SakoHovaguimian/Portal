@@ -6,6 +6,7 @@ import type { SegmentedTabsProps } from '../models/segmentedTabsProps';
 import { SegmentedChoices } from './SegmentedChoices';
 import { Select } from './Select';
 import { UiIcon } from './UiIcon';
+
 export type { SegmentedTab } from '../models/segmentedTab';
 
 export function SegmentedTabs<T extends string>({
@@ -15,6 +16,7 @@ export function SegmentedTabs<T extends string>({
   label = strings.componentLibrary.segmentedLabel,
   disabled = false,
 }: SegmentedTabsProps<T>) {
+
   const compact = useCompactSectionNavigation();
   const choices = (
     <SegmentedChoices
@@ -26,7 +28,19 @@ export function SegmentedTabs<T extends string>({
     />
   );
 
-  if (tabs.length <= 2) return choices;
+  if (tabs.length <= 2) { return choices; }
+
+  function renderTab(tab: (typeof tabs)[number]) {
+
+    return (
+      <option key={tab.value} value={tab.value}>
+        {tab.label}
+      </option>
+    );
+
+  }
+
+  const tabItems = tabs.map(renderTab);
 
   return (
     <div className="ui-section-navigation">
@@ -39,19 +53,18 @@ export function SegmentedTabs<T extends string>({
             value={value}
             disabled={disabled}
             onValueChange={(next) => {
+
               const tab = tabs.find((tab) => tab.value === next);
-              if (tab) onValueChange(tab.value);
+              if (tab) { onValueChange(tab.value); }
+
             }}
           >
-            {tabs.map((tab) => (
-              <option key={tab.value} value={tab.value}>
-                {tab.label}
-              </option>
-            ))}
+            {tabItems}
           </Select>
         </div>
       )}
       <div className="ui-section-navigation-wide">{choices}</div>
     </div>
   );
+
 }

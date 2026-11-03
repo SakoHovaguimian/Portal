@@ -2,14 +2,13 @@
 
 import { useCurrentTimezone } from '@/components/ui/lib/useCurrentTimezone';
 import { formatBlogDate } from '../formatBlogDate';
+import type { BlogDateProps } from '../models/blogDateProps';
 
 export function BlogDate({
   value,
   long = false,
-}: {
-  value: string;
-  long?: boolean;
-}) {
+}: BlogDateProps) {
+
   const timeZone = useCurrentTimezone();
   return (
     <time
@@ -19,4 +18,5 @@ export function BlogDate({
       {timeZone ? formatBlogDate(value, long, timeZone) : value.slice(0, 10)}
     </time>
   );
+
 }

@@ -5,14 +5,22 @@ export function confirmNavigationGuards(
   guards: NavigationGuard[],
   start = 0,
 ): boolean | Promise<boolean> {
+
   for (let index = start; index < guards.length; index++) {
+
     const allowed = guards[index]();
     if (typeof allowed !== 'boolean') {
-      return allowed.then((confirmed) =>
+
+      const confirmationPromise = allowed.then((confirmed) =>
         confirmed ? confirmNavigationGuards(guards, index + 1) : false,
       );
+
+      return confirmationPromise;
+
     }
-    if (!allowed) return false;
+    if (!allowed) { return false; }
+
   }
   return true;
+
 }

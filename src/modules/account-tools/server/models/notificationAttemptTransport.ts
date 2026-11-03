@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { DeliveryStatusSchema } from '../../models/notificationDelivery';
+import { DeliveryStatusSchema } from '../../models/deliveryStatus';
 
 export const NotificationAttemptTransportSchema = z.object({
   id: z.string().uuid(),
@@ -10,6 +10,7 @@ export const NotificationAttemptTransportSchema = z.object({
   retryable: z.boolean().nullable(),
   error: z.string().nullable(),
 });
+
 export type NotificationAttemptTransport = z.infer<
   typeof NotificationAttemptTransportSchema
 >;

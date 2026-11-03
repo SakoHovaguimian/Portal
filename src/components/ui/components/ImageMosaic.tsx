@@ -1,7 +1,9 @@
 'use client';
 
+import type { MosaicTileProps } from '../models/mosaicTileProps';
+import type { ImageMosaicProps } from '../models/imageMosaicProps';
 import Image from 'next/image';
-import { useRef, useState, type ReactNode } from 'react';
+import { useRef, useState } from 'react';
 import { strings } from '@/strings';
 import type { ImageMosaicItem } from '../models/imageMosaicItem';
 import { cn } from '../lib/cn';
@@ -14,13 +16,8 @@ function MosaicTile({
   paired,
   disabled,
   onPreview,
-}: {
-  item: ImageMosaicItem;
-  featured: boolean;
-  paired: boolean;
-  disabled?: boolean;
-  onPreview: () => void;
-}) {
+}: MosaicTileProps) {
+
   const [failedSrc, setFailedSrc] = useState<string>();
   return (
     <li
@@ -55,14 +52,7 @@ function MosaicTile({
       </button>
     </li>
   );
-}
 
-interface ImageMosaicProps<T extends ImageMosaicItem> {
-  items: T[];
-  label: string;
-  disabled?: boolean;
-  renderDetails?: (item: T, index: number) => ReactNode;
-  renderActions?: (item: T, index: number) => ReactNode;
 }
 
 export function ImageMosaic<T extends ImageMosaicItem>({
@@ -72,11 +62,35 @@ export function ImageMosaic<T extends ImageMosaicItem>({
   renderDetails,
   renderActions,
 }: ImageMosaicProps<T>) {
+
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
   const list = useRef<HTMLOListElement>(null);
   const selectedIndex = items.findIndex((item) => item.id === selectedId);
   const selected = items[selectedIndex];
+
+  function renderMosaicTile(item: T, index: number) {
+
+    return (
+      <MosaicTile
+        key={item.id}
+        item={item}
+        featured={index % 7 === 0}
+        paired={items.length === 2}
+        disabled={disabled}
+        onPreview={() => {
+
+          setSelectedId(item.id);
+          setPreviewOpen(true);
+
+        }}
+      />
+    );
+
+  }
+
+  const mosaicTiles = items.map(renderMosaicTile);
+
   return (
     <div className="@container min-w-0">
       <ol
@@ -89,19 +103,7 @@ export function ImageMosaic<T extends ImageMosaicItem>({
           items.length === 2 && 'grid-cols-3 @xl:grid-cols-3 @3xl:grid-cols-3',
         )}
       >
-        {items.map((item, index) => (
-          <MosaicTile
-            key={item.id}
-            item={item}
-            featured={index % 7 === 0}
-            paired={items.length === 2}
-            disabled={disabled}
-            onPreview={() => {
-              setSelectedId(item.id);
-              setPreviewOpen(true);
-            }}
-          />
-        ))}
+        {mosaicTiles}
       </ol>
       <ImagePreview
         image={selected ?? null}
@@ -117,4 +119,5 @@ export function ImageMosaic<T extends ImageMosaicItem>({
       />
     </div>
   );
+
 }

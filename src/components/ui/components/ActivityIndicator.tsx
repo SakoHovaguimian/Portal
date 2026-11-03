@@ -10,6 +10,7 @@ export function ActivityIndicator({
   showLabel = false,
   className,
 }: ActivityIndicatorProps) {
+
   return (
     <span
       role="status"
@@ -25,4 +26,5 @@ export function ActivityIndicator({
       <span className={showLabel ? 'ui-value-label' : 'sr-only'}>{label}</span>
     </span>
   );
+
 }

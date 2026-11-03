@@ -10,6 +10,7 @@ export function usePublicImageUpload({
   onUploaded,
   onUploadStateChange,
 }: PublicImageUploadOptions) {
+
   const { publicImageService } = useServiceContainer();
   const picker = useRef<HTMLInputElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
@@ -18,19 +19,31 @@ export function usePublicImageUpload({
   const [uploading, setUploading] = useState(false);
   const [failure, setFailure] = useState('');
   useEffect(() => {
-    if (uploading || !restoreFocus.current) return;
+
+    if (uploading || !restoreFocus.current) { return; }
     restoreFocus.current = false;
-    if (document.activeElement === document.body) trigger.current?.focus();
+    if (document.activeElement === document.body) { trigger.current?.focus(); }
+
   }, [uploading]);
   useEffect(
-    () => () => {
-      controller.current?.abort();
-      controller.current = null;
+    () => {
+
+      const cleanup = () => {
+
+        controller.current?.abort();
+        controller.current = null;
+
+      };
+
+      return cleanup;
+
     },
     [],
   );
+
   async function upload(file?: File) {
-    if (!file || disabled || controller.current) return;
+
+    if (!file || disabled || controller.current) { return; }
     const active = new AbortController();
     controller.current = active;
     restoreFocus.current = true;
@@ -38,25 +51,38 @@ export function usePublicImageUpload({
     onUploadStateChange(true);
     setFailure('');
     try {
+
       const media = await publicImageService.upload(file, active.signal);
-      if (!active.signal.aborted) onUploaded(media.url);
+      if (!active.signal.aborted) { onUploaded(media.url); }
+
     } catch (error) {
-      if (!active.signal.aborted)
+
+      if (!active.signal.aborted) {
+
         setFailure(
           error instanceof DomainError
             ? error.message
             : mediaCopy.imageUploadError,
         );
+
+      }
+
     } finally {
+
       if (controller.current === active) {
+
         controller.current = null;
         setUploading(false);
         onUploadStateChange(false);
-        if (picker.current) picker.current.value = '';
+        if (picker.current) { picker.current.value = ''; }
+
       }
+
     }
+
   }
-  return {
+
+  const imageUpload = {
     picker,
     trigger,
     uploading,
@@ -65,8 +91,13 @@ export function usePublicImageUpload({
     clearFailure: () => setFailure(''),
     upload,
     cancel: () => {
+
       restoreFocus.current = true;
       controller.current?.abort();
+
     },
   };
+
+  return imageUpload;
+
 }

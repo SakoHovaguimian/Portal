@@ -6,6 +6,7 @@ import { strings } from '@/strings';
 import { ShowcaseSection } from './ShowcaseSection';
 
 export function EmptyStatesShowcase() {
+
   const copy = strings.componentLibrary;
   const { showToast } = usePresentationService();
   return (
@@ -64,4 +65,5 @@ export function EmptyStatesShowcase() {
       </div>
     </ShowcaseSection>
   );
+
 }

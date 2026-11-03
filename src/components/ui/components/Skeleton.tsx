@@ -10,6 +10,7 @@ export function Skeleton({
   animated = true,
   className,
 }: SkeletonProps) {
+
   return (
     <span
       aria-hidden="true"
@@ -19,4 +20,5 @@ export function Skeleton({
       style={{ width, height }}
     />
   );
+
 }

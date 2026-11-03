@@ -1,6 +1,6 @@
 'use client';
 
-import type { ComponentProps } from 'react';
+import type { RecoveryButtonProps } from '../models/recoveryButtonProps';
 import { strings } from '@/strings';
 import { Button } from './Button';
 
@@ -8,9 +8,9 @@ import { Button } from './Button';
 export function RecoveryButton({
   needed,
   ...props
-}: Omit<ComponentProps<typeof Button>, 'children' | 'asChild'> & {
-  needed: boolean;
-}) {
-  if (!needed) return null;
+}: RecoveryButtonProps) {
+
+  if (!needed) { return null; }
   return <Button {...props}>{strings.ui.states.retry}</Button>;
+
 }

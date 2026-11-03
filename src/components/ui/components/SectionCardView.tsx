@@ -1,9 +1,5 @@
-import {
-  cloneElement,
-  isValidElement,
-  type ComponentProps,
-  type ReactNode,
-} from 'react';
+import type { SectionCardViewProps } from '../models/sectionCardViewProps';
+import { cloneElement, isValidElement, type ReactNode } from 'react';
 import { Button } from './Button';
 import { IconTile } from './IconTile';
 import { UiIcon } from './UiIcon';
@@ -21,14 +17,8 @@ export function SectionCardView({
   children,
   asChild,
   ...props
-}: Omit<ComponentProps<typeof Button>, 'title'> & {
-  title: string;
-  description?: string;
-  icon: ReactNode;
-  accent?: boolean;
-  trailing?: ReactNode;
-  metadata?: ReactNode;
-}) {
+}: SectionCardViewProps) {
+
   const content = (
     <>
       <IconTile
@@ -79,4 +69,5 @@ export function SectionCardView({
         : content}
     </Button>
   );
+
 }

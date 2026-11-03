@@ -1,14 +1,13 @@
 'use client';
 
+import type { GlobalErrorProps } from '@/models/globalErrorProps';
 import { strings } from '@/strings';
 import { ErrorState } from '@/components/ui';
 
 export default function GlobalError({
   reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
+}: GlobalErrorProps) {
+
   return (
     <main style={{ padding: '1.5rem' }}>
       <ErrorState
@@ -18,4 +17,5 @@ export default function GlobalError({
       />
     </main>
   );
+
 }

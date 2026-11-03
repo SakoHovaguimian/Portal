@@ -2,17 +2,30 @@ import 'server-only';
 import { ZodError } from 'zod';
 import { DomainError } from '@/errors/domainErrors';
 import { strings } from '@/strings';
+
+// **************************************
+// MARK: - VERIFY MUTATION ORIGIN
+// **************************************
+
 export function trustedMutation(request: Request): boolean {
-  if (['GET', 'HEAD'].includes(request.method)) return true;
-  if (request.headers.get('sec-fetch-site') === 'cross-site') return false;
+
+  if (['GET', 'HEAD'].includes(request.method)) { return true; }
+  if (request.headers.get('sec-fetch-site') === 'cross-site') { return false; }
   const origin = request.headers.get('origin');
   // Browsers send Origin for same-origin mutations; non-browser clients may omit it.
   return (
     !origin ||
     origin === new URL(process.env.PORTAL_APP_ORIGIN || request.url).origin
   );
+
 }
+
+// **************************************
+// MARK: - CREATE API ERROR RESPONSE
+// **************************************
+
 export function errorResponse(error: unknown) {
+
   const status =
     error instanceof DomainError
       ? error.status
@@ -29,4 +42,5 @@ export function errorResponse(error: unknown) {
     { message },
     { status, headers: { 'cache-control': 'no-store' } },
   );
+
 }

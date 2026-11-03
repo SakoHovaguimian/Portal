@@ -2,54 +2,55 @@ import { useState, type FormEvent } from 'react';
 import { Button, Field, Input, Select } from '@/components/ui';
 import { portalAccountToolsStrings as copy } from '@/strings';
 import { NotificationDeliveryQuerySchema } from '../models/notificationDeliveryQuery';
+import type { DeliveryFilterValues } from '../models/deliveryFilterValues';
+import type { DeliveryFiltersProps } from '../models/deliveryFiltersProps';
 
 const allStatuses = '';
 
 export function deliveryDateBoundary(date: string, end = false) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return undefined;
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) { return undefined; }
   const parts = date.split('-').map(Number);
   const check = new Date(`${date}T00:00:00.000Z`);
   if (
     check.getUTCFullYear() !== parts[0] ||
     check.getUTCMonth() !== parts[1] - 1 ||
     check.getUTCDate() !== parts[2]
-  )
-    return undefined;
+  ) { return undefined; }
   const parsed = new Date(`${date}T${end ? '23:59:59.999' : '00:00:00.000'}`);
   return Number.isNaN(parsed.valueOf()) ? undefined : parsed.toISOString();
+
 }
 
 export function DeliveryFilters({
   values,
   onChange,
-}: {
-  values: {
-    status: string;
-    notification: string;
-    after: string;
-    before: string;
-  };
-  onChange: (values: Record<string, string | undefined>) => void;
-}) {
+}: DeliveryFiltersProps) {
+
   const [input, setInput] = useState(values);
   const [validation, setValidation] = useState<Record<string, string>>({});
-  function change(key: keyof typeof input, value: string) {
+
+  function change(key: keyof DeliveryFilterValues, value: string) {
+
     setInput((current) => ({ ...current, [key]: value }));
     setValidation({});
+
   }
+
   function submit(event: FormEvent<HTMLFormElement>) {
+
     event.preventDefault();
     const dateErrors: Record<string, string> = {};
-    if (input.after && !deliveryDateBoundary(input.after))
-      dateErrors.after = copy.validation.dateRange;
-    if (input.before && !deliveryDateBoundary(input.before, true))
-      dateErrors.before = copy.validation.dateRange;
+    if (input.after && !deliveryDateBoundary(input.after)) { dateErrors.after = copy.validation.dateRange; }
+    if (input.before && !deliveryDateBoundary(input.before, true)) { dateErrors.before = copy.validation.dateRange; }
     if (Object.keys(dateErrors).length) {
+
       setValidation(dateErrors);
       event.currentTarget
         .querySelector<HTMLElement>(`[name="${Object.keys(dateErrors)[0]}"]`)
         ?.focus();
       return;
+
     }
     const result = NotificationDeliveryQuerySchema.safeParse({
       status: input.status || undefined,
@@ -58,8 +59,10 @@ export function DeliveryFilters({
       createdBefore: deliveryDateBoundary(input.before, true),
     });
     if (!result.success) {
+
       const errors: Record<string, string> = {};
       result.error.issues.forEach((issue) => {
+
         errors[
           issue.path[0] === 'notificationId'
             ? 'notification'
@@ -70,12 +73,14 @@ export function DeliveryFilters({
           issue.path[0] === 'notificationId'
             ? copy.validation.notificationId
             : copy.validation.dateRange;
+
       });
       setValidation(errors);
       event.currentTarget
         .querySelector<HTMLElement>(`[name="${Object.keys(errors)[0]}"]`)
         ?.focus();
       return;
+
     }
     onChange({
       status: input.status || undefined,
@@ -84,9 +89,19 @@ export function DeliveryFilters({
       before: input.before || undefined,
       offset: undefined,
     });
+
   }
-  return (
-    <form noValidate onSubmit={submit} className="grid gap-4">
+
+  function renderFields() {
+
+    const statusOptions = Object.entries(copy.deliveries.statuses).map(
+      ([value, label]) => (
+        <option key={value} value={value}>
+          {label}
+        </option>
+      ),
+    );
+    return (
       <div className="grid min-w-0 gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <Field labelText={copy.deliveries.statusLabel}>
           <Select
@@ -95,11 +110,7 @@ export function DeliveryFilters({
             onValueChange={(value) => change('status', value)}
           >
             <option value={allStatuses}>{copy.deliveries.allStatuses}</option>
-            {Object.entries(copy.deliveries.statuses).map(([value, label]) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
+            {statusOptions}
           </Select>
         </Field>
         <Field labelText={copy.deliveries.notificationLabel}>
@@ -142,23 +153,39 @@ export function DeliveryFilters({
           />
         </Field>
       </div>
-      {Object.keys(validation).length > 0 && (
-        <p
-          id="delivery-filter-validation"
-          role="alert"
-          className="m-0 text-sm text-error-primary"
-        >
-          {Object.values(validation).join(' ')}
-        </p>
-      )}
+    );
+
+  }
+
+  function renderValidationMessage() {
+
+    if (!Object.keys(validation).length) { return null; }
+    const validationMessage = Object.values(validation).join(' ');
+    return (
+      <p
+        id="delivery-filter-validation"
+        role="alert"
+        className="m-0 text-sm text-error-primary"
+      >
+        {validationMessage}
+      </p>
+    );
+
+  }
+
+  function renderActions() {
+
+    const hasActiveFilters = Object.values(input).some(Boolean);
+    return (
       <div className="flex flex-wrap gap-3">
         <Button type="submit" variant="secondary">
           {copy.deliveries.applyAction}
         </Button>
-        {Object.values(input).some(Boolean) && (
+        {hasActiveFilters && (
           <Button
             variant="ghost"
             onClick={() => {
+
               setInput({ status: '', notification: '', after: '', before: '' });
               setValidation({});
               onChange({
@@ -168,12 +195,29 @@ export function DeliveryFilters({
                 before: undefined,
                 offset: undefined,
               });
+
             }}
           >
             {copy.common.clearFiltersAction}
           </Button>
         )}
       </div>
-    </form>
-  );
+    );
+
+  }
+
+  function renderContent() {
+
+    return (
+      <form noValidate onSubmit={submit} className="grid gap-4">
+        {renderFields()}
+        {renderValidationMessage()}
+        {renderActions()}
+      </form>
+    );
+
+  }
+
+  return renderContent();
+
 }

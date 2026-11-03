@@ -7,12 +7,16 @@ import { FirebaseAuthService } from '@/services/auth/firebaseAuthService';
 import { SessionService } from '@/services/session/sessionService';
 import { getEffectiveRuntime } from '@/services/demo/demoRuntime';
 import { createDemoModuleHandlers } from '@/services/api/demoModuleHandlers';
+
 export class ServiceContainer {
+
   readonly apiClient = new ApiClient();
   readonly demoApiClient = new DemoApiClient(createDemoModuleHandlers());
   readonly firebaseAuthService;
   readonly sessionService;
+
   constructor(readonly demoMode = environment.demoMode) {
+
     this.firebaseAuthService = demoMode
       ? new DemoFirebaseAuthService()
       : new FirebaseAuthService();
@@ -20,15 +24,27 @@ export class ServiceContainer {
       this.firebaseAuthService,
       demoMode,
     );
+
   }
+
 }
+
 const containers = new Map<boolean, ServiceContainer>();
+
+// **************************************
+// MARK: - GET SERVICE CONTAINER
+// **************************************
+
 export async function getContainer() {
+
   const { demoMode } = await getEffectiveRuntime();
   let container = containers.get(demoMode);
   if (!container) {
+
     container = new ServiceContainer(demoMode);
     containers.set(demoMode, container);
+
   }
   return container;
+
 }

@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import type { PresentationMotionOverride } from './presentationMotionOverride';
 import type { ToastIntent, ToastPosition } from '@/components/ui';
+
 export type ToastPresentation = {
   kind: 'toast';
   title: string;

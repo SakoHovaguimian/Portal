@@ -5,6 +5,7 @@ export const NotificationCountsTransportSchema = z.object({
   unread_count: z.number().int().nonnegative(),
   read_count: z.number().int().nonnegative(),
 });
+
 export type NotificationCountsTransport = z.infer<
   typeof NotificationCountsTransportSchema
 >;

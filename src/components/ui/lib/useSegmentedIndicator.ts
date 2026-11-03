@@ -3,21 +3,27 @@
 import { useLayoutEffect, useRef } from 'react';
 
 export function useSegmentedIndicator(value: string) {
+
   const groupRef = useRef<HTMLDivElement>(null);
   const indicatorRef = useRef<HTMLSpanElement>(null);
 
   useLayoutEffect(() => {
+
     const group = groupRef.current;
     const indicator = indicatorRef.current;
-    if (!group || !indicator) return;
+    if (!group || !indicator) { return; }
+
     function update() {
-      if (!group || !indicator) return;
+
+      if (!group || !indicator) { return; }
       const selected = group
         .querySelector<HTMLInputElement>('input:checked')
         ?.closest('label');
       if (!selected) {
+
         indicator.style.opacity = '0';
         return;
+
       }
       indicator.style.setProperty(
         '--ui-segment-x',
@@ -36,27 +42,41 @@ export function useSegmentedIndicator(value: string) {
         `${selected.offsetHeight - 12}px`,
       );
       indicator.style.opacity = '1';
+
     }
+
     update();
     // Place the first indicator before enabling movement, including hydration.
     const readyFrame = requestAnimationFrame(() => {
       group.dataset.ready = 'true';
     });
     if (typeof ResizeObserver === 'undefined') {
+
       window.addEventListener('resize', update);
-      return () => {
+      const cleanup = () => {
+
         cancelAnimationFrame(readyFrame);
         window.removeEventListener('resize', update);
+
       };
+
+      return cleanup;
+
     }
     const observer = new ResizeObserver(update);
     observer.observe(group);
     group.querySelectorAll('label').forEach((label) => observer.observe(label));
-    return () => {
+    const cleanup = () => {
+
       cancelAnimationFrame(readyFrame);
       observer.disconnect();
+
     };
+
+    return cleanup;
+
   }, [value]);
 
   return { groupRef, indicatorRef };
+
 }

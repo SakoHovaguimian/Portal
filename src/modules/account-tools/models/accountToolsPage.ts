@@ -6,9 +6,12 @@ export const AccountToolsPageMetadataSchema = z.object({
   hasMore: z.boolean(),
   nextOffset: z.number().int().nonnegative().nullable(),
 });
+
 export function accountToolsPageSchema<T extends z.ZodType>(item: T) {
+
   return z.object({
     data: z.array(item),
     page: AccountToolsPageMetadataSchema,
   });
+
 }

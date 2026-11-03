@@ -14,29 +14,41 @@ export function TextArea({
   onInput,
   ...props
 }: TextAreaProps) {
+
   const input = useRef<HTMLTextAreaElement>(null);
   useImperativeHandle(ref, () => input.current!, []);
   useLayoutEffect(() => {
+
     const element = input.current;
-    if (!element) return;
+    if (!element) { return; }
     if (!autoGrow) {
+
       element.style.height = '';
       return;
+
     }
     const resize = () => {
+
       element.style.height = 'auto';
       element.style.height = `${element.scrollHeight + element.offsetHeight - element.clientHeight}px`;
+
     };
     resize();
     let width = element.clientWidth;
     const observer = new ResizeObserver(() => {
+
       if (element.clientWidth !== width) {
+
         width = element.clientWidth;
         resize();
+
       }
+
     });
     observer.observe(element);
-    return () => observer.disconnect();
+    const cleanup = () => observer.disconnect();
+    return cleanup;
+
   }, [autoGrow, rows, value]);
   return (
     <div className="relative min-w-0">
@@ -59,15 +71,20 @@ export function TextArea({
           className,
         )}
         onInput={(event) => {
+
           if (autoGrow) {
+
             const element = event.currentTarget;
             element.style.height = 'auto';
             element.style.height = `${element.scrollHeight + element.offsetHeight - element.clientHeight}px`;
+
           }
           onInput?.(event);
+
         }}
         {...props}
       />
     </div>
   );
+
 }

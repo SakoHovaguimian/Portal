@@ -7,4 +7,5 @@ export const BlogPageSchema = z.object({
   limit: z.number().int().min(1),
   offset: z.number().int().min(0),
 });
+
 export type BlogPage = z.infer<typeof BlogPageSchema>;

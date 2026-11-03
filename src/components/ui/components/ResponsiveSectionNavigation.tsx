@@ -1,11 +1,11 @@
 'use client';
 
-import type { SegmentedTabsProps } from '../models/segmentedTabsProps';
+import type { ResponsiveSectionNavigationProps } from '../models/responsiveSectionNavigationProps';
 import { SegmentedTabs } from './Tabs';
 
 // Section destinations and ordinary segmented controls share one responsive rule.
 export function ResponsiveSectionNavigation<T extends string>(
-  props: SegmentedTabsProps<T> & { label: string },
+  props: ResponsiveSectionNavigationProps<T>,
 ) {
   return <SegmentedTabs {...props} />;
 }

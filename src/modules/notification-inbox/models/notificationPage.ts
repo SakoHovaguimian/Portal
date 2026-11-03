@@ -10,4 +10,5 @@ export const NotificationPageSchema = z.object({
     nextOffset: z.number().int().nonnegative().safe().nullable(),
   }),
 });
+
 export type NotificationPage = z.infer<typeof NotificationPageSchema>;

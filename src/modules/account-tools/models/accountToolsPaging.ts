@@ -9,4 +9,5 @@ export const AccountToolsPagingSchema = z.object({
     .max(Number.MAX_SAFE_INTEGER)
     .default(0),
 });
+
 export type AccountToolsPaging = z.infer<typeof AccountToolsPagingSchema>;

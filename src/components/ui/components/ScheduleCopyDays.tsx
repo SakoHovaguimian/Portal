@@ -1,17 +1,10 @@
 'use client';
 
+import type { ScheduleCopyDaysProps } from '../models/scheduleCopyDaysProps';
 import { useId, useRef, useState } from 'react';
 import { Button } from './Button';
 import { Checkbox } from './Checkbox';
 import { strings } from '@/strings';
-
-interface ScheduleCopyDaysProps {
-  source: number;
-  days: readonly string[];
-  disabled: boolean;
-  canApply: (targets: number[]) => boolean;
-  onApply: (targets: number[]) => void;
-}
 
 export function ScheduleCopyDays({
   source,
@@ -20,6 +13,7 @@ export function ScheduleCopyDays({
   canApply,
   onApply,
 }: ScheduleCopyDaysProps) {
+
   const id = useId();
   const trigger = useRef<HTMLButtonElement>(null);
   const [expanded, setExpanded] = useState(false);
@@ -27,6 +21,90 @@ export function ScheduleCopyDays({
   const [announcement, setAnnouncement] = useState('');
   const copy = strings.schedule;
   const allowed = canApply(targets);
+
+  function renderCopyFields() {
+
+    if (!expanded) {
+      return null;
+    }
+
+    function renderTargetDay(day: string, weekday: number) {
+
+      return (weekday === source ? null : (
+        <Checkbox
+          key={weekday}
+          label={day}
+          checked={targets.includes(weekday)}
+          onChange={(event) => {
+
+            setTargets(
+              event.target.checked
+                ? [...targets, weekday].sort((a, b) => a - b)
+                : targets.filter((value) => value !== weekday),
+            );
+
+          }}
+        />
+      ));
+
+    }
+
+    const targetDays = days.map(renderTargetDay);
+
+    return (
+      <fieldset
+        id={id}
+        disabled={disabled}
+        className="grid min-w-0 gap-3 border-t-control border-secondary pt-3"
+      >
+        <legend className="text-sm font-semibold text-primary">
+          {copy.copyFromDay(days[source])}
+        </legend>
+        <p className="m-0 text-xs text-secondary">{copy.copyHoursHint}</p>
+        <div className="grid gap-x-6 sm:grid-cols-2">
+          {targetDays}
+        </div>
+        {!allowed && (
+          <p className="m-0 text-sm text-error-primary">{copy.hoursLimit}</p>
+        )}
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant="secondary"
+            disabled={!targets.length || !allowed}
+            onClick={() => {
+
+              onApply(targets);
+              setAnnouncement(
+                copy.hoursCopied(
+                  days[source],
+                  targets.map((day) => days[day]),
+                ),
+              );
+              setTargets([]);
+              setExpanded(false);
+              trigger.current?.focus();
+
+            }}
+          >
+            {copy.applyHours(targets.length)}
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() => {
+
+              setExpanded(false);
+              trigger.current?.focus();
+
+            }}
+          >
+            {strings.ui.alertModal.cancel}
+          </Button>
+        </div>
+      </fieldset>
+    );
+
+  }
+
   return (
     <div className="grid min-w-0 gap-3">
       <div>
@@ -42,71 +120,11 @@ export function ScheduleCopyDays({
           {copy.copyHours}
         </Button>
       </div>
-      {expanded && (
-        <fieldset
-          id={id}
-          disabled={disabled}
-          className="grid min-w-0 gap-3 border-t-control border-secondary pt-3"
-        >
-          <legend className="text-sm font-semibold text-primary">
-            {copy.copyFromDay(days[source])}
-          </legend>
-          <p className="m-0 text-xs text-secondary">{copy.copyHoursHint}</p>
-          <div className="grid gap-x-6 sm:grid-cols-2">
-            {days.map((day, weekday) =>
-              weekday === source ? null : (
-                <Checkbox
-                  key={weekday}
-                  label={day}
-                  checked={targets.includes(weekday)}
-                  onChange={(event) =>
-                    setTargets(
-                      event.target.checked
-                        ? [...targets, weekday].sort((a, b) => a - b)
-                        : targets.filter((value) => value !== weekday),
-                    )
-                  }
-                />
-              ),
-            )}
-          </div>
-          {!allowed && (
-            <p className="m-0 text-sm text-error-primary">{copy.hoursLimit}</p>
-          )}
-          <div className="flex flex-wrap gap-2">
-            <Button
-              variant="secondary"
-              disabled={!targets.length || !allowed}
-              onClick={() => {
-                onApply(targets);
-                setAnnouncement(
-                  copy.hoursCopied(
-                    days[source],
-                    targets.map((day) => days[day]),
-                  ),
-                );
-                setTargets([]);
-                setExpanded(false);
-                trigger.current?.focus();
-              }}
-            >
-              {copy.applyHours(targets.length)}
-            </Button>
-            <Button
-              variant="ghost"
-              onClick={() => {
-                setExpanded(false);
-                trigger.current?.focus();
-              }}
-            >
-              {strings.ui.alertModal.cancel}
-            </Button>
-          </div>
-        </fieldset>
-      )}
+      {renderCopyFields()}
       <p role="status" className="m-0 text-xs text-secondary">
         {announcement}
       </p>
     </div>
   );
+
 }

@@ -1,4 +1,5 @@
 import type { UserTransport } from './userTransport';
+
 export type FeatureRequestTransport = {
   id: string;
   user_id: string;

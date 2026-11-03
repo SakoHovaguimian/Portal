@@ -13,6 +13,7 @@ import type { NotificationInboxFilters } from './models/notificationInboxQuery';
 import type { NotificationMutationResult } from './models/notificationMutationResult';
 
 export function useNotificationActions(filters: NotificationInboxFilters) {
+
   const read = useNotificationRead();
   const readBulk = useNotificationBulkRead();
   const archive = useArchiveNotification();
@@ -20,82 +21,116 @@ export function useNotificationActions(filters: NotificationInboxFilters) {
   const presentation = usePresentationService();
   const busy = useRef(false);
   const filtered = Object.values(filters).some((value) => value !== undefined);
+
   async function perform(
     operation: () => Promise<NotificationMutationResult>,
     archived = false,
     confirm?: () => Promise<boolean>,
   ) {
-    if (busy.current) return;
+
+    if (busy.current) { return; }
     busy.current = true;
     read.reset();
     readBulk.reset();
     archive.reset();
     archiveBulk.reset();
     try {
-      if (confirm && !(await confirm())) return;
+
+      if (confirm && !(await confirm())) { return; }
       const result = await operation();
       void presentation.showToast({
         title: archived ? copy.archivedTitle : copy.readChangedTitle,
         description: copy.mutationDescription(result.affectedCount),
         intent: 'success',
       });
+
     } catch {
       /* The inline error and unchanged records remain available for retry. */
     } finally {
       busy.current = false;
     }
+
   }
-  return {
+
+  function readItem(item: NotificationInboxItem) {
+
+    const operation = () =>
+      read.mutateAsync({ id: item.id, read: !item.readAt });
+    void perform(operation);
+
+  }
+
+  function readAll(value: boolean) {
+
+    const operation = () =>
+      readBulk.mutateAsync(
+        filtered
+          ? { scope: 'FILTERED', filters, read: value }
+          : { scope: 'ALL', read: value },
+      );
+    void perform(operation);
+
+  }
+
+  function markAllRead() {
+
+    const operation = () =>
+      readBulk.mutateAsync({ scope: 'ALL', read: true });
+    void perform(operation);
+
+  }
+
+  function archiveItem(item: NotificationInboxItem) {
+
+    const operation = () => archive.mutateAsync(item.id);
+    const confirm = () =>
+      presentation.showAlert({
+        title: copy.archiveTitle,
+        description: copy.archiveDescription(item.title),
+        tone: 'danger',
+        confirmLabel: copy.archiveAction,
+        cancelLabel: copy.cancelAction,
+      });
+    void perform(operation, true, confirm);
+
+  }
+
+  function archiveAll() {
+
+    const operation = () =>
+      archiveBulk.mutateAsync(
+        filtered ? { scope: 'FILTERED', filters } : { scope: 'ALL' },
+      );
+    const confirm = () =>
+      presentation.showAlert({
+        title: filtered ? copy.archiveMatchingTitle : copy.archiveAllTitle,
+        description: filtered
+          ? copy.archiveMatchingDescription
+          : copy.archiveAllDescription,
+        tone: 'danger',
+        confirmLabel: filtered
+          ? copy.archiveMatchingAction
+          : copy.archiveAllAction,
+        cancelLabel: copy.cancelAction,
+      });
+    void perform(operation, true, confirm);
+
+  }
+
+  const actions = {
     busy:
       read.isPending ||
       readBulk.isPending ||
       archive.isPending ||
       archiveBulk.isPending,
     error: read.error ?? readBulk.error ?? archive.error ?? archiveBulk.error,
-    readItem: (item: NotificationInboxItem) =>
-      void perform(() => read.mutateAsync({ id: item.id, read: !item.readAt })),
-    readAll: (value: boolean) =>
-      void perform(() =>
-        readBulk.mutateAsync(
-          filtered
-            ? { scope: 'FILTERED', filters, read: value }
-            : { scope: 'ALL', read: value },
-        ),
-      ),
-    markAllRead: () =>
-      void perform(() => readBulk.mutateAsync({ scope: 'ALL', read: true })),
-    archiveItem: (item: NotificationInboxItem) =>
-      void perform(
-        () => archive.mutateAsync(item.id),
-        true,
-        () =>
-          presentation.showAlert({
-            title: copy.archiveTitle,
-            description: copy.archiveDescription(item.title),
-            tone: 'danger',
-            confirmLabel: copy.archiveAction,
-            cancelLabel: copy.cancelAction,
-          }),
-      ),
-    archiveAll: () =>
-      void perform(
-        () =>
-          archiveBulk.mutateAsync(
-            filtered ? { scope: 'FILTERED', filters } : { scope: 'ALL' },
-          ),
-        true,
-        () =>
-          presentation.showAlert({
-            title: filtered ? copy.archiveMatchingTitle : copy.archiveAllTitle,
-            description: filtered
-              ? copy.archiveMatchingDescription
-              : copy.archiveAllDescription,
-            tone: 'danger',
-            confirmLabel: filtered
-              ? copy.archiveMatchingAction
-              : copy.archiveAllAction,
-            cancelLabel: copy.cancelAction,
-          }),
-      ),
+    readItem,
+    readAll,
+    markAllRead,
+    archiveItem,
+    archiveAll,
   };
+
+  return actions;
+
 }

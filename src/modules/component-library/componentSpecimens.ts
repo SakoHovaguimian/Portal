@@ -38,6 +38,7 @@ export const componentCategories = [
   'feedback',
   'media',
 ] as const;
+
 export const componentSpecimens: readonly ComponentSpecimen[] = [
   {
     id: 'avatars',
@@ -247,6 +248,7 @@ export const componentSpecimens: readonly ComponentSpecimen[] = [
     Preview: EditingShowcase,
   },
 ];
+
 export const componentIds = [
   'catalog',
   ...componentSpecimens.map((item) => item.id),

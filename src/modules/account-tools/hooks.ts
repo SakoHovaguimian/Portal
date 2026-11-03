@@ -6,59 +6,100 @@ import type { AccountDeviceQuery } from './models/accountDeviceQuery';
 import type { AccountToolsPaging } from './models/accountToolsPaging';
 import type { NotificationDeliveryQuery } from './models/notificationDeliveryQuery';
 import type { AccountDeletion } from './models/accountDeletion';
-import type { LegalContext } from './models/legalInformation';
+import type { LegalContext } from './models/legalContext';
 import { accountToolsQueryKeys as keys } from './queryKeys';
 
 export function useAccountDevices(query: AccountDeviceQuery) {
+
   const { accountToolsService: service } = useServiceContainer();
-  return useQuery({
+  const devicesQuery = useQuery({
     queryKey: keys.devices(query),
     queryFn: ({ signal }) => service.devices(query, signal),
   });
+
+  return devicesQuery;
+
 }
+
 export function useNotificationDeliveries(query: NotificationDeliveryQuery) {
+
   const { accountToolsService: service } = useServiceContainer();
-  return useQuery({
+  const deliveriesQuery = useQuery({
     queryKey: keys.deliveries(query),
     queryFn: ({ signal }) => service.deliveries(query, signal),
   });
+
+  return deliveriesQuery;
+
 }
+
 export function useDeliveryAttempts(id: string, paging: AccountToolsPaging) {
+
   const { accountToolsService: service } = useServiceContainer();
-  return useQuery({
+  const deliveryAttemptsQuery = useQuery({
     queryKey: keys.attempts(id, paging),
     queryFn: ({ signal }) => service.deliveryAttempts(id, paging, signal),
   });
+
+  return deliveryAttemptsQuery;
+
 }
+
 export function useLegalInformation(context: LegalContext) {
+
   const { accountToolsService: service } = useServiceContainer();
-  return useQuery({
+  const legalInformationQuery = useQuery({
     queryKey: keys.legal(context),
     queryFn: ({ signal }) => service.legal(context, signal),
   });
+
+  return legalInformationQuery;
+
 }
+
 export function useFrequentlyAskedQuestions() {
+
   const { accountToolsService: service } = useServiceContainer();
-  return useQuery({
+  const faqQuery = useQuery({
     queryKey: keys.faq,
     queryFn: ({ signal }) => service.faq(signal),
   });
+
+  return faqQuery;
+
 }
+
 function useAccountToolsMutation<T, R>(mutationFn: (input: T) => Promise<R>) {
+
   const cache = useQueryClient();
-  return useMutation({
+  const accountToolsMutation = useMutation({
     mutationFn,
     onSuccess: () => cache.invalidateQueries({ queryKey: keys.all }),
   });
+
+  return accountToolsMutation;
+
 }
+
 export function useRemoveAccountDevice() {
+
   const { accountToolsService: service } = useServiceContainer();
-  return useAccountToolsMutation((id: string) => service.removeDevice(id));
+  const removeDeviceMutation = useAccountToolsMutation(
+    (id: string) => service.removeDevice(id),
+  );
+
+  return removeDeviceMutation;
+
 }
+
 export function useDeleteAccount() {
+
   const { accountToolsService: service } = useServiceContainer();
-  return useMutation({
+  const deleteAccountMutation = useMutation({
     mutationFn: (input: AccountDeletion) => service.deleteAccount(input),
     retry: false,
   });
+
+  return deleteAccountMutation;
+
 }

@@ -24,6 +24,7 @@ export function ColorInput({
   disabled,
   ...props
 }: ColorInputProps) {
+
   const copy = strings.ui.colorInput;
   return (
     <DialogTrigger>
@@ -79,8 +80,10 @@ export function ColorInput({
                   <ColorPickerValueField
                     value={color.toString('hex')}
                     onDone={() => {
+
                       onChange(color.toString('hex'));
                       close();
+
                     }}
                   />
                 </div>
@@ -91,4 +94,5 @@ export function ColorInput({
       </Popover>
     </DialogTrigger>
   );
+
 }

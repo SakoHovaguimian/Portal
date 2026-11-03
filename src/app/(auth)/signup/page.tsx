@@ -1,12 +1,14 @@
+import type { SearchRouteProps } from '@/models/searchRouteProps';
 import type { Metadata } from 'next';
 import { strings } from '@/strings';
-export const metadata: Metadata = { title: strings.ui.signupScreen.createAccount };
 import { SignupScreen } from '@/modules/auth/SignupScreen';
+
+export const metadata: Metadata = { title: strings.ui.signupScreen.createAccount };
+
 export default async function AuthPage({
   searchParams,
-}: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}) {
+}: SearchRouteProps) {
+
   const query = await searchParams;
   return (
     <main className="auth-scene min-h-screen bg-secondary px-6 py-12 sm:px-8">
@@ -20,4 +22,5 @@ export default async function AuthPage({
       </div>
     </main>
   );
+
 }

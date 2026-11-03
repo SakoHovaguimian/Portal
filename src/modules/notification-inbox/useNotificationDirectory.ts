@@ -5,6 +5,7 @@ import { NotificationCategorySchema } from './models/notificationCategory';
 import type { NotificationInboxQuery } from './models/notificationInboxQuery';
 
 export function useNotificationDirectory() {
+
   const directory = useDirectoryState();
   const params = useSearchParams();
   const category = NotificationCategorySchema.safeParse(params.get('category'));
@@ -19,15 +20,23 @@ export function useNotificationDirectory() {
     limit: 20,
     sortOrder: params.get('sortOrder') === 'asc' ? 'asc' : 'desc',
   };
-  return {
+
+  const clearFilters = () => {
+
+    directory.update({
+      query: undefined,
+      category: undefined,
+      read: undefined,
+      offset: undefined,
+    });
+
+  };
+  const notificationDirectory = {
     ...directory,
     query,
-    clearFilters: () =>
-      directory.update({
-        query: undefined,
-        category: undefined,
-        read: undefined,
-        offset: undefined,
-      }),
+    clearFilters,
   };
+
+  return notificationDirectory;
+
 }

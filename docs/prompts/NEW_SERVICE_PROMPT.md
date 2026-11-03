@@ -1,5 +1,7 @@
 # New service
 
+Follow the permanent [Portal code standards](../PORTAL_STANDARDS.md) for exact formatting, independent models, named callback results, service MARKs, and hook-safe Lego block composition. Preserve behavior, appearance, and state ownership.
+
 Read [architecture](../ARCHITECTURE.md) and inspect the closest service before creating another abstraction.
 
 Domain services belong to their module. Infrastructure integrations belong in `src/services/<capability>`. Inject dependencies through the matching client/server container. Use a service interface when multiple implementations exist, as for live and demo authentication.

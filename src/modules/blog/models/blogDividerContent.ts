@@ -7,6 +7,7 @@ export const BlogDividerContentSchema = z
     metaData: z.object({}),
   })
   .strict();
+
 export type BlogDividerContent = z.infer<typeof BlogDividerContentSchema>;
 
 export const BlogReadableDividerContentSchema = BlogDividerContentSchema.extend(

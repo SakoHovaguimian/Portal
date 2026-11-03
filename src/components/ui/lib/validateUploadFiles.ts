@@ -6,6 +6,7 @@ export function validateUploadFiles(
   maxSize: number | undefined,
   available: number,
 ) {
+
   const rules = (accept ?? '')
     .toLowerCase()
     .split(',')
@@ -14,6 +15,7 @@ export function validateUploadFiles(
   const accepted: File[] = [];
   const rejected: FileRejection[] = [];
   for (const file of files) {
+
     const type = file.type.toLowerCase();
     const allowed =
       !rules.length ||
@@ -31,8 +33,9 @@ export function validateUploadFiles(
         : accepted.length >= available
           ? 'count'
           : undefined;
-    if (reason) rejected.push({ file, reason });
-    else accepted.push(file);
+    if (reason) { rejected.push({ file, reason }); } else { accepted.push(file); }
+
   }
   return { accepted, rejected };
+
 }

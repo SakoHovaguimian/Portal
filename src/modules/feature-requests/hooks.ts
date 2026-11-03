@@ -9,8 +9,9 @@ import {
 import { useServiceContainer } from '../../providers/AppProviders';
 
 export function useFeatureRequests(query = '') {
+
   const container = useServiceContainer();
-  return useQuery({
+  const featureRequestsQuery = useQuery({
     queryKey: queryKeys.featureRequests.list(query).queryKey,
     queryFn: ({ signal }) =>
       container.featureRequestService.listFeatureRequests(
@@ -23,11 +24,15 @@ export function useFeatureRequests(query = '') {
       ),
     staleTime: staleTimes.featureRequests,
   });
+
+  return featureRequestsQuery;
+
 }
 
 export function useFeatureRequest(featureRequestId: string) {
+
   const container = useServiceContainer();
-  return useQuery({
+  const featureRequestQuery = useQuery({
     queryKey: queryKeys.featureRequests.detail(featureRequestId).queryKey,
     queryFn: ({ signal }) =>
       container.featureRequestService.getFeatureRequestById(
@@ -36,35 +41,46 @@ export function useFeatureRequest(featureRequestId: string) {
       ),
     staleTime: staleTimes.featureRequests,
   });
+
+  return featureRequestQuery;
+
 }
 
 export function useCreateFeatureRequest() {
+
   const container = useServiceContainer();
   const queryClient = useQueryClient();
-  return useMutation({
+  const createFeatureRequestMutation = useMutation({
     mutationFn: (input: FeatureRequestMutationInput) =>
       container.featureRequestService.createFeatureRequest(input),
     onSuccess: () => {
+
       void queryClient.invalidateQueries({
         queryKey: queryKeys.featureRequests._def,
       });
       void queryClient.invalidateQueries({
         queryKey: queryKeys.dashboard.overview.queryKey,
       });
+
     },
   });
+
+  return createFeatureRequestMutation;
+
 }
 
 export function useUpdateFeatureRequest(featureRequestId: string) {
+
   const container = useServiceContainer();
   const queryClient = useQueryClient();
-  return useMutation({
+  const updateFeatureRequestMutation = useMutation({
     mutationFn: (input: FeatureRequestMutationInput) =>
       container.featureRequestService.updateFeatureRequest(
         featureRequestId,
         input,
       ),
     onSuccess: (request) => {
+
       queryClient.setQueryData(
         queryKeys.featureRequests.detail(featureRequestId).queryKey,
         request,
@@ -78,23 +94,33 @@ export function useUpdateFeatureRequest(featureRequestId: string) {
       void queryClient.invalidateQueries({
         queryKey: queryKeys.dashboard.overview.queryKey,
       });
+
     },
   });
+
+  return updateFeatureRequestMutation;
+
 }
 
 export function useDeleteFeatureRequest(featureRequestId: string) {
+
   const container = useServiceContainer();
   const queryClient = useQueryClient();
-  return useMutation({
+  const deleteFeatureRequestMutation = useMutation({
     mutationFn: () =>
       container.featureRequestService.deleteFeatureRequest(featureRequestId),
     onSuccess: () => {
+
       void queryClient.invalidateQueries({
         queryKey: queryKeys.featureRequests._def,
       });
       void queryClient.invalidateQueries({
         queryKey: queryKeys.dashboard.overview.queryKey,
       });
+
     },
   });
+
+  return deleteFeatureRequestMutation;
+
 }

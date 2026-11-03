@@ -19,6 +19,8 @@ import {
 } from '@/components/ui';
 import { strings } from '@/strings';
 import { ShowcaseSection } from './ShowcaseSection';
+import type { ShowcaseDirectoryQuery } from '../models/showcaseDirectoryQuery';
+
 const copy = strings.designSystem;
 const statuses = { active: 'active', inactive: 'inactive' };
 const options = copy.itemNames.map((name, index) => ({
@@ -29,34 +31,37 @@ const options = copy.itemNames.map((name, index) => ({
 }));
 
 export function CollectionShowcase() {
+
   const [items, setItems] = useState(options);
   const [selected, setSelected] = useState<string[]>([]);
-  const [filters, setFilters] = useState<{ query: string; status?: string }>({
+  const [filters, setFilters] = useState<ShowcaseDirectoryQuery>({
     query: '',
   });
   const [dialog, setDialog] = useState(false);
   const [choice, setChoice] = useState('0');
   const changeFilters = useCallback(
-    (value: { query: string; status?: string }) => setFilters(value),
+    (value: ShowcaseDirectoryQuery) => setFilters(value),
     [],
   );
   const rows = useMemo(
-    () =>
-      options.filter(
+    () => {
+
+      const matchingRows = options.filter(
         (item) =>
           item.name.toLowerCase().includes(filters.query.toLowerCase()) &&
           (!filters.status ||
             (filters.status === 'active' ? item.id !== '2' : item.id === '2')),
-      ),
+      );
+
+      return matchingRows;
+
+    },
     [filters],
   );
-  return (
-    <ShowcaseSection
-      id="collections"
-      title={copy.reorder}
-      description={copy.advancedHint}
-      icon="layers"
-    >
+
+  function renderReordering() {
+
+    return (
       <ReorderableList
         items={items}
         disabled={false}
@@ -64,19 +69,30 @@ export function CollectionShowcase() {
         handleLabel={(item) => strings.designSystem.reorderHandle(item.name)}
         upLabel={(item) => copy.reorderUp(item.name)}
         downLabel={(item) => copy.reorderDown(item.name)}
-        onMove={(id, targetId) =>
+        onMove={(id, targetId) => {
+
           setItems((current) => {
+
             const next = [...current];
             const from = next.findIndex((item) => item.id === id);
             const to = next.findIndex((item) => item.id === targetId);
             next.splice(to, 0, ...next.splice(from, 1));
             return next;
-          })
-        }
+
+          });
+
+        }}
         renderItem={(item, _index, controls, handle) => (
           <ListRow title={item.name} leading={handle} trailing={controls} />
         )}
       />
+    );
+
+  }
+
+  function renderMultiSelection() {
+
+    return (
       <Field labelText={copy.multiSelect}>
         <MultiSelect
           label={copy.multiSelect}
@@ -88,6 +104,13 @@ export function CollectionShowcase() {
           onValueChange={setSelected}
         />
       </Field>
+    );
+
+  }
+
+  function renderDirectory() {
+
+    return (
       <DataPanel
         toolbar={
           <DirectoryFilters
@@ -167,14 +190,25 @@ export function CollectionShowcase() {
           />
         )}
       </DataPanel>
-      <Button
-        className="w-fit"
-        variant="secondary"
-        onClick={() => setDialog(true)}
-      >
-        <UiIcon name="layers" />
-        {copy.openDialog}
-      </Button>
+    );
+
+  }
+
+  function renderDialog() {
+
+    function renderChoiceOption(item: (typeof options)[number]) {
+
+      return (
+        <option key={item.id} value={item.id}>
+          {item.name}
+        </option>
+      );
+
+    }
+
+    const choiceOptions = options.map(renderChoiceOption);
+
+    return (
       <Modal
         open={dialog}
         title={copy.dialog}
@@ -184,16 +218,36 @@ export function CollectionShowcase() {
         <div className="grid gap-4">
           <Field labelText={strings.componentLibrary.select}>
             <Select value={choice} onValueChange={setChoice}>
-              {options.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.name}
-                </option>
-              ))}
+              {choiceOptions}
             </Select>
           </Field>
           <Button onClick={() => setDialog(false)}>{copy.close}</Button>
         </div>
       </Modal>
+    );
+
+  }
+
+  return (
+    <ShowcaseSection
+      id="collections"
+      title={copy.reorder}
+      description={copy.advancedHint}
+      icon="layers"
+    >
+      {renderReordering()}
+      {renderMultiSelection()}
+      {renderDirectory()}
+      <Button
+        className="w-fit"
+        variant="secondary"
+        onClick={() => setDialog(true)}
+      >
+        <UiIcon name="layers" />
+        {copy.openDialog}
+      </Button>
+      {renderDialog()}
     </ShowcaseSection>
   );
+
 }

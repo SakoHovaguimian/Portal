@@ -1,20 +1,21 @@
 'use client';
-import { portalPublishingStrings } from '@/strings';
-const copy = portalPublishingStrings.article;
 
+import { portalPublishingStrings } from '@/strings';
 import Image from 'next/image';
 import { Button, Field, Input, SplitSection, TextArea } from '@/components/ui';
-import type { BlogArticleDraft } from '../models/blogArticle';
 import {
   BlogCoverSchema,
   blogCoverSource,
-  BlogCoverPresetSchema,
 } from '../models/blogCover';
+import { BlogCoverPresetSchema } from '../models/blogCoverPreset';
+import type { BlogArticleDraft } from '../models/blogArticle';
 import { useBlogOptions } from '../hooks';
+import type { BlogArticleFieldsProps } from '../models/blogArticleFieldsProps';
 import { BlogTopicField } from './BlogTopicField';
 import { BlogCoverField } from './BlogCoverField';
-import type { BlogFormErrors } from '../models/blogFormErrors';
 import styles from '../BlogAdmin.module.css';
+
+const copy = portalPublishingStrings.article;
 
 export function BlogArticleFields({
   form,
@@ -22,13 +23,8 @@ export function BlogArticleFields({
   disabled,
   onChangeAction,
   onUploadStateChangeAction,
-}: {
-  form: BlogArticleDraft;
-  errors: BlogFormErrors;
-  disabled: boolean;
-  onChangeAction: (form: BlogArticleDraft) => void;
-  onUploadStateChangeAction: (busy: boolean) => void;
-}) {
+}: BlogArticleFieldsProps) {
+
   const options = useBlogOptions();
   const update = <Key extends keyof BlogArticleDraft>(
     key: Key,
@@ -62,6 +58,7 @@ export function BlogArticleFields({
             aria-invalid={Boolean(errors.title)}
             aria-describedby={errors.title ? 'blog-title-error' : undefined}
             onChange={(event) => {
+
               const title = event.target.value;
               const previousSlug = form.title
                 .toLowerCase()
@@ -73,14 +70,15 @@ export function BlogArticleFields({
               const slug =
                 !form.revision && (!form.slug || form.slug === previousSlug)
                   ? title
-                      .toLowerCase()
-                      .normalize('NFKD')
-                      .replace(/[\u0300-\u036f]/g, '')
-                      .replace(/[^a-z0-9]+/g, '-')
-                      .replace(/^-|-$/g, '')
-                      .slice(0, 100)
+                    .toLowerCase()
+                    .normalize('NFKD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/^-|-$/g, '')
+                    .slice(0, 100)
                   : form.slug;
               onChangeAction({ ...form, title, slug });
+
             }}
           />
         </Field>
@@ -180,25 +178,26 @@ export function BlogArticleFields({
       <p className="m-0 text-xs text-tertiary">{copy.reusableOptionsHint}</p>
       {form.cover !== 'none' &&
         BlogCoverSchema.safeParse(form.cover).success && (
-          <div className={styles.editorCover} data-cover={form.cover}>
-            <Image
-              src={blogCoverSource(form.cover)}
-              unoptimized
-              alt={copy.decorativeAlt}
-              width={180}
-              height={140}
-              sizes="120px"
-            />
-            <p>
-              <span>{copy.coverLabel}</span>
-              {BlogCoverPresetSchema.safeParse(form.cover).success
-                ? copy.coverOptions[
+        <div className={styles.editorCover} data-cover={form.cover}>
+          <Image
+            src={blogCoverSource(form.cover)}
+            unoptimized
+            alt={copy.decorativeAlt}
+            width={180}
+            height={140}
+            sizes="120px"
+          />
+          <p>
+            <span>{copy.coverLabel}</span>
+            {BlogCoverPresetSchema.safeParse(form.cover).success
+              ? copy.coverOptions[
                     form.cover as keyof typeof copy.coverOptions
-                  ]
-                : copy.customCover}
-            </p>
-          </div>
-        )}
+              ]
+              : copy.customCover}
+          </p>
+        </div>
+      )}
     </SplitSection>
   );
+
 }

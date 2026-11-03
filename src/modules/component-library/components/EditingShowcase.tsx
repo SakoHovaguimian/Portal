@@ -11,9 +11,11 @@ import {
 } from '@/components/ui';
 import { strings } from '@/strings';
 import { ShowcaseSection } from './ShowcaseSection';
+
 const copy = strings.designSystem;
 
 export function EditingShowcase() {
+
   const [notes, setNotes] = useState<string>(copy.notesSample);
   const [amount, setAmount] = useState('29.00');
   const [country, setCountry] = useState('US');
@@ -53,4 +55,5 @@ export function EditingShowcase() {
       </Field>
     </ShowcaseSection>
   );
+
 }

@@ -14,7 +14,7 @@ import {
 } from '@/components/ui';
 import { useDirectoryState } from '@/queries/useDirectoryState';
 import { portalAccountToolsStrings as copy } from '@/strings';
-import { DeliveryStatusSchema } from './models/notificationDelivery';
+import { DeliveryStatusSchema } from './models/deliveryStatus';
 import { useNotificationDeliveries } from './hooks';
 import { formatAccountToolsDate } from './formatAccountToolsDate';
 import { AccountToolsLoading } from './components/AccountToolsLoading';
@@ -27,6 +27,7 @@ import { DeliveryStatusBadge } from './components/DeliveryStatusBadge';
 import { DeliveryAttemptsDialog } from './components/DeliveryAttemptsDialog';
 
 export function DeliveryHistoryScreen() {
+
   const directory = useDirectoryState();
   const params = useSearchParams();
   const status = DeliveryStatusSchema.safeParse(directory.status);
@@ -57,182 +58,235 @@ export function DeliveryHistoryScreen() {
       before: undefined,
       offset: undefined,
     });
-  return (
-    <Page>
-      <PageHeader
-        title={copy.deliveries.title}
-        description={copy.deliveries.description}
-        eyebrow={copy.common.operationsEyebrow}
+
+  function renderHeader() {
+
+    return (
+      <>
+        <PageHeader
+          title={copy.deliveries.title}
+          description={copy.deliveries.description}
+          eyebrow={copy.common.operationsEyebrow}
+        />
+        <p className="m-0 text-sm text-secondary">{copy.deliveries.accessHint}</p>
+      </>
+    );
+
+  }
+
+  function renderFilters() {
+
+    return (
+      <DeliveryFilters
+        key={JSON.stringify(filters)}
+        values={filters}
+        onChange={directory.update}
       />
-      <p className="m-0 text-sm text-secondary">{copy.deliveries.accessHint}</p>
-      <DataPanel
+    );
+
+  }
+
+  function renderFooter() {
+
+    if (!query.data) { return null; }
+    return (
+      <AccountToolsPagination
+        page={query.data.page}
+        count={query.data.data.length}
         busy={query.isFetching}
-        busyLabel={copy.common.loadingTitle}
-        toolbar={
-          <DeliveryFilters
-            key={JSON.stringify(filters)}
-            values={filters}
-            onChange={directory.update}
-          />
-        }
-        footer={
-          query.data && (
-            <AccountToolsPagination
-              page={query.data.page}
-              count={query.data.data.length}
-              busy={query.isFetching}
-              onNavigate={directory.setOffset}
-            />
-          )
+        onNavigate={directory.setOffset}
+      />
+    );
+
+  }
+
+  function renderInspectAction(
+    delivery: NonNullable<typeof query.data>['data'][number],
+  ) {
+
+    return (
+      <Button
+        variant="secondary"
+        onClick={() =>
+          directory.update({
+            delivery: delivery.id,
+            attemptOffset: undefined,
+          })
         }
       >
-        <QueryBoundary
-          query={query}
-          loadingFallback={<AccountToolsLoading />}
-          inset
+        {copy.deliveries.inspectAction}
+      </Button>
+    );
+
+  }
+
+  function renderMobileDelivery(delivery: NonNullable<typeof query.data>['data'][number]) {
+
+    return (
+      <MobileRecordRow
+        title={copy.deliveries.channels[delivery.channel]}
+        description={delivery.notificationId}
+        summary={
+          <DescriptionList
+            items={[
+              {
+                label: copy.common.statusColumn,
+                value: <DeliveryStatusBadge status={delivery.status} />,
+              },
+              {
+                label: copy.deliveries.attemptsColumn,
+                value: delivery.attemptCount,
+              },
+              {
+                label: copy.common.createdColumn,
+                value: formatAccountToolsDate(delivery.createdAt),
+              },
+            ]}
+          />
+        }
+        footer={renderInspectAction(delivery)}
+      />
+    );
+
+  }
+
+  function renderDeliveryTable(result: NonNullable<typeof query.data>) {
+
+    return (
+      <DataTable
+        embedded
+        caption={copy.deliveries.title}
+        rows={result.data}
+        getRowKey={(delivery) => delivery.id}
+        columns={[
+          {
+            key: 'notification',
+            header: copy.deliveries.notificationColumn,
+            render: (delivery) => (
+              <span className="font-mono text-xs wrap-anywhere">
+                {delivery.notificationId}
+              </span>
+            ),
+          },
+          {
+            key: 'channel',
+            header: copy.deliveries.channelColumn,
+            render: (delivery) => copy.deliveries.channels[delivery.channel],
+          },
+          {
+            key: 'status',
+            header: copy.common.statusColumn,
+            render: (delivery) => <DeliveryStatusBadge status={delivery.status} />,
+          },
+          {
+            key: 'attempts',
+            header: copy.deliveries.attemptsColumn,
+            render: (delivery) => delivery.attemptCount,
+          },
+          {
+            key: 'created',
+            header: copy.common.createdColumn,
+            render: (delivery) => formatAccountToolsDate(delivery.createdAt),
+          },
+          {
+            key: 'actions',
+            header: copy.common.actionsColumn,
+            render: renderInspectAction,
+          },
+        ]}
+        renderMobileRow={renderMobileDelivery}
+      />
+    );
+
+  }
+
+  function renderEmptyState() {
+
+    return (
+      <EmptyState
+        variant="plain"
+        title={
+          filtered ? copy.common.noResultsTitle : copy.deliveries.emptyTitle
+        }
+        description={
+          filtered ? copy.common.noResultsHint : copy.deliveries.emptyHint
+        }
+        action={
+          filtered && (
+            <Button variant="secondary" onClick={clear}>
+              {copy.common.clearFiltersAction}
+            </Button>
+          )
+        }
+      />
+    );
+
+  }
+
+  function renderDeliveryResults(result: NonNullable<typeof query.data>) {
+
+    if (!result.data.length) { return renderEmptyState(); }
+    return renderDeliveryTable(result);
+
+  }
+
+  function renderQueryResults() {
+
+    return (
+      <QueryBoundary
+        query={query}
+        loadingFallback={<AccountToolsLoading />}
+        inset
+      >
+        {(result) => renderDeliveryResults(result)}
+      </QueryBoundary>
+    );
+
+  }
+
+  function renderAttemptsDialog() {
+
+    if (!selected) { return null; }
+    return (
+      <DeliveryAttemptsDialog
+        delivery={selected}
+        offset={
+          Number.isSafeInteger(attemptOffset) && attemptOffset > 0
+            ? attemptOffset
+            : 0
+        }
+        onNavigate={(offset) =>
+          directory.update({
+            attemptOffset: offset ? String(offset) : undefined,
+          })
+        }
+        onClose={() =>
+          directory.update({ delivery: undefined, attemptOffset: undefined })
+        }
+      />
+    );
+
+  }
+
+  function renderContent() {
+
+    return (
+      <Page>
+        {renderHeader()}
+        <DataPanel
+          busy={query.isFetching}
+          busyLabel={copy.common.loadingTitle}
+          toolbar={renderFilters()}
+          footer={renderFooter()}
         >
-          {(result) =>
-            result.data.length ? (
-              <DataTable
-                embedded
-                caption={copy.deliveries.title}
-                rows={result.data}
-                getRowKey={(delivery) => delivery.id}
-                columns={[
-                  {
-                    key: 'notification',
-                    header: copy.deliveries.notificationColumn,
-                    render: (delivery) => (
-                      <span className="font-mono text-xs wrap-anywhere">
-                        {delivery.notificationId}
-                      </span>
-                    ),
-                  },
-                  {
-                    key: 'channel',
-                    header: copy.deliveries.channelColumn,
-                    render: (delivery) =>
-                      copy.deliveries.channels[delivery.channel],
-                  },
-                  {
-                    key: 'status',
-                    header: copy.common.statusColumn,
-                    render: (delivery) => (
-                      <DeliveryStatusBadge status={delivery.status} />
-                    ),
-                  },
-                  {
-                    key: 'attempts',
-                    header: copy.deliveries.attemptsColumn,
-                    render: (delivery) => delivery.attemptCount,
-                  },
-                  {
-                    key: 'created',
-                    header: copy.common.createdColumn,
-                    render: (delivery) =>
-                      formatAccountToolsDate(delivery.createdAt),
-                  },
-                  {
-                    key: 'actions',
-                    header: copy.common.actionsColumn,
-                    render: (delivery) => (
-                      <Button
-                        variant="secondary"
-                        onClick={() =>
-                          directory.update({
-                            delivery: delivery.id,
-                            attemptOffset: undefined,
-                          })
-                        }
-                      >
-                        {copy.deliveries.inspectAction}
-                      </Button>
-                    ),
-                  },
-                ]}
-                renderMobileRow={(delivery) => (
-                  <MobileRecordRow
-                    title={copy.deliveries.channels[delivery.channel]}
-                    description={delivery.notificationId}
-                    summary={
-                      <DescriptionList
-                        items={[
-                          {
-                            label: copy.common.statusColumn,
-                            value: (
-                              <DeliveryStatusBadge status={delivery.status} />
-                            ),
-                          },
-                          {
-                            label: copy.deliveries.attemptsColumn,
-                            value: delivery.attemptCount,
-                          },
-                          {
-                            label: copy.common.createdColumn,
-                            value: formatAccountToolsDate(delivery.createdAt),
-                          },
-                        ]}
-                      />
-                    }
-                    footer={
-                      <Button
-                        variant="secondary"
-                        onClick={() =>
-                          directory.update({
-                            delivery: delivery.id,
-                            attemptOffset: undefined,
-                          })
-                        }
-                      >
-                        {copy.deliveries.inspectAction}
-                      </Button>
-                    }
-                  />
-                )}
-              />
-            ) : (
-              <EmptyState
-                variant="plain"
-                title={
-                  filtered
-                    ? copy.common.noResultsTitle
-                    : copy.deliveries.emptyTitle
-                }
-                description={
-                  filtered
-                    ? copy.common.noResultsHint
-                    : copy.deliveries.emptyHint
-                }
-                action={
-                  filtered && (
-                    <Button variant="secondary" onClick={clear}>
-                      {copy.common.clearFiltersAction}
-                    </Button>
-                  )
-                }
-              />
-            )
-          }
-        </QueryBoundary>
-      </DataPanel>
-      {selected && (
-        <DeliveryAttemptsDialog
-          delivery={selected}
-          offset={
-            Number.isSafeInteger(attemptOffset) && attemptOffset > 0
-              ? attemptOffset
-              : 0
-          }
-          onNavigate={(offset) =>
-            directory.update({
-              attemptOffset: offset ? String(offset) : undefined,
-            })
-          }
-          onClose={() =>
-            directory.update({ delivery: undefined, attemptOffset: undefined })
-          }
-        />
-      )}
-    </Page>
-  );
+          {renderQueryResults()}
+        </DataPanel>
+        {renderAttemptsDialog()}
+      </Page>
+    );
+
+  }
+
+  return renderContent();
+
 }

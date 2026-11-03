@@ -11,8 +11,57 @@ export function SegmentedChoices<T extends string>({
   label = strings.componentLibrary.segmentedLabel,
   disabled = false,
 }: SegmentedTabsProps<T>) {
+
   const id = useId();
   const { groupRef, indicatorRef } = useSegmentedIndicator(value);
+
+  function renderChoice(tab: (typeof tabs)[number]) {
+
+    const active = tab.value === value;
+    return (
+      <label
+        key={tab.value}
+        className={cn(
+          'ui-segment text-sm has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-brand',
+          active
+            ? 'text-segmented-text'
+            : disabled
+              ? 'text-secondary'
+              : 'text-secondary hover:text-primary',
+        )}
+      >
+        <input
+          type="radio"
+          name={id}
+          value={tab.value}
+          checked={active}
+          aria-controls={tab.panelId}
+          onChange={() => onValueChange(tab.value)}
+          className="ui-segment-input"
+        />
+        {active && (
+          <span aria-hidden="true" className="ui-segment-fallback" />
+        )}
+        <span className="relative z-10 block font-semibold">
+          {tab.label}
+        </span>
+        {tab.meta ? (
+          <span
+            className={cn(
+              'relative z-10 mt-0.5 block text-xs',
+              active ? 'text-segmented-text' : 'text-tertiary',
+            )}
+          >
+            {tab.meta}
+          </span>
+        ) : null}
+      </label>
+    );
+
+  }
+
+  const choices = tabs.map(renderChoice);
+
   return (
     <fieldset
       disabled={disabled}
@@ -26,49 +75,9 @@ export function SegmentedChoices<T extends string>({
           aria-hidden="true"
           className="ui-segmented-indicator shadow-xs"
         />
-        {tabs.map((tab) => {
-          const active = tab.value === value;
-          return (
-            <label
-              key={tab.value}
-              className={cn(
-                'ui-segment text-sm has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-brand',
-                active
-                  ? 'text-segmented-text'
-                  : disabled
-                    ? 'text-secondary'
-                    : 'text-secondary hover:text-primary',
-              )}
-            >
-              <input
-                type="radio"
-                name={id}
-                value={tab.value}
-                checked={active}
-                aria-controls={tab.panelId}
-                onChange={() => onValueChange(tab.value)}
-                className="ui-segment-input"
-              />
-              {active && (
-                <span aria-hidden="true" className="ui-segment-fallback" />
-              )}
-              <span className="relative z-10 block font-semibold">
-                {tab.label}
-              </span>
-              {tab.meta ? (
-                <span
-                  className={cn(
-                    'relative z-10 mt-0.5 block text-xs',
-                    active ? 'text-segmented-text' : 'text-tertiary',
-                  )}
-                >
-                  {tab.meta}
-                </span>
-              ) : null}
-            </label>
-          );
-        })}
+        {choices}
       </div>
     </fieldset>
   );
+
 }

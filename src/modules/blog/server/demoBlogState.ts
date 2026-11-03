@@ -1,14 +1,27 @@
 import 'server-only';
 import { portalPublishingStrings } from '@/strings';
 import { BlogArticleSchema, type BlogArticle } from '../models/blogArticle';
+
 const copy = portalPublishingStrings.article;
+
 const empty = '';
 const demoGlobal = globalThis as typeof globalThis & {
   portalDemoBlogArticles?: BlogArticle[];
 };
+
+// **************************************
+// MARK: - CREATE DEMO BLOG ARTICLES
+// **************************************
+
 export function createDemoBlogArticles(): BlogArticle[] {
-  return [copy.demo.title, copy.demo.secondTitle, copy.demo.draftTitle].map(
+
+  const articles = [copy.demo.title, copy.demo.secondTitle, copy.demo.draftTitle].map(
     (title, index) => {
+
+      // **************************************
+      // MARK: - CREATE DEMO BLOG ARTICLE ID
+      // **************************************
+
       const id = (part: number) =>
         `b2000000-0000-4000-8000-${String(index * 20 + part).padStart(12, '0')}`;
       const date = new Date(
@@ -75,12 +88,26 @@ export function createDemoBlogArticles(): BlogArticle[] {
           },
         ],
       });
+
     },
   );
+
+  return articles;
+
 }
+
+// **************************************
+// MARK: - GET DEMO BLOG STATE
+// **************************************
+
 export function getDemoBlogState() {
   return (demoGlobal.portalDemoBlogArticles ??= createDemoBlogArticles());
 }
+
+// **************************************
+// MARK: - RESET DEMO BLOG STATE
+// **************************************
+
 export function resetDemoBlogState() {
   demoGlobal.portalDemoBlogArticles = createDemoBlogArticles();
 }

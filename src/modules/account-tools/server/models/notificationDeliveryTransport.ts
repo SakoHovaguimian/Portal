@@ -1,10 +1,11 @@
 import { z } from 'zod';
-import { DeliveryStatusSchema } from '../../models/notificationDelivery';
+import { DeliveryChannelSchema } from '../../models/deliveryChannel';
+import { DeliveryStatusSchema } from '../../models/deliveryStatus';
 
 export const NotificationDeliveryTransportSchema = z.object({
   id: z.string().uuid(),
   notification_id: z.string().uuid(),
-  channel: z.enum(['PUSH', 'EMAIL']),
+  channel: DeliveryChannelSchema,
   status: DeliveryStatusSchema,
   attempt_count: z.number().int().nonnegative(),
   next_attempt_at: z.string().datetime({ offset: true }).nullable(),
@@ -13,6 +14,7 @@ export const NotificationDeliveryTransportSchema = z.object({
   skip_reason: z.string().nullable(),
   created_at: z.string().datetime({ offset: true }).nullable(),
 });
+
 export type NotificationDeliveryTransport = z.infer<
   typeof NotificationDeliveryTransportSchema
 >;

@@ -4,24 +4,34 @@ import { useSearchParams } from 'next/navigation';
 import { Page, PageHeader, SegmentedPanels } from '@/components/ui';
 import { useDirectoryState } from '@/queries/useDirectoryState';
 import { portalAccountToolsStrings as copy } from '@/strings';
+import type { HelpSection } from './models/helpSection';
 import { FrequentlyAskedQuestionsPanel } from './components/FrequentlyAskedQuestionsPanel';
 import { LegalInformationPanel } from './components/LegalInformationPanel';
 
-type HelpSection = 'faq' | 'terms' | 'privacy';
 const helpSections = {
   faq: 'faq',
   terms: 'terms',
   privacy: 'privacy',
 } as const;
 export function HelpScreen() {
+
   const params = useSearchParams();
   const directory = useDirectoryState();
   const section = params.get('section');
   const value: HelpSection =
     section === 'terms' || section === 'privacy' ? section : 'faq';
-  return (
-    <Page>
+
+  function renderHeader() {
+
+    return (
       <PageHeader title={copy.help.title} description={copy.help.description} />
+    );
+
+  }
+
+  function renderPanels() {
+
+    return (
       <SegmentedPanels<HelpSection>
         label={copy.help.sectionLabel}
         value={value}
@@ -46,6 +56,21 @@ export function HelpScreen() {
           },
         ]}
       />
-    </Page>
-  );
+    );
+
+  }
+
+  function renderContent() {
+
+    return (
+      <Page>
+        {renderHeader()}
+        {renderPanels()}
+      </Page>
+    );
+
+  }
+
+  return renderContent();
+
 }

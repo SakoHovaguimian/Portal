@@ -1,4 +1,4 @@
-import type { ComponentPropsWithRef } from 'react';
+import type { ConfirmationChoiceProps } from '../models/confirmationChoiceProps';
 import { cn } from '../lib/cn';
 import { Checkbox } from './Checkbox';
 
@@ -8,10 +8,8 @@ export function ConfirmationChoice({
   description,
   className,
   ...props
-}: Omit<ComponentPropsWithRef<'input'>, 'type'> & {
-  label: string;
-  description: string;
-}) {
+}: ConfirmationChoiceProps) {
+
   return (
     <Checkbox
       {...props}
@@ -27,4 +25,5 @@ export function ConfirmationChoice({
       }
     />
   );
+
 }

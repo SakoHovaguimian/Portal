@@ -1,5 +1,4 @@
-import type { HTMLAttributes, ReactNode } from 'react';
-import type { UiIntent } from '../models/uiIntent';
+import type { BadgeProps } from '../models/badgeProps';
 import { cn } from '../lib/cn';
 
 const tones = {
@@ -22,11 +21,8 @@ export function Badge({
   dot = false,
   className,
   ...props
-}: HTMLAttributes<HTMLSpanElement> & {
-  children: ReactNode;
-  intent?: UiIntent | 'brand' | 'pink' | 'purple';
-  dot?: boolean;
-}) {
+}: BadgeProps) {
+
   return (
     <span
       className={cn(
@@ -50,4 +46,5 @@ export function Badge({
       </span>
     </span>
   );
+
 }

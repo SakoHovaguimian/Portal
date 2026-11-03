@@ -1,6 +1,6 @@
 # Implementation conventions
 
-Use strict TypeScript, descriptive camelCase values, PascalCase React components, single quotes, semicolons, and trailing commas. The root Prettier configuration is canonical. Keep unrelated formatting out of small changes.
+Use strict TypeScript, descriptive camelCase values, PascalCase React components, single quotes, semicolons, and trailing commas. The [Portal code standards](PORTAL_STANDARDS.md) are canonical: ESLint owns code layout and Prettier owns compatible non-code formats. Keep unrelated formatting out of small changes.
 
 Split independent models into individual files. A Zod schema, its inferred type, and directly derived mutation schema may share a file. A small barrel may re-export models without defining another copy. Shared models live in `src/models`; feature-only models live under the owning module; transport DTOs live under `services/api/models`.
 

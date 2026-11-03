@@ -1,7 +1,8 @@
-import type { BlogContentType } from '../../models/blogContentType';
+import type { BlogBlockPreviewProps } from '../../models/blogBlockPreviewProps';
 import styles from '../../Blog.module.css';
 
-export function BlogBlockPreview({ type }: { type: BlogContentType }) {
+export function BlogBlockPreview({ type }: BlogBlockPreviewProps) {
+
   const lines = (
     <>
       <path d="M10 22h44M10 29h44M10 36h30" />
@@ -9,6 +10,7 @@ export function BlogBlockPreview({ type }: { type: BlogContentType }) {
   );
   let content;
   switch (type) {
+
     case 'header':
       content = (
         <>
@@ -74,10 +76,12 @@ export function BlogBlockPreview({ type }: { type: BlogContentType }) {
     case 'gallery2':
     case 'gallery3':
     case 'gallery4': {
+
       const count = Number(type.slice(-1));
       content = (
         <>
           {Array.from({ length: count }, (_, i) => {
+
             const cols = count === 4 ? 2 : count;
             const w = (48 - (cols - 1) * 4) / cols;
             const x = 8 + (i % cols) * (w + 4);
@@ -91,10 +95,12 @@ export function BlogBlockPreview({ type }: { type: BlogContentType }) {
                 />
               </g>
             );
+
           })}
         </>
       );
       break;
+
     }
     case 'callout':
       content = (
@@ -113,6 +119,7 @@ export function BlogBlockPreview({ type }: { type: BlogContentType }) {
         </>
       );
       break;
+
   }
   return (
     <span className={styles.blockPreview} aria-hidden="true">
@@ -128,4 +135,5 @@ export function BlogBlockPreview({ type }: { type: BlogContentType }) {
       </svg>
     </span>
   );
+
 }

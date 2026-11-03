@@ -10,10 +10,11 @@ import { themeCatalog } from '@/themes';
 import { ThemePreview } from './ThemePreview';
 import { ThemeLivePreview } from './ThemeLivePreview';
 import styles from './ThemeStudio.module.css';
+import type { ThemeModeOption } from '../models/themeModeOption';
 
 const copy = strings.designSystem;
 const motionValues = { system: 'system', reduced: 'reduced' } as const;
-const modes: Array<{ value: ThemeMode; label: string }> = [
+const modes: ThemeModeOption[] = [
   {
     value: ThemeModeSchema.enum.light,
     label: strings.ui.appearanceScreen.light,
@@ -22,14 +23,17 @@ const modes: Array<{ value: ThemeMode; label: string }> = [
 ];
 
 export function ThemeControls() {
+
   const theme = useThemePreference();
   const motion = useMotionPreference();
   const groupId = useId();
   const [pending, setPending] = useState(false);
   const pendingRef = useRef(false);
   const [error, setError] = useState('');
+
   async function save(action: () => Promise<void>) {
-    if (pendingRef.current) return;
+
+    if (pendingRef.current) { return; }
     pendingRef.current = true;
     setPending(true);
     setError('');
@@ -38,43 +42,70 @@ export function ThemeControls() {
     } catch {
       setError(copy.preferenceFailed);
     } finally {
+
       pendingRef.current = false;
       setPending(false);
+
     }
+
   }
-  return (
-    <div className={`${styles.studio} grid min-w-0 gap-6`} aria-busy={pending}>
+
+  function renderThemeChoice({ id }: (typeof themeCatalog)[number]) {
+
+    const themeCopy = copy.themeStudio.themes[id];
+
+    function saveThemeChoice() {
+      return theme.setThemeId(id);
+    }
+
+    function handleThemeChange() {
+      void save(saveThemeChoice);
+    }
+
+    return (
+      <Radio
+        key={id}
+        name={groupId}
+        value={id}
+        checked={theme.themeId === id}
+        aria-disabled={pending || undefined}
+        className={styles.choice}
+        onChange={handleThemeChange}
+        label={
+          <span className={styles.choiceLabel}>
+            <ThemePreview themeId={id} mode={theme.mode} />
+            <span className={styles.choiceDetails}>
+              <span className={styles.choiceName}>{themeCopy.name}</span>
+              <span className={styles.choiceDescription}>
+                {themeCopy.description}
+              </span>
+            </span>
+          </span>
+        }
+      />
+    );
+
+  }
+
+  function renderThemeChoices() {
+
+    const themeChoices = themeCatalog.map(renderThemeChoice);
+
+    return (
       <div
         role="radiogroup"
         aria-label={copy.themeStudio.themeGroup}
         className={styles.choices}
       >
-        {themeCatalog.map(({ id }) => {
-          const themeCopy = copy.themeStudio.themes[id];
-          return (
-            <Radio
-              key={id}
-              name={groupId}
-              value={id}
-              checked={theme.themeId === id}
-              aria-disabled={pending || undefined}
-              className={styles.choice}
-              onChange={() => void save(() => theme.setThemeId(id))}
-              label={
-                <span className={styles.choiceLabel}>
-                  <ThemePreview themeId={id} mode={theme.mode} />
-                  <span className={styles.choiceDetails}>
-                    <span className={styles.choiceName}>{themeCopy.name}</span>
-                    <span className={styles.choiceDescription}>
-                      {themeCopy.description}
-                    </span>
-                  </span>
-                </span>
-              }
-            />
-          );
-        })}
+        {themeChoices}
       </div>
+    );
+
+  }
+
+  function renderPreferenceSummary() {
+
+    return (
       <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
         <div className="grid gap-1">
           <h3 className="m-0 text-base font-semibold text-primary">
@@ -92,6 +123,40 @@ export function ThemeControls() {
           </Badge>
         </span>
       </div>
+    );
+
+  }
+
+  function handleModeChange(mode: ThemeMode) {
+
+    function saveModePreference() {
+
+      return theme.setPreference({
+        mode,
+        themeId: theme.themeId,
+      });
+
+    }
+
+    void save(saveModePreference);
+
+  }
+
+  function handleMotionPreferenceChange(value: string) {
+
+    const preference = value === 'reduced' ? 'reduced' : 'system';
+
+    function saveMotionPreference() {
+      return motion.setPreference(preference);
+    }
+
+    void save(saveMotionPreference);
+
+  }
+
+  function renderPreferenceControls() {
+
+    return (
       <div className="grid min-w-0 items-end gap-5 sm:grid-cols-2">
         <div className="grid min-w-0 gap-1.5">
           <span className="text-sm font-medium text-secondary">
@@ -102,40 +167,56 @@ export function ThemeControls() {
             label={copy.mode}
             value={theme.mode}
             disabled={pending}
-            onValueChange={(mode) =>
-              void save(() =>
-                theme.setPreference({
-                  mode,
-                  themeId: theme.themeId,
-                }),
-              )
-            }
+            onValueChange={handleModeChange}
           />
         </div>
         <Field labelText={copy.motion}>
           <Select
             value={motion.preference}
             disabled={pending}
-            onValueChange={(value) =>
-              void save(() =>
-                motion.setPreference(
-                  value === 'reduced' ? 'reduced' : 'system',
-                ),
-              )
-            }
+            onValueChange={handleMotionPreferenceChange}
           >
             <option value={motionValues.system}>{copy.systemMotion}</option>
             <option value={motionValues.reduced}>{copy.reducedMotion}</option>
           </Select>
         </Field>
       </div>
-      <p className="m-0 text-sm text-tertiary">{copy.motionHint}</p>
-      {error && (
-        <p role="alert" className="m-0 text-sm text-error-primary">
-          {error}
-        </p>
-      )}
-      <ThemeLivePreview />
-    </div>
-  );
+    );
+
+  }
+
+  function renderPreferenceFeedback() {
+
+    return (
+      <>
+        <p className="m-0 text-sm text-tertiary">{copy.motionHint}</p>
+        {error && (
+          <p role="alert" className="m-0 text-sm text-error-primary">
+            {error}
+          </p>
+        )}
+      </>
+    );
+
+  }
+
+  function renderContent() {
+
+    return (
+      <div
+        className={`${styles.studio} grid min-w-0 gap-6`}
+        aria-busy={pending}
+      >
+        {renderThemeChoices()}
+        {renderPreferenceSummary()}
+        {renderPreferenceControls()}
+        {renderPreferenceFeedback()}
+        <ThemeLivePreview />
+      </div>
+    );
+
+  }
+
+  return renderContent();
+
 }

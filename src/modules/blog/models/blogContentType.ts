@@ -15,4 +15,5 @@ export const BlogContentTypeSchema = z.enum([
   'callout',
   'link',
 ]);
+
 export type BlogContentType = z.infer<typeof BlogContentTypeSchema>;

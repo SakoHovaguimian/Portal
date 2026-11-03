@@ -12,9 +12,11 @@ import {
 import { usePresentationService } from '@/presentation/PresentationProvider';
 import { strings } from '@/strings';
 import { ShowcaseSection } from './ShowcaseSection';
+
 const copy = strings.componentLibrary;
 
 export function TableShowcase() {
+
   const [selected, setSelected] = useState(false);
   const presentation = usePresentationService();
   return (
@@ -98,12 +100,14 @@ export function TableShowcase() {
               <IconButton
                 label={copy.productActions}
                 onClick={() => {
+
                   void presentation.showSheet({
                     title: copy.sheetTitle,
                     description: copy.actionPreviewHint,
                     confirmLabel: copy.close,
                     cancelLabel: copy.cancel,
                   });
+
                 }}
               >
                 <UiIcon name="settings" />
@@ -117,4 +121,5 @@ export function TableShowcase() {
       </p>
     </ShowcaseSection>
   );
+
 }

@@ -1,9 +1,14 @@
 import { z } from 'zod';
+import { FrequentlyAskedQuestionSectionSchema } from './frequentlyAskedQuestionSection';
 
-export const FrequentlyAskedQuestionSectionSchema = z.object({
-  title: z.string(),
-  sections: z.array(z.object({ question: z.string(), answer: z.string() })),
-});
+export {
+  FrequentlyAskedQuestionSectionSchema,
+} from './frequentlyAskedQuestionSection';
+
+export type {
+  FrequentlyAskedQuestionSection,
+} from './frequentlyAskedQuestionSection';
+
 export const FrequentlyAskedQuestionsSchema = z.object({
   illustrative: z.boolean(),
   sections: z.array(FrequentlyAskedQuestionSectionSchema),

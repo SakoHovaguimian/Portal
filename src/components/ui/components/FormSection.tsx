@@ -1,4 +1,4 @@
-import type { ReactNode, Ref } from 'react';
+import type { FormSectionProps } from '../models/formSectionProps';
 import { IconTile } from './IconTile';
 import { cn } from '../lib/cn';
 
@@ -12,17 +12,8 @@ export function FormSection({
   headingLevel = 3,
   children,
   className,
-}: {
-  id: string;
-  title: string;
-  description?: string;
-  icon?: ReactNode;
-  action?: ReactNode;
-  headingRef?: Ref<HTMLHeadingElement>;
-  headingLevel?: 2 | 3;
-  children: ReactNode;
-  className?: string;
-}) {
+}: FormSectionProps) {
+
   const Heading = headingLevel === 2 ? 'h2' : 'h3';
   return (
     <section
@@ -53,4 +44,5 @@ export function FormSection({
       {children}
     </section>
   );
+
 }

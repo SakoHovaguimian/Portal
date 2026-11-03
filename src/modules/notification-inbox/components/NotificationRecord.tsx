@@ -9,7 +9,7 @@ import { NavigationLink } from '@/components/ui/components/NavigationLink';
 import { useNavigationGuard } from '@/providers/NavigationGuardProvider';
 import { portalNotificationInboxStrings as copy } from '@/strings';
 import type { NotificationCategory } from '../models/notificationCategory';
-import type { NotificationInboxItem } from '../models/notificationInboxItem';
+import type { NotificationRecordProps } from '../models/notificationRecordProps';
 import { notificationDestination } from '../notificationDestination';
 import styles from '../NotificationInbox.module.css';
 
@@ -31,12 +31,8 @@ export function NotificationRecord({
   busy,
   onRead,
   onArchive,
-}: {
-  item: NotificationInboxItem;
-  busy: boolean;
-  onRead: (item: NotificationInboxItem) => void;
-  onArchive: (item: NotificationInboxItem) => void;
-}) {
+}: NotificationRecordProps) {
+
   const { confirmNavigation } = useNavigationGuard();
   const href = notificationDestination(item.destination);
   const instant = item.publishedAt ?? item.createdAt;
@@ -101,4 +97,5 @@ export function NotificationRecord({
       </div>
     </Card>
   );
+
 }

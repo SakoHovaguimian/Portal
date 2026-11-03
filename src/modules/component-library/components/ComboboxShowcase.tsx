@@ -13,6 +13,7 @@ const options: ComboboxOption[] = copy.examples.people.map((label, index) => ({
   disabled: index === 4,
 }));
 export function ComboboxShowcase() {
+
   const [value, setValue] = useState<string | null>(null);
   const [remote, setRemote] = useState<string | null>(null);
   const [results, setResults] = useState(options);
@@ -20,29 +21,36 @@ export function ComboboxShowcase() {
   const [failure, setFailure] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const latestQuery = useRef('');
-  useEffect(() => () => clearTimeout(timer.current), []);
+  useEffect(() => {
+
+    const cleanup = () => clearTimeout(timer.current);
+    return cleanup;
+
+  }, []);
   const search = (query: string) => {
+
     latestQuery.current = query;
     clearTimeout(timer.current);
     setFailure(false);
     setLoading(true);
     timer.current = setTimeout(() => {
+
       setResults(
         options.filter((item) =>
           item.label.toLowerCase().includes(query.toLowerCase()),
         ),
       );
       setLoading(false);
+
     }, 650);
+
   };
-  return (
-    <ShowcaseSection
-      id="combobox"
-      title={copy.examples.comboTitle}
-      description={copy.examples.comboDescription}
-      icon="search"
-    >
-      <div className="grid items-start gap-6 lg:grid-cols-2">
+
+  function renderSearchExamples() {
+
+    function renderLocalSearch() {
+
+      return (
         <div className="grid gap-3">
           <Combobox
             label={copy.examples.assignee}
@@ -54,11 +62,18 @@ export function ComboboxShowcase() {
           <p role="status" className="m-0 text-xs text-tertiary">
             {value
               ? copy.examples.selectedPerson(
-                  options.find((item) => item.id === value)?.label ?? '',
-                )
+                options.find((item) => item.id === value)?.label ?? '',
+              )
               : copy.examples.unassigned}
           </p>
         </div>
+      );
+
+    }
+
+    function renderRemoteSearch() {
+
+      return (
         <div className="grid gap-3">
           <Combobox
             label={copy.examples.remoteLabel}
@@ -75,15 +90,25 @@ export function ComboboxShowcase() {
           <Button
             variant="secondary"
             onClick={() => {
+
               clearTimeout(timer.current);
               setLoading(false);
               setResults([]);
               setFailure(true);
+
             }}
           >
             {copy.examples.failSearch}
           </Button>
         </div>
+      );
+
+    }
+
+    return (
+      <div className="grid items-start gap-6 lg:grid-cols-2">
+        {renderLocalSearch()}
+        {renderRemoteSearch()}
         <Combobox
           label={copy.examples.disabledLabel}
           options={options}
@@ -99,6 +124,19 @@ export function ComboboxShowcase() {
           readOnly
         />
       </div>
+    );
+
+  }
+
+  return (
+    <ShowcaseSection
+      id="combobox"
+      title={copy.examples.comboTitle}
+      description={copy.examples.comboDescription}
+      icon="search"
+    >
+      {renderSearchExamples()}
     </ShowcaseSection>
   );
+
 }

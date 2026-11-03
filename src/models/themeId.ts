@@ -9,4 +9,5 @@ export const ThemeIdSchema = z.enum([
   'dusk',
   'cupertino',
 ]);
+
 export type ThemeId = z.infer<typeof ThemeIdSchema>;

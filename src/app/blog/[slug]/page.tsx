@@ -1,3 +1,4 @@
+import type { SlugRouteProps } from '@/models/slugRouteProps';
 import { portalModules } from '@/config/portalModules';
 import { cache } from 'react';
 import type { Metadata } from 'next';
@@ -5,41 +6,45 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Button, UiIcon } from '@/components/ui';
 import { portalPublishingStrings } from '@/strings';
-const copy = portalPublishingStrings.article;
 import { publicBlogService } from '@/modules/blog/services/publicBlogService';
 import { BlogEngagementControls } from '@/modules/engagement/components/BlogEngagementControls';
 import { BlogArticleReader } from '@/modules/blog/components/BlogArticleReader';
 import { BlogArticleCard } from '@/modules/blog/components/BlogArticleCard';
 import styles from '@/modules/blog/Blog.module.css';
 
+const copy = portalPublishingStrings.article;
+
 export const dynamic = 'force-dynamic';
 const readArticle = cache(async (slug: string) => {
+
   try {
     return await publicBlogService.getPublic(slug);
   } catch (error) {
+
     if (
       error &&
       typeof error === 'object' &&
       'status' in error &&
       error.status === 404
-    )
-      notFound();
+    ) { notFound(); }
     throw error;
+
   }
+
 });
 export async function generateMetadata({
   params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
+}: SlugRouteProps): Promise<Metadata> {
+
   const article = await readArticle((await params).slug);
   return { title: article.title, description: article.description };
+
 }
+
 export default async function BlogArticlePage({
   params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+}: SlugRouteProps) {
+
   const article = await readArticle((await params).slug);
   const related = await publicBlogService.listPublic({
     category: article.category,
@@ -50,6 +55,32 @@ export default async function BlogArticlePage({
   const nextArticles = related.data
     .filter((item) => item.id !== article.id)
     .slice(0, 3);
+
+  function renderRelatedArticles() {
+
+    function renderRelatedArticle(item: (typeof nextArticles)[number]) {
+
+      return (
+        <BlogArticleCard key={item.id} article={item} headingLevel="h3" />
+      );
+
+    }
+
+    const articleCards = nextArticles.map(renderRelatedArticle);
+
+    return (
+      nextArticles.length > 0 && (
+        <section className={styles.related}>
+          <h2>{copy.relatedTitle}</h2>
+          <div className={styles.articleGrid}>
+            {articleCards}
+          </div>
+        </section>
+      )
+    );
+
+  }
+
   return (
     <main id="main-content" className={styles.articleContainer}>
       <div className={styles.readerNavigation}>
@@ -71,16 +102,8 @@ export default async function BlogArticlePage({
           ) : null
         }
       />
-      {nextArticles.length > 0 && (
-        <section className={styles.related}>
-          <h2>{copy.relatedTitle}</h2>
-          <div className={styles.articleGrid}>
-            {nextArticles.map((item) => (
-              <BlogArticleCard key={item.id} article={item} headingLevel="h3" />
-            ))}
-          </div>
-        </section>
-      )}
+      {renderRelatedArticles()}
     </main>
   );
+
 }

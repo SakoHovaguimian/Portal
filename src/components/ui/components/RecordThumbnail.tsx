@@ -1,4 +1,6 @@
 'use client';
+
+import type { RecordThumbnailProps } from '../models/recordThumbnailProps';
 import Image from 'next/image';
 import { useState } from 'react';
 import { strings } from '@/strings';
@@ -10,13 +12,8 @@ export function RecordThumbnail({
   loading = false,
   hasImage = true,
   emptyLabel = strings.media.empty,
-}: {
-  src?: string;
-  alt: string;
-  loading?: boolean;
-  hasImage?: boolean;
-  emptyLabel?: string;
-}) {
+}: RecordThumbnailProps) {
+
   const [failed, setFailed] = useState<string>();
   return (
     <span
@@ -47,4 +44,5 @@ export function RecordThumbnail({
       )}
     </span>
   );
+
 }

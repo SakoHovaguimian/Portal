@@ -1,5 +1,6 @@
 'use client';
 
+import type { MarkdownContentProps } from '../models/markdownContentProps';
 import { useId } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -7,15 +8,12 @@ import { strings } from '@/strings';
 import styles from './MarkdownContent.module.css';
 
 // Share rendering between previews and saved legal readers. Never fetch embeds.
-interface MarkdownContentProps {
-  value: string;
-  headingContext?: 'nested' | 'article';
-}
 
 export function MarkdownContent({
   value,
   headingContext = 'nested',
 }: MarkdownContentProps) {
+
   const Heading1 = headingContext === 'article' ? 'h2' : 'h3';
   const Heading2 = headingContext === 'article' ? 'h2' : 'h4';
   const Heading3 = headingContext === 'article' ? 'h3' : 'h5';
@@ -98,4 +96,5 @@ export function MarkdownContent({
       </ReactMarkdown>
     </div>
   );
+
 }

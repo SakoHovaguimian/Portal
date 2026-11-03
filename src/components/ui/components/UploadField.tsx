@@ -26,13 +26,15 @@ export function UploadField({
   onReject,
   ...listProps
 }: UploadFieldProps) {
+
   const id = useId();
   const input = useRef<HTMLInputElement>(null);
   const [rejections, setRejections] = useState<FileRejection[]>([]);
   const limit = Math.max(0, Math.floor(multiple ? (maxFiles ?? Infinity) : 1));
   const full = files.length >= limit;
   const receive = (list: FileList | null) => {
-    if (disabled) return;
+
+    if (disabled) { return; }
     const result = validateUploadFiles(
       Array.from(list ?? []),
       accept,
@@ -40,9 +42,23 @@ export function UploadField({
       Math.max(0, limit - files.length),
     );
     setRejections(result.rejected);
-    if (result.rejected.length) onReject?.(result.rejected);
-    if (result.accepted.length) onFiles(result.accepted);
+    if (result.rejected.length) { onReject?.(result.rejected); }
+    if (result.accepted.length) { onFiles(result.accepted); }
+
   };
+
+  function renderRejection({ file, reason }: FileRejection, index: number) {
+
+    return (
+      <p className="m-0 wrap-anywhere" key={`${index}:${file.name}`}>
+        {copy.upload.rejection(file.name, reason)}
+      </p>
+    );
+
+  }
+
+  const rejectionMessages = rejections.map(renderRejection);
+
   return (
     <div
       role="group"
@@ -82,8 +98,10 @@ export function UploadField({
           aria-invalid={invalid || Boolean(rejections.length)}
           aria-describedby={`${id}-help${rejections.length ? ` ${id}-errors` : ''}`}
           onChange={(event) => {
+
             receive(event.target.files);
             event.target.value = '';
+
           }}
         />
         <Button
@@ -99,13 +117,10 @@ export function UploadField({
         role="alert"
         className="grid gap-1 text-xs text-error-primary"
       >
-        {rejections.map(({ file, reason }, index) => (
-          <p className="m-0 wrap-anywhere" key={`${index}:${file.name}`}>
-            {copy.upload.rejection(file.name, reason)}
-          </p>
-        ))}
+        {rejectionMessages}
       </div>
       <FileList files={files} disabled={disabled} {...listProps} />
     </div>
   );
+
 }

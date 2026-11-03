@@ -1,6 +1,8 @@
+import type { SpinnerProps } from '../models/spinnerProps';
 import { cn } from '../lib/cn';
 
-export function Spinner({ className }: { className?: string }) {
+export function Spinner({ className }: SpinnerProps) {
+
   return (
     <span
       aria-hidden="true"
@@ -10,4 +12,5 @@ export function Spinner({ className }: { className?: string }) {
       )}
     />
   );
+
 }

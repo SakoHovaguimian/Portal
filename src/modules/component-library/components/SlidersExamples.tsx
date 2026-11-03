@@ -13,6 +13,7 @@ import { strings } from '@/strings';
 const copy = strings.valueControls;
 
 export function SlidersExamples() {
+
   const [brightness, setBrightness] = useState(0.64);
   const [exposure, setExposure] = useState(1);
   const [range, setRange] = useState<[number, number]>([200, 800]);
@@ -104,11 +105,13 @@ export function SlidersExamples() {
         <Button
           variant="secondary"
           onClick={() => {
+
             setBrightness(0.64);
             setExposure(1);
             setRange([200, 800]);
             setQuantity(3);
             setSelection(15);
+
           }}
         >
           {copy.reset}
@@ -116,4 +119,5 @@ export function SlidersExamples() {
       </div>
     </div>
   );
+
 }

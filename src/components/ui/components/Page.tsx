@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { PageProps } from '../models/pageProps';
 import { cn } from '../lib/cn';
 
 // Owns the page rhythm through the active theme section spacing.
@@ -6,11 +6,8 @@ export function Page({
   children,
   className,
   'aria-busy': busy,
-}: {
-  children: ReactNode;
-  className?: string;
-  'aria-busy'?: boolean;
-}) {
+}: PageProps) {
+
   return (
     <div
       aria-busy={busy}
@@ -22,4 +19,5 @@ export function Page({
       {children}
     </div>
   );
+
 }

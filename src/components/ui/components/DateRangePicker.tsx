@@ -45,6 +45,7 @@ export function DateRangePicker({
   description,
   className,
 }: DateRangePickerProps) {
+
   const id = useId();
   const start = calendarDate(value?.start);
   const end = calendarDate(value?.end);
@@ -171,8 +172,10 @@ export function DateRangePicker({
                     <Button
                       className={styles.clear}
                       onPress={() => {
+
                         onValueChange(null);
                         state.setOpen(false);
+
                       }}
                     >
                       {copy.clearDate}
@@ -186,4 +189,5 @@ export function DateRangePicker({
       </AriaDateRangePicker>
     </I18nProvider>
   );
+
 }

@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { CardViewProps } from '../models/cardViewProps';
 import { Card } from './Card';
 import { IconTile } from './IconTile';
 import { cn } from '../lib/cn';
@@ -10,14 +10,8 @@ export function CardView({
   trailing,
   children,
   className,
-}: {
-  title: string;
-  description?: string;
-  icon?: ReactNode;
-  trailing?: ReactNode;
-  children?: ReactNode;
-  className?: string;
-}) {
+}: CardViewProps) {
+
   return (
     <Card className={cn('grid gap-4 p-4 sm:p-4', className)}>
       <div className="flex min-w-0 items-center gap-3">
@@ -37,4 +31,5 @@ export function CardView({
       {children}
     </Card>
   );
+
 }

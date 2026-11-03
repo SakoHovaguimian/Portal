@@ -1,18 +1,17 @@
 'use client';
 
+import type { AlertTone } from '../models/alertTone';
+import type { AlertAlignment } from '../models/alertAlignment';
+import type { AlertModalProps } from '../models/alertModalProps';
 import { labels, strings } from '@/strings';
 import * as Dialog from '@radix-ui/react-dialog';
-import {
-  useRef,
-  type CSSProperties,
-  type ReactNode,
-  type RefObject,
-} from 'react';
+import { useRef, type CSSProperties } from 'react';
 import { Button } from './Button';
 import { cn } from '../lib/cn';
 
-export type AlertTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
-export type AlertAlignment = 'center' | 'top' | 'right';
+export type { AlertTone } from '../models/alertTone';
+
+export type { AlertAlignment } from '../models/alertAlignment';
 
 const toneClasses: Record<AlertTone, string> = {
   neutral: 'border-secondary',
@@ -38,22 +37,6 @@ const layoutClasses: Record<AlertAlignment, string> = {
     'right-0 top-0 h-dvh w-[min(94vw,34rem)] rounded-none rounded-l-overlay',
 };
 
-interface AlertModalProps {
-  open: boolean;
-  title: string;
-  description: string;
-  tone?: AlertTone;
-  alignment?: AlertAlignment;
-  confirmLabel?: string;
-  cancelLabel?: string;
-  onCancel: () => void;
-  onConfirm: () => void;
-  details?: ReactNode;
-  motionEnabled?: boolean;
-  motionDurationMs?: number;
-  restoreFocusRef?: RefObject<HTMLElement | null>;
-}
-
 export function AlertModal({
   open,
   title,
@@ -69,8 +52,78 @@ export function AlertModal({
   motionDurationMs,
   restoreFocusRef,
 }: AlertModalProps) {
+
   const localReturnFocusRef = useRef<HTMLElement | null>(null);
   const returnFocusRef = restoreFocusRef ?? localReturnFocusRef;
+
+  function renderContent() {
+
+    function renderHeader() {
+
+      return (
+        <div className="flex flex-col items-start gap-4 text-left">
+          <div
+            className={cn(
+              'inline-flex items-center gap-2 rounded-chip px-3 py-1 text-xs font-semibold tracking-[0.16em]',
+              accentClasses[tone],
+            )}
+          >
+            <span className="h-2 w-2 rounded-full bg-current opacity-70" />
+            {labels.tones[tone]}
+          </div>
+          <div className="min-w-0">
+            <Dialog.Title className="font-display text-2xl font-semibold tracking-tight text-primary">
+              {title}
+            </Dialog.Title>
+            <Dialog.Description className="mt-2 text-sm leading-6 text-secondary">
+              {description}
+            </Dialog.Description>
+          </div>
+        </div>
+      );
+
+    }
+
+    function renderDetails() {
+
+      return (
+        details ? (
+          <div className="rounded-card border-control border-secondary bg-secondary_subtle p-4 text-sm text-secondary">
+            {details}
+          </div>
+        ) : null
+      );
+
+    }
+
+    function renderActions() {
+
+      return (
+        <div className="mt-auto flex flex-wrap justify-center gap-3 border-t-control border-secondary pt-5">
+          <Button variant="secondary" onClick={onCancel}>
+            {cancelLabel}
+          </Button>
+          <Button
+            variant={tone === 'danger' ? 'destructive' : 'primary'}
+            onClick={onConfirm}
+          >
+            {confirmLabel}
+          </Button>
+        </div>
+      );
+
+    }
+
+    return (
+      <div className="flex h-full flex-col gap-5">
+        {renderHeader()}
+        {renderDetails()}
+        {renderActions()}
+      </div>
+    );
+
+  }
+
   return (
     <Dialog.Root
       open={open}
@@ -86,11 +139,11 @@ export function AlertModal({
           style={
             motionEnabled
               ? ({
-                  '--ui-overlay-duration':
+                '--ui-overlay-duration':
                     motionDurationMs === undefined
                       ? 'var(--motion-duration-enter)'
                       : `${motionDurationMs}ms`,
-                } as CSSProperties)
+              } as CSSProperties)
               : undefined
           }
         />
@@ -99,16 +152,18 @@ export function AlertModal({
           role="alertdialog"
           data-motion={motionEnabled ? undefined : 'off'}
           onOpenAutoFocus={() => {
+
             const focused = document.activeElement;
             // Consecutive confirmations share the original workflow trigger.
             if (
               focused instanceof HTMLElement &&
               focused !== document.body &&
               !focused.closest('[role="alertdialog"]')
-            )
-              returnFocusRef.current = focused;
+            ) { returnFocusRef.current = focused; }
+
           }}
           onCloseAutoFocus={(event) => {
+
             event.preventDefault();
             // A completed workflow may have focused its result during modal exit.
             // Preserve that deliberate destination instead of restoring the trigger.
@@ -118,11 +173,11 @@ export function AlertModal({
               focused !== document.body &&
               event.target instanceof HTMLElement &&
               !event.target.contains(focused)
-            )
-              return;
+            ) { return; }
             if (returnFocusRef.current?.isConnected) {
               returnFocusRef.current.focus();
             }
+
           }}
           className={cn(
             'ui-dialog fixed z-90 max-h-[calc(100dvh-2rem)] overflow-y-auto border-control bg-primary p-6 shadow-(--shadow-overlay) outline-none',
@@ -132,53 +187,18 @@ export function AlertModal({
           style={
             motionEnabled
               ? ({
-                  '--ui-overlay-duration':
+                '--ui-overlay-duration':
                     motionDurationMs === undefined
                       ? 'var(--motion-duration-enter)'
                       : `${motionDurationMs}ms`,
-                } as CSSProperties)
+              } as CSSProperties)
               : undefined
           }
         >
-          <div className="flex h-full flex-col gap-5">
-            <div className="flex flex-col items-start gap-4 text-left">
-              <div
-                className={cn(
-                  'inline-flex items-center gap-2 rounded-chip px-3 py-1 text-xs font-semibold tracking-[0.16em]',
-                  accentClasses[tone],
-                )}
-              >
-                <span className="h-2 w-2 rounded-full bg-current opacity-70" />
-                {labels.tones[tone]}
-              </div>
-              <div className="min-w-0">
-                <Dialog.Title className="font-display text-2xl font-semibold tracking-tight text-primary">
-                  {title}
-                </Dialog.Title>
-                <Dialog.Description className="mt-2 text-sm leading-6 text-secondary">
-                  {description}
-                </Dialog.Description>
-              </div>
-            </div>
-            {details ? (
-              <div className="rounded-card border-control border-secondary bg-secondary_subtle p-4 text-sm text-secondary">
-                {details}
-              </div>
-            ) : null}
-            <div className="mt-auto flex flex-wrap justify-center gap-3 border-t-control border-secondary pt-5">
-              <Button variant="secondary" onClick={onCancel}>
-                {cancelLabel}
-              </Button>
-              <Button
-                variant={tone === 'danger' ? 'destructive' : 'primary'}
-                onClick={onConfirm}
-              >
-                {confirmLabel}
-              </Button>
-            </div>
-          </div>
+          {renderContent()}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
   );
+
 }

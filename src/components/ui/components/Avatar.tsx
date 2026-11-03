@@ -24,6 +24,7 @@ export function Avatar({
   status,
   className,
 }: AvatarProps) {
+
   const [failed, setFailed] = useState<string>();
   const parts = name.trim().split(/\s+/u).filter(Boolean);
   const initials = [parts[0], ...(parts.length > 1 ? [parts.at(-1)] : [])]
@@ -71,4 +72,5 @@ export function Avatar({
       )}
     </span>
   );
+
 }

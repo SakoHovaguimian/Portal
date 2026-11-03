@@ -1,4 +1,4 @@
-import type { ReactNode, Ref } from 'react';
+import type { PageSectionProps } from '../models/pageSectionProps';
 import { cn } from '../lib/cn';
 
 // A titled page region (h2). Content decides whether it sits on a Card.
@@ -11,16 +11,8 @@ export function PageSection({
   headingRef,
   children,
   className,
-}: {
-  id: string;
-  title: string;
-  description?: string;
-  action?: ReactNode;
-  actionAlignment?: 'end' | 'center';
-  headingRef?: Ref<HTMLHeadingElement>;
-  children: ReactNode;
-  className?: string;
-}) {
+}: PageSectionProps) {
+
   return (
     <section
       aria-labelledby={`${id}-title`}
@@ -64,4 +56,5 @@ export function PageSection({
       {children}
     </section>
   );
+
 }

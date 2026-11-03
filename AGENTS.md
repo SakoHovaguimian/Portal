@@ -6,6 +6,7 @@ Portal is a Node 22 / TypeScript web template using Next.js 16.2.10, React 19.2.
 
 - Do not create a worktree unless explicitly requested.
 - Do not write tests. Do not run Xcode builds unless explicitly requested. Verify with static checks, the web build, and focused manual workflows.
+- Follow the permanent [Portal code standards](docs/PORTAL_STANDARDS.md) for exact ESLint-owned formatting, service MARKs, named callback results, and hook-safe Lego block composition. Preserve behavior and appearance.
 - Split independent models into separate files. Keep each schema, inferred type, and directly derived input schema together.
 - All user-visible strings belong in the single [src/strings.ts](src/strings.ts) file, including labels, metadata, validation, errors, accessibility text, notifications, and static demo copy. Use named formatters for interpolation. Never place new display copy inline or create separate string catalogs.
 - Use Title Case for actions, CTAs, page/section/dialog titles, field labels, navigation, table headers, options, and short status/toast titles. Capitalize every word, including A, And, Of, and To; preserve acronyms and brand spelling. Keep supporting prose, validation, and data in their appropriate case. Follow [copy casing and lint exceptions](docs/STRINGS.md#copy-casing); `copy/title-case` and `check:strings` enforce the catalog rule.
@@ -26,6 +27,7 @@ Choose the matching rows below. Read the guide and nearest implementation, then 
 | Architecture and state ownership   | [Architecture](docs/ARCHITECTURE.md), [client container](src/clientContainer.ts), [server container](src/container.ts)                                                                                   |
 | New domain module                  | [Module guide](docs/prompts/NEW_MODULE_PROMPT.md), [feature requests](src/modules/feature-requests/)                                                                                                     |
 | Foundational services              | [Service guide](docs/prompts/NEW_SERVICE_PROMPT.md), [services](src/services/)                                                                                                                           |
+| Code formatting and composition    | [Portal code standards](docs/PORTAL_STANDARDS.md), [conventions](docs/CONVENTIONS.md)                                                                                                                    |
 | Models, validation, API mapping    | [Conventions](docs/CONVENTIONS.md), [models](src/models/), [transport models](src/services/api/models/), [mappers](src/services/api/domainMappers.ts)                                                    |
 | API routes and backend integration | [Backend contract](docs/BACKEND_CONTRACT.md), [proxy route](src/app/api/backend/[...path]/route.ts), [API client](src/services/api/apiClient.ts)                                                         |
 | Authentication or session refresh  | [Auth guide](docs/AUTH.md), [auth service](src/services/auth/), [session service](src/services/session/)                                                                                                 |

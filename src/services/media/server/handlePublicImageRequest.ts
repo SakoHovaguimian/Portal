@@ -5,6 +5,10 @@ import { uploadDemoPublicImage } from './demoPublicImages';
 import { validatePublicImageUpload } from './validatePublicImageUpload';
 import type { MediaRequestOptions } from './models/mediaRequestOptions';
 
+// **************************************
+// MARK: - HANDLE PUBLIC IMAGE REQUEST
+// **************************************
+
 export async function handlePublicImageRequest({
   request,
   path,
@@ -12,14 +16,13 @@ export async function handlePublicImageRequest({
   demoMode,
   forward,
 }: MediaRequestOptions): Promise<Response | null> {
+
   const pathname = new URL(path, 'http://portal.internal').pathname;
-  if (!['/media/images', '/blog/media/upload'].includes(pathname)) return null;
-  if (actor?.role !== 'admin' && actor?.role !== 'superadmin')
-    throw new OwnershipError(portalPublishingStrings.article.permissionError);
-  if (request.method !== 'POST')
-    return new Response(null, { status: 405, headers: { allow: 'POST' } });
-  if (demoMode) return uploadDemoPublicImage(request);
-  if (!forward) throw new ApiError(portalMediaStrings.imageUploadError, 503);
+  if (!['/media/images', '/blog/media/upload'].includes(pathname)) { return null; }
+  if (actor?.role !== 'admin' && actor?.role !== 'superadmin') { throw new OwnershipError(portalPublishingStrings.article.permissionError); }
+  if (request.method !== 'POST') { return new Response(null, { status: 405, headers: { allow: 'POST' } }); }
+  if (demoMode) { return uploadDemoPublicImage(request); }
+  if (!forward) { throw new ApiError(portalMediaStrings.imageUploadError, 503); }
   const file = await validatePublicImageUpload(request.clone());
   const body = new FormData();
   body.set('file', file);
@@ -30,4 +33,5 @@ export async function handlePublicImageRequest({
     new Request(request.url, { method: 'POST', body, signal: request.signal }),
     '/media/upload-media',
   );
+
 }

@@ -1,8 +1,10 @@
 'use client';
 
+import type { LoadingMessageProps } from '../models/loadingMessageProps';
+import type { QueryErrorStateProps } from '../models/queryErrorStateProps';
+import type { QueryBoundaryProps } from '../models/queryBoundaryProps';
 import { portalUiStrings, strings } from '@/strings';
 import { DomainError } from '@/errors/domainErrors';
-import type { UseQueryResult } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { Card } from './Card';
 import { Button } from './Button';
@@ -14,9 +16,8 @@ import { Message } from './Message';
  */
 function LoadingState({
   message = strings.common.loading,
-}: {
-  message?: string;
-}) {
+}: LoadingMessageProps) {
+
   return (
     <Card className="animate-pulse">
       <div className="grid gap-3">
@@ -27,6 +28,7 @@ function LoadingState({
       <span className="sr-only">{message}</span>
     </Card>
   );
+
 }
 
 /**
@@ -36,11 +38,8 @@ function QueryErrorState({
   error,
   onRetry,
   busy,
-}: {
-  error: Error;
-  onRetry?: () => void;
-  busy?: boolean;
-}) {
+}: QueryErrorStateProps) {
+
   const message = getErrorMessage(error);
 
   return (
@@ -62,47 +61,36 @@ function QueryErrorState({
       ) : null}
     </Card>
   );
+
 }
 
 /**
  * Extract a user-friendly message from various error types
  */
 function getErrorMessage(error: unknown): string {
+
   if (error instanceof Error) {
+
     // Check for domain error codes
     const anyError = error as { code?: string; status?: number };
     if (anyError.code === 'AUTH_ERROR' || anyError.status === 401) {
       return strings.ui.queryBoundary.youNeedToBeLoggedInToViewThis;
     }
     if (anyError.code === 'OWNERSHIP_ERROR' || anyError.status === 403) {
+
       return strings.ui.queryBoundary
         .youDoNotHavePermissionToAccessThisResource;
+
     }
     if (anyError.code === 'NOT_FOUND_ERROR' || anyError.status === 404) {
       return strings.ui.queryBoundary.theRequestedResourceCouldNotBeFound;
     }
-    if (error instanceof DomainError && error.status < 500)
-      return error.message;
+    if (error instanceof DomainError && error.status < 500) { return error.message; }
     return strings.errors.requestFailed;
+
   }
   return strings.ui.queryBoundary.anUnexpectedErrorOccurred;
-}
 
-interface QueryBoundaryProps<T> {
-  /** The React Query result object */
-  query: UseQueryResult<T, Error>;
-  /** Render function called with the data when query succeeds */
-  children: (data: T) => ReactNode;
-  /** Optional custom loading component */
-  loadingFallback?: ReactNode;
-  /** Optional loading message for accessibility */
-  loadingMessage?: string;
-  /** Whether to show error state (defaults to true) */
-  showError?: boolean;
-  /** Pads the error state when rendered inside a DataPanel or other surface */
-  inset?: boolean;
-  /** Retain mounted content after a non-authoritative background refresh failure. */
-  retainDataOnError?: boolean;
 }
 
 /**
@@ -137,6 +125,7 @@ export function QueryBoundary<T>({
   inset = false,
   retainDataOnError = false,
 }: QueryBoundaryProps<T>): ReactNode {
+
   if (query.isLoading) {
     return loadingFallback ?? <LoadingState message={loadingMessage} />;
   }
@@ -152,16 +141,20 @@ export function QueryBoundary<T>({
     );
   const retained = retainDataOnError && query.data !== undefined && !forbidden;
   if (query.isError && (showError || forbidden) && !retained) {
+
     const error = (
       <QueryErrorState
         error={query.error}
         busy={query.isFetching}
         onRetry={() => {
-          if (!query.isFetching) void query.refetch();
+
+          if (!query.isFetching) { void query.refetch(); }
+
         }}
       />
     );
     return inset ? <div className="p-4 sm:p-6">{error}</div> : error;
+
   }
 
   if (query.data === undefined) {
@@ -169,6 +162,7 @@ export function QueryBoundary<T>({
   }
 
   if (retainDataOnError) {
+
     // The same children slot remains mounted while the refresh notice changes.
     return (
       <>
@@ -183,7 +177,9 @@ export function QueryBoundary<T>({
                   variant="secondary"
                   loading={query.isFetching}
                   onClick={() => {
-                    if (!query.isFetching) void query.refetch();
+
+                    if (!query.isFetching) { void query.refetch(); }
+
                   }}
                 >
                   {strings.ui.queryBoundary.tryAgain}
@@ -195,8 +191,10 @@ export function QueryBoundary<T>({
         {children(query.data)}
       </>
     );
+
   }
   return children(query.data);
+
 }
 
 /**
@@ -204,13 +202,13 @@ export function QueryBoundary<T>({
  */
 export function InlineLoading({
   message = strings.common.loading,
-}: {
-  message?: string;
-}) {
+}: LoadingMessageProps) {
+
   return (
     <div className="flex items-center gap-2 text-secondary">
       <Spinner className="size-4" />
       <span className="text-sm">{message}</span>
     </div>
   );
+
 }

@@ -6,8 +6,15 @@ import type { SignupInput } from '@/models/auth';
 import type { FirebaseAuthSession } from '@/services/auth/models/firebaseAuthSession';
 import type { FirebaseAuthServiceInterface } from '@/services/auth/firebaseAuthServiceInterface';
 import { getDemoState, passwordMatches, passwordRecord } from './demoState';
+
 export class DemoFirebaseAuthService implements FirebaseAuthServiceInterface {
+
+  // **************************************
+  // MARK: - SIGN IN TO DEMO ACCOUNT
+  // **************************************
+
   async signIn(email: string, password: string): Promise<FirebaseAuthSession> {
+
     const state = getDemoState();
     const user = state.users.find(
       (user) => user.email.toLowerCase() === email.trim().toLowerCase(),
@@ -19,15 +26,20 @@ export class DemoFirebaseAuthService implements FirebaseAuthServiceInterface {
       user.deleted ||
       !credential ||
       !passwordMatches(password, credential)
-    )
-      throw new AuthError(strings.auth.invalidCredentials);
+    ) { throw new AuthError(strings.auth.invalidCredentials); }
     return this.session(user.external_id, user.email);
+
   }
+
+  // **************************************
+  // MARK: - CREATE DEMO ACCOUNT
+  // **************************************
+
   async signUp(input: SignupInput): Promise<FirebaseAuthSession> {
+
     const state = getDemoState();
     const email = input.email.trim().toLowerCase();
-    if (state.users.some((user) => user.email.toLowerCase() === email))
-      throw new AuthError(strings.auth.emailExists, 409);
+    if (state.users.some((user) => user.email.toLowerCase() === email)) { throw new AuthError(strings.auth.emailExists, 409); }
     const now = new Date().toISOString();
     const user = {
       id: crypto.randomUUID(),
@@ -47,8 +59,15 @@ export class DemoFirebaseAuthService implements FirebaseAuthServiceInterface {
     createDemoOnboarding(user);
     state.credentials.set(user.external_id, passwordRecord(input.password));
     return this.session(user.external_id, email);
+
   }
+
+  // **************************************
+  // MARK: - REFRESH DEMO SESSION
+  // **************************************
+
   async refresh(session: FirebaseAuthSession): Promise<FirebaseAuthSession> {
+
     const state = getDemoState();
     const user = state.users.find(
       (user) => user.external_id === session.externalId,
@@ -58,12 +77,18 @@ export class DemoFirebaseAuthService implements FirebaseAuthServiceInterface {
       user.disabled ||
       user.deleted ||
       state.refreshTokens.get(session.refreshToken) !== session.externalId
-    )
-      throw new AuthError(strings.errors.sessionExpired);
+    ) { throw new AuthError(strings.errors.sessionExpired); }
     state.refreshTokens.delete(session.refreshToken);
     return this.session(session.externalId, session.email);
+
   }
+
+  // **************************************
+  // MARK: - CREATE DEMO AUTH SESSION
+  // **************************************
+
   private session(externalId: string, email: string): FirebaseAuthSession {
+
     const refreshToken = crypto.randomUUID();
     getDemoState().refreshTokens.set(refreshToken, externalId);
     return {
@@ -73,5 +98,7 @@ export class DemoFirebaseAuthService implements FirebaseAuthServiceInterface {
       email,
       expiresAt: Date.now() + 3600000,
     };
+
   }
+
 }

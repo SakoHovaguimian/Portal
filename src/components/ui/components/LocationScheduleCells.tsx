@@ -1,17 +1,15 @@
-import type { LocationScheduleValue } from '../models/locationSchedule';
+import type { LocationScheduleTimeProps } from '../models/locationScheduleTimeProps';
+import type { LocationScheduleTimezoneProps } from '../models/locationScheduleTimezoneProps';
 import { locationScheduleFormat } from '../lib/locationScheduleFormat';
 
 export function LocationScheduleTime({
   schedule,
   endpoint,
   noEnd,
-}: {
-  schedule: LocationScheduleValue;
-  endpoint: 'startsAt' | 'endsAt';
-  noEnd: string;
-}) {
+}: LocationScheduleTimeProps) {
+
   const value = schedule[endpoint];
-  if (!value) return <span className="text-secondary">{noEnd}</span>;
+  if (!value) { return <span className="text-secondary">{noEnd}</span>; }
   const { timezone } = locationScheduleFormat(schedule.timezone);
   const date = new Date(value);
   return (
@@ -33,22 +31,27 @@ export function LocationScheduleTime({
       </span>
     </time>
   );
+
 }
 
 export function LocationScheduleTimezone({
   schedule,
-}: {
-  schedule: LocationScheduleValue;
-}) {
+}: LocationScheduleTimezoneProps) {
+
   const { timezone } = locationScheduleFormat(schedule.timezone);
   const format = new Intl.DateTimeFormat('en-US', {
     timeZone: timezone,
     timeZoneName: 'short',
   });
-  const abbreviation = (value: string) =>
-    format
+  const abbreviation = (value: string) => {
+
+    const timezoneName = format
       .formatToParts(new Date(value))
       .find((part) => part.type === 'timeZoneName')!.value;
+
+    return timezoneName;
+
+  };
   // Preserve both offsets when the schedule crosses a daylight-saving boundary.
   const names = [
     ...new Set([
@@ -64,4 +67,5 @@ export function LocationScheduleTimezone({
       {names.join(' / ')}
     </abbr>
   );
+
 }

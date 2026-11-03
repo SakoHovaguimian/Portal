@@ -1,4 +1,6 @@
-import type { ReactNode, Ref } from 'react';
+import type { ListGroupProps } from '../models/listGroupProps';
+import type { ListRowProps } from '../models/listRowProps';
+import type { Ref } from 'react';
 import { cn } from '../lib/cn';
 
 // A divided list surface. Children are ListRow elements wrapped in <li>.
@@ -8,13 +10,8 @@ export function ListGroup({
   label,
   listRef,
   className,
-}: {
-  children: ReactNode;
-  ordered?: boolean;
-  label?: string;
-  listRef?: Ref<HTMLOListElement>;
-  className?: string;
-}) {
+}: ListGroupProps) {
+
   const List = ordered ? 'ol' : 'ul';
   return (
     <List
@@ -28,6 +25,7 @@ export function ListGroup({
       {children}
     </List>
   );
+
 }
 
 // Leading visual, title/description, and trailing status or actions.
@@ -38,13 +36,8 @@ export function ListRow({
   description,
   trailing,
   className,
-}: {
-  leading?: ReactNode;
-  title: ReactNode;
-  description?: ReactNode;
-  trailing?: ReactNode;
-  className?: string;
-}) {
+}: ListRowProps) {
+
   return (
     <div
       className={cn(
@@ -78,4 +71,5 @@ export function ListRow({
       )}
     </div>
   );
+
 }

@@ -1,18 +1,9 @@
 'use client';
 
+import type { ButtonProps } from '../models/buttonProps';
 import { Slot } from '@radix-ui/react-slot';
-import type { ComponentPropsWithRef, PropsWithChildren } from 'react';
 import { buttonClassName } from '../lib/buttonStyles';
-import type { ButtonVariant } from '../models/buttonVariant';
 import { Spinner } from './Spinner';
-
-type ButtonProps = PropsWithChildren<
-  ComponentPropsWithRef<'button'> & {
-    variant?: ButtonVariant;
-    asChild?: boolean;
-    loading?: boolean;
-  }
->;
 
 export function Button({
   children,
@@ -26,6 +17,7 @@ export function Button({
   tabIndex,
   ...props
 }: ButtonProps) {
+
   const Comp = asChild ? Slot : 'button';
 
   return (
@@ -37,12 +29,16 @@ export function Button({
       aria-disabled={asChild && (disabled || loading) ? true : undefined}
       tabIndex={asChild && (disabled || loading) ? -1 : tabIndex}
       onClickCapture={(event) => {
+
         if (asChild && (disabled || loading)) {
+
           event.preventDefault();
           event.stopPropagation();
           return;
+
         }
         onClickCapture?.(event);
+
       }}
       aria-busy={loading || undefined}
       {...props}
@@ -71,4 +67,5 @@ export function Button({
       )}
     </Comp>
   );
+
 }

@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react';
-import { Card, IconTile, UiIcon, type IconName } from '@/components/ui';
+import { Card, IconTile, UiIcon } from '@/components/ui';
+import type { ShowcaseSectionProps } from '../models/showcaseSectionProps';
 
 // A documentation section: heading outside, specimens on one canvas.
 export function ShowcaseSection({
@@ -8,13 +8,8 @@ export function ShowcaseSection({
   description,
   icon,
   children,
-}: {
-  id: string;
-  title: string;
-  description: string;
-  icon: IconName;
-  children: ReactNode;
-}) {
+}: ShowcaseSectionProps) {
+
   return (
     <section
       id={id}
@@ -38,4 +33,5 @@ export function ShowcaseSection({
       <Card className="grid min-w-0 gap-8">{children}</Card>
     </section>
   );
+
 }

@@ -31,6 +31,7 @@ export function MultiSelect<Value extends string>({
   'aria-describedby': describedBy,
   'aria-invalid': invalid,
 }: MultiSelectProps<Value>) {
+
   const limit =
     maxSelections === undefined || !Number.isFinite(maxSelections)
       ? undefined
@@ -41,12 +42,13 @@ export function MultiSelect<Value extends string>({
       disabledKeys={
         limit !== undefined && value.length >= limit
           ? options
-              .filter((option) => !value.includes(option.value))
-              .map((option) => option.value)
+            .filter((option) => !value.includes(option.value))
+            .map((option) => option.value)
           : []
       }
       value={value}
       onChange={(keys) => {
+
         const next = options
           .filter((option) => keys.includes(option.value))
           .map((option) => option.value);
@@ -55,9 +57,9 @@ export function MultiSelect<Value extends string>({
           limit !== undefined &&
           next.length > limit &&
           next.length >= value.length
-        )
-          return;
+        ) { return; }
         onValueChange(next);
+
       }}
       aria-label={labelledBy ? undefined : label}
       aria-labelledby={labelledBy}
@@ -76,19 +78,29 @@ export function MultiSelect<Value extends string>({
         className="ui-select-trigger ui-input shadow-(--shadow-control) flex min-h-(--control-height-lg) w-full min-w-0 cursor-pointer items-center gap-3 rounded-control border-control border-control-border bg-primary px-4 py-2.5 text-left text-sm text-primary outline-none focus-visible:ring-4 focus-visible:ring-brand/12 disabled:cursor-not-allowed disabled:bg-disabled_subtle disabled:text-disabled"
       >
         <SelectValue className="min-w-0 flex-1 wrap-anywhere">
-          {() =>
-            value.length === 0
+          {() => {
+
+            const selectedLabel = value.length === 0
               ? placeholder
               : value.length === 1
                 ? options.find((option) => option.value === value[0])?.label
                 : selectionLabel(
-                    value.length,
-                    value.map(
-                      (selected) =>
-                        options.find((option) => option.value === selected)
-                          ?.label ?? selected,
-                    ),
-                  )
+                  value.length,
+                  value.map(
+                    (selected) => {
+
+                      const optionLabel = options.find((option) => option.value === selected)
+                        ?.label ?? selected;
+
+                      return optionLabel;
+
+                    },
+                  ),
+                );
+
+            return selectedLabel;
+
+          }
           }
         </SelectValue>
         <UiIcon
@@ -137,9 +149,9 @@ export function MultiSelect<Value extends string>({
                 value.length === options.length ||
                 (limit !== undefined && options.length > limit)
               }
-              onClick={() =>
-                onValueChange(options.map((option) => option.value))
-              }
+              onClick={() => {
+                onValueChange(options.map((option) => option.value));
+              }}
             >
               {selectAllLabel}
             </Button>
@@ -156,4 +168,5 @@ export function MultiSelect<Value extends string>({
       </Popover>
     </AriaSelect>
   );
+
 }

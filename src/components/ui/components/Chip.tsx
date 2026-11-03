@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ChipProps } from '../models/chipProps';
 import { cn } from '../lib/cn';
 
 export function Chip({
@@ -6,12 +6,8 @@ export function Chip({
   icon,
   selected = false,
   className,
-}: {
-  children: ReactNode;
-  icon?: ReactNode;
-  selected?: boolean;
-  className?: string;
-}) {
+}: ChipProps) {
+
   return (
     <span
       data-selected={selected || undefined}
@@ -29,4 +25,5 @@ export function Chip({
       </span>
     </span>
   );
+
 }

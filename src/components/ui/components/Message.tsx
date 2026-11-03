@@ -1,4 +1,4 @@
-import type { ComponentPropsWithRef, ReactNode } from 'react';
+import type { MessageProps } from '../models/messageProps';
 import { strings } from '@/strings';
 import type { UiIntent } from '../models/uiIntent';
 import type { IconName } from '../models/iconName';
@@ -32,13 +32,8 @@ export function Message({
   className,
   role,
   ...props
-}: Omit<ComponentPropsWithRef<'div'>, 'title'> & {
-  title: string;
-  description?: ReactNode;
-  intent?: UiIntent;
-  onDismiss?: () => void;
-  action?: ReactNode;
-}) {
+}: MessageProps) {
+
   return (
     <div
       role={role ?? (intent === 'danger' ? 'alert' : 'status')}
@@ -68,4 +63,5 @@ export function Message({
       )}
     </div>
   );
+
 }

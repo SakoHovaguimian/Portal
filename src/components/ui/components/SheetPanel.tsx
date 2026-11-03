@@ -1,15 +1,20 @@
 'use client';
 
+import type { SheetTone } from '../models/sheetTone';
+import type { SheetSide } from '../models/sheetSide';
+import type { SheetSize } from '../models/sheetSize';
+import type { SheetPanelProps } from '../models/sheetPanelProps';
 import { labels, strings } from '@/strings';
 import * as Dialog from '@radix-ui/react-dialog';
-import { useRef, type CSSProperties, type ReactNode } from 'react';
+import { useRef, type CSSProperties } from 'react';
 import { Button } from './Button';
 import { cn } from '../lib/cn';
-import type { AlertTone } from './AlertModal';
 
-export type SheetTone = AlertTone;
-export type SheetSide = 'left' | 'right' | 'bottom';
-export type SheetSize = 'sm' | 'md' | 'lg';
+export type { SheetTone } from '../models/sheetTone';
+
+export type { SheetSide } from '../models/sheetSide';
+
+export type { SheetSize } from '../models/sheetSize';
 
 const toneClasses: Record<SheetTone, string> = {
   neutral: 'border-secondary',
@@ -52,23 +57,6 @@ const sizeClasses: Record<SheetSide, Record<SheetSize, string>> = {
   },
 };
 
-interface SheetPanelProps {
-  open: boolean;
-  title: string;
-  description?: string;
-  tone?: SheetTone;
-  side?: SheetSide;
-  size?: SheetSize;
-  confirmLabel?: string;
-  cancelLabel?: string;
-  onCancel: () => void;
-  onConfirm: () => void;
-  details?: ReactNode;
-  content?: ReactNode;
-  motionEnabled?: boolean;
-  motionDurationMs?: number;
-}
-
 export function SheetPanel({
   open,
   title,
@@ -85,7 +73,93 @@ export function SheetPanel({
   motionEnabled = true,
   motionDurationMs,
 }: SheetPanelProps) {
+
   const returnFocusRef = useRef<HTMLElement | null>(null);
+
+  function renderContent() {
+
+    function renderHeader() {
+
+      return (
+        <div className="flex items-start gap-4">
+          <div
+            className={cn(
+              'inline-flex items-center gap-2 rounded-chip px-3 py-1 text-xs font-semibold tracking-[0.16em]',
+              accentClasses[tone],
+            )}
+          >
+            <span className="h-2 w-2 rounded-full bg-current opacity-70" />
+            {labels.sides[side]}
+          </div>
+          <div className="min-w-0 flex-1">
+            <Dialog.Title className="font-display text-2xl font-semibold tracking-tight text-primary">
+              {title}
+            </Dialog.Title>
+            {description ? (
+              <Dialog.Description className="mt-2 text-sm leading-6 text-secondary">
+                {description}
+              </Dialog.Description>
+            ) : null}
+          </div>
+        </div>
+      );
+
+    }
+
+    function renderDetails() {
+
+      return (
+        details ? (
+          <div className="rounded-card border-control border-secondary bg-secondary_subtle p-4 text-sm text-secondary">
+            {details}
+          </div>
+        ) : null
+      );
+
+    }
+
+    function renderBody() {
+
+      return (
+        content ? (
+          <div className="min-h-0 flex-1 overflow-auto">{content}</div>
+        ) : null
+      );
+
+    }
+
+    function renderActions() {
+
+      return (
+        <div className="mt-auto flex flex-wrap justify-end gap-3 border-t-control border-secondary pt-5">
+          <Button variant="secondary" onClick={onCancel}>
+            {cancelLabel}
+          </Button>
+          <Button
+            variant={tone === 'danger' ? 'destructive' : 'primary'}
+            onClick={onConfirm}
+          >
+            {confirmLabel}
+          </Button>
+        </div>
+      );
+
+    }
+
+    return (
+      <div className="flex h-full w-full flex-col gap-5 p-6">
+        {renderHeader()}
+
+        {renderDetails()}
+
+        {renderBody()}
+
+        {renderActions()}
+      </div>
+    );
+
+  }
+
   return (
     <Dialog.Root
       open={open}
@@ -101,11 +175,11 @@ export function SheetPanel({
           style={
             motionEnabled
               ? ({
-                  '--ui-overlay-duration':
+                '--ui-overlay-duration':
                     motionDurationMs === undefined
                       ? 'var(--motion-duration-enter)'
                       : `${motionDurationMs}ms`,
-                } as CSSProperties)
+              } as CSSProperties)
               : undefined
           }
         />
@@ -115,16 +189,20 @@ export function SheetPanel({
           data-motion={motionEnabled ? undefined : 'off'}
           {...(!description ? { 'aria-describedby': undefined } : {})}
           onOpenAutoFocus={() => {
+
             returnFocusRef.current =
               document.activeElement instanceof HTMLElement
                 ? document.activeElement
                 : null;
+
           }}
           onCloseAutoFocus={(event) => {
+
             event.preventDefault();
             if (returnFocusRef.current?.isConnected) {
               returnFocusRef.current.focus();
             }
+
           }}
           className={cn(
             'ui-sheet fixed z-90 flex max-h-dvh overflow-y-auto border-control bg-primary shadow-(--shadow-overlay) outline-none',
@@ -135,61 +213,18 @@ export function SheetPanel({
           style={
             motionEnabled
               ? ({
-                  '--ui-overlay-duration':
+                '--ui-overlay-duration':
                     motionDurationMs === undefined
                       ? 'var(--motion-duration-enter)'
                       : `${motionDurationMs}ms`,
-                } as CSSProperties)
+              } as CSSProperties)
               : undefined
           }
         >
-          <div className="flex h-full w-full flex-col gap-5 p-6">
-            <div className="flex items-start gap-4">
-              <div
-                className={cn(
-                  'inline-flex items-center gap-2 rounded-chip px-3 py-1 text-xs font-semibold tracking-[0.16em]',
-                  accentClasses[tone],
-                )}
-              >
-                <span className="h-2 w-2 rounded-full bg-current opacity-70" />
-                {labels.sides[side]}
-              </div>
-              <div className="min-w-0 flex-1">
-                <Dialog.Title className="font-display text-2xl font-semibold tracking-tight text-primary">
-                  {title}
-                </Dialog.Title>
-                {description ? (
-                  <Dialog.Description className="mt-2 text-sm leading-6 text-secondary">
-                    {description}
-                  </Dialog.Description>
-                ) : null}
-              </div>
-            </div>
-
-            {details ? (
-              <div className="rounded-card border-control border-secondary bg-secondary_subtle p-4 text-sm text-secondary">
-                {details}
-              </div>
-            ) : null}
-
-            {content ? (
-              <div className="min-h-0 flex-1 overflow-auto">{content}</div>
-            ) : null}
-
-            <div className="mt-auto flex flex-wrap justify-end gap-3 border-t-control border-secondary pt-5">
-              <Button variant="secondary" onClick={onCancel}>
-                {cancelLabel}
-              </Button>
-              <Button
-                variant={tone === 'danger' ? 'destructive' : 'primary'}
-                onClick={onConfirm}
-              >
-                {confirmLabel}
-              </Button>
-            </div>
-          </div>
+          {renderContent()}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
   );
+
 }

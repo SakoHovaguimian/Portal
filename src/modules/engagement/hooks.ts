@@ -4,20 +4,30 @@ import { useServiceContainer } from '@/providers/AppProviders';
 import type { SavedQuery } from './models/savedQuery';
 import type { EngagementKey } from './models/engagementTarget';
 import { engagementQueryKeys } from './queryKeys';
+
 export function useSavedItems(query: SavedQuery) {
+
   const { engagementService } = useServiceContainer();
-  return useQuery({
+  const savedItemsQuery = useQuery({
     queryKey: engagementQueryKeys.saved(query),
     queryFn: ({ signal }) => engagementService.saved(query, signal),
   });
+
+  return savedItemsQuery;
+
 }
+
 export function useRemoveSavedItem() {
+
   const { engagementService } = useServiceContainer();
   const cache = useQueryClient();
-  return useMutation({
+  const removeSavedItemMutation = useMutation({
     mutationFn: (key: EngagementKey) => engagementService.removeSaved(key),
     onSuccess: () => {
       void cache.invalidateQueries({ queryKey: engagementQueryKeys.all });
     },
   });
+
+  return removeSavedItemMutation;
+
 }

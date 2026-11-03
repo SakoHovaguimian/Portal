@@ -1,7 +1,8 @@
 import { portalPublishingStrings } from '@/strings';
-const copy = portalPublishingStrings.builder;
 import { z } from 'zod';
 import { BlogContentTextFormatSchema } from './blogContentTextFormat';
+
+const copy = portalPublishingStrings.builder;
 
 export const BlogSectionContentSchema = z
   .object({
@@ -19,15 +20,21 @@ export const BlogSectionContentSchema = z
       })
       .strict()
       .superRefine((metadata, context) => {
-        if (metadata.format === 'plain' && metadata.body.length > 20000)
+
+        if (metadata.format === 'plain' && metadata.body.length > 20000) {
+
           context.addIssue({
             code: 'custom',
             message: copy.invalidText,
             path: ['body'],
           });
+
+        }
+
       }),
   })
   .strict();
+
 export type BlogSectionContent = z.infer<typeof BlogSectionContentSchema>;
 
 export const BlogReadableSectionContentSchema = BlogSectionContentSchema.extend(

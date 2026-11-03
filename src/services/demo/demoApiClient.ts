@@ -13,29 +13,38 @@ import { ChatMessageInputSchema } from '@/modules/chat/models/chatMessage';
 import type { ServerSession } from '@/services/session/models/serverSession';
 import { getDemoState } from './demoState';
 import { dashboardModelMeta } from './demoFixtures';
+import { DemoPageQuerySchema } from './models/demoPageQuery';
 import { getDemoContext } from './demoRuntime';
 import { simulateDemoRequest } from './demoSimulation';
 import type { DemoRequestHandler } from './models/demoRequestHandler';
 import { handleDemoOnboardingRequest } from '@/modules/onboarding/demo/handleDemoOnboardingRequest';
 import { mapUserMutationToTransport } from '../api/domainMappers';
-const PageQuerySchema = z.object({
-  limit: z.coerce.number().int().min(1).max(100).default(25),
-  offset: z.coerce.number().int().min(0).default(0),
-});
+
 export class DemoApiClient {
+
   constructor(private readonly handlers: DemoRequestHandler[] = []) {}
+
+  // **************************************
+  // MARK: - REGISTER DEMO REQUEST HANDLER
+  // **************************************
+
   register(handler: DemoRequestHandler) {
     this.handlers.push(handler);
   }
+
+  // **************************************
+  // MARK: - HANDLE DEMO API REQUEST
+  // **************************************
+
   async proxy(
     request: Request,
     path: string,
     session: ServerSession,
   ): Promise<Response> {
+
     const state = getDemoState();
     const current = state.users.find((user) => user.id === session.user.id);
-    if (!current || current.disabled || current.deleted)
-      throw new AuthError(strings.errors.sessionExpired);
+    if (!current || current.disabled || current.deleted) { throw new AuthError(strings.errors.sessionExpired); }
     const url = new URL(path, 'http://portal.internal');
     const parts = url.pathname
       .split('/')
@@ -44,21 +53,41 @@ export class DemoApiClient {
     const [resource, id] = parts;
     const method = request.method;
     const context = await getDemoContext();
-    if (resource !== 'onboarding')
-      await simulateDemoRequest(context, request.signal);
+    if (resource !== 'onboarding') { await simulateDemoRequest(context, request.signal); }
     const empty = context.scenario === 'empty' && method === 'GET';
+
+    // **************************************
+    // MARK: - CREATE DEMO JSON RESPONSE
+    // **************************************
+
     const json = (body: unknown, status = 200) =>
       Response.json(body, { status, headers: { 'cache-control': 'no-store' } });
-    const input = async () =>
-      request
+
+    // **************************************
+    // MARK: - READ DEMO REQUEST INPUT
+    // **************************************
+
+    const input = async () => {
+
+      const inputPromise = request
         .json()
         .then((value) => z.record(z.string(), z.unknown()).parse(value))
         .catch(() => {
           throw new ValidationError(strings.errors.invalidInput);
         });
+
+      return inputPromise;
+
+    };
+
+    // **************************************
+    // MARK: - CREATE DEMO RESULT PAGE
+    // **************************************
+
     const page = <T>(allRows: T[]) => {
+
       const rows = empty ? [] : allRows;
-      const { limit, offset } = PageQuerySchema.parse(
+      const { limit, offset } = DemoPageQuerySchema.parse(
         Object.fromEntries(url.searchParams),
       );
       return {
@@ -67,8 +96,10 @@ export class DemoApiClient {
         limit,
         offset,
       };
+
     };
     for (const handler of [handleDemoOnboardingRequest, ...this.handlers]) {
+
       const response = await handler({
         request,
         path,
@@ -82,7 +113,8 @@ export class DemoApiClient {
         page,
         empty,
       });
-      if (response) return response;
+      if (response) { return response; }
+
     }
     const search = (
       url.searchParams.get('query') ||
@@ -95,22 +127,34 @@ export class DemoApiClient {
       (item) => !item.deleted && item.user_id === current.id,
     );
     if (resource === 'users') {
-      if (method === 'GET' && !id)
-        return json(
+
+      if (method === 'GET' && !id) {
+
+        const usersResponse = json(
           page(
-            state.users.filter((user) =>
-              [user.first_name, user.last_name, user.email].some((value) =>
+            state.users.filter((user) => {
+
+              const matchesSearch = [user.first_name, user.last_name, user.email].some((value) =>
                 value.toLowerCase().includes(search),
-              ),
+              );
+
+              return matchesSearch;
+
+            },
             ),
           ),
         );
+
+        return usersResponse;
+
+      }
       const user =
         id === 'profile' ? current : state.users.find((user) => user.id === id);
-      if (!user) throw new NotFoundError();
-      if (method === 'GET' && parts.length === 2) return json(user);
+      if (!user) { throw new NotFoundError(); }
+      if (method === 'GET' && parts.length === 2) { return json(user); }
       if (method === 'PUT' && id !== 'profile') {
-        if (user.id !== current.id) throw new OwnershipError();
+
+        if (user.id !== current.id) { throw new OwnershipError(); }
         const raw = await input();
         const validated = UserMutationInputSchema.parse({
           firstName: raw.first_name,
@@ -119,24 +163,32 @@ export class DemoApiClient {
           phoneNumber: raw.phone_number,
           dateOfBirth: raw.date_of_birth,
         });
-        if (validated.email !== current.email)
-          throw new ValidationError(strings.errors.invalidInput);
+        if (validated.email !== current.email) { throw new ValidationError(strings.errors.invalidInput); }
         Object.assign(user, mapUserMutationToTransport(validated), {
           updated_at: new Date().toISOString(),
         });
         return json(user);
+
       }
+
     }
     if (resource === 'feature-requests') {
-      if (method === 'GET' && !id)
-        return json(
+
+      if (method === 'GET' && !id) {
+
+        const requestsResponse = json(
           page(
             visibleRequests
               .filter((item) => item.message.toLowerCase().includes(search))
               .map((item) => ({ ...item, user: current })),
           ),
         );
+
+        return requestsResponse;
+
+      }
       if (method === 'POST' && !id) {
+
         const body = FeatureRequestMutationInputSchema.parse(await input());
         const now = new Date().toISOString();
         const item = {
@@ -150,23 +202,30 @@ export class DemoApiClient {
         };
         state.featureRequests.unshift(item);
         return json(item, 201);
+
       }
       const item = visibleRequests.find((item) => item.id === id);
-      if (!item) throw new NotFoundError();
-      if (method === 'GET') return json({ ...item, user: current });
+      if (!item) { throw new NotFoundError(); }
+      if (method === 'GET') { return json({ ...item, user: current }); }
       if (method === 'PATCH') {
+
         item.message = FeatureRequestMutationInputSchema.parse(
           await input(),
         ).message;
         item.updated_at = new Date().toISOString();
         return json(item);
+
       }
       if (method === 'DELETE') {
+
         item.deleted = true;
         return new Response(null, { status: 204 });
+
       }
+
     }
     if (resource === 'dashboard' && method === 'GET') {
+
       const models = [
         {
           key: 'user',
@@ -181,29 +240,41 @@ export class DemoApiClient {
           record_count: empty ? 0 : visibleRequests.length,
         },
       ];
-      if (id === 'overview')
-        return json({
-          models: models.map((model) => ({
-            model: model.key,
-            display_name: model.display_name,
-            total_count: model.record_count,
-            period_count: empty
-              ? 0
-              : (model.key === 'user' ? state.users : visibleRequests).filter(
+      if (id === 'overview') {
+
+        const overviewResponse = json({
+          models: models.map((model) => {
+
+            const modelOverview = ({
+              model: model.key,
+              display_name: model.display_name,
+              total_count: model.record_count,
+              period_count: empty
+                ? 0
+                : (model.key === 'user' ? state.users : visibleRequests).filter(
                   (item) =>
                     Date.parse(item.created_at) >= Date.now() - 30 * 86400000,
                 ).length,
-            growth_percent: null,
-          })),
+              growth_percent: null,
+            });
+
+            return modelOverview;
+
+          }),
           date_range: {
             from: new Date(Date.now() - 30 * 86400000).toISOString(),
             to: new Date().toISOString(),
           },
         });
-      if (id === 'models' && !parts[2]) return json({ models });
+
+        return overviewResponse;
+
+      }
+      if (id === 'models' && !parts[2]) { return json({ models }); }
       if (id === 'models') {
+
         const meta = dashboardModelMeta[parts[2]];
-        if (!meta) throw new NotFoundError();
+        if (!meta) { throw new NotFoundError(); }
         return json({
           ...meta,
           total_records: empty
@@ -212,25 +283,31 @@ export class DemoApiClient {
               ? state.users.length
               : visibleRequests.length,
         });
+
       }
       if (id === 'records') {
+
         const model = url.searchParams.get('model');
-        if (model !== 'user' && model !== 'featureRequest')
-          throw new NotFoundError();
+        if (model !== 'user' && model !== 'featureRequest') { throw new NotFoundError(); }
         const rows = model === 'user' ? state.users : visibleRequests;
-        return json(
+        const recordsResponse = json(
           page(
             rows.filter((item) =>
               JSON.stringify(item).toLowerCase().includes(search),
             ),
           ),
         );
+
+        return recordsResponse;
+
       }
+
     }
     if (resource === 'chat' && id === 'messages') {
-      if (method === 'GET')
-        return json(empty ? [] : state.messages.slice(-100));
+
+      if (method === 'GET') { return json(empty ? [] : state.messages.slice(-100)); }
       if (method === 'POST') {
+
         const body = ChatMessageInputSchema.parse(await input());
         const message = {
           id: crypto.randomUUID(),
@@ -241,8 +318,12 @@ export class DemoApiClient {
         };
         state.messages.push(message);
         return json(message, 201);
+
       }
+
     }
     throw new NotFoundError();
+
   }
+
 }

@@ -9,6 +9,7 @@ export function portalNavigation(
   user: SessionUser,
   runtime: RuntimeConfig,
 ): AppSidebarItem[] {
+
   const items: AppSidebarItem[] = [
     {
       href: '/dashboard',
@@ -31,24 +32,33 @@ export function portalNavigation(
       icon: <UiIcon name="user" />,
     },
   ];
-  if (portalModules.publishing)
+  if (portalModules.publishing) {
+
     items.push({
       href: canManageContent(user.role) ? '/admin/blog' : '/blog',
       label: portalModuleStrings.publishing,
       icon: <UiIcon name="layers" />,
     });
-  if (portalModules.notifications)
+
+  }
+  if (portalModules.notifications) {
+
     items.push({
       href: '/notifications',
       label: portalModuleStrings.notifications,
       icon: <UiIcon name="bell" />,
     });
-  if (portalModules.engagement)
+
+  }
+  if (portalModules.engagement) {
+
     items.push({
       href: '/saved',
       label: portalModuleStrings.saved,
       icon: <UiIcon name="bookmark" />,
     });
+
+  }
   items.push(
     {
       href: '/profile',
@@ -61,7 +71,8 @@ export function portalNavigation(
       icon: <UiIcon name="settings" />,
     },
   );
-  if (portalModules.accountTools)
+  if (portalModules.accountTools) {
+
     items.push(
       {
         href: '/settings/account',
@@ -74,7 +85,10 @@ export function portalNavigation(
         icon: <UiIcon name="info" />,
       },
     );
-  if (runtime.devSettingsEnabled)
+
+  }
+  if (runtime.devSettingsEnabled) {
+
     items.push(
       {
         href: '/dev-settings',
@@ -89,5 +103,8 @@ export function portalNavigation(
         placement: 'bottom',
       },
     );
+
+  }
   return items;
+
 }

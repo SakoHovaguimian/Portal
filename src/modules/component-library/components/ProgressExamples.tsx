@@ -15,24 +15,28 @@ import { strings } from '@/strings';
 const copy = strings.valueControls;
 
 export function ProgressExamples() {
+
   const [progress, setProgress] = useState(42);
   const [running, setRunning] = useState(false);
   const [failed, setFailed] = useState(false);
   const active = running && progress < 100 && !failed;
   useEffect(() => {
-    if (!active) return;
+
+    if (!active) { return; }
     const timer = setTimeout(
-      () => setProgress((value) => Math.min(value + 4, 100)),
+      () => {
+        setProgress((value) => Math.min(value + 4, 100));
+      },
       350,
     );
-    return () => clearTimeout(timer);
+    const cleanup = () => clearTimeout(timer);
+    return cleanup;
+
   }, [active, progress]);
 
-  return (
-    <div className="grid min-w-0 gap-6 border-t border-secondary pt-8">
-      <h3 className="m-0 text-base font-semibold text-primary">
-        {copy.progressTitle}
-      </h3>
+  function renderProgressIndicators() {
+
+    return (
       <div className="grid min-w-0 gap-10">
         <div className="grid min-w-0 max-w-2xl gap-4">
           <ProgressBar
@@ -45,7 +49,9 @@ export function ProgressExamples() {
             <Button
               variant="secondary"
               disabled={progress === 100 || failed}
-              onClick={() => setRunning((value) => !value)}
+              onClick={() => {
+                setRunning((value) => !value);
+              }}
             >
               {active ? copy.pause : copy.run}
             </Button>
@@ -53,8 +59,10 @@ export function ProgressExamples() {
               variant="secondary"
               disabled={failed || progress === 100}
               onClick={() => {
+
                 setFailed(true);
                 setRunning(false);
+
               }}
             >
               {copy.simulateFailure}
@@ -62,9 +70,11 @@ export function ProgressExamples() {
             <Button
               variant="ghost"
               onClick={() => {
+
                 setRunning(false);
                 setFailed(false);
                 setProgress(0);
+
               }}
             >
               {copy.reset}
@@ -79,8 +89,10 @@ export function ProgressExamples() {
                 <Button
                   variant="secondary"
                   onClick={() => {
+
                     setFailed(false);
                     setRunning(true);
+
                   }}
                 >
                   {copy.retry}
@@ -110,6 +122,13 @@ export function ProgressExamples() {
           <ProgressRing label={copy.processing} indeterminate size="sm" />
         </div>
       </div>
+    );
+
+  }
+
+  function renderLoadingIndicators() {
+
+    return (
       <div className="grid min-w-0 gap-5 border-t border-secondary pt-8">
         <h3 className="m-0 text-base font-semibold text-primary">
           {copy.loadingTitle}
@@ -133,6 +152,18 @@ export function ProgressExamples() {
         </div>
         <p className="m-0 text-xs text-tertiary">{copy.skeletonHint}</p>
       </div>
+    );
+
+  }
+
+  return (
+    <div className="grid min-w-0 gap-6 border-t border-secondary pt-8">
+      <h3 className="m-0 text-base font-semibold text-primary">
+        {copy.progressTitle}
+      </h3>
+      {renderProgressIndicators()}
+      {renderLoadingIndicators()}
     </div>
   );
+
 }

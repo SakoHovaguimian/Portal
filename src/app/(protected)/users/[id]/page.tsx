@@ -1,14 +1,16 @@
+import type { IdRouteProps } from '@/models/idRouteProps';
 import type { Metadata } from 'next';
 import { strings } from '@/strings';
-export const metadata: Metadata = { title: strings.ui.userDetailScreen.userDetail };
 import { UserDetailScreen } from '@/modules/users/UserDetailScreen';
+
+export const metadata: Metadata = { title: strings.ui.userDetailScreen.userDetail };
 
 export default async function UserDetailPage({
   params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+}: IdRouteProps) {
+
   const { id } = await params;
 
   return <UserDetailScreen userId={id} />;
+
 }

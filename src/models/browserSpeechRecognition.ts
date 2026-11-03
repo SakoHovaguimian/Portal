@@ -1,5 +1,6 @@
 import type { BrowserSpeechRecognitionEvent } from './browserSpeechRecognitionEvent';
 import type { BrowserSpeechRecognitionErrorEvent } from './browserSpeechRecognitionErrorEvent';
+
 export interface BrowserSpeechRecognition {
   continuous: boolean;
   interimResults: boolean;
@@ -12,8 +13,13 @@ export interface BrowserSpeechRecognition {
   stop: () => void;
   abort: () => void;
 }
+
 export type { BrowserSpeechRecognitionConstructor } from './browserSpeechRecognitionConstructor';
+
 export type { BrowserSpeechRecognitionEvent } from './browserSpeechRecognitionEvent';
+
 export type { BrowserSpeechRecognitionResult } from './browserSpeechRecognitionResult';
+
 export type { BrowserSpeechRecognitionErrorEvent } from './browserSpeechRecognitionErrorEvent';
+
 export type { BrowserSpeechWindow } from './browserSpeechWindow';

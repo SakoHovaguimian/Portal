@@ -1,4 +1,4 @@
-import type { SVGProps } from 'react';
+import type { UiIconProps } from '../models/uiIconProps';
 import type { IconName } from '../models/iconName';
 import { cn } from '../lib/cn';
 
@@ -102,7 +102,8 @@ export function UiIcon({
   name,
   className,
   ...props
-}: SVGProps<SVGSVGElement> & { name: IconName }) {
+}: UiIconProps) {
+
   return (
     <svg
       viewBox="0 0 24 24"
@@ -119,4 +120,5 @@ export function UiIcon({
       <path d={paths[name]} />
     </svg>
   );
+
 }

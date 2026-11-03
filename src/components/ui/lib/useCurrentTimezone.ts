@@ -2,7 +2,12 @@
 
 import { useSyncExternalStore } from 'react';
 
-const subscribe = () => () => {};
+const subscribe = () => {
+
+  const cleanup = () => {};
+  return cleanup;
+
+};
 const getServerSnapshot = () => null;
 const getSnapshot = () => Intl.DateTimeFormat().resolvedOptions().timeZone;
 

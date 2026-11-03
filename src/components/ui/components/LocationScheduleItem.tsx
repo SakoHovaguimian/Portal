@@ -1,24 +1,16 @@
+import type { LocationScheduleItemProps } from '../models/locationScheduleItemProps';
 import { DescriptionList } from './DescriptionList';
 import { IconTile } from './IconTile';
 import { UiIcon } from './UiIcon';
 import { LocationScheduleTime } from './LocationScheduleCells';
 import { locationScheduleFormat } from '../lib/locationScheduleFormat';
-import type { LocationScheduleValue } from '../models/locationSchedule';
 
 export function LocationScheduleItem({
   name,
   schedule,
   copy,
-}: {
-  name: string;
-  schedule: LocationScheduleValue;
-  copy: {
-    starts: string;
-    ends: string;
-    timezone: string;
-    noEnd: string;
-  };
-}) {
+}: LocationScheduleItemProps) {
+
   const { timezone } = locationScheduleFormat(schedule.timezone);
   return (
     <li className="grid min-w-0 gap-5 p-4 sm:p-6">
@@ -60,4 +52,5 @@ export function LocationScheduleItem({
       </dl>
     </li>
   );
+
 }

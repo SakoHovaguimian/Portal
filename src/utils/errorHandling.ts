@@ -2,6 +2,7 @@ import { strings } from '@/strings';
 import { DomainError, UnknownAppError } from '@/errors/domainErrors';
 
 export function normalizeDomainError(error: unknown): DomainError {
+
   if (error instanceof DomainError) {
     return error;
   }
@@ -14,4 +15,5 @@ export function normalizeDomainError(error: unknown): DomainError {
     strings.ui.errorHandling.unexpectedNonErrorThrown,
     error,
   );
+
 }

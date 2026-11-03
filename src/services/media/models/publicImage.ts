@@ -1,13 +1,16 @@
 import { z } from 'zod';
 import { portalMediaStrings as mediaCopy } from '@/strings';
 import { isPublicImageReference } from '@/services/media/models/publicImageUrl';
+
 export const publicImageMimeTypes = [
   'image/png',
   'image/jpeg',
   'image/webp',
   'image/gif',
 ] as const;
+
 export const publicImageMaxBytes = 5 * 1024 * 1024;
+
 export const PublicImageSchema = z.object({
   fileName: z.string().min(1),
   thumbnailFileName: z.string().nullable().optional(),
@@ -22,4 +25,5 @@ export const PublicImageSchema = z.object({
     .nullable()
     .optional(),
 });
+
 export type PublicImage = z.infer<typeof PublicImageSchema>;

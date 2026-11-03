@@ -5,11 +5,7 @@ import { RuntimeProvider } from '@/providers/RuntimeProvider';
 import { AnalyticsProvider } from '@/services/analytics/components/AnalyticsProvider';
 import { CookieConsentControls } from '@/services/privacy/components/CookieConsentControls';
 import { strings } from '@/strings';
-export const metadata: Metadata = {
-  title: { default: strings.app.name, template: `%s | ${strings.app.name}` },
-  description: strings.app.description,
-};
-import type { ReactNode } from 'react';
+import type { ChildrenProps } from '@/models/childrenProps';
 import {
   Bricolage_Grotesque,
   Fraunces,
@@ -20,6 +16,11 @@ import {
   Sora,
 } from 'next/font/google';
 import { ThemeScript } from '@/components/ui';
+
+export const metadata: Metadata = {
+  title: { default: strings.app.name, template: `%s | ${strings.app.name}` },
+  description: strings.app.description,
+};
 
 const bodyFont = IBM_Plex_Sans({
   subsets: ['latin'],
@@ -77,9 +78,8 @@ const fontVariables = [
 
 export default async function RootLayout({
   children,
-}: {
-  children: ReactNode;
-}) {
+}: ChildrenProps) {
+
   const runtime = await getEffectiveRuntime();
   return (
     <html
@@ -100,4 +100,5 @@ export default async function RootLayout({
       </body>
     </html>
   );
+
 }

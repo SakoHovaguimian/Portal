@@ -4,8 +4,10 @@ import type { BlogContentType } from '../models/blogContentType';
 const empty = '';
 
 export function createBlogContent(contentType: BlogContentType): BlogContent {
+
   const id = crypto.randomUUID();
   switch (contentType) {
+
     case 'header':
     case 'footer':
       return { id, contentType, metaData: { text: empty } };
@@ -35,22 +37,29 @@ export function createBlogContent(contentType: BlogContentType): BlogContent {
       };
     case 'gallery2':
     case 'gallery3':
-    case 'gallery4':
+    case 'gallery4': {
+
+      const imageCount = Number(contentType.slice(-1));
+      const images = Array.from({ length: imageCount }, () => ({
+        src: empty,
+        alt: empty,
+        caption: empty,
+      }));
       return {
         id,
         contentType,
         metaData: {
-          images: Array.from({ length: Number(contentType.slice(-1)) }, () => ({
-            src: empty,
-            alt: empty,
-            caption: empty,
-          })),
+          images,
           caption: empty,
         },
       };
+
+    }
     case 'callout':
       return { id, contentType, metaData: { title: empty, text: empty } };
     case 'link':
       return { id, contentType, metaData: { url: empty, text: empty } };
+
   }
+
 }

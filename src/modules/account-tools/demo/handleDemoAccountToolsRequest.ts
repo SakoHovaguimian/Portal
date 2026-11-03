@@ -21,13 +21,26 @@ import {
   type AccountToolsPaging,
 } from '../models/accountToolsPaging';
 import { NotificationDeliveryQuerySchema } from '../models/notificationDeliveryQuery';
-import { LegalContextSchema } from '../models/legalInformation';
+import { LegalContextSchema } from '../models/legalContext';
 import { getDemoAccountToolsState } from './accountToolsState';
+
+// **************************************
+// MARK: - CREATE ACCOUNT TOOLS RESPONSE
+// **************************************
 
 const json = (body: unknown, status = 200) =>
   Response.json(body, { status, headers: { 'cache-control': 'no-store' } });
+
+// **************************************
+// MARK: - CREATE NO-CONTENT RESPONSE
+// **************************************
+
 const noContent = () =>
   new Response(null, { status: 204, headers: { 'cache-control': 'no-store' } });
+
+// **************************************
+// MARK: - HANDLE DEMO ACCOUNT TOOLS REQUEST
+// **************************************
 
 export async function handleDemoAccountToolsRequest(
   request: Request,
@@ -35,14 +48,14 @@ export async function handleDemoAccountToolsRequest(
   session: ServerSession,
   context: DemoContext,
 ): Promise<Response | null> {
+
   const url = new URL(path, 'http://portal.internal');
   const [area, feature, resource, id, action, ...extra] = url.pathname
     .split('/')
     .filter(Boolean)
     .map(decodeURIComponent);
-  if (feature !== 'account-tools' || !['portal', 'admin'].includes(area))
-    return null;
-  if (extra.length) throw new NotFoundError();
+  if (feature !== 'account-tools' || !['portal', 'admin'].includes(area)) { return null; }
+  if (extra.length) { throw new NotFoundError(); }
   const accounts = getDemoState();
   const current = accounts.users.find(
     (user) =>
@@ -51,19 +64,34 @@ export async function handleDemoAccountToolsRequest(
       !user.deleted &&
       !user.disabled,
   );
-  if (!session.demo || !current) throw new AuthError();
+  if (!session.demo || !current) { throw new AuthError(); }
   const administrative = area === 'admin';
-  if (administrative && current.role !== 'superadmin')
-    throw new OwnershipError();
+  if (administrative && current.role !== 'superadmin') { throw new OwnershipError(); }
   const state = getDemoAccountToolsState();
   const method = request.method;
   const rawQuery = Object.fromEntries(url.searchParams);
-  const readInput = () =>
-    request.json().catch(() => {
+
+  // **************************************
+  // MARK: - READ DEMO ACCOUNT TOOLS REQUEST BODY
+  // **************************************
+
+  const readInput = () => {
+
+    const inputPromise = request.json().catch(() => {
       throw new ValidationError();
     });
+
+    return inputPromise;
+
+  };
+
+  // **************************************
+  // MARK: - CREATE DEMO ACCOUNT TOOLS PAGE
+  // **************************************
+
   const page = <T>(rows: T[], paging: AccountToolsPaging) => {
-    if (context.scenario === 'empty') rows = [];
+
+    if (context.scenario === 'empty') { rows = []; }
     const data = rows.slice(paging.offset, paging.offset + paging.limit);
     const hasMore = paging.offset + data.length < rows.length;
     return {
@@ -75,24 +103,30 @@ export async function handleDemoAccountToolsRequest(
         nextOffset: hasMore ? paging.offset + paging.limit : null,
       },
     };
+
   };
   if (!administrative) {
+
     if (resource === 'account' && !id && !action && method === 'DELETE') {
+
       const input = AccountDeletionSchema.parse(await readInput());
-      if (input.confirmationEmail !== current.email)
-        throw new ValidationError(copy.validation.emailMismatch);
+      if (input.confirmationEmail !== current.email) { throw new ValidationError(copy.validation.emailMismatch); }
       current.deleted = true;
       resetDemoAccountState(current.id);
       current.updated_at = new Date().toISOString();
       accounts.credentials.delete(current.external_id);
       for (const [token, externalId] of accounts.refreshTokens) {
-        if (externalId === current.external_id)
-          accounts.refreshTokens.delete(token);
+
+        if (externalId === current.external_id) { accounts.refreshTokens.delete(token); }
+
       }
       return noContent();
+
     }
     if (resource === 'devices' && !action) {
+
       if (!id && method === 'GET') {
+
         const query = AccountDeviceQuerySchema.parse(rawQuery);
         const search = query.query.toLowerCase();
         const rows = state.devices.filter(
@@ -101,29 +135,33 @@ export async function handleDemoAccountToolsRequest(
             (!query.deviceType || device.deviceType === query.deviceType) &&
             device.deviceType.toLowerCase().includes(search),
         );
-        return json(
-          page(
-            rows.map(({ id: deviceId, deviceType, createdAt, updatedAt }) => ({
-              id: deviceId,
-              deviceType,
-              createdAt,
-              updatedAt,
-            })),
-            query,
-          ),
+        const deviceRows = rows.map(
+          ({ id: deviceId, deviceType, createdAt, updatedAt }) => ({
+            id: deviceId,
+            deviceType,
+            createdAt,
+            updatedAt,
+          }),
         );
+        const devicesPage = page(deviceRows, query);
+        return json(devicesPage);
+
       }
       if (id && method === 'DELETE') {
+
         z.string().uuid().parse(id);
         const device = state.devices.find(
           (device) => device.id === id && device.userId === current.id,
         );
-        if (!device) throw new NotFoundError();
+        if (!device) { throw new NotFoundError(); }
         state.devices = state.devices.filter((device) => device.id !== id);
         return noContent();
+
       }
+
     }
     if (resource === 'legal' && !id && !action && method === 'GET') {
+
       z.object({ context: LegalContextSchema }).strict().parse(rawQuery);
       return json({
         illustrative: true,
@@ -131,22 +169,29 @@ export async function handleDemoAccountToolsRequest(
           context.scenario === 'empty'
             ? []
             : [
-                {
-                  title: copy.demo.legalTitle,
-                  sections: [copy.demo.legalDescription],
-                },
-              ],
+              {
+                title: copy.demo.legalTitle,
+                sections: [copy.demo.legalDescription],
+              },
+            ],
       });
+
     }
     if (resource === 'faq' && !id && !action && method === 'GET') {
+
       return json({
         illustrative: true,
         sections: context.scenario === 'empty' ? [] : portalHelpFaqSections,
       });
+
     }
+
   } else {
+
     if (resource === 'deliveries') {
+
       if (!id && !action && method === 'GET') {
+
         const query = NotificationDeliveryQuerySchema.parse(rawQuery);
         const rows = state.deliveries.filter(
           (delivery) =>
@@ -161,19 +206,27 @@ export async function handleDemoAccountToolsRequest(
                 delivery.createdAt <= query.createdBefore)),
         );
         return json(page(rows, query));
+
       }
       if (id && action === 'attempts' && method === 'GET') {
+
         z.string().uuid().parse(id);
-        if (!state.deliveries.some((delivery) => delivery.id === id))
-          throw new NotFoundError();
+        const deliveryExists = state.deliveries.some(
+          (delivery) => delivery.id === id,
+        );
+        if (!deliveryExists) { throw new NotFoundError(); }
         return json(
           page(
             state.attempts.get(id) ?? [],
             AccountToolsPagingSchema.strict().parse(rawQuery),
           ),
         );
+
       }
+
     }
+
   }
   throw new NotFoundError();
+
 }

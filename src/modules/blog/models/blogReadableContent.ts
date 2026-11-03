@@ -29,4 +29,5 @@ export const BlogReadableContentSchema = z.discriminatedUnion('contentType', [
   BlogReadableCalloutContentSchema,
   BlogReadableLinkContentSchema,
 ]);
+
 export type BlogReadableContent = z.infer<typeof BlogReadableContentSchema>;

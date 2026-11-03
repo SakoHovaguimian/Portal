@@ -7571,6 +7571,7 @@ export const portalOnboardingStrings = {
   required: 'Complete account setup before opening this page.',
   invalidStep: 'Save the previous steps before continuing.',
 } as const;
+
 export const portalUiStrings = {
   colorInput: {
     hex: 'HEX Color',
@@ -8465,6 +8466,7 @@ export const portalHelpFaqSections = [
     ],
   },
 ];
+
 export const portalModuleStrings = {
   back: 'Back',
   notifications: 'Notifications',
@@ -8583,8 +8585,9 @@ export const componentExpansionStrings = {
           ? `${(bytes / 1024).toFixed(1)} KB`
           : `${(bytes / (1024 * 1024)).toFixed(1)} MB`,
     // @sentence-case: Informational upload constraints.
-    limits: (accept?: string, count?: number, size?: number) =>
-      [
+    limits: (accept?: string, count?: number, size?: number) => {
+
+      const uploadLimits = [
         accept || 'All file types',
         count === undefined ? 'Multiple files' : `Up to ${count} files`,
         size === undefined
@@ -8592,7 +8595,11 @@ export const componentExpansionStrings = {
           : `Up to ${Math.round(size / (1024 * 1024))} MB per file`,
       ]
         .filter(Boolean)
-        .join(' · '),
+        .join(' · ');
+
+      return uploadLimits;
+
+    },
     // @sentence-case: Validation feedback for rejected files.
     rejection: (name: string, reason: 'type' | 'size' | 'count') =>
       reason === 'type'

@@ -16,6 +16,7 @@ export function PublicImageField({
   onChange,
   onUploadStateChange,
 }: PublicImageFieldProps) {
+
   const {
     picker,
     trigger,
@@ -30,8 +31,10 @@ export function PublicImageField({
     onUploadStateChange,
   });
   const failure = error || uploadFailure;
-  return (
-    <div className="grid min-w-0 gap-3" aria-busy={uploading}>
+
+  function renderUrlField() {
+
+    return (
       <Field labelText={label}>
         <Input
           id={id}
@@ -43,14 +46,30 @@ export function PublicImageField({
           aria-invalid={Boolean(failure)}
           aria-describedby={`${id}-hint${failure ? ` ${id}-error` : ''}`}
           onChange={(event) => {
+
             clearFailure();
             onChange(event.target.value);
+
           }}
         />
       </Field>
-      {isPublicImageReference(value) && (
+    );
+
+  }
+
+  function renderPreview() {
+
+    return (
+      isPublicImageReference(value) && (
         <PublicImagePreview key={value} src={value} />
-      )}
+      )
+    );
+
+  }
+
+  function renderActions() {
+
+    return (
       <div className="flex flex-wrap gap-2">
         <FileInput
           ref={picker}
@@ -82,8 +101,10 @@ export function PublicImageField({
               variant="destructive"
               disabled={disabled}
               onClick={() => {
+
                 clearFailure();
                 onChange('');
+
               }}
             >
               <UiIcon name="trash" />
@@ -92,10 +113,14 @@ export function PublicImageField({
           )
         )}
       </div>
-      <p id={`${id}-hint`} className="m-0 text-xs text-tertiary">
-        {mediaCopy.imageUploadHint}
-      </p>
-      {failure && (
+    );
+
+  }
+
+  function renderFailure() {
+
+    return (
+      failure && (
         <p
           id={`${id}-error`}
           role="alert"
@@ -103,7 +128,21 @@ export function PublicImageField({
         >
           {failure}
         </p>
-      )}
+      )
+    );
+
+  }
+
+  return (
+    <div className="grid min-w-0 gap-3" aria-busy={uploading}>
+      {renderUrlField()}
+      {renderPreview()}
+      {renderActions()}
+      <p id={`${id}-hint`} className="m-0 text-xs text-tertiary">
+        {mediaCopy.imageUploadHint}
+      </p>
+      {renderFailure()}
     </div>
   );
+
 }

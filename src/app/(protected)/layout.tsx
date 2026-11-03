@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ChildrenProps } from '@/models/childrenProps';
 import { redirect } from 'next/navigation';
 import { AppProviders } from '@/providers/AppProviders';
 import { ProtectedShell } from '@/components/ProtectedShell';
@@ -6,9 +6,8 @@ import { getServerSession } from '@/lib/server/getServerSession';
 
 export default async function ProtectedLayout({
   children,
-}: {
-  children: ReactNode;
-}) {
+}: ChildrenProps) {
+
   const session = await getServerSession();
 
   if (!session) {
@@ -20,4 +19,5 @@ export default async function ProtectedLayout({
       <ProtectedShell initialSession={session}>{children}</ProtectedShell>
     </AppProviders>
   );
+
 }

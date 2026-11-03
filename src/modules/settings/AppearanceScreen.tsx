@@ -15,6 +15,7 @@ import { strings } from '@/strings';
 import { ThemeControls } from './components/ThemeControls';
 
 export function AppearanceScreen() {
+
   return (
     <Page>
       <PageHeader
@@ -52,4 +53,5 @@ export function AppearanceScreen() {
       </SplitSection>
     </Page>
   );
+
 }

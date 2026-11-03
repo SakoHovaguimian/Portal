@@ -13,6 +13,7 @@ export function useMarkdownEditor(
   maxLength: number,
   disabled: boolean,
 ) {
+
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const history = useRef<{
     past: MarkdownSelection[];
@@ -24,31 +25,46 @@ export function useMarkdownEditor(
     redo: false,
   });
   const [limitReached, setLimitReached] = useState(false);
+
   function current(): MarkdownSelection {
+
     return {
       value,
       start: inputRef.current?.selectionStart ?? value.length,
       end: inputRef.current?.selectionEnd ?? value.length,
     };
+
   }
+
   function announceHistory() {
+
     setAvailability({
       undo: history.current.past.length > 0,
       redo: history.current.future.length > 0,
     });
+
   }
+
   function restore(selection: MarkdownSelection) {
+
     onChange(selection.value);
     requestAnimationFrame(() => {
+
       inputRef.current?.focus({ preventScroll: true });
       inputRef.current?.setSelectionRange(selection.start, selection.end);
+
     });
+
   }
+
   function commit(selection: MarkdownSelection, typing = false) {
-    if (disabled || selection.value === value) return;
+
+    if (disabled || selection.value === value) { return; }
     if (selection.value.length > maxLength) {
+
       setLimitReached(true);
       return;
+
     }
     const now = Date.now();
     if (
@@ -56,51 +72,64 @@ export function useMarkdownEditor(
       now - lastTyping.current > 800 ||
       !history.current.past.length
     ) {
+
       history.current.past.push(current());
-      if (history.current.past.length > 100) history.current.past.shift();
+      if (history.current.past.length > 100) { history.current.past.shift(); }
+
     }
     lastTyping.current = typing ? now : 0;
     history.current.future = [];
     setLimitReached(false);
     announceHistory();
-    if (typing) onChange(selection.value);
-    else restore(selection);
+    if (typing) { onChange(selection.value); } else { restore(selection); }
+
   }
+
   function apply(action: MarkdownAction) {
     commit(applyMarkdownAction(action, current()));
   }
+
   function moveHistory(direction: 'undo' | 'redo') {
-    if (disabled) return;
+
+    if (disabled) { return; }
     const source =
       direction === 'undo' ? history.current.past : history.current.future;
     const destination =
       direction === 'undo' ? history.current.future : history.current.past;
     const previous = source.pop();
-    if (!previous) return;
+    if (!previous) { return; }
     destination.push(current());
     lastTyping.current = 0;
     setLimitReached(false);
     restore(previous);
     announceHistory();
+
   }
+
   function onKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
+
     if (
       disabled ||
       event.nativeEvent.isComposing ||
       !(event.metaKey || event.ctrlKey) ||
       event.altKey
-    )
-      return;
+    ) { return; }
     const key = event.key.toLowerCase();
     if (key === 'z' || key === 'y') {
+
       event.preventDefault();
       moveHistory(key === 'y' || event.shiftKey ? 'redo' : 'undo');
+
     } else if (key === 'b' || key === 'i' || key === 'k') {
+
       event.preventDefault();
       apply(key === 'b' ? 'bold' : key === 'i' ? 'italic' : 'link');
+
     }
+
   }
-  return {
+
+  const editor = {
     inputRef,
     availability,
     limitReached,
@@ -118,4 +147,7 @@ export function useMarkdownEditor(
         true,
       ),
   };
+
+  return editor;
+
 }

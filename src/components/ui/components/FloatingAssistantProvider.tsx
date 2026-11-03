@@ -1,6 +1,7 @@
 'use client';
 
-import { useCallback, useMemo, useRef, useState, type ReactNode } from 'react';
+import type { FloatingAssistantProviderProps } from '../models/floatingAssistantProviderProps';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { strings } from '@/strings';
 import { FloatingAssistantContext } from '../lib/floatingAssistantContext';
 import type { FloatingAssistantEntry } from '../models/floatingAssistantEntry';
@@ -12,11 +13,8 @@ import { UiIcon } from './UiIcon';
 export function FloatingAssistantProvider({
   children,
   hideLauncher = false,
-}: {
-  // A render callback places the same registered-tool launcher in a page header.
-  children: ReactNode | ((launcher: ReactNode) => ReactNode);
-  hideLauncher?: boolean;
-}) {
+}: FloatingAssistantProviderProps) {
+
   const [entries, setEntries] = useState<FloatingAssistantEntry[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [choosing, setChoosing] = useState(false);
@@ -27,15 +25,29 @@ export function FloatingAssistantProvider({
     !inline && !hideLauncher && entries.length > 0,
   );
   const register = useCallback((entry: FloatingAssistantEntry) => {
-    setEntries((current) =>
-      current.some((item) => item.id === entry.id)
+
+    setEntries((current) => {
+
+      const updatedEntries = current.some((item) => item.id === entry.id)
         ? current.map((item) => (item.id === entry.id ? entry : item))
-        : [...current, entry],
+        : [...current, entry];
+
+      return updatedEntries;
+
+    },
     );
+
   }, []);
   const unregister = useCallback((id: string) => {
-    setEntries((current) => current.filter((item) => item.id !== id));
+
+    setEntries((current) => {
+
+      const remainingEntries = current.filter((item) => item.id !== id);
+      return remainingEntries;
+
+    });
     setActiveId((current) => (current === id ? null : current));
+
   }, []);
   const close = useCallback(() => setActiveId(null), []);
   const focusLauncher = useCallback(() => launcher.current?.focus(), []);
@@ -44,11 +56,14 @@ export function FloatingAssistantProvider({
     [activeId, register, unregister, close, focusLauncher],
   );
   const copy = strings.floatingAssistant;
+
   function open(entry: FloatingAssistantEntry) {
-    if (entry.disabled) return;
-    if (entry.onOpen) entry.onOpen();
-    else setActiveId(entry.id);
+
+    if (entry.disabled) { return; }
+    if (entry.onOpen) { entry.onOpen(); } else { setActiveId(entry.id); }
+
   }
+
   const trigger = !hideLauncher && entries.length > 0 && (
     <Button
       ref={launcher}
@@ -60,17 +75,52 @@ export function FloatingAssistantProvider({
       disabled={entries.every((entry) => entry.disabled)}
       aria-haspopup="dialog"
       onClick={() => {
-        if (entries.length === 1) open(entries[0]);
-        else {
+
+        if (entries.length === 1) { open(entries[0]); } else {
+
           transferring.current = false;
           setChoosing(true);
+
         }
+
       }}
     >
       <UiIcon name="sparkles" className="size-5" />
       {inline || entries.length > 1 ? copy.open : entries[0].title}
     </Button>
   );
+
+  function renderAssistantEntry(entry: (typeof entries)[number]) {
+
+    return (
+      <Button
+        key={entry.id}
+        variant="secondary"
+        className="justify-start gap-4 rounded-card p-4 text-start"
+        disabled={entry.disabled}
+        onClick={() => {
+
+          transferring.current = true;
+          setChoosing(false);
+          // Let the chooser release its focus trap before the selected tool opens.
+          requestAnimationFrame(() => open(entry));
+
+        }}
+      >
+        <UiIcon name="sparkles" className="size-6 text-brand-secondary" />
+        <span className="grid min-w-0 gap-1">
+          <span>{entry.title}</span>
+          <span className="text-sm font-normal text-tertiary">
+            {entry.description}
+          </span>
+        </span>
+      </Button>
+    );
+
+  }
+
+  const assistantEntries = entries.map(renderAssistantEntry);
+
   return (
     <FloatingAssistantContext.Provider value={context}>
       {typeof children === 'function' ? children(trigger) : children}
@@ -85,32 +135,14 @@ export function FloatingAssistantProvider({
         description={copy.description}
         onClose={() => setChoosing(false)}
         onReturnFocus={() => {
-          if (!transferring.current) focusLauncher();
+
+          if (!transferring.current) { focusLauncher(); }
+
         }}
       >
-        {entries.map((entry) => (
-          <Button
-            key={entry.id}
-            variant="secondary"
-            className="justify-start gap-4 rounded-card p-4 text-start"
-            disabled={entry.disabled}
-            onClick={() => {
-              transferring.current = true;
-              setChoosing(false);
-              // Let the chooser release its focus trap before the selected tool opens.
-              requestAnimationFrame(() => open(entry));
-            }}
-          >
-            <UiIcon name="sparkles" className="size-6 text-brand-secondary" />
-            <span className="grid min-w-0 gap-1">
-              <span>{entry.title}</span>
-              <span className="text-sm font-normal text-tertiary">
-                {entry.description}
-              </span>
-            </span>
-          </Button>
-        ))}
+        {assistantEntries}
       </FloatingAssistantDialog>
     </FloatingAssistantContext.Provider>
   );
+
 }

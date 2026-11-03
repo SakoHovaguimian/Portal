@@ -1,3 +1,4 @@
+import type { IosPushNotificationProps } from '../models/iosPushNotificationProps';
 import { strings } from '@/strings';
 import { IconButton } from './IconButton';
 import { UiIcon } from './UiIcon';
@@ -6,11 +7,8 @@ export function IosPushNotification({
   title,
   body,
   onDismiss,
-}: {
-  title: string;
-  body?: string;
-  onDismiss: () => void;
-}) {
+}: IosPushNotificationProps) {
+
   const copy = strings.pushPreview;
   return (
     <div
@@ -51,4 +49,5 @@ export function IosPushNotification({
       </IconButton>
     </div>
   );
+
 }

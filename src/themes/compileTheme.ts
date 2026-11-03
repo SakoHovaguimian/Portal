@@ -1,15 +1,17 @@
 import type { CSSProperties } from 'react';
+import type { ThemeCssVariables } from './models/themeCssVariables';
 import type { ThemeMode } from '@/models/themeMode';
 import type { ThemeDefinition } from './models/themeDefinition';
 import { semanticAliases, darkSemanticAliases } from './semanticAliases';
 
-export type ThemeCssVariables = { [property: `--${string}`]: string };
+export type { ThemeCssVariables } from './models/themeCssVariables';
 
 /** Adapt complete semantic roles to Portal and Tailwind's existing vocabulary. */
 export function compileThemeRoles(
   theme: ThemeDefinition,
   mode: ThemeMode,
 ): ThemeCssVariables {
+
   const dark = mode === 'dark';
   const background = theme.backgrounds[mode];
   const foreground = theme.foregrounds[mode];
@@ -42,12 +44,12 @@ export function compileThemeRoles(
     '--color-fg-error-secondary': palette.danger,
     '--color-bg-success-solid': palette.success,
     '--color-bg-warning-solid': palette.warning,
-    '--color-bg-success-primary': `color-mix(in srgb, var(--color-success) 8%, var(--color-surface))`,
-    '--color-bg-success-secondary': `color-mix(in srgb, var(--color-success) 16%, var(--color-surface))`,
-    '--color-bg-warning-primary': `color-mix(in srgb, var(--color-warning) 8%, var(--color-surface))`,
-    '--color-bg-warning-secondary': `color-mix(in srgb, var(--color-warning) 16%, var(--color-surface))`,
-    '--color-bg-error-primary': `color-mix(in srgb, var(--color-error) 8%, var(--color-surface))`,
-    '--color-bg-error-secondary': `color-mix(in srgb, var(--color-error) 16%, var(--color-surface))`,
+    '--color-bg-success-primary': 'color-mix(in srgb, var(--color-success) 8%, var(--color-surface))',
+    '--color-bg-success-secondary': 'color-mix(in srgb, var(--color-success) 16%, var(--color-surface))',
+    '--color-bg-warning-primary': 'color-mix(in srgb, var(--color-warning) 8%, var(--color-surface))',
+    '--color-bg-warning-secondary': 'color-mix(in srgb, var(--color-warning) 16%, var(--color-surface))',
+    '--color-bg-error-primary': 'color-mix(in srgb, var(--color-error) 8%, var(--color-surface))',
+    '--color-bg-error-secondary': 'color-mix(in srgb, var(--color-error) 16%, var(--color-surface))',
     '--color-nav-item-button-icon-fg': foreground.secondary,
     '--color-nav-item-button-icon-fg_active': 'var(--color-accent)',
     '--color-nav-item-icon-fg': foreground.secondary,
@@ -268,15 +270,19 @@ export function compileThemeRoles(
     [900, 95],
     [950, 100],
   ]) {
+
     tokens[`--color-utility-gray-${shade}`] = `var(--color-gray-${shade})`;
     tokens[`--color-gray-${shade}`] =
       `color-mix(in srgb, var(--color-primary) ${amount}%, var(--color-surface))`;
+
   }
   return tokens;
+
 }
 
 /** Brand shades are derived from the selected theme's complete palette. */
 function compileThemePalette(theme: ThemeDefinition): ThemeCssVariables {
+
   const tokens: ThemeCssVariables = {};
   for (const [shade, amount] of [
     [25, 3],
@@ -287,8 +293,10 @@ function compileThemePalette(theme: ThemeDefinition): ThemeCssVariables {
     [400, 58],
     [500, 78],
   ]) {
+
     tokens[`--color-brand-${shade}`] =
       `color-mix(in srgb, var(--color-accent-light) ${amount}%, white)`;
+
   }
   tokens['--color-brand-400'] = theme.palette.dark.accentBright;
   tokens['--color-brand-600'] = theme.palette.light.accent;
@@ -299,24 +307,28 @@ function compileThemePalette(theme: ThemeDefinition): ThemeCssVariables {
   tokens['--color-brand-950'] =
     'color-mix(in srgb, var(--color-accent-light) 55%, black)';
   return tokens;
+
 }
 
 export function compileTheme(
   theme: ThemeDefinition,
   mode: ThemeMode,
 ): ThemeCssVariables {
+
   return {
     ...semanticAliases,
     ...(mode === 'dark' ? darkSemanticAliases : {}),
     ...compileThemeRoles(theme, mode),
     ...compileThemePalette(theme),
   };
+
 }
 
 /** Repeat all aliases inside the preview scope; inherited resolved aliases cannot retint. */
 export function themeVariablesToStyle(
   variables: ThemeCssVariables,
 ): CSSProperties {
+
   return {
     ...variables,
     fontFamily: 'var(--font-body)',
@@ -325,4 +337,5 @@ export function themeVariablesToStyle(
     fontSize: 'var(--text-sm)',
     lineHeight: 'var(--text-sm--line-height)',
   } as CSSProperties;
+
 }

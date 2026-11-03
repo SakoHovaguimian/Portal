@@ -2,10 +2,15 @@ import 'server-only';
 import type { ServerSession } from '@/services/session/models/serverSession';
 import { getDemoState } from './demoState';
 
+// **************************************
+// MARK: - RESOLVE DEMO SESSION IDENTITY
+// **************************************
+
 /** Proxy navigation and API sessions must agree after reset or account changes. */
 export function resolveDemoSession(
   session: ServerSession,
 ): ServerSession | null {
+
   const state = getDemoState();
   const user = state.users.find(
     (candidate) =>
@@ -17,8 +22,7 @@ export function resolveDemoSession(
     user.disabled ||
     user.deleted ||
     session.demoGeneration !== state.generation
-  )
-    return null;
+  ) { return null; }
   return {
     ...session,
     user: {
@@ -30,4 +34,5 @@ export function resolveDemoSession(
       role: user.role,
     },
   };
+
 }

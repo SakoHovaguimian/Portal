@@ -1,21 +1,12 @@
 'use client';
 
+import type { ImagePreviewProps } from '../models/imagePreviewProps';
 import Image from 'next/image';
-import { useRef, useState, type ReactNode, type RefObject } from 'react';
+import { useRef, useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { strings } from '@/strings';
-import type { ImageMosaicItem } from '../models/imageMosaicItem';
 import { IconButton } from './IconButton';
 import { UiIcon } from './UiIcon';
-
-interface ImagePreviewProps {
-  image: ImageMosaicItem | null;
-  open?: boolean;
-  onClose: () => void;
-  details?: ReactNode;
-  actions?: ReactNode;
-  fallbackFocus?: RefObject<HTMLElement | null>;
-}
 
 export function ImagePreview({
   image,
@@ -25,13 +16,16 @@ export function ImagePreview({
   actions,
   fallbackFocus,
 }: ImagePreviewProps) {
+
   const returnFocus = useRef<HTMLElement | null>(null);
   const [failedSrc, setFailedSrc] = useState<string>();
   return (
     <Dialog.Root
       open={open && Boolean(image)}
       onOpenChange={(open) => {
-        if (!open) onClose();
+
+        if (!open) { onClose(); }
+
       }}
     >
       <Dialog.Portal>
@@ -39,17 +33,21 @@ export function ImagePreview({
         <Dialog.Content
           data-side="right"
           onOpenAutoFocus={() => {
+
             returnFocus.current =
               document.activeElement instanceof HTMLElement
                 ? document.activeElement
                 : null;
+
           }}
           onCloseAutoFocus={(event) => {
+
             event.preventDefault();
             const target = returnFocus.current?.isConnected
               ? returnFocus.current
               : fallbackFocus?.current;
             target?.focus();
+
           }}
           className="ui-sheet fixed inset-y-0 right-0 z-90 flex w-full max-w-6xl flex-col overflow-y-auto border-l-control border-secondary bg-primary shadow-(--shadow-overlay) outline-none sm:w-[94vw] sm:rounded-l-overlay"
         >
@@ -112,4 +110,5 @@ export function ImagePreview({
       </Dialog.Portal>
     </Dialog.Root>
   );
+
 }

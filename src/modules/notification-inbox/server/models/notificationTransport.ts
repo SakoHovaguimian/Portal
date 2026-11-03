@@ -12,4 +12,5 @@ export const NotificationTransportSchema = z.object({
   published_at: z.iso.datetime({ offset: true }).nullable(),
   read_at: z.iso.datetime({ offset: true }).nullable(),
 });
+
 export type NotificationTransport = z.infer<typeof NotificationTransportSchema>;

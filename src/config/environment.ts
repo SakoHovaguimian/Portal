@@ -2,23 +2,29 @@ import 'server-only';
 import type { RuntimeConfig } from '@/models/runtimeConfig';
 import { strings } from '@/strings';
 import { portalModules } from '@/config/portalModules';
+
 function required(name: string): string {
+
   const value = process.env[name]?.trim();
-  if (!value) throw new Error(strings.environment.missing(name));
+  if (!value) { throw new Error(strings.environment.missing(name)); }
   return value;
+
 }
+
 export const environment = {
   get demoMode() {
     return process.env.DEMO_MODE === 'true';
   },
   get sessionSecret() {
+
     const value = process.env.SESSION_SECRET;
-    if (this.demoMode) return value || 'portal-demo-only-local-session-secret';
-    if (!value || value.length < 32 || value.includes('replace-with'))
-      throw new Error(strings.environment.secret);
+    if (this.demoMode) { return value || 'portal-demo-only-local-session-secret'; }
+    if (!value || value.length < 32 || value.includes('replace-with')) { throw new Error(strings.environment.secret); }
     return value;
+
   },
   get apiUrl() {
+
     const url = new URL(required('PORTAL_API_URL'));
     if (
       !['http:', 'https:'].includes(url.protocol) ||
@@ -26,9 +32,9 @@ export const environment = {
       url.password ||
       url.search ||
       url.hash
-    )
-      throw new Error(strings.environment.invalid);
+    ) { throw new Error(strings.environment.invalid); }
     return url.toString().replace(/\/$/, '');
+
   },
   get firebaseApiKey() {
     return required('FIREBASE_WEB_API_KEY');
@@ -37,10 +43,13 @@ export const environment = {
     return process.env.APP_VERSION || '1.0.0';
   },
 };
+
 export function getRuntimeConfig(
   demoMode = environment.demoMode,
 ): RuntimeConfig {
-  if (demoMode)
+
+  if (demoMode) {
+
     return {
       demoMode: true,
       onboardingEnabled: portalModules.onboarding,
@@ -48,6 +57,8 @@ export function getRuntimeConfig(
       messaging: null,
       amplitudeApiKey: null,
     };
+
+  }
   const firebase = {
     apiKey: process.env.FIREBASE_WEB_API_KEY || '',
     authDomain: process.env.FIREBASE_AUTH_DOMAIN || '',
@@ -56,7 +67,7 @@ export function getRuntimeConfig(
     appId: process.env.FIREBASE_APP_ID || '',
   };
   const vapidKey = process.env.FIREBASE_VAPID_PUBLIC_KEY || '';
-  return {
+  const runtimeConfig = {
     demoMode: false,
     onboardingEnabled:
       portalModules.onboarding &&
@@ -68,12 +79,16 @@ export function getRuntimeConfig(
         : null,
     amplitudeApiKey: process.env.AMPLITUDE_API_KEY || null,
   };
+
+  return runtimeConfig;
+
 }
 
 export function getSessionSecret(demoMode = environment.demoMode) {
+
   const value = process.env.SESSION_SECRET;
-  if (demoMode) return value || 'portal-demo-only-local-session-secret';
-  if (!value || value.length < 32 || value.includes('replace-with'))
-    throw new Error(strings.environment.secret);
+  if (demoMode) { return value || 'portal-demo-only-local-session-secret'; }
+  if (!value || value.length < 32 || value.includes('replace-with')) { throw new Error(strings.environment.secret); }
   return value;
+
 }

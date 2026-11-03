@@ -7,9 +7,17 @@ import {
   mapUserMutationToTransport,
   mapUserTransportToDomain,
 } from '@/services/api/domainMappers';
+
 export class UserService {
+
   constructor(private readonly api: ApiClientInterface) {}
+
+  // **************************************
+  // MARK: - LIST USERS
+  // **************************************
+
   async listUsers(query: UsersQuery, signal?: AbortSignal) {
+
     const params = new URLSearchParams({
       query: query.query || '',
       limit: String(query.limit),
@@ -19,17 +27,33 @@ export class UserService {
       `/users?${params}`,
       { signal },
     );
-    return { ...page, data: page.data.map(mapUserTransportToDomain) };
+    const users = page.data.map(mapUserTransportToDomain);
+
+    return { ...page, data: users };
+
   }
+
+  // **************************************
+  // MARK: - GET USER BY ID
+  // **************************************
+
   async getUserById(id: string, signal?: AbortSignal) {
+
     return mapUserTransportToDomain(
       await this.api.request<UserTransport>(
         `/users/${encodeURIComponent(id)}`,
         { signal },
       ),
     );
+
   }
+
+  // **************************************
+  // MARK: - UPDATE CURRENT USER
+  // **************************************
+
   async updateCurrentUser(id: string, input: UserMutationInput) {
+
     return mapUserTransportToDomain(
       await this.api.request<UserTransport>(
         `/users/${encodeURIComponent(id)}`,
@@ -41,5 +65,7 @@ export class UserService {
         },
       ),
     );
+
   }
+
 }

@@ -1,21 +1,18 @@
 'use client';
 
+import type { ColorPickerValueFieldProps } from '../models/colorPickerValueFieldProps';
 import { useContext, useId, useState } from 'react';
 import { ColorPickerStateContext, parseColor } from 'react-aria-components';
 import { portalUiStrings } from '@/strings';
 import { Button } from './Button';
 import { Input } from './Input';
 
-interface ColorPickerValueFieldProps {
-  value: string;
-  onDone: () => void;
-}
-
 // Keep incomplete hex entry local. Only a complete color reaches the picker/form.
 export function ColorPickerValueField({
   value,
   onDone,
 }: ColorPickerValueFieldProps) {
+
   const picker = useContext(ColorPickerStateContext);
   const id = useId();
   const [previous, setPrevious] = useState(value);
@@ -24,10 +21,12 @@ export function ColorPickerValueField({
   const [copiedValue, setCopiedValue] = useState('');
   const [copyFailed, setCopyFailed] = useState(false);
   if (previous !== value) {
+
     setPrevious(value);
     setDraft(value);
     setBlurred(false);
     setCopyFailed(false);
+
   }
   const valid = /^#?[0-9a-fA-F]{6}$/.test(draft.trim());
   const hex = '#' + draft.trim().replace(/^#/, '').toUpperCase();
@@ -35,14 +34,18 @@ export function ColorPickerValueField({
   const copy = portalUiStrings.colorInput;
 
   async function copyHex() {
-    if (!valid) return;
+
+    if (!valid) { return; }
     try {
+
       await navigator.clipboard.writeText(hex);
       setCopiedValue(hex);
       setCopyFailed(false);
+
     } catch {
       setCopyFailed(true);
     }
+
   }
 
   return (
@@ -62,20 +65,27 @@ export function ColorPickerValueField({
             aria-describedby={`${id}-help`}
             onBlur={() => setBlurred(true)}
             onChange={(event) => {
+
               const next = event.target.value;
               setDraft(next);
               setCopyFailed(false);
-              if (/^#?[0-9a-fA-F]{6}$/.test(next.trim()))
+              if (/^#?[0-9a-fA-F]{6}$/.test(next.trim())) {
+
                 picker?.setColor(
                   parseColor('#' + next.trim().replace(/^#/, '')),
                 );
+
+              }
+
             }}
             onKeyDown={(event) => {
-              if (event.key !== 'Enter') return;
-              if (event.nativeEvent.isComposing) return;
+
+              if (event.key !== 'Enter') { return; }
+              if (event.nativeEvent.isComposing) { return; }
               event.preventDefault();
               setBlurred(true);
-              if (valid) onDone();
+              if (valid) { onDone(); }
+
             }}
           />
         </div>
@@ -109,4 +119,5 @@ export function ColorPickerValueField({
       </Button>
     </div>
   );
+
 }

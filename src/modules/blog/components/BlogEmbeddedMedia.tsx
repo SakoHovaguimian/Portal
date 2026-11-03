@@ -1,18 +1,18 @@
 'use client';
-import { portalPublishingStrings } from '@/strings';
-const copy = portalPublishingStrings.builder;
 
+import { portalPublishingStrings } from '@/strings';
 import { useId, useState } from 'react';
 import { Button } from '@/components/ui';
 import { resolveBlogEmbed } from '../content/resolveBlogEmbed';
-import type { BlogReadableContent } from '../models/blogReadableContent';
+import type { BlogEmbeddedMediaProps } from '../models/blogEmbeddedMediaProps';
 import styles from '../Blog.module.css';
+
+const copy = portalPublishingStrings.builder;
 
 export function BlogEmbeddedMedia({
   metaData,
-}: {
-  metaData: Extract<BlogReadableContent, { contentType: 'embed' }>['metaData'];
-}) {
+}: BlogEmbeddedMediaProps) {
+
   const player = resolveBlogEmbed(metaData.url);
   const titleId = useId();
   const playerId = `${titleId}-player`;
@@ -66,4 +66,5 @@ export function BlogEmbeddedMedia({
       {metaData.caption && <figcaption>{metaData.caption}</figcaption>}
     </figure>
   );
+
 }

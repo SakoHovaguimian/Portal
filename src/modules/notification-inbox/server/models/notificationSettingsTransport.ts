@@ -8,6 +8,7 @@ export const NotificationSettingsTransportSchema = z.object({
   last_timezone_updated_at: z.iso.datetime({ offset: true }).nullable(),
   effective_timezone: NotificationTimezoneSchema,
 });
+
 export type NotificationSettingsTransport = z.infer<
   typeof NotificationSettingsTransportSchema
 >;

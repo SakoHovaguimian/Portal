@@ -1,8 +1,6 @@
 'use client';
-import { portalPublishingStrings } from '@/strings';
-const copy = portalPublishingStrings.article;
-const builderCopy = portalPublishingStrings.builder;
 
+import { portalPublishingStrings } from '@/strings';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
@@ -31,12 +29,16 @@ import {
   type BlogArticle,
   type BlogArticleDraft,
 } from '../models/blogArticle';
+import type { BlogEditorProps } from '../models/blogEditorProps';
 import type { BlogFormErrors } from '../models/blogFormErrors';
 import { useBlogMutations } from '../hooks';
 import { BlogArticleFields } from './BlogArticleFields';
 import { BlogArticleReader } from './BlogArticleReader';
 import styles from '../Blog.module.css';
 import adminStyles from '../BlogAdmin.module.css';
+
+const copy = portalPublishingStrings.article;
+const builderCopy = portalPublishingStrings.builder;
 
 const empty = '';
 const articleInput = (article: BlogArticle): BlogArticleDraft => ({
@@ -50,11 +52,8 @@ const articleInput = (article: BlogArticle): BlogArticleDraft => ({
   revision: article.revision,
   ...(article.body === undefined ? {} : { body: article.body }),
 });
-export function BlogEditor({
-  initialArticle,
-}: {
-  initialArticle?: BlogArticle;
-}) {
+export function BlogEditor({ initialArticle }: BlogEditorProps) {
+
   const router = useRouter();
   const navigate = useGuardedNavigate();
   const presentation = usePresentationService();
@@ -65,16 +64,16 @@ export function BlogEditor({
     initialArticle
       ? articleInput(initialArticle)
       : {
-          title: empty,
-          slug: '',
-          description: empty,
-          content: [],
-          author: session?.user.firstName
-            ? `${session.user.firstName} ${session.user.lastName}`.trim()
-            : copy.defaultAuthor,
-          category: 'ideas',
-          cover: 'none',
-        },
+        title: empty,
+        slug: '',
+        description: empty,
+        content: [],
+        author: session?.user.firstName
+          ? `${session.user.firstName} ${session.user.lastName}`.trim()
+          : copy.defaultAuthor,
+        category: 'ideas',
+        cover: 'none',
+      },
   );
   const [baseline, setBaseline] = useState(() => JSON.stringify(form));
   const [errors, setErrors] = useState<BlogFormErrors>({});
@@ -96,17 +95,22 @@ export function BlogEditor({
   const busyRef = useRef(false);
   const busy = mutations.isPending || confirming || uploading;
   useEffect(() => {
+
     dirtyRef.current = dirty;
     busyRef.current = busy;
+
   }, [dirty, busy]);
   useUnsavedFormGuard(dirtyRef, busyRef, copy.discardDescription);
 
   const updateForm = (next: BlogArticleDraft) => {
+
     dirtyRef.current = JSON.stringify(next) !== baseline;
     setForm(next);
     setNotice('');
+
   };
   const acceptArticle = (saved: BlogArticle) => {
+
     const next = articleInput(saved);
     setArticle(saved);
     setForm(next);
@@ -114,20 +118,27 @@ export function BlogEditor({
     dirtyRef.current = false;
     setErrors({});
     setFailure('');
+
   };
   const validate = () => {
+
     if (form.body !== undefined) {
+
       setErrors({ content: builderCopy.legacyConversionRequired });
       document.getElementById('blog-legacy-body')?.focus();
       return null;
+
     }
     const result = BlogMutationInputSchema.safeParse(form);
     if (result.success) {
+
       setErrors({});
       return result.data;
+
     }
     const next: BlogFormErrors = {};
     for (const issue of result.error.issues) {
+
       const key = issue.path[0] as keyof BlogArticleDraft;
       next[key] =
         issue.code === 'unrecognized_keys'
@@ -135,10 +146,12 @@ export function BlogEditor({
           : issue.code === 'invalid_union'
             ? builderCopy.invalidBlock
             : issue.message;
+
     }
     setErrors(next);
     setFailure('');
     queueMicrotask(() => {
+
       const first = result.error.issues[0];
       const block =
         first?.path[0] === 'content' && typeof first.path[1] === 'number'
@@ -152,8 +165,10 @@ export function BlogEditor({
           'input, textarea, button',
         ) as HTMLElement | null) || target
       )?.focus();
+
     });
     return null;
+
   };
   const displayError = (error: unknown) =>
     setFailure(
@@ -162,40 +177,50 @@ export function BlogEditor({
         : copy.mutationErrorDescription,
     );
   const persist = async (): Promise<BlogArticle | null> => {
+
     const input = validate();
-    if (!input) return null;
+    if (!input) { return null; }
     setFailure('');
     setNotice('');
     try {
+
       const saved = await mutations.save.mutateAsync({
         id: article?.id,
         input,
       });
       acceptArticle(saved);
       return saved;
+
     } catch (error) {
+
       displayError(error);
       return null;
+
     }
+
   };
   const save = async () => {
-    if (busy) return;
+
+    if (busy) { return; }
     const saved = await persist();
-    if (!saved) return;
+    if (!saved) { return; }
     setNotice(copy.savedDescription);
     void presentation.showToast({
       title: copy.savedTitle,
       description: copy.savedDescription,
       intent: 'success',
     });
-    if (!article) router.replace(`/admin/blog/${saved.id}`);
+    if (!article) { router.replace(`/admin/blog/${saved.id}`); }
+
   };
   const changePublication = async () => {
-    if (busy) return;
+
+    if (busy) { return; }
     const publishing = article?.status !== 'published';
-    if ((publishing || dirty) && !validate()) return;
+    if ((publishing || dirty) && !validate()) { return; }
     setConfirming(true);
     try {
+
       const confirmed = await presentation.showAlert({
         title: publishing
           ? copy.publishConfirmTitle
@@ -207,9 +232,9 @@ export function BlogEditor({
         cancelLabel: copy.keepWriting,
         tone: publishing ? 'info' : 'danger',
       });
-      if (!confirmed) return;
+      if (!confirmed) { return; }
       const saved = dirty || !article ? await persist() : article;
-      if (!saved) return;
+      if (!saved) { return; }
       const updated = await mutations.publication.mutateAsync({
         id: saved.id,
         revision: saved.revision,
@@ -226,17 +251,21 @@ export function BlogEditor({
           : copy.unpublishedDescription,
         intent: 'success',
       });
-      if (!article) router.replace(`/admin/blog/${updated.id}`);
+      if (!article) { router.replace(`/admin/blog/${updated.id}`); }
+
     } catch (error) {
       displayError(error);
     } finally {
       setConfirming(false);
     }
+
   };
   const remove = async () => {
-    if (busy || !article) return;
+
+    if (busy || !article) { return; }
     setConfirming(true);
     try {
+
       const confirmed = await presentation.showAlert({
         title: copy.deleteConfirmTitle,
         description: copy.deleteConfirmDescription(article.title),
@@ -244,7 +273,7 @@ export function BlogEditor({
         cancelLabel: copy.cancel,
         tone: 'danger',
       });
-      if (!confirmed) return;
+      if (!confirmed) { return; }
       await mutations.remove.mutateAsync({
         id: article.id,
         revision: article.revision,
@@ -258,11 +287,13 @@ export function BlogEditor({
         intent: 'success',
       });
       router.push('/admin/blog');
+
     } catch (error) {
       displayError(error);
     } finally {
       setConfirming(false);
     }
+
   };
   const previewArticle: BlogArticle = {
     ...form,
@@ -273,8 +304,10 @@ export function BlogEditor({
     status: article?.status || 'draft',
     revision: article?.revision || 1,
   };
-  return (
-    <Page aria-busy={busy} className={adminStyles.editor}>
+
+  function renderHeader() {
+
+    return (
       <div className={adminStyles.intro} data-tone="lilac">
         <PageHeader
           title={article ? copy.editTitle : copy.newTitle}
@@ -300,180 +333,258 @@ export function BlogEditor({
           }
         />
       </div>
+
+    );
+
+  }
+
+  function renderRepairNotice() {
+
+    if (!needsRepair) { return null; }
+    return (
+      <Message
+        title={builderCopy.repairTitle}
+        description={builderCopy.repairDescription}
+        intent="warning"
+      />
+    );
+
+  }
+
+  function renderLegacyContent() {
+
+    if (form.body === undefined) { return null; }
+    return (
+      <div className="grid min-w-0 gap-4">
+        <Message
+          title={builderCopy.legacyTitle}
+          description={builderCopy.legacyDescription}
+        />
+        <Field labelText={builderCopy.legacyBodyLabel}>
+          <TextArea
+            id="blog-legacy-body"
+            value={form.body}
+            readOnly
+            aria-describedby="blog-legacy-description"
+          />
+        </Field>
+        <p id="blog-legacy-description" className="m-0 text-sm text-tertiary">
+          {builderCopy.legacyConversionRequired}
+        </p>
+        <Button
+          variant="secondary"
+          disabled={busy}
+          onClick={() => {
+
+            const { body, ...canonical } = form;
+            if (body === undefined) { return; }
+            updateForm({
+              ...canonical,
+              content: [
+                ...form.content,
+                {
+                  id: crypto.randomUUID(),
+                  contentType: 'section',
+                  metaData: { title: empty, body, format: 'markdown' },
+                },
+              ],
+            });
+
+          }}
+        >
+          <UiIcon name="layers" />
+          {builderCopy.convert}
+        </Button>
+      </div>
+    );
+
+  }
+
+  function renderStorySection() {
+
+    return (
+      <SplitSection
+        id="blog-story"
+        title={builderCopy.title}
+        description={builderCopy.description}
+      >
+        {renderLegacyContent()}
+        <BlogContentBuilder
+          content={form.content}
+          disabled={busy}
+          showErrors={Boolean(errors.content) || needsRepair}
+          onUploadStateChangeAction={setUploading}
+          onChangeAction={(content) => updateForm({ ...form, content })}
+        />
+        {errors.content && (
+          <p
+            id="blog-content-error"
+            role="alert"
+            className="m-0 text-sm text-error-primary"
+          >
+            {errors.content}
+          </p>
+        )}
+      </SplitSection>
+    );
+
+  }
+
+  function renderEditorSections() {
+
+    return (
+      <SectionStack>
+        <BlogArticleFields
+          onUploadStateChangeAction={setUploading}
+          form={form}
+          errors={errors}
+          disabled={busy}
+          onChangeAction={updateForm}
+        />
+        {renderStorySection()}
+      </SectionStack>
+    );
+
+  }
+
+  function renderValidationMessage() {
+
+    if (Object.keys(errors).length === 0) { return null; }
+    return <Message title={copy.validationTitle} intent="danger" />;
+
+  }
+
+  function renderFailureMessage() {
+
+    if (!failure) { return null; }
+    return (
+      <Message
+        title={copy.mutationErrorTitle}
+        description={failure}
+        intent="danger"
+      />
+    );
+
+  }
+
+  function renderNoticeMessage() {
+
+    if (!notice) { return null; }
+    return (
+      <Message
+        title={copy.savedTitle}
+        description={notice}
+        intent="success"
+      />
+    );
+
+  }
+
+  function renderFormActions() {
+
+    return (
+      <FormActions
+        description={
+          dirty
+            ? copy.unsavedHint
+            : article?.status === 'published'
+              ? copy.publishedHint
+              : copy.draftHint
+        }
+        live
+      >
+        <Button
+          variant="secondary"
+          disabled={busy}
+          onClick={() => void navigate('/admin/blog')}
+        >
+          {copy.backToArticles}
+        </Button>
+        <BookmarkButton
+          saved={Boolean(notice) && !dirty}
+          type="submit"
+          variant="secondary"
+          loading={mutations.save.isPending}
+          disabled={busy}
+        >
+          {article?.status === 'published' ? copy.saveChanges : copy.saveDraft}
+        </BookmarkButton>
+        <Button
+          variant={
+            article?.status === 'published' ? 'destructive' : 'secondary'
+          }
+          loading={mutations.publication.isPending}
+          disabled={busy}
+          onClick={() => void changePublication()}
+        >
+          {article?.status === 'published' ? copy.unpublish : copy.publish}
+        </Button>
+        <Button disabled={busy} onClick={() => setPreviewOpen(true)}>
+          <UiIcon name="file" />
+          {copy.preview}
+        </Button>
+      </FormActions>
+    );
+
+  }
+
+  function renderDeleteActions() {
+
+    if (!article) { return null; }
+    return (
+      <div className="flex flex-wrap items-center justify-between gap-4 border-t border-secondary pt-5">
+        <Button
+          variant="destructive"
+          loading={mutations.remove.isPending}
+          disabled={busy}
+          onClick={() => void remove()}
+        >
+          <UiIcon name="trash" />
+          {copy.delete}
+        </Button>
+        {article.status === 'published' && (
+          <Button
+            variant="ghost"
+            disabled={busy}
+            onClick={() => void navigate(`/blog/${article.slug}`)}
+          >
+            {copy.openPublic}
+            <UiIcon name="arrowRight" />
+          </Button>
+        )}
+      </div>
+    );
+
+  }
+
+  function renderEditorForm() {
+
+    return (
       <form
         noValidate
         className="grid min-w-0 gap-8"
         onSubmit={(event) => {
+
           event.preventDefault();
           void save();
+
         }}
       >
-        {needsRepair && (
-          <Message
-            title={builderCopy.repairTitle}
-            description={builderCopy.repairDescription}
-            intent="warning"
-          />
-        )}
-        <SectionStack>
-          <BlogArticleFields
-            onUploadStateChangeAction={setUploading}
-            form={form}
-            errors={errors}
-            disabled={busy}
-            onChangeAction={updateForm}
-          />
-          <SplitSection
-            id="blog-story"
-            title={builderCopy.title}
-            description={builderCopy.description}
-          >
-            {form.body !== undefined && (
-              <div className="grid min-w-0 gap-4">
-                <Message
-                  title={builderCopy.legacyTitle}
-                  description={builderCopy.legacyDescription}
-                />
-                <Field labelText={builderCopy.legacyBodyLabel}>
-                  <TextArea
-                    id="blog-legacy-body"
-                    value={form.body}
-                    readOnly
-                    aria-describedby="blog-legacy-description"
-                  />
-                </Field>
-                <p
-                  id="blog-legacy-description"
-                  className="m-0 text-sm text-tertiary"
-                >
-                  {builderCopy.legacyConversionRequired}
-                </p>
-                <Button
-                  variant="secondary"
-                  disabled={busy}
-                  onClick={() => {
-                    const { body, ...canonical } = form;
-                    if (body === undefined) return;
-                    updateForm({
-                      ...canonical,
-                      content: [
-                        ...form.content,
-                        {
-                          id: crypto.randomUUID(),
-                          contentType: 'section',
-                          metaData: { title: empty, body, format: 'markdown' },
-                        },
-                      ],
-                    });
-                  }}
-                >
-                  <UiIcon name="layers" />
-                  {builderCopy.convert}
-                </Button>
-              </div>
-            )}
-            <BlogContentBuilder
-              content={form.content}
-              disabled={busy}
-              showErrors={Boolean(errors.content) || needsRepair}
-              onUploadStateChangeAction={setUploading}
-              onChangeAction={(content) => updateForm({ ...form, content })}
-            />
-            {errors.content && (
-              <p
-                id="blog-content-error"
-                role="alert"
-                className="m-0 text-sm text-error-primary"
-              >
-                {errors.content}
-              </p>
-            )}
-          </SplitSection>
-        </SectionStack>
-        {Object.keys(errors).length > 0 && (
-          <Message title={copy.validationTitle} intent="danger" />
-        )}
-        {failure && (
-          <Message
-            title={copy.mutationErrorTitle}
-            description={failure}
-            intent="danger"
-          />
-        )}
-        {notice && (
-          <Message
-            title={copy.savedTitle}
-            description={notice}
-            intent="success"
-          />
-        )}
-        <FormActions
-          description={
-            dirty
-              ? copy.unsavedHint
-              : article?.status === 'published'
-                ? copy.publishedHint
-                : copy.draftHint
-          }
-          live
-        >
-          <Button
-            variant="secondary"
-            disabled={busy}
-            onClick={() => void navigate('/admin/blog')}
-          >
-            {copy.backToArticles}
-          </Button>
-          <BookmarkButton
-            saved={Boolean(notice) && !dirty}
-            type="submit"
-            variant="secondary"
-            loading={mutations.save.isPending}
-            disabled={busy}
-          >
-            {article?.status === 'published'
-              ? copy.saveChanges
-              : copy.saveDraft}
-          </BookmarkButton>
-          <Button
-            variant={
-              article?.status === 'published' ? 'destructive' : 'secondary'
-            }
-            loading={mutations.publication.isPending}
-            disabled={busy}
-            onClick={() => void changePublication()}
-          >
-            {article?.status === 'published' ? copy.unpublish : copy.publish}
-          </Button>
-          <Button disabled={busy} onClick={() => setPreviewOpen(true)}>
-            <UiIcon name="file" />
-            {copy.preview}
-          </Button>
-        </FormActions>
-        {article && (
-          <div className="flex flex-wrap items-center justify-between gap-4 border-t border-secondary pt-5">
-            <Button
-              variant="destructive"
-              loading={mutations.remove.isPending}
-              disabled={busy}
-              onClick={() => void remove()}
-            >
-              <UiIcon name="trash" />
-              {copy.delete}
-            </Button>
-            {article.status === 'published' && (
-              <Button
-                variant="ghost"
-                disabled={busy}
-                onClick={() => void navigate(`/blog/${article.slug}`)}
-              >
-                {copy.openPublic}
-                <UiIcon name="arrowRight" />
-              </Button>
-            )}
-          </div>
-        )}
+        {renderRepairNotice()}
+        {renderEditorSections()}
+        {renderValidationMessage()}
+        {renderFailureMessage()}
+        {renderNoticeMessage()}
+        {renderFormActions()}
+        {renderDeleteActions()}
       </form>
+    );
+
+  }
+
+  function renderPreview() {
+
+    return (
       <Modal
         open={previewOpen}
         title={copy.previewTitle}
@@ -489,6 +600,16 @@ export function BlogEditor({
           <BlogArticleReader article={previewArticle} preview />
         </div>
       </Modal>
+    );
+
+  }
+
+  return (
+    <Page aria-busy={busy} className={adminStyles.editor}>
+      {renderHeader()}
+      {renderEditorForm()}
+      {renderPreview()}
     </Page>
   );
+
 }

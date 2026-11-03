@@ -1,5 +1,118 @@
 # Migration verification
 
+## Portal Standards Migration — November 3, 2026
+
+Completed every module and shared-file gate using four Luna Max workers, exactly three modules per worker, with one module active per worker and coordinator acceptance before advancing. The coordinator handled the remaining two modules and all shared files. The durable contract is [Portal Code Standards](PORTAL_STANDARDS.md), linked from AGENTS and all module/service/query authoring guides. The one-off migration prompt and temporary rollout ledger have been removed.
+
+ESLint now owns all maintained JavaScript/TypeScript formatting with no rollout exclusions. Six small AST rules cover expanded-block boundaries, constructors, service MARKs, interfaces, named callback returns and Zod enums; existing Next/copy/color/shared-control/Tailwind checks remain active. Prettier owns compatible non-code files only. Model moves retain schemas with their inferred/derived inputs and narrow compatibility exports. JSX uses hook-free local section/row helpers while preserving state owners, hook dependencies, keys, DOM and semantic styles. No dependencies, product copy, API contracts or CSS values changed.
+
+- `npm run format` passed twice; SHA-256 comparison of 997 maintained files showed **zero changes on the second pass** (generated `next-env.d.ts` excluded).
+- `npm run check` passed after final source formatting: zero-warning ESLint, route generation/TypeScript, Next editor diagnostics, strings/title case, semantic colors, shared controls and canonical Tailwind classes.
+- `DEMO_MODE=true npm run build` passed: successful optimized compilation, TypeScript and 31 generated static pages. `git diff --check` passed.
+- Full diff/model/caller review and a supplemental source audit found no hook-owner/dependency-array or await-count changes across the original 678 source files and 920 final source files. Embedded theme/worker scripts are structurally equivalent after whitespace/control-flow-brace normalization. Canonical enum reuse and shared identical action helpers explain removed duplicate literals; these checks supplement manual review rather than prove behavioral equivalence.
+- Production ran on port 3002 because a separate development server occupied 3001. Browser demo sign-in reached the complete catalog. HTTP verified protected page rendering, directories/dashboard/notifications/onboarding/devices, anonymous 401, restricted staff 403, foreign-origin mutation 403, invalid input 400, synthetic feature create201/update200/read200/delete204, other-owner404 and deleted404, public publishing page200 and authenticated public-data200, unknown page404, and an empty demo Messaging worker200. The synthetic record was removed. An initial devices request used an incorrect path and returned404; the canonical `/portal/account-tools/devices` returned200. Anonymous access to the authenticated proxy returns401; public pages use their existing server read path.
+- Desktop/narrow browser coverage includes state/error/retry/empty/success, validation focus, retained drafts, local mutations, overlays, navigation, keyboard controls, themes and 390px layouts; details follow. Production screenshot: `/tmp/portal-standards-production.jpg`.
+
+Known limits: auth failure focus and the native Browser Back/tool path were reproduced in original implementations and preserved, as detailed below. App Back and link guards passed. Live Firebase/backend refresh, sockets, push, assistant generation and analytics were not exercised. No native notification/microphone permissions or external writes were triggered. The supplemental Premium strict text audit was interrupted after several minutes without a result; its stack was in HTML/regex scanning, so it is **not a passing audit**. Project-owned checks and manual gates passed. No tests, Xcode builds or worktrees were created. The owned production process and temporary viewport override were cleaned up; the separate development server was left running.
+
+| Owner       | Module                | State    |
+| ----------- | --------------------- | -------- |
+| Luna A      | feature-requests      | Accepted |
+| Luna A      | users                 | Accepted |
+| Luna A      | chat                  | Accepted |
+| Luna B      | blog                  | Accepted |
+| Luna B      | engagement            | Accepted |
+| Luna B      | account-tools         | Accepted |
+| Luna C      | notification-inbox    | Accepted |
+| Luna C      | onboarding            | Accepted |
+| Luna C      | auth                  | Accepted |
+| Luna D      | dashboard             | Accepted |
+| Luna D      | settings              | Accepted |
+| Luna D      | dev-settings          | Accepted |
+| Coordinator | component-library     | Accepted |
+| Coordinator | experience            | Accepted |
+| Coordinator | Shared Infrastructure | Accepted |
+
+### Feature Requests Gate
+
+All eight module files and both route callers reviewed. Focused ESLint and whitespace checks pass. Browser at 390px/desktop: create clears only on success; update toast; dirty navigation Keep Editing retains draft; whitespace validation focuses the field; cancel delete retains draft; confirmed deletion returns to list and removed only the verification record. Empty URL query, simulated 503/retry with failed-create draft retention, bounded loading and populated recovery verified. No horizontal overflow at 390px. Anonymous API returns 401; public demo session keys contain no tokens. The final serialized project check passes.
+
+### Users Gate
+
+All ten files and three route callers reviewed; normalized TypeScript AST diff reviewed in full. Focused ESLint and whitespace pass. Demo desktop directory, detail, empty query and simulated retryable error checked. Profile: blank-name validation focuses First Name; dirty navigation safe action retains draft; successful save updates profile toast and public session; failed simulated save retains typed draft and inline error; email remains read-only; 390px profile fits without overflow. Restored original synthetic first name and Populated simulation. New model exports preserve callers. Final serialized project checks pass.
+
+### Notification Inbox Gate
+
+Full normalized diff and all new models reviewed, including corrections to independent view/mutation models, row/channel composition and nested live/demo service MARKs. Focused ESLint/whitespace pass; serialized project typecheck passes after all extraction imports settle. Browser verified single read/unread counts, search/no results/clear, archive confirmation safe focus and cancellation, saved preference toggle/restore, manual timezone save and automatic restore, failed-save retained preference choices/discard, query error with Try Again, empty scenario and populated recovery. Inbox and settings fit 390px without document overflow. HTTP verifies SELECTED bulk read/restore, zero-match FILTERED archive (no fixture removed), invalid timezone 400, preferences/settings reads. Demo push explanation inspected; no permission requested.
+
+### Chat Gate
+
+All four module files plus route/container/realtime callers reviewed. Focused lint/whitespace and project typecheck pass. Corrected collection to focused renderMessageRow with unchanged key. Browser checks: seeded log, send success and cleared compose input, local simulated alert, failed send retains controlled draft, empty scenario without record removal, populated recovery, 390px no overflow. Polling/invalidation/await and subscription ownership unchanged by full diff review. Only a synthetic demo chat message was added; this process was created for verification.
+
+### Blog Gate
+
+All module changes reviewed through full normalized TypeScript diff, new props/mutation models and schema moves; all direct caller exports reviewed. Corrected missing revision import and split independent cover-preset/image-url models. Focused lint/whitespace and serialized typecheck pass. Public browser search/no-results/clear and structured article reader inspected at 390px. Staff directory and editor checked: validation focuses title, block palette/add divider, local preview retains current title, save feedback, safe-focus publication and delete-cancel dialogs, published state and 390px no overflow. A deliberate external demo revision change produced the expected conflict message while preserving the typed draft. HTTP: ordinary staff API403; draft create201/public404; local PNG upload201; saved/published revision and public200; stale revision409; public limit1 paging; unpublish200/delete204/public404 cleanup. Only the synthetic verification article was deleted; seeded articles remain.
+
+### Dashboard Gate
+
+Full six-file/route/container/query/model review completed; no state owner/hook/dependency changes. Focused lint/whitespace and serialized typecheck pass. Browser verified model URL selection (user registry → seven rows), Compact/Comfortable restoration, no-records/analytics hidden for the admin account, error/Retry, bounded Loading Workspace Data, and populated-user metrics/two records/chart sections. At 390px the Records scroller is 278px wide with 483px scrollable content and document width remains 390px. Desktop chart/header/metric composition visually inspected.
+
+### Onboarding Gate
+
+Reviewed all seventeen files/new props models and direct route/gate/proxy/container callers, full normalized diff, retained hook callbacks, and corrected Stepper contextual union typing. Focused lint/whitespace pass; serialized project typecheck passes. Browser: incomplete account enters Profile, blank first name focuses validation, save advances, reload resumes Preferences, dirty preferences disable Back, timezone popup fits 390px and Escape restores trigger focus, saved choices appear in Review, Finish Setup follows allowed `/feature-requests` return path. No document overflow at 390px. HTTP: invalid-shaped completion400; correctly shaped out-of-order completion403; incomplete protected feature API403. Demo recovery intentionally remains available. Completed only the isolated seeded onboarding account; no live calls.
+
+### Engagement Gate
+
+Full eighteen-file normalized diff, new independent input/page/props models and callers reviewed. Preserved timestamp evaluation before named like-count filtering. Focused lint/whitespace and serialized project typecheck pass. Browser: like/save/four-star update, clear-rating safe focus and successful clear, restore like state, saved-list search/no results/clear, removal safe focus/success/empty, 390px no overflow, signed-out loading then account prompt with encoded article return URL. HTTP: anonymous401, draft target404, saved published target200, unpublished target becomes null without exposing metadata, unavailable save removal204, synthetic target cleanup204. Seeded articles unchanged.
+
+### Settings Gate
+
+Reviewed all eleven files/new models, provider and route/library/shell callers, normalized diff and unchanged CSS/token/catalog data. Focused lint/whitespace and serialized project typecheck pass. Browser verified Blueprint/Light persists after reload; Reduced motion DOM attribute; keyboard Brightness 64→65 with matching progress; local notification switch/toast/reset; live project draft retained when changing theme; shell toggle; 390px no overflow. Restored the original Dusk/Dark/Follow Device Settings and default preview values. Demo notification/analytics explanations inspected without permissions or external events.
+
+### Auth Gate
+
+Full ten-file normalized diff/new models and login/signup/onboarding callers reviewed, including focused demo-option composition. Focused lint/whitespace and serialized typecheck pass. Browser: invalid sign-in and signup render inline errors without clearing visible name drafts; password remains masked; external redirect falls back to Dashboard after valid sign-in; signup links preserve encoded internal return path; disposable demo signup completes onboarding and arrives at `/saved`; 390px signup has no overflow. Existing auth catch ordering calls focus while inputs are still disabled before pending is cleared; browser focus was BODY after failure. This ordering is identical in HEAD and was preserved, not counted as a migration success or fixed incidentally. Exact credential values were not included in verification output. The disposable signup is reserved for Account Tools cleanup.
+
+### Dev Settings Gate
+
+Reviewed all five module files, direct route/API/container/guard contracts and full normalized diff; the settings update remains returned without await. Focused lint/whitespace pass; no module diagnostics in serialized TypeScript runs. Browser checked invalid -1 latency with aria-invalid and disabled Apply, dirty latency safe-navigation cancellation retaining 50, Empty update and Populated restoration/toast, reset safe-focus/cancel, and 390px no overflow. Earlier module gates exercised bounded loading/error scenarios and preset switching. Live runtime was not enabled; shared reset verification passed after the disposable-account cleanup.
+
+### Account Tools Gate
+
+Reviewed all 51 files, complete normalized diff/new models and direct callers. Corrected independent HelpSection, DeliveryFilterValues, LegalItem and FAQ section models. Focused lint/whitespace and serialized TypeScript pass. Browser verified deletion safe focus, exact-email/acknowledgement gating, cancellation and successful removal of only the disposable signup, redirect to login and subsequent login401. Devices: owned seeded rows, empty disposable account, search/no results/clear, removal safe focus/cancel. Help: FAQ expansion and legal panels; superadmin deliveries: read-only attempts and invalid-UUID inline validation with focused field. Narrow screens remain 390px without document overflow. HTTP confirms ordinary delivery403, foreign-device delete404, and token-free device response keys. Runtime literal differences are explained by canonical enum reuse and reused identical desktop/mobile action helpers; hooks/dependencies and await counts are unchanged.
+
+### Component Library Gate
+
+Reviewed all 40 source/model files, full normalized diff and stable module-scope preview children. Focused lint/whitespace and serialized TypeScript pass. Runtime literal, hook-owner/dependency and await-count audit has no differences. Browser verified 23-family catalog/search/no-results/clear, preview heading focus, typed description retained across next/previous preview, local upload failure/retry/completion, bulk partial failure retaining the failed selection, confirmation safe focus/cancel/reset, and desktop table/mobile list alternatives. No document overflow at 390px. No files or notifications were sent externally.
+
+### Experience Gate
+
+Reviewed both files, all direct route callers and the complete original screen/section extraction. Runtime literals, hook owners/dependency arrays and await counts are unchanged. Focused lint/whitespace and serialized TypeScript pass. Browser verified section navigation, alert/sheet safe focus and dismissal, exclusive FAQ expansion retained across scroll and viewport changes, motion disable/default restoration, and desktop/narrow content. Document width is 390px at the narrow viewport. Scroll listeners, observer registration and animation-frame cleanup remain in the original screen effects. No product copy or style tokens changed.
+
+### Shared Models, Queries, Utilities, And Containers Gate
+
+Audited the complete model, error, utility, query, config, library, store and container slice. Split independent sort direction/demo scenario/store state/density/schedule-input models and each domain error while retaining compatibility exports and class identity. Related schema/type/input declarations remain together. Full normalized non-layout diffs reviewed; return locals preserve call/await/closure scope, query configuration and History API behavior. Focused lint, serialized TypeScript and whitespace checks pass. Existing route/module gates cover consumers; final integration repeats directory navigation, session errors and density behavior against the complete shared source.
+
+### Shared Services And Demo/Live Adapters Gate
+
+Audited all 86 service files and their direct module/container/route callers. Reviewed every normalized code diff, explicit operation-specific MARK labels, method-interface grouping, model extractions and media/notification/privacy composition. Split request options/context, demo paging/password records, notification options, profile transport and independent props; retained narrow exports. Scoped lint, serialized TypeScript and whitespace pass. Runtime literal, hook-owner/dependency and await-count audits have no differences. Browser verified local demo notification opt-in/disable without native permission, reset safe focus/success, recreated current session and restored seeded chat data. Demo remains isolated from Firebase, Socket.IO, Messaging and Amplitude. Production API smoke repeats proxy and permission boundaries after route integration; no live integration is asserted.
+
+### Routes And Proxy Gate
+
+Reviewed all 47 maintained route source files plus proxy, complete normalized diffs, extracted input/route-props models and current installed Next route/cookie/page documentation. Async cookies/params, reserved exports, route strings, headers, cache behavior, live refresh retry and permission/onboarding checks are unchanged. Thin route files remain route composition. Exact MARKs cover concrete handlers, forward helper and HTTP aliases. Messaging worker text received layout/braces only; demo endpoint remains empty JavaScript. Focused lint/whitespace and serialized TypeScript pass. Demo HTTP: login200/public token-free projection; users/feature/dashboard/devices200; anonymous401; restricted deliveries403; cross-origin session mutation403; malformed path400; invalid auth400; profile refresh200; public blog200. Browser public article renders correctly at 390px. No live integrations exercised.
+
+### Providers, Presentation, And Themes Gate
+
+Audited all provider/presentation/theme files and new independent context, queue, configuration, props and CSS-variable models. Full normalized code diffs and direct consumers reviewed. Provider nesting, hook owners/order/dependencies, return promise awaiting, guard re-entrancy, overlay occupancy/queue advancement, listener/timer cleanup, theme values and DOM remain intact. Focused lint/whitespace and serialized TypeScript pass. Provider/presentation runtime literal and hook/await audits have no differences; embedded theme and messaging scripts compare structurally equal after normalizing whitespace and control-flow braces. Browser verified link/App Back safe focus and draft retention, theme Light persisted through reload, restored Dusk/Dark, reduced-motion toast and restored system preference. Native Browser Back from a dirty profile after a canceled link confirmation returned to Users in this browser; temporarily loading the original three guard/history implementations reproduced it exactly, and all migrated files were restored byte-for-byte. This pre-existing/tool-path limitation is recorded separately and is not counted as a passing guard flow. No speech/microphone permission requested.
+
+### Shared UI Gate
+
+Reviewed all 216 original component/control/layout/helper files, the full normalized runtime diff and all 109 independent extracted models, plus direct consumers. Canonical props, discriminated table selection contracts and compatibility exports are retained. Hooks, state ownership, dependency arrays, awaits, runtime literals, keys, markup, class names and CSS values are unchanged. Review caught and corrected one Combobox event-local lookup before acceptance. Focused ESLint, serialized TypeScript, whitespace and preservation audits pass. Demo browser: Combobox selection/blur reversion/clear/disabled/error/retry; table page selection/partial failure retaining only failed selection at desktop and 390px; bounded calendar popup/inclusive range/return focus; keyboard slider step and range bounds; multi-select limits; Markdown current draft preview and undo; upload loading/failure/retry/completion; alert/sheet safe focus/dismissal; nested Select first-Escape popup dismissal and second-Escape dialog dismissal returning to the opener; mobile shell navigation and App Back draft retention. Defaults and local examples restored. Narrow document has no horizontal overflow. Existing baseline auth/native Browser Back limits remain as recorded above. No live requests or native permission prompts.
+
+### Tooling, Configuration, And Catalog Gate
+
+Reviewed maintained root configuration, all source-check scripts, six focused standards rules, the existing title-case rule and the complete strings diff. All maintained JS/TS now receives standards lint without rollout exclusions; existing Next/copy/color/shared-control/Tailwind checks remain enabled. Source scanners retain recursive behavior after deliberately avoiding result-name shadowing. Strings keys and output literals, CSS values, package dependencies and application configuration values are unchanged. Exact switch-body padding is covered by the existing block rule. ESLint owns code; non-code Prettier excludes generated/code files and embedded Markdown code. Project check passes with zero warnings. Canonical formatting idempotence, production build and production smoke passed as recorded above.
+
 ## Cupertino theme and value controls — November 2, 2026
 
 - Added the selectable macOS / iOS (`cupertino`) light/dark preset and eight shared controls: Slider, RangeSlider, ProgressBar, ProgressRing, NumberStepper, Meter, ActivityIndicator, and Skeleton. Existing switches and segmented selections consume the optional theme control roles. No default preference was changed.

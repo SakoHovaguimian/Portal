@@ -6,9 +6,9 @@ import {
   useContext,
   useMemo,
   useRef,
-  type ReactNode,
 } from 'react';
 import { strings } from '@/strings';
+import type { ChildrenProps } from '@/models/childrenProps';
 import { confirmNavigationGuards } from './confirmNavigationGuards';
 import { useNavigationHistory } from './useNavigationHistory';
 import type {
@@ -20,35 +20,50 @@ const NavigationGuardContext = createContext<NavigationGuardService | null>(
   null,
 );
 
-export function NavigationGuardProvider({ children }: { children: ReactNode }) {
+export function NavigationGuardProvider({ children }: ChildrenProps) {
+
   const guards = useRef(new Map<symbol, NavigationGuard>());
   const checkingRef = useRef(false);
   const register = useCallback((guard: NavigationGuard) => {
+
     const key = Symbol();
     guards.current.set(key, guard);
-    return () => {
+    const cleanup = () => {
       guards.current.delete(key);
     };
+
+    return cleanup;
+
   }, []);
   const confirmNavigation = useCallback(() => {
-    if (checkingRef.current) return false;
+
+    if (checkingRef.current) { return false; }
     checkingRef.current = true;
     // Awaited confirmations can re-render forms and replace registrations.
     // Only check the guards present when this navigation was requested.
     const navigationGuards = Array.from(guards.current.values());
     try {
+
       const allowed = confirmNavigationGuards(navigationGuards);
       if (typeof allowed !== 'boolean') {
-        return allowed.finally(() => {
+
+        const navigationPermission = allowed.finally(() => {
           checkingRef.current = false;
         });
+
+        return navigationPermission;
+
       }
       checkingRef.current = false;
       return allowed;
+
     } catch (error) {
+
       checkingRef.current = false;
       throw error;
+
     }
+
   }, []);
   const back = useNavigationHistory(confirmNavigation);
   const value = useMemo(
@@ -60,10 +75,13 @@ export function NavigationGuardProvider({ children }: { children: ReactNode }) {
       {children}
     </NavigationGuardContext.Provider>
   );
+
 }
 
 export function useNavigationGuard() {
+
   const service = useContext(NavigationGuardContext);
-  if (!service) throw new Error(strings.errors.provider);
+  if (!service) { throw new Error(strings.errors.provider); }
   return service;
+
 }

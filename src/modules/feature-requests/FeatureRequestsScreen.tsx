@@ -18,8 +18,10 @@ import {
   MobileRecordRow,
 } from '@/components/ui';
 import { useCreateFeatureRequest, useFeatureRequests } from './hooks';
+import type { FeatureRequestsScreenProps } from './models/featureRequestsScreenProps';
 
-export function FeatureRequestsScreen({ query = '' }: { query?: string }) {
+export function FeatureRequestsScreen({ query = '' }: FeatureRequestsScreenProps) {
+
   const { data, isPending, isError, refetch } = useFeatureRequests(query);
   const createMutation = useCreateFeatureRequest();
   const [message, setMessage] = useState('');
@@ -30,30 +32,39 @@ export function FeatureRequestsScreen({ query = '' }: { query?: string }) {
   useUnsavedFormGuard(dirtyRef, busyRef);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+
     event.preventDefault();
-    if (busyRef.current) return;
+    if (busyRef.current) {
+      return;
+    }
     const parsed = FeatureRequestMutationInputSchema.safeParse({ message });
     if (!parsed.success) {
+
       setValidation(strings.errors.invalidInput);
       inputRef.current?.focus();
       return;
+
     }
     setValidation(null);
     busyRef.current = true;
     createMutation.mutate(parsed.data, {
       onSuccess: () => {
+
         dirtyRef.current = false;
         busyRef.current = false;
         setMessage('');
+
       },
       onSettled: () => {
         busyRef.current = false;
       },
     });
+
   }
 
-  return (
-    <Page>
+  function renderHeader() {
+
+    return (
       <PageHeader
         title={strings.ui.appShell.featureRequests}
         description={
@@ -61,6 +72,13 @@ export function FeatureRequestsScreen({ query = '' }: { query?: string }) {
             .shareIdeasForImprovingYourWorkspaceAndFollowYour
         }
       />
+    );
+
+  }
+
+  function renderCreateRequestForm() {
+
+    return (
       <Card className="grid gap-4">
         <form noValidate onSubmit={handleSubmit} className="grid gap-3">
           <Field labelText={strings.ui.featureRequestsScreen.newFeatureRequest}>
@@ -76,9 +94,11 @@ export function FeatureRequestsScreen({ query = '' }: { query?: string }) {
                   : undefined
               }
               onChange={(event) => {
+
                 dirtyRef.current = event.target.value.length > 0;
                 setMessage(event.target.value);
                 setValidation(null);
+
               }}
               placeholder={
                 strings.ui.featureRequestsScreen.describeTheWorkflowGapOrIdea
@@ -104,66 +124,115 @@ export function FeatureRequestsScreen({ query = '' }: { query?: string }) {
           )}
         </form>
       </Card>
-      {isPending ? (
-        <Card>{strings.ui.featureRequestsScreen.loadingFeatureRequests}</Card>
-      ) : null}
-      {isError ? (
-        <ErrorState
-          title={strings.ui.featureRequestsScreen.featureRequestsUnavailable}
-          description={
-            strings.ui.featureRequestsScreen.weCouldNotLoadTheRequestQueue
-          }
-          onRetry={() => void refetch()}
-        />
-      ) : null}
-      {data && data.data.length === 0 ? (
-        <EmptyState
-          title={strings.ui.featureRequestsScreen.noRequestsYet}
-          description={
-            strings.ui.featureRequestsScreen
-              .createTheFirstFeatureRequestToSeedTheWorkflow
-          }
-        />
-      ) : null}
-      {data && data.data.length > 0 ? (
-        <DataTable
-          caption={strings.ui.featureRequestsScreen.featureRequestQueue}
-          getRowKey={(row) => row.id}
-          getRowHref={(row) => `/feature-requests/${row.id}`}
-          renderMobileRow={(row) => (
-            <MobileRecordRow
-              title={
-                <Link href={`/feature-requests/${row.id}`}>{row.message}</Link>
-              }
-              footer={
-                <time dateTime={row.updatedAt}>
-                  {new Date(row.updatedAt).toLocaleString()}
-                </time>
-              }
-            />
-          )}
-          columns={[
-            {
-              key: 'message',
-              header: strings.ui.featureRequestsScreen.message,
-              render: (row) => (
-                <Link
-                  className="font-medium text-primary hover:text-brand-secondary"
-                  href={`/feature-requests/${row.id}`}
-                >
-                  {row.message}
-                </Link>
-              ),
-            },
-            {
-              key: 'updatedAt',
-              header: strings.ui.featureRequestsScreen.updated,
-              render: (row) => new Date(row.updatedAt).toLocaleString(),
-            },
-          ]}
-          rows={data.data}
-        />
-      ) : null}
-    </Page>
-  );
+    );
+
+  }
+
+  function renderLoadingState() {
+
+    return isPending ? (
+      <Card>{strings.ui.featureRequestsScreen.loadingFeatureRequests}</Card>
+    ) : null;
+
+  }
+
+  function renderErrorState() {
+
+    return isError ? (
+      <ErrorState
+        title={strings.ui.featureRequestsScreen.featureRequestsUnavailable}
+        description={
+          strings.ui.featureRequestsScreen.weCouldNotLoadTheRequestQueue
+        }
+        onRetry={() => void refetch()}
+      />
+    ) : null;
+
+  }
+
+  function renderEmptyState() {
+
+    return data && data.data.length === 0 ? (
+      <EmptyState
+        title={strings.ui.featureRequestsScreen.noRequestsYet}
+        description={
+          strings.ui.featureRequestsScreen
+            .createTheFirstFeatureRequestToSeedTheWorkflow
+        }
+      />
+    ) : null;
+
+  }
+
+  function renderFeatureRequestsTable() {
+
+    return data && data.data.length > 0 ? (
+      <DataTable
+        caption={strings.ui.featureRequestsScreen.featureRequestQueue}
+        getRowKey={(row) => row.id}
+        getRowHref={(row) => `/feature-requests/${row.id}`}
+        renderMobileRow={(row) => (
+          <MobileRecordRow
+            title={
+              <Link href={`/feature-requests/${row.id}`}>{row.message}</Link>
+            }
+            footer={
+              <time dateTime={row.updatedAt}>
+                {new Date(row.updatedAt).toLocaleString()}
+              </time>
+            }
+          />
+        )}
+        columns={[
+          {
+            key: 'message',
+            header: strings.ui.featureRequestsScreen.message,
+            render: (row) => (
+              <Link
+                className="font-medium text-primary hover:text-brand-secondary"
+                href={`/feature-requests/${row.id}`}
+              >
+                {row.message}
+              </Link>
+            ),
+          },
+          {
+            key: 'updatedAt',
+            header: strings.ui.featureRequestsScreen.updated,
+            render: (row) => new Date(row.updatedAt).toLocaleString(),
+          },
+        ]}
+        rows={data.data}
+      />
+    ) : null;
+
+  }
+
+  function renderRequestResults() {
+
+    return (
+      <>
+        {renderLoadingState()}
+        {renderErrorState()}
+        {renderEmptyState()}
+        {renderFeatureRequestsTable()}
+      </>
+    );
+
+  }
+
+  function renderContent() {
+
+    return (
+      <Page>
+        {renderHeader()}
+        {renderCreateRequestForm()}
+        {renderRequestResults()}
+      </Page>
+    );
+
+  }
+
+  return renderContent();
+
 }

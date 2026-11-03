@@ -1,11 +1,7 @@
 'use client';
 
-import {
-  useId,
-  useState,
-  type ComponentPropsWithRef,
-  type ReactNode,
-} from 'react';
+import type { RadioProps } from '../models/radioProps';
+import { useId, useState } from 'react';
 import { cn } from '../lib/cn';
 
 export function Radio({
@@ -14,7 +10,8 @@ export function Radio({
   id,
   onChange,
   ...props
-}: Omit<ComponentPropsWithRef<'input'>, 'type'> & { label: ReactNode }) {
+}: RadioProps) {
+
   const generatedId = useId();
   const inputId = id ?? generatedId;
   // Selection motion plays only after a person changes the value, never on mount.
@@ -35,8 +32,10 @@ export function Radio({
           id={inputId}
           className="ui-choice ui-radio absolute inset-0 m-0 size-5 cursor-pointer rounded-full border-control border-control-border bg-primary checked:border-brand focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand disabled:cursor-not-allowed"
           onChange={(event) => {
+
             setInteracted(true);
             onChange?.(event);
+
           }}
           {...props}
         />
@@ -54,4 +53,5 @@ export function Radio({
       <span className="min-w-0 wrap-anywhere">{label}</span>
     </label>
   );
+
 }

@@ -8,11 +8,13 @@ export function ContentTransition({
   revision,
   busy = false,
 }: ContentTransitionProps) {
+
   const ref = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
+
     const element = ref.current;
     const duration = motionDuration('--motion-duration-base');
-    if (!element || !duration || typeof element.animate !== 'function') return;
+    if (!element || !duration || typeof element.animate !== 'function') { return; }
     const animation = element.animate(
       [
         { opacity: 0.5, transform: 'translateY(0.25rem)' },
@@ -25,7 +27,9 @@ export function ContentTransition({
           .trim(),
       },
     );
-    return () => animation.cancel();
+    const cleanup = () => animation.cancel();
+    return cleanup;
+
   }, [revision]);
   return (
     <div
@@ -36,4 +40,5 @@ export function ContentTransition({
       {children}
     </div>
   );
+
 }

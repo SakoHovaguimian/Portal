@@ -1,12 +1,11 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import type { AppSidebarContentProps } from '../models/appSidebarContentProps';
 import { strings } from '@/strings';
 import { NavigationLink } from '../components/NavigationLink';
 import { InitialsAvatar } from '../components/InitialsAvatar';
 import { SidebarLinks } from '../components/SidebarLinks';
 import { cn } from '../lib/cn';
-import type { AppSidebarProps } from '../models/appSidebarProps';
 
 export function AppSidebarContent({
   session,
@@ -16,15 +15,19 @@ export function AppSidebarContent({
   activePath,
   contextSlot,
   headerAction,
-}: AppSidebarProps & { headerAction?: ReactNode }) {
+}: AppSidebarContentProps) {
+
   const homeHref = '/dashboard';
   const displayName =
     `${session.user.firstName} ${session.user.lastName}`.trim();
   const primaryItems = items.filter((item) => item.placement !== 'bottom');
   const utilityItems = items.filter((item) => item.placement === 'bottom');
-  return (
-    <div className="flex min-h-full flex-col">
-      <div className="flex flex-1 flex-col items-stretch gap-8 pt-10 pb-6">
+
+  function renderNavigation() {
+
+    function renderBrand() {
+
+      return (
         <div
           className={cn(
             'flex items-center justify-between gap-3 px-8',
@@ -41,6 +44,13 @@ export function AppSidebarContent({
           </NavigationLink>
           {headerAction}
         </div>
+      );
+
+    }
+
+    function renderLinks() {
+
+      return (
         <nav
           aria-label={strings.ui.appShell.navigation}
           className="mx-4 flex flex-1 flex-col gap-2"
@@ -53,7 +63,22 @@ export function AppSidebarContent({
             </div>
           )}
         </nav>
+      );
+
+    }
+
+    return (
+      <div className="flex flex-1 flex-col items-stretch gap-8 pt-10 pb-6">
+        {renderBrand()}
+        {renderLinks()}
       </div>
+    );
+
+  }
+
+  function renderAccount() {
+
+    return (
       <div className="mt-auto border-t-control border-secondary px-8 pt-3 pb-6">
         <NavigationLink
           href="/profile"
@@ -80,6 +105,15 @@ export function AppSidebarContent({
         </NavigationLink>
         {accountSlot && <div className="mt-3">{accountSlot}</div>}
       </div>
+    );
+
+  }
+
+  return (
+    <div className="flex min-h-full flex-col">
+      {renderNavigation()}
+      {renderAccount()}
     </div>
   );
+
 }

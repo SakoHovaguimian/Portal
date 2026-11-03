@@ -1,4 +1,4 @@
-import type { ComponentPropsWithRef } from 'react';
+import type { SelectionChipProps } from '../models/selectionChipProps';
 import { Chip } from './Chip';
 import { Checkbox } from './Checkbox';
 import { cn } from '../lib/cn';
@@ -7,9 +7,8 @@ export function SelectionChip({
   label,
   className,
   ...props
-}: Omit<ComponentPropsWithRef<'input'>, 'type'> & {
-  label: string;
-}) {
+}: SelectionChipProps) {
+
   return (
     <Chip
       selected={props.checked === true}
@@ -21,4 +20,5 @@ export function SelectionChip({
       <Checkbox {...props} label={label} className="w-full px-3 py-2" />
     </Chip>
   );
+
 }

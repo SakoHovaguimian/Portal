@@ -7,7 +7,9 @@ import {
   subscribeConsent,
 } from '@/services/privacy/cookieConsentStore';
 import { analyticsService } from '../analyticsService';
+
 export function AnalyticsProvider() {
+
   const config = useRuntimeConfig();
   const pathname = usePathname();
   const consent = useSyncExternalStore(
@@ -16,6 +18,7 @@ export function AnalyticsProvider() {
     () => null,
   );
   useEffect(() => {
+
     let cancelled = false;
     const screen = pathname.replace(/\/[0-9a-f-]{36}(?=\/|$)/gi, '/:id');
     void analyticsService
@@ -24,12 +27,18 @@ export function AnalyticsProvider() {
         consent === 'accepted',
       )
       .then(() => {
-        if (!cancelled) analyticsService.trackScreen(screen);
+
+        if (!cancelled) { analyticsService.trackScreen(screen); }
+
       })
       .catch(() => undefined);
-    return () => {
+    const cleanup = () => {
       cancelled = true;
     };
+
+    return cleanup;
+
   }, [config.amplitudeApiKey, config.demoMode, consent, pathname]);
   return null;
+
 }

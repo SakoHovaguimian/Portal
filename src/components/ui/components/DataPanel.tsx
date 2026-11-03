@@ -1,4 +1,5 @@
-import type { ReactNode } from 'react';
+import type { DataPanelProps } from '../models/dataPanelProps';
+import type { ChildrenProps } from '../../../models/childrenProps';
 import { Card } from './Card';
 import { cn } from '../lib/cn';
 
@@ -11,14 +12,8 @@ export function DataPanel({
   busyLabel,
   children,
   className,
-}: {
-  toolbar?: ReactNode;
-  footer?: ReactNode;
-  busy?: boolean;
-  busyLabel?: string;
-  children: ReactNode;
-  className?: string;
-}) {
+}: DataPanelProps) {
+
   return (
     <Card
       aria-busy={busy}
@@ -48,13 +43,16 @@ export function DataPanel({
       )}
     </Card>
   );
+
 }
 
 // Centers loading or error feedback inside a DataPanel body.
-export function DataPanelState({ children }: { children: ReactNode }) {
+export function DataPanelState({ children }: ChildrenProps) {
+
   return (
     <div className="grid min-h-64 place-items-center p-4 sm:p-6">
       <div className="w-full max-w-xl">{children}</div>
     </div>
   );
+
 }

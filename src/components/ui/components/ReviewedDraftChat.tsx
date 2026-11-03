@@ -1,12 +1,10 @@
 'use client';
 
+import type { ReviewedDraftChatProps } from '../models/reviewedDraftChatProps';
 import { useEffect, useRef, useState } from 'react';
+import type { DraftAssistantMessage } from '../models/draftAssistantMessage';
 import { strings } from '@/strings';
 import { useReviewedDraftAssistant } from '../useReviewedDraftAssistant';
-import type {
-  ReviewedDraftAssistantField,
-  ReviewedDraftAssistantResult,
-} from '../models/reviewedDraftAssistant';
 import { FloatingAssistantDialog } from './FloatingAssistantDialog';
 import { DraftChatMessage } from './DraftChatMessage';
 import { DraftChatReview } from './DraftChatReview';
@@ -15,21 +13,6 @@ import { Field } from './Field';
 import { TextArea } from './TextArea';
 import { Message } from './Message';
 import { InlineLoading } from './QueryBoundary';
-
-interface ReviewedDraftChatProps {
-  open: boolean;
-  fields: ReviewedDraftAssistantField[];
-  contextKey: string;
-  disabled: boolean;
-  generate: (
-    transcript: string,
-    signal: AbortSignal,
-  ) => Promise<ReviewedDraftAssistantResult>;
-  onApply: (suggestions: Record<string, string>) => void;
-  onBusyChange: (busy: boolean) => boolean;
-  onClose: () => void;
-  onReturnFocus: () => void;
-}
 
 export function ReviewedDraftChat({
   open,
@@ -42,11 +25,10 @@ export function ReviewedDraftChat({
   onClose,
   onReturnFocus,
 }: ReviewedDraftChatProps) {
+
   const copy = strings.assistantMessages;
   const [introduced, setIntroduced] = useState(false);
-  const [messages, setMessages] = useState<
-    { user: boolean; content: string }[]
-  >([]);
+  const [messages, setMessages] = useState<DraftAssistantMessage[]>([]);
   const sent = useRef('');
   const {
     transcript,
@@ -76,15 +58,19 @@ export function ReviewedDraftChat({
     rateLimited: copy.rateLimited,
     selectSuggestions: true,
     generate: async (transcript, signal) => {
+
       if (sent.current !== transcript) {
+
         setMessages((current) => [
           ...current,
           { user: true, content: transcript },
         ]);
         sent.current = transcript;
+
       }
       const response = await generate(transcript, signal);
-      if (!signal.aborted)
+      if (!signal.aborted) {
+
         setMessages((current) => [
           ...current,
           {
@@ -94,41 +80,62 @@ export function ReviewedDraftChat({
               : copy.needMore,
           },
         ]);
+
+      }
       return response;
+
     },
     onApply: (suggestions) => {
+
       onApply(suggestions);
       setMessages([]);
       sent.current = '';
       setIntroduced(false);
       onClose();
+
     },
   });
   const blocked = disabled || pending || speechBusy;
   useEffect(() => {
-    if (!open || introduced) return;
+
+    if (!open || introduced) { return; }
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+
       const frame = requestAnimationFrame(() => setIntroduced(true));
-      return () => cancelAnimationFrame(frame);
+      const cleanup = () => cancelAnimationFrame(frame);
+      return cleanup;
+
     }
     const timer = setTimeout(() => setIntroduced(true), 500);
-    return () => clearTimeout(timer);
+    const cleanup = () => clearTimeout(timer);
+    return cleanup;
+
   }, [open, introduced]);
+
   function decline() {
+
     discard();
     sent.current = '';
     setMessages([]);
     onClose();
+
   }
-  return (
-    <FloatingAssistantDialog
-      open={open}
-      title={copy.title}
-      description={copy.description}
-      busy={pending || speechBusy}
-      onClose={onClose}
-      onReturnFocus={onReturnFocus}
-    >
+
+  function renderConversation() {
+
+    function renderMessage(message: DraftAssistantMessage, index: number) {
+
+      return (
+        <DraftChatMessage key={index} user={message.user}>
+          {message.content}
+        </DraftChatMessage>
+      );
+
+    }
+
+    const messageElements = messages.map(renderMessage);
+
+    return (
       <div
         role="log"
         aria-label={copy.conversation}
@@ -137,19 +144,29 @@ export function ReviewedDraftChat({
       >
         <DraftChatMessage>{copy.hello}</DraftChatMessage>
         {introduced && <DraftChatMessage>{copy.guidance}</DraftChatMessage>}
-        {messages.map((message, index) => (
-          <DraftChatMessage key={index} user={message.user}>
-            {message.content}
-          </DraftChatMessage>
-        ))}
+        {messageElements}
         {pending && (
           <DraftChatMessage>
             <InlineLoading message={copy.thinking} />
           </DraftChatMessage>
         )}
       </div>
-      {error && <Message intent="danger" title={error} />}
-      {result && (
+    );
+
+  }
+
+  function renderFailure() {
+
+    return (
+      error && <Message intent="danger" title={error} />
+    );
+
+  }
+
+  function renderReview() {
+
+    return (
+      result && (
         <DraftChatReview
           resultRef={resultRef}
           review={review}
@@ -164,7 +181,14 @@ export function ReviewedDraftChat({
           blocked={blocked}
           onDecline={decline}
         />
-      )}
+      )
+    );
+
+  }
+
+  function renderCompose() {
+
+    return (
       <div className="grid min-w-0 gap-3 border-t-control border-secondary pt-4">
         <Field labelText={copy.input}>
           <TextArea
@@ -178,15 +202,19 @@ export function ReviewedDraftChat({
             aria-describedby="business-chat-help"
             onChange={(event) => changeTranscript(event.target.value)}
             onKeyDown={(event) => {
+
               if (
                 event.key === 'Enter' &&
                 !event.shiftKey &&
                 !event.nativeEvent.isComposing &&
                 event.keyCode !== 229
               ) {
+
                 event.preventDefault();
                 void run();
+
               }
+
             }}
           />
         </Field>
@@ -235,6 +263,24 @@ export function ReviewedDraftChat({
         )}
         {speech.error && <Message intent="warning" title={speech.error} />}
       </div>
+    );
+
+  }
+
+  return (
+    <FloatingAssistantDialog
+      open={open}
+      title={copy.title}
+      description={copy.description}
+      busy={pending || speechBusy}
+      onClose={onClose}
+      onReturnFocus={onReturnFocus}
+    >
+      {renderConversation()}
+      {renderFailure()}
+      {renderReview()}
+      {renderCompose()}
     </FloatingAssistantDialog>
   );
+
 }

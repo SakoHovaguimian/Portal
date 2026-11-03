@@ -12,10 +12,12 @@ const host = {
   getScriptFileNames: () => parsed.fileNames,
   getScriptVersion: () => '0',
   getScriptSnapshot: (file) => {
+
     const source = ts.sys.readFile(file);
     return source === undefined
       ? undefined
       : ts.ScriptSnapshot.fromString(source);
+
   },
   getCompilationSettings: () => parsed.options,
   getCurrentDirectory: () => root,
@@ -34,6 +36,7 @@ const plugin = createTSPlugin({ typescript: ts }).create({
 });
 
 try {
+
   const diagnostics = [
     ...(config.error ? [config.error] : []),
     ...parsed.errors,
@@ -46,11 +49,14 @@ try {
       diagnostic.category === ts.DiagnosticCategory.Warning,
   );
   if (diagnostics.length) {
+
     console.error(ts.formatDiagnosticsWithColorAndContext(diagnostics, host));
     process.exitCode = 1;
+
   } else {
     console.log('Next.js editor check passed with no warnings.');
   }
+
 } finally {
   service.dispose();
 }

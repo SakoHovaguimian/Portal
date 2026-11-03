@@ -5,26 +5,35 @@ import { queryKeys, staleTimes } from '@/models';
 import { useServiceContainer } from '../../providers/AppProviders';
 
 export function useDashboardOverview() {
+
   const container = useServiceContainer();
-  return useQuery({
+  const overviewQuery = useQuery({
     queryKey: queryKeys.dashboard.overview.queryKey,
     queryFn: () => container.dashboardService.getOverview(),
     staleTime: staleTimes.dashboard,
   });
+
+  return overviewQuery;
+
 }
 
 export function useDashboardModels() {
+
   const container = useServiceContainer();
-  return useQuery({
+  const modelsQuery = useQuery({
     queryKey: queryKeys.dashboard.models.queryKey,
     queryFn: () => container.dashboardService.listModels(),
     staleTime: staleTimes.dashboard,
   });
+
+  return modelsQuery;
+
 }
 
 export function useDashboardRecords(model = 'featureRequest', search = '') {
+
   const container = useServiceContainer();
-  return useQuery({
+  const recordsQuery = useQuery({
     queryKey: queryKeys.dashboard.records(model, search).queryKey,
     queryFn: () =>
       container.dashboardService.listRecords({
@@ -35,13 +44,20 @@ export function useDashboardRecords(model = 'featureRequest', search = '') {
       }),
     staleTime: staleTimes.dashboard,
   });
+
+  return recordsQuery;
+
 }
 
 export function useDashboardModelDetail(model: string) {
+
   const container = useServiceContainer();
-  return useQuery({
+  const modelDetailQuery = useQuery({
     queryKey: queryKeys.dashboard.modelDetail(model).queryKey,
     queryFn: () => container.dashboardService.getModelDetail(model),
     staleTime: staleTimes.dashboard,
   });
+
+  return modelDetailQuery;
+
 }

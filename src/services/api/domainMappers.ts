@@ -23,7 +23,12 @@ import type {
   UserTransport,
 } from './models';
 
+// **************************************
+// MARK: - MAP USER TO DOMAIN
+// **************************************
+
 export function mapUserTransportToDomain(transport: UserTransport): User {
+
   return UserSchema.parse({
     id: transport.id,
     externalId: transport.external_id,
@@ -36,11 +41,17 @@ export function mapUserTransportToDomain(transport: UserTransport): User {
     updatedAt: transport.updated_at,
     deleted: transport.deleted,
   });
+
 }
+
+// **************************************
+// MARK: - MAP USER MUTATION TO TRANSPORT
+// **************************************
 
 export function mapUserMutationToTransport(
   input: UserMutationInput,
 ): UserMutationTransport {
+
   const parsed = UserMutationInputSchema.parse(input);
   return {
     first_name: parsed.firstName,
@@ -49,11 +60,17 @@ export function mapUserMutationToTransport(
     phone_number: parsed.phoneNumber,
     date_of_birth: parsed.dateOfBirth,
   };
+
 }
+
+// **************************************
+// MARK: - MAP FEATURE REQUEST TO DOMAIN
+// **************************************
 
 export function mapFeatureRequestTransportToDomain(
   transport: FeatureRequestTransport,
 ): FeatureRequest {
+
   return FeatureRequestSchema.parse({
     id: transport.id,
     userId: transport.user_id,
@@ -63,20 +80,32 @@ export function mapFeatureRequestTransportToDomain(
     deleted: transport.deleted,
     user: transport.user ? mapUserTransportToDomain(transport.user) : null,
   });
+
 }
+
+// **************************************
+// MARK: - MAP FEATURE REQUEST MUTATION TO TRANSPORT
+// **************************************
 
 export function mapFeatureRequestMutationToTransport(
   input: FeatureRequestMutationInput,
 ): FeatureRequestMutationTransport {
+
   return {
     message: input.message,
   };
+
 }
+
+// **************************************
+// MARK: - MAP DASHBOARD OVERVIEW TO DOMAIN
+// **************************************
 
 export function mapDashboardOverviewTransportToDomain(
   transport: DashboardOverviewTransport,
 ): DashboardOverview {
-  return DashboardOverviewSchema.parse({
+
+  const overview = DashboardOverviewSchema.parse({
     models: transport.models.map((item) => ({
       model: item.model,
       displayName: item.display_name,
@@ -89,23 +118,37 @@ export function mapDashboardOverviewTransportToDomain(
       to: transport.date_range.to,
     },
   });
+
+  return overview;
+
 }
+
+// **************************************
+// MARK: - MAP DASHBOARD MODEL SUMMARY TO DOMAIN
+// **************************************
 
 export function mapDashboardModelSummaryTransportToDomain(
   transport: DashboardModelSummaryTransport,
 ): DashboardModelSummary {
+
   return DashboardModelSummarySchema.parse({
     key: transport.key,
     displayName: transport.display_name,
     fieldCount: transport.field_count,
     recordCount: transport.record_count,
   });
+
 }
+
+// **************************************
+// MARK: - MAP DASHBOARD MODEL METADATA TO DOMAIN
+// **************************************
 
 export function mapDashboardModelMetaTransportToDomain(
   transport: DashboardModelMetaTransport,
 ): DashboardModelMeta {
-  return DashboardModelMetaSchema.parse({
+
+  const metadata = DashboardModelMetaSchema.parse({
     key: transport.key,
     displayName: transport.display_name,
     displayNameSingular: transport.display_name_singular,
@@ -131,4 +174,7 @@ export function mapDashboardModelMetaTransportToDomain(
       displayField: relation.display_field,
     })),
   });
+
+  return metadata;
+
 }

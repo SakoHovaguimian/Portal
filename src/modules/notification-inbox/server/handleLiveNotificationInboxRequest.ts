@@ -12,10 +12,8 @@ import {
   readNotificationInboxQuery,
 } from '../models/notificationInboxQuery';
 import { NotificationArchiveInputSchema } from '../models/notificationArchiveInput';
-import {
-  NotificationBulkReadInputSchema,
-  NotificationReadInputSchema,
-} from '../models/notificationReadInput';
+import { NotificationBulkReadInputSchema } from '../models/notificationBulkReadInput';
+import { NotificationReadInputSchema } from '../models/notificationReadInput';
 import {
   NotificationPreferencesInputSchema,
   NotificationPreferenceSchema,
@@ -40,8 +38,17 @@ class UpstreamResponse extends Error {
     super();
   }
 }
+
+// **************************************
+// MARK: - CREATE NO STORE JSON RESPONSE
+// **************************************
+
 const json = (body: unknown) =>
   Response.json(body, { headers: { 'cache-control': 'no-store' } });
+
+// **************************************
+// MARK: - HANDLE LIVE NOTIFICATION INBOX REQUEST
+// **************************************
 
 /** Authentication, refresh, origin verification, and credential ownership stay in the shared proxy. */
 export async function handleLiveNotificationInboxRequest(
@@ -50,23 +57,40 @@ export async function handleLiveNotificationInboxRequest(
   forward: BackendForward,
   userId?: string,
 ): Promise<Response | null> {
+
   const url = new URL(path, 'http://portal.internal');
   const [area, feature, resource, action, ...extra] = url.pathname
     .split('/')
     .filter(Boolean)
     .map(decodeURIComponent);
-  if (area !== 'portal' || feature !== 'notification-inbox') return null;
-  if (extra.length) throw new NotFoundError();
-  const input = () =>
-    request.json().catch(() => {
+  if (area !== 'portal' || feature !== 'notification-inbox') { return null; }
+  if (extra.length) { throw new NotFoundError(); }
+
+  // **************************************
+  // MARK: - PARSE NOTIFICATION REQUEST BODY
+  // **************************************
+
+  const input = () => {
+
+    const inputPromise = request.json().catch(() => {
       throw new ValidationError();
     });
+
+    return inputPromise;
+
+  };
+
+  // **************************************
+  // MARK: - FORWARD AND VALIDATE NOTIFICATION RESPONSE
+  // **************************************
+
   const read = async <T extends z.ZodType>(
     schema: T,
     endpoint: string,
     method = 'GET',
     body?: unknown,
   ): Promise<z.output<T>> => {
+
     const response = await forward(
       new Request(request.url, {
         method,
@@ -79,22 +103,34 @@ export async function handleLiveNotificationInboxRequest(
       }),
       endpoint,
     );
-    if (!response.ok) throw new UpstreamResponse(response);
+    if (!response.ok) { throw new UpstreamResponse(response); }
     return schema.parse(await response.json());
+
   };
+
   const mutationSchema = z.object({
     affected_count: z.number().int().nonnegative(),
     counts: NotificationCountsTransportSchema,
   });
+
+  // **************************************
+  // MARK: - MAP NOTIFICATION MUTATION RESPONSE
+  // **************************************
+
   const mutation = async (endpoint: string, method: string, body?: unknown) => {
+
     const result = await read(mutationSchema, endpoint, method, body);
     return json({
       affectedCount: result.affected_count,
       counts: mapNotificationCounts(result.counts),
     });
+
   };
+
   try {
+
     if (resource === 'counts' && !action && request.method === 'GET') {
+
       const filters = NotificationInboxFiltersSchema.omit({ read: true }).parse(
         Object.fromEntries(url.searchParams),
       );
@@ -106,16 +142,22 @@ export async function handleLiveNotificationInboxRequest(
           ),
         ),
       );
+
     }
     if (resource === 'preferences' && !action) {
-      if (request.method === 'GET')
+
+      if (request.method === 'GET') {
+
         return json(
           await read(
             z.array(NotificationPreferenceSchema),
             '/notifications/preferences',
           ),
         );
-      if (request.method === 'PUT')
+
+      }
+      if (request.method === 'PUT') {
+
         return json(
           await read(
             z.array(NotificationPreferenceSchema),
@@ -124,23 +166,33 @@ export async function handleLiveNotificationInboxRequest(
             NotificationPreferencesInputSchema.parse(await input()),
           ),
         );
+
+      }
+
     }
     if (resource === 'settings') {
+
       let settings;
-      if (!action && request.method === 'GET')
+      if (!action && request.method === 'GET') {
+
         settings = await read(
           NotificationSettingsTransportSchema,
           '/user-settings',
         );
+
+      }
       if (action === 'timezone' && request.method === 'PUT') {
+
         settings = await read(
           NotificationSettingsTransportSchema,
           '/user-settings/timezone',
           'PUT',
           NotificationTimezoneInputSchema.parse(await input()),
         );
+
       }
       if (action === 'last-timezone' && request.method === 'PUT') {
+
         const value = NotificationDetectedTimezoneInputSchema.parse(
           await input(),
         );
@@ -150,14 +202,19 @@ export async function handleLiveNotificationInboxRequest(
           'PUT',
           { last_timezone: value.lastTimezone },
         );
+
       }
       if (settings) {
-        if (userId && settings.user_id !== userId) throw new OwnershipError();
+
+        if (userId && settings.user_id !== userId) { throw new OwnershipError(); }
         return json(mapNotificationSettings(settings));
+
       }
       throw new NotFoundError();
+
     }
     if (resource === 'read' && !action && request.method === 'PUT') {
+
       const value = NotificationBulkReadInputSchema.parse(await input());
       return mutation(
         '/notifications/read',
@@ -166,8 +223,10 @@ export async function handleLiveNotificationInboxRequest(
           ? { ...value, filters: notificationFiltersTransport(value.filters) }
           : value,
       );
+
     }
     if (!resource && request.method === 'GET') {
+
       const query = readNotificationInboxQuery(url.searchParams);
       const result = await read(
         z.object({
@@ -176,43 +235,65 @@ export async function handleLiveNotificationInboxRequest(
         }),
         `/notifications?${notificationTransportParams(query)}`,
       );
-      if (userId && result.data.some((item) => item.user_id !== userId))
+      if (
+        userId &&
+        result.data.some((item) => item.user_id !== userId)
+      ) {
         throw new OwnershipError();
+      }
+      const notifications = result.data.map(mapNotification);
       return json({
-        data: result.data.map(mapNotification),
+        data: notifications,
         page: result.page,
       });
+
     }
     if (!resource && request.method === 'DELETE') {
+
       const value = NotificationArchiveInputSchema.parse(await input());
       const params = notificationTransportParams(
         value.scope === 'FILTERED' ? value.filters : {},
       );
       params.set('scope', value.scope);
       return mutation(`/notifications?${params}`, 'DELETE');
+
     }
     if (resource) {
+
       const id = encodeURIComponent(z.string().uuid().parse(resource));
       if (!action && request.method === 'GET') {
+
         const item = await read(
           NotificationTransportSchema,
           `/notifications/${id}`,
         );
-        if (userId && item.user_id !== userId) throw new OwnershipError();
+        if (userId && item.user_id !== userId) {
+          throw new OwnershipError();
+        }
         return json(mapNotification(item));
+
       }
-      if (action === 'read' && request.method === 'PUT')
+      if (action === 'read' && request.method === 'PUT') {
+
         return mutation(
           `/notifications/${id}/read`,
           'PUT',
           NotificationReadInputSchema.parse(await input()),
         );
-      if (!action && request.method === 'DELETE')
+
+      }
+      if (!action && request.method === 'DELETE') {
         return mutation(`/notifications/${id}`, 'DELETE');
+      }
+
     }
     throw new NotFoundError();
+
   } catch (error) {
-    if (error instanceof UpstreamResponse) return error.response;
+
+    if (error instanceof UpstreamResponse) { return error.response; }
     throw error;
+
   }
+
 }

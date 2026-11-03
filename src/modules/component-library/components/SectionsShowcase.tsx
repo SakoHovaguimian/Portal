@@ -7,13 +7,14 @@ import {
   SectionCard,
   SectionCardView,
   UiIcon,
-  type IconName,
 } from '@/components/ui';
 import { usePresentationService } from '@/presentation/PresentationProvider';
 import { strings } from '@/strings';
 import { ShowcaseSection } from './ShowcaseSection';
+import type { SectionSpecimen } from '../models/sectionSpecimen';
+
 const copy = strings.componentLibrary;
-const sections: { title: string; description: string; icon: IconName }[] = [
+const sections: SectionSpecimen[] = [
   {
     title: copy.basicDetails,
     description: copy.basicDetailsHint,
@@ -41,7 +42,34 @@ const sections: { title: string; description: string; icon: IconName }[] = [
   },
 ];
 export function SectionsShowcase() {
+
   const presentation = usePresentationService();
+
+  function renderSectionCard(section: SectionSpecimen) {
+
+    return (
+      <SectionCardView
+        key={section.icon}
+        {...section}
+        icon={<UiIcon name={section.icon} />}
+        className="p-3"
+        onClick={() => {
+
+          void presentation.showSheet({
+            title: section.title,
+            description: section.description,
+            confirmLabel: copy.close,
+            cancelLabel: copy.cancel,
+          });
+
+        }}
+      />
+    );
+
+  }
+
+  const sectionCards = sections.map(renderSectionCard);
+
   return (
     <ShowcaseSection
       id="sections"
@@ -50,22 +78,7 @@ export function SectionsShowcase() {
       icon="file"
     >
       <div className="grid gap-2">
-        {sections.map((section) => (
-          <SectionCardView
-            key={section.icon}
-            {...section}
-            icon={<UiIcon name={section.icon} />}
-            className="p-3"
-            onClick={() => {
-              void presentation.showSheet({
-                title: section.title,
-                description: section.description,
-                confirmLabel: copy.close,
-                cancelLabel: copy.cancel,
-              });
-            }}
-          />
-        ))}
+        {sectionCards}
       </div>
       <SectionCard
         id="preview-section-card"
@@ -97,4 +110,5 @@ export function SectionsShowcase() {
       </FormActions>
     </ShowcaseSection>
   );
+
 }

@@ -1,12 +1,11 @@
 import { Badge } from '@/components/ui';
 import { portalAccountToolsStrings as copy } from '@/strings';
-import type { NotificationDelivery } from '../models/notificationDelivery';
+import type { DeliveryStatusBadgeProps } from '../models/deliveryStatusBadgeProps';
 
 export function DeliveryStatusBadge({
   status,
-}: {
-  status: NotificationDelivery['status'];
-}) {
+}: DeliveryStatusBadgeProps) {
+
   return (
     <Badge
       intent={
@@ -24,4 +23,5 @@ export function DeliveryStatusBadge({
       {copy.deliveries.statuses[status]}
     </Badge>
   );
+
 }

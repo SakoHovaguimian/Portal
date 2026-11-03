@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 export const DashboardModelMetaSchema = z.object({
   key: z.string(),
   displayName: z.string(),
@@ -29,4 +30,5 @@ export const DashboardModelMetaSchema = z.object({
     }),
   ),
 });
+
 export type DashboardModelMeta = z.infer<typeof DashboardModelMetaSchema>;

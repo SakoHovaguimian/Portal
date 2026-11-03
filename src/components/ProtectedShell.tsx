@@ -1,8 +1,7 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import type { ProtectedShellProps } from './models/protectedShellProps';
 import { usePathname } from 'next/navigation';
-import type { AppSession } from '@/models';
 import { AppShell, Button, UiIcon } from '@/components/ui';
 import { useSessionState } from '@/providers/AppProviders';
 import { ThemeToggle } from '@/modules/settings/components/ThemeToggle';
@@ -18,10 +17,8 @@ import { portalModuleStrings } from '@/strings';
 export function ProtectedShell({
   children,
   initialSession,
-}: {
-  children: ReactNode;
-  initialSession: AppSession;
-}) {
+}: ProtectedShellProps) {
+
   const navigate = useGuardedNavigate();
   const pathname = usePathname();
   const { session } = useSessionState();
@@ -29,29 +26,38 @@ export function ProtectedShell({
   const back = useGuardedBack('/dashboard');
   const current = session ?? initialSession;
 
+  function renderUtilities() {
+
+    return (
+      <>
+        <Button variant="ghost" onClick={() => void back()}>
+          <UiIcon name="chevronLeft" />
+          {portalModuleStrings.back}
+        </Button>
+        {portalModules.notifications && <NotificationInboxLink />}
+        <ThemeToggle />
+      </>
+    );
+
+  }
+
   return (
     <AppShell
       session={current}
       navigationItems={portalNavigation(current.user, runtime)}
       accountSlot={<ShellActions />}
-      utilitySlot={
-        <>
-          <Button variant="ghost" onClick={() => void back()}>
-            <UiIcon name="chevronLeft" />
-            {portalModuleStrings.back}
-          </Button>
-          {portalModules.notifications && <NotificationInboxLink />}
-          <ThemeToggle />
-        </>
-      }
+      utilitySlot={renderUtilities()}
       activePath={pathname}
       onNavigate={(href) => {
+
         if (href !== pathname) {
           void navigate(href);
         }
+
       }}
     >
       {children}
     </AppShell>
   );
+
 }

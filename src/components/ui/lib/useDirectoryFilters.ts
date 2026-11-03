@@ -1,12 +1,10 @@
 'use client';
 
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-type DirectoryStatus = string | readonly string[];
+import type { DirectoryStatus } from '../models/directoryStatus';
+import type { DirectoryFiltersValue } from '../models/directoryFiltersValue';
 
-export type DirectoryFiltersValue<Status extends DirectoryStatus> = {
-  query: string;
-  status?: Status;
-};
+export type { DirectoryFiltersValue } from '../models/directoryFiltersValue';
 
 const searchDelay = 300;
 const statusKey = (status: DirectoryStatus | undefined) =>
@@ -21,6 +19,7 @@ export function useDirectoryFilters<Status extends DirectoryStatus>(
   value: DirectoryFiltersValue<Status>,
   onChange: (value: DirectoryFiltersValue<Status>) => void,
 ) {
+
   const [draft, setDraft] = useState(value);
   const [committed, setCommitted] = useState(value);
   const [applied, setApplied] = useState<DirectoryFiltersValue<Status>>();
@@ -32,9 +31,11 @@ export function useDirectoryFilters<Status extends DirectoryStatus>(
   // Own URL updates acknowledge the draft without replacing newer typing.
   // Back/Forward or an external URL change restores its filters instead.
   if (!sameFilters(committed, value)) {
+
     setCommitted(value);
-    if (!applied || !sameFilters(applied, value)) setDraft(value);
+    if (!applied || !sameFilters(applied, value)) { setDraft(value); }
     setApplied(undefined);
+
   }
 
   function cancelSearch() {
@@ -42,58 +43,77 @@ export function useDirectoryFilters<Status extends DirectoryStatus>(
   }
 
   function apply(next: DirectoryFiltersValue<Status>) {
+
     cancelSearch();
     const normalized = { ...next, query: next.query.trim() };
-    if (sameFilters(normalized, value)) return;
+    if (sameFilters(normalized, value)) { return; }
     setApplied(normalized);
     onChange(normalized);
+
   }
 
   useEffect(() => {
+
     if (
       composing ||
       (draft.query.trim() === valueQuery &&
         statusKey(draft.status) === valueStatus)
-    )
-      return;
+    ) { return; }
     timer.current = setTimeout(() => {
+
       const next = { ...draft, query: draft.query.trim() };
       setApplied(next);
       onChange(next);
+
     }, searchDelay);
-    return () => clearTimeout(timer.current);
+    const cleanup = () => clearTimeout(timer.current);
+    return cleanup;
+
   }, [draft, composing, valueQuery, valueStatus, onChange]);
 
   function changeQuery(query: string) {
+
     cancelSearch();
     setDraft((current) => ({ ...current, query }));
+
   }
 
   function changeStatus(status: DirectoryFiltersValue<Status>['status']) {
+
     const next = { ...draft, status };
     setDraft(next);
-    if (!composing) apply(next);
+    if (!composing) { apply(next); }
+
   }
 
   function submit(event: FormEvent<HTMLFormElement>) {
+
     event.preventDefault();
-    if (!composing) apply(draft);
+    if (!composing) { apply(draft); }
+
   }
 
-  return {
+  const directoryFilters = {
     draft,
     changeQuery,
     changeStatus,
     submit,
     startComposition: () => {
+
       cancelSearch();
       setComposing(true);
+
     },
     endComposition: () => setComposing(false),
     clear: () => {
+
       const next = { ...draft, query: '' };
       setDraft(next);
       apply(next);
+
     },
   };
+
+  return directoryFilters;
+
 }

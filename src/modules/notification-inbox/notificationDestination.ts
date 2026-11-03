@@ -14,22 +14,24 @@ const supportedRoutes = new Set([
 
 /** Notification payloads cannot navigate to external origins, auth, or executable URLs. */
 export function notificationDestination(destination: string | null) {
+
   if (
     !destination ||
     !destination.startsWith('/') ||
     destination.startsWith('//') ||
     /[\\\u0000-\u001f]/.test(destination)
-  )
-    return null;
+  ) { return null; }
   try {
+
     const url = new URL(destination, 'https://portal.internal');
     if (
       url.origin !== 'https://portal.internal' ||
       !supportedRoutes.has(url.pathname.split('/')[1])
-    )
-      return null;
+    ) { return null; }
     return `${url.pathname}${url.search}${url.hash}`;
+
   } catch {
     return null;
   }
+
 }

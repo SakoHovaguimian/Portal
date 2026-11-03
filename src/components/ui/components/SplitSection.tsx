@@ -1,4 +1,5 @@
-import type { ReactNode, Ref } from 'react';
+import type { SplitSectionProps } from '../models/splitSectionProps';
+import type { SectionStackProps } from '../models/sectionStackProps';
 import { Card } from './Card';
 import { cn } from '../lib/cn';
 
@@ -14,16 +15,8 @@ export function SplitSection({
   bare = false,
   children,
   className,
-}: {
-  id: string;
-  title: string;
-  description?: string;
-  action?: ReactNode;
-  headingRef?: Ref<HTMLHeadingElement>;
-  bare?: boolean;
-  children: ReactNode;
-  className?: string;
-}) {
+}: SplitSectionProps) {
+
   return (
     <section aria-labelledby={`${id}-title`} className="@container min-w-0">
       <div className="ui-split-section grid min-w-0 gap-4 @3xl:grid-cols-[minmax(0,17rem)_minmax(0,1fr)] @3xl:gap-8 @5xl:grid-cols-[minmax(0,19rem)_minmax(0,1fr)] @5xl:gap-10">
@@ -53,15 +46,14 @@ export function SplitSection({
       </div>
     </section>
   );
+
 }
 
 export function SectionStack({
   children,
   className,
-}: {
-  children: ReactNode;
-  className?: string;
-}) {
+}: SectionStackProps) {
+
   return (
     <div
       className={cn(
@@ -72,4 +64,5 @@ export function SectionStack({
       {children}
     </div>
   );
+
 }

@@ -1,5 +1,4 @@
 import { portalPublishingStrings } from '@/strings';
-const copy = portalPublishingStrings.article;
 import { useState } from 'react';
 import { Button, Field, Input, Select, UiIcon } from '@/components/ui';
 import {
@@ -7,6 +6,9 @@ import {
   blogCategoryPresets,
   blogCategoryLabel,
 } from '../models/blogCategory';
+import type { BlogTopicFieldProps } from '../models/blogTopicFieldProps';
+
+const copy = portalPublishingStrings.article;
 
 export function BlogTopicField({
   value,
@@ -14,13 +16,8 @@ export function BlogTopicField({
   disabled,
   invalid,
   onChange,
-}: {
-  value: string;
-  categories: string[];
-  disabled: boolean;
-  invalid: boolean;
-  onChange: (value: string) => void;
-}) {
+}: BlogTopicFieldProps) {
+
   const [adding, setAdding] = useState(false);
   const [previous, setPrevious] = useState(value);
   const [failure, setFailure] = useState('');
@@ -44,8 +41,10 @@ export function BlogTopicField({
               aria-invalid={invalid || Boolean(failure)}
               aria-describedby={failure ? 'blog-new-topic-error' : undefined}
               onChange={(event) => {
+
                 setFailure('');
                 onChange(event.target.value);
+
               }}
             />
           </Field>
@@ -63,10 +62,13 @@ export function BlogTopicField({
               variant="secondary"
               disabled={disabled}
               onClick={() => {
+
                 const result = BlogCategorySchema.safeParse(value);
                 if (!result.success) {
+
                   setFailure(copy.invalidTopic);
                   return;
+
                 }
                 const match = [...blogCategoryPresets, ...categories].find(
                   (item) =>
@@ -77,6 +79,7 @@ export function BlogTopicField({
                 );
                 onChange(match ?? result.data);
                 setAdding(false);
+
               }}
             >
               {copy.useTopic}
@@ -85,9 +88,11 @@ export function BlogTopicField({
               variant="ghost"
               disabled={disabled}
               onClick={() => {
+
                 onChange(previous);
                 setAdding(false);
                 setFailure('');
+
               }}
             >
               {copy.cancelTopic}
@@ -117,12 +122,14 @@ export function BlogTopicField({
             className="justify-self-start px-2 py-1"
             disabled={disabled}
             onClick={() => {
+
               setPrevious(value);
               onChange('');
               setAdding(true);
               requestAnimationFrame(() =>
                 document.getElementById('blog-category')?.focus(),
               );
+
             }}
           >
             <UiIcon name="plus" className="size-4" />
@@ -132,4 +139,5 @@ export function BlogTopicField({
       )}
     </div>
   );
+
 }

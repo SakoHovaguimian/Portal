@@ -1,13 +1,12 @@
-import type { ReactNode } from 'react';
+import type { ChildrenProps } from '@/models/childrenProps';
 import { redirect } from 'next/navigation';
 import { AppProviders } from '@/providers/AppProviders';
 import { getServerSession } from '@/lib/server/getServerSession';
 
 export default async function ImmersiveLayout({
   children,
-}: {
-  children: ReactNode;
-}) {
+}: ChildrenProps) {
+
   const session = await getServerSession();
 
   if (!session) {
@@ -15,4 +14,5 @@ export default async function ImmersiveLayout({
   }
 
   return <AppProviders session={session}>{children}</AppProviders>;
+
 }

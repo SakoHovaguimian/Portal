@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { portalAccountToolsStrings as copy } from '@/strings';
 import { AccountToolsPagingSchema } from './accountToolsPaging';
-import { DeliveryStatusSchema } from './notificationDelivery';
+import { DeliveryStatusSchema } from './deliveryStatus';
 
 export const NotificationDeliveryQuerySchema = AccountToolsPagingSchema.extend({
   notificationId: z.string().uuid().optional(),
@@ -17,6 +17,7 @@ export const NotificationDeliveryQuerySchema = AccountToolsPagingSchema.extend({
       Date.parse(value.createdAfter) <= Date.parse(value.createdBefore),
     { path: ['createdBefore'], message: copy.validation.dateRange },
   );
+
 export type NotificationDeliveryQuery = z.infer<
   typeof NotificationDeliveryQuerySchema
 >;

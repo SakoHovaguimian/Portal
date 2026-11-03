@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, type ComponentProps } from 'react';
+import type { MoneyInputProps } from '../models/moneyInputProps';
+import { useState } from 'react';
 import { Input } from './Input';
 
 export function MoneyInput({
@@ -8,11 +9,8 @@ export function MoneyInput({
   onValueChange,
   currencyCode,
   ...props
-}: Omit<ComponentProps<typeof Input>, 'value' | 'onChange' | 'type'> & {
-  value: string;
-  onValueChange: (value: string) => void;
-  currencyCode?: string;
-}) {
+}: MoneyInputProps) {
+
   const [focused, setFocused] = useState(false);
   const amount = value.trim() ? Number(value) : NaN;
   const formatted =
@@ -20,12 +18,12 @@ export function MoneyInput({
     amount >= 0 &&
     Number(amount.toFixed(2)) === amount
       ? new Intl.NumberFormat('en-US', {
-          ...(currencyCode
-            ? { style: 'currency', currency: currencyCode }
-            : {}),
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }).format(amount)
+        ...(currencyCode
+          ? { style: 'currency', currency: currencyCode }
+          : {}),
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(amount)
       : value;
   return (
     <Input
@@ -34,14 +32,19 @@ export function MoneyInput({
       inputMode="decimal"
       value={focused ? value : formatted}
       onFocus={(event) => {
+
         setFocused(true);
         props.onFocus?.(event);
+
       }}
       onBlur={(event) => {
+
         setFocused(false);
         props.onBlur?.(event);
+
       }}
       onChange={(event) => onValueChange(event.target.value)}
     />
   );
+
 }

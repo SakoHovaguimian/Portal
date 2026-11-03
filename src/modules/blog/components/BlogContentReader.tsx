@@ -1,19 +1,22 @@
 import { portalPublishingStrings } from '@/strings';
-const copy = portalPublishingStrings.builder;
 import { BlogContentImage } from './BlogContentImage';
 import { MarkdownContent } from '@/components/ui';
 import {
   BlogReadableContentSchema,
-  type BlogReadableContent,
 } from '../models/blogReadableContent';
-import type { StoredBlogContent } from '../models/storedBlogContent';
 import { BlogContentSchema } from '../models/blogContent';
-import type { BlogReadableImage } from '../models/blogImage';
+import type { StoredBlogContent } from '../models/storedBlogContent';
 import { BlogEmbeddedMedia } from './BlogEmbeddedMedia';
 import { canRenderBlogContent } from '../content/canRenderBlogContent';
 import styles from '../Blog.module.css';
+import type { BlogContentImageRendererProps } from '../models/blogContentImageRendererProps';
+import type { BlogContentBlockRendererProps } from '../models/blogContentBlockRendererProps';
+import type { BlogContentReaderProps } from '../models/blogContentReaderProps';
 
-function ContentImage({ image }: { image: BlogReadableImage }) {
+const copy = portalPublishingStrings.builder;
+
+function ContentImage({ image }: BlogContentImageRendererProps) {
+
   return (
     <figure className={styles.contentFigure}>
       <BlogContentImage
@@ -28,9 +31,13 @@ function ContentImage({ image }: { image: BlogReadableImage }) {
       {image.caption && <figcaption>{image.caption}</figcaption>}
     </figure>
   );
+
 }
-function ContentBlock({ block }: { block: BlogReadableContent }) {
+
+function ContentBlock({ block }: BlogContentBlockRendererProps) {
+
   switch (block.contentType) {
+
     case 'header':
       return <h2>{block.metaData.text}</h2>;
     case 'section':
@@ -114,47 +121,55 @@ function ContentBlock({ block }: { block: BlogReadableContent }) {
       );
     case 'embed':
       return <BlogEmbeddedMedia metaData={block.metaData} />;
+
   }
+
 }
-export function BlogContentReader({
-  content,
-}: {
-  content: StoredBlogContent[];
-}) {
-  return (
-    <div className={styles.structuredContent}>
-      {content.map((block, index) => {
-        const parsed = BlogReadableContentSchema.safeParse(block);
-        const renderable = parsed.success && canRenderBlogContent(parsed.data);
-        const writable = BlogContentSchema.safeParse(block);
-        const additionalData =
-          !writable.success &&
-          writable.error.issues.some(
-            (issue) => issue.code === 'unrecognized_keys',
-          );
-        return (
-          <div
-            key={`${block.id}-${index}`}
-            data-content-type={block.contentType}
-          >
-            {parsed.success && renderable && (
-              <ContentBlock block={parsed.data} />
-            )}
-            {(!renderable || additionalData) && (
-              <>
-                <p className="text-tertiary">
-                  {renderable
-                    ? copy.savedBlockAdditionalDescription
-                    : copy.savedBlockUnavailableDescription}
-                </p>
-                <pre className="whitespace-pre-wrap wrap-anywhere">
-                  {JSON.stringify(block, null, 2)}
-                </pre>
-              </>
-            )}
-          </div>
-        );
-      })}
-    </div>
-  );
+
+export function BlogContentReader({ content }: BlogContentReaderProps) {
+
+  function renderContentRow(block: StoredBlogContent, index: number) {
+
+    const parsed = BlogReadableContentSchema.safeParse(block);
+    const renderable = parsed.success && canRenderBlogContent(parsed.data);
+    const writable = BlogContentSchema.safeParse(block);
+    const additionalData =
+      !writable.success &&
+      writable.error.issues.some(
+        (issue) => issue.code === 'unrecognized_keys',
+      );
+    return (
+      <div
+        key={`${block.id}-${index}`}
+        data-content-type={block.contentType}
+      >
+        {parsed.success && renderable && (
+          <ContentBlock block={parsed.data} />
+        )}
+        {(!renderable || additionalData) && (
+          <>
+            <p className="text-tertiary">
+              {renderable
+                ? copy.savedBlockAdditionalDescription
+                : copy.savedBlockUnavailableDescription}
+            </p>
+            <pre className="whitespace-pre-wrap wrap-anywhere">
+              {JSON.stringify(block, null, 2)}
+            </pre>
+          </>
+        )}
+      </div>
+    );
+
+  }
+
+  function renderContent() {
+
+    const contentRows = content.map(renderContentRow);
+    return <div className={styles.structuredContent}>{contentRows}</div>;
+
+  }
+
+  return renderContent();
+
 }

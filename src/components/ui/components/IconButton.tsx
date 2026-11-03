@@ -1,4 +1,4 @@
-import type { ComponentProps } from 'react';
+import type { IconButtonProps } from '../models/iconButtonProps';
 import { Button } from './Button';
 import { cn } from '../lib/cn';
 
@@ -6,9 +6,8 @@ export function IconButton({
   label,
   className,
   ...props
-}: Omit<ComponentProps<typeof Button>, 'asChild' | 'aria-label'> & {
-  label: string;
-}) {
+}: IconButtonProps) {
+
   return (
     <Button
       variant="secondary"
@@ -18,4 +17,5 @@ export function IconButton({
       {...props}
     />
   );
+
 }

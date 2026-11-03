@@ -1,11 +1,12 @@
 'use client';
-import { portalPublishingStrings } from '@/strings';
-const copy = portalPublishingStrings.article;
 
+import { portalPublishingStrings } from '@/strings';
 import { DirectoryFilters, Field, Select } from '@/components/ui';
 import { blogCategoryPresets, blogCategoryLabel } from '../models/blogCategory';
 import { BlogStatusSchema } from '../models/blogStatus';
-import type { BlogQuery } from '../models/blogQuery';
+import type { BlogFiltersProps } from '../models/blogFiltersProps';
+
+const copy = portalPublishingStrings.article;
 
 const allStatusesValue = '';
 
@@ -14,12 +15,8 @@ export function BlogFilters({
   onChangeAction,
   admin = false,
   categories = [],
-}: {
-  query: BlogQuery;
-  onChangeAction: (query: BlogQuery) => void;
-  admin?: boolean;
-  categories?: string[];
-}) {
+}: BlogFiltersProps) {
+
   return (
     <DirectoryFilters
       id={admin ? 'admin-blog-search' : 'journal-search'}
@@ -76,4 +73,5 @@ export function BlogFilters({
       }
     />
   );
+
 }

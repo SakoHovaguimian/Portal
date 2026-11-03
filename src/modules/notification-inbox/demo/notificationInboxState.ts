@@ -10,17 +10,41 @@ import type { DemoInboxNotification } from './models/demoInboxNotification';
 const owner = globalThis as typeof globalThis & {
   portalNotificationInboxState?: DemoNotificationInboxState;
 };
+
+// **************************************
+// MARK: - CREATE DEFAULT NOTIFICATION PREFERENCES
+// **************************************
+
 export function defaultNotificationPreferences(): NotificationPreference[] {
-  return NotificationCategorySchema.options.flatMap((category) =>
-    NotificationChannelSchema.options.map((channel) => ({
-      category,
-      channel,
-      enabled: channel !== 'EMAIL',
-    })),
+
+  const categoryPreferences = NotificationCategorySchema.options.flatMap(
+    (category) => {
+
+      const channelPreferences = NotificationChannelSchema.options.map(
+        (channel) => ({
+          category,
+          channel,
+          enabled: channel !== 'EMAIL',
+        }),
+      );
+
+      return channelPreferences;
+
+    },
   );
+
+  return categoryPreferences;
+
 }
+
+// **************************************
+// MARK: - GET DEMO NOTIFICATION INBOX STATE
+// **************************************
+
 export function getDemoNotificationInboxState(): DemoNotificationInboxState {
+
   if (!owner.portalNotificationInboxState) {
+
     const templates = [
       {
         category: 'ACTIVITY' as const,
@@ -49,8 +73,10 @@ export function getDemoNotificationInboxState(): DemoNotificationInboxState {
     ];
     const notifications: DemoInboxNotification[] = populatedDemoUsers.flatMap(
       (user) => {
+
         const visible: DemoInboxNotification[] = templates.map(
           (template, index) => {
+
             const instant = new Date(
               Date.now() - (index + 1) * 3600000,
             ).toISOString();
@@ -66,6 +92,7 @@ export function getDemoNotificationInboxState(): DemoNotificationInboxState {
               inAppEnabled: true,
               expiresAt: null,
             };
+
           },
         );
         return [
@@ -93,6 +120,7 @@ export function getDemoNotificationInboxState(): DemoNotificationInboxState {
             expiresAt: new Date(Date.now() - 1000).toISOString(),
           },
         ];
+
       },
     );
     owner.portalNotificationInboxState = {
@@ -100,17 +128,34 @@ export function getDemoNotificationInboxState(): DemoNotificationInboxState {
       preferences: new Map(),
       settings: new Map(),
     };
+
   }
   return owner.portalNotificationInboxState;
+
 }
+
+// **************************************
+// MARK: - GET DEMO EFFECTIVE TIMEZONE
+// **************************************
+
 export function getDemoEffectiveTimezone(userId: string) {
+
   const settings = getDemoNotificationInboxState().settings.get(userId);
   return settings?.timezone ?? settings?.lastTimezone ?? 'UTC';
+
 }
+
+// **************************************
+// MARK: - RESET DEMO NOTIFICATION INBOX STATE
+// **************************************
+
 export function resetDemoNotificationInboxState(userId?: string) {
+
   if (!userId) {
+
     owner.portalNotificationInboxState = undefined;
     return;
+
   }
   const state = getDemoNotificationInboxState();
   state.notifications = state.notifications.filter(
@@ -118,4 +163,5 @@ export function resetDemoNotificationInboxState(userId?: string) {
   );
   state.preferences.delete(userId);
   state.settings.delete(userId);
+
 }

@@ -12,11 +12,9 @@ import { AccountDeviceQuerySchema } from '../models/accountDeviceQuery';
 import { AccountToolsPagingSchema } from '../models/accountToolsPaging';
 import { accountToolsPageSchema } from '../models/accountToolsPage';
 import { NotificationDeliveryQuerySchema } from '../models/notificationDeliveryQuery';
-import {
-  LegalContextSchema,
-  LegalItemSchema,
-} from '../models/legalInformation';
-import { FrequentlyAskedQuestionSectionSchema } from '../models/frequentlyAskedQuestions';
+import { LegalItemSchema } from '../models/legalItem';
+import { LegalContextSchema } from '../models/legalContext';
+import { FrequentlyAskedQuestionSectionSchema } from '../models/frequentlyAskedQuestionSection';
 import { accountToolsQueryParams } from '../accountToolsQueryParams';
 import { AccountDeviceTransportSchema } from './models/accountDeviceTransport';
 import { NotificationDeliveryTransportSchema } from './models/notificationDeliveryTransport';
@@ -32,10 +30,24 @@ class UpstreamResponse extends Error {
     super();
   }
 }
+
+// **************************************
+// MARK: - CREATE ACCOUNT TOOLS RESPONSE
+// **************************************
+
 const json = (body: unknown, status = 200) =>
   Response.json(body, { status, headers: { 'cache-control': 'no-store' } });
+
+// **************************************
+// MARK: - CREATE NO-CONTENT RESPONSE
+// **************************************
+
 const noContent = () =>
   new Response(null, { status: 204, headers: { 'cache-control': 'no-store' } });
+
+// **************************************
+// MARK: - HANDLE LIVE ACCOUNT TOOLS REQUEST
+// **************************************
 
 /** The authenticated proxy owns session verification, origin checks, and refresh. */
 export async function handleLiveAccountToolsRequest(
@@ -45,22 +57,38 @@ export async function handleLiveAccountToolsRequest(
   userId?: string,
   role?: string,
 ): Promise<Response | null> {
+
   const url = new URL(path, 'http://portal.internal');
   const [area, feature, resource, id, action, ...extra] = url.pathname
     .split('/')
     .filter(Boolean)
     .map(decodeURIComponent);
-  if (feature !== 'account-tools' || !['portal', 'admin'].includes(area))
-    return null;
-  if (extra.length) throw new NotFoundError();
+  if (feature !== 'account-tools' || !['portal', 'admin'].includes(area)) { return null; }
+  if (extra.length) { throw new NotFoundError(); }
   const administrative = area === 'admin';
-  if (administrative && role !== 'superadmin') throw new OwnershipError();
+  if (administrative && role !== 'superadmin') { throw new OwnershipError(); }
   const method = request.method;
-  const readInput = () =>
-    request.json().catch(() => {
+
+  // **************************************
+  // MARK: - READ ACCOUNT TOOLS REQUEST BODY
+  // **************************************
+
+  const readInput = () => {
+
+    const inputPromise = request.json().catch(() => {
       throw new ValidationError();
     });
+
+    return inputPromise;
+
+  };
+
+  // **************************************
+  // MARK: - FORWARD ACCOUNT TOOLS REQUEST
+  // **************************************
+
   const call = async (upstreamPath: string, verb = 'GET', body?: unknown) => {
+
     const response = await forward(
       new Request(request.url, {
         method: verb,
@@ -73,9 +101,15 @@ export async function handleLiveAccountToolsRequest(
       }),
       upstreamPath,
     );
-    if (!response.ok) throw new UpstreamResponse(response);
+    if (!response.ok) { throw new UpstreamResponse(response); }
     return response;
+
   };
+
+  // **************************************
+  // MARK: - READ VALIDATED ACCOUNT TOOLS RESPONSE
+  // **************************************
+
   const read = async <T extends z.ZodType>(
     schema: T,
     upstreamPath: string,
@@ -84,22 +118,27 @@ export async function handleLiveAccountToolsRequest(
   ): Promise<z.output<T>> =>
     schema.parse(await (await call(upstreamPath, verb, body)).json());
   try {
+
     if (!administrative) {
+
       if (resource === 'account' && !id && !action && method === 'DELETE') {
+
         const input = AccountDeletionSchema.parse(await readInput());
         const account = await read(
           z.object({ id: z.string().uuid(), email: z.email() }),
           '/users/profile',
         );
-        if (userId && account.id !== userId) throw new OwnershipError();
-        if (account.email !== input.confirmationEmail)
-          throw new ValidationError(copy.validation.emailMismatch);
+        if (userId && account.id !== userId) { throw new OwnershipError(); }
+        if (account.email !== input.confirmationEmail) { throw new ValidationError(copy.validation.emailMismatch); }
         await call(`/users/${encodeURIComponent(account.id)}`, 'DELETE');
         // The caller clears the encrypted session cookie only after success.
         return noContent();
+
       }
       if (resource === 'devices' && !action) {
+
         if (!id && method === 'GET') {
+
           const query = AccountDeviceQuerySchema.parse(
             Object.fromEntries(url.searchParams),
           );
@@ -109,8 +148,8 @@ export async function handleLiveAccountToolsRequest(
             z.array(AccountDeviceTransportSchema),
             '/devices',
           );
-          if (userId && devices.some((device) => device.user_id !== userId))
-            throw new OwnershipError();
+          const hasForeignDevice = userId && devices.some((device) => device.user_id !== userId);
+          if (hasForeignDevice) { throw new OwnershipError(); }
           const search = query.query.toLocaleLowerCase('en-US');
           const matching = devices.filter(
             (device) =>
@@ -118,31 +157,38 @@ export async function handleLiveAccountToolsRequest(
               device.device_type.toLocaleLowerCase('en-US').includes(search),
           );
           const hasMore = query.offset + query.limit < matching.length;
-          return json({
-            data: matching
-              .slice(query.offset, query.offset + query.limit)
-              .map(mapAccountDevice),
+          const deviceRows = matching
+            .slice(query.offset, query.offset + query.limit)
+            .map(mapAccountDevice);
+          const responseBody = {
+            data: deviceRows,
             page: {
               limit: query.limit,
               offset: query.offset,
               hasMore,
               nextOffset: hasMore ? query.offset + query.limit : null,
             },
-          });
+          };
+          return json(responseBody);
+
         }
         if (id && method === 'DELETE') {
+
           const device = await read(
             AccountDeviceTransportSchema,
             `/devices/${encodeURIComponent(z.string().uuid().parse(id))}`,
           );
-          if (userId && device.user_id !== userId) throw new OwnershipError();
+          if (userId && device.user_id !== userId) { throw new OwnershipError(); }
           await call('/devices', 'DELETE', {
             device_token: device.device_token,
           });
           return noContent();
+
         }
+
       }
       if (resource === 'legal' && !id && !action && method === 'GET') {
+
         const { context } = z
           .object({ context: LegalContextSchema })
           .strict()
@@ -152,17 +198,24 @@ export async function handleLiveAccountToolsRequest(
           `/system/legal-information?${accountToolsQueryParams({ context })}`,
         );
         return json({ illustrative: false, items });
+
       }
       if (resource === 'faq' && !id && !action && method === 'GET') {
+
         const value = await read(
           z.object({ sections: z.array(FrequentlyAskedQuestionSectionSchema) }),
           '/system/faq',
         );
         return json({ illustrative: false, sections: value.sections });
+
       }
+
     } else {
+
       if (resource === 'deliveries') {
+
         if (!id && !action && method === 'GET') {
+
           const query = NotificationDeliveryQuerySchema.parse(
             Object.fromEntries(url.searchParams),
           );
@@ -178,12 +231,16 @@ export async function handleLiveAccountToolsRequest(
             accountToolsPageSchema(NotificationDeliveryTransportSchema),
             `/notification-deliveries?${params}`,
           );
-          return json({
-            data: result.data.map(mapNotificationDelivery),
+          const deliveries = result.data.map(mapNotificationDelivery);
+          const responseBody = {
+            data: deliveries,
             page: result.page,
-          });
+          };
+          return json(responseBody);
+
         }
         if (id && action === 'attempts' && method === 'GET') {
+
           const paging = AccountToolsPagingSchema.strict().parse(
             Object.fromEntries(url.searchParams),
           );
@@ -191,16 +248,25 @@ export async function handleLiveAccountToolsRequest(
             accountToolsPageSchema(NotificationAttemptTransportSchema),
             `/notification-deliveries/${encodeURIComponent(z.string().uuid().parse(id))}/attempts?${accountToolsQueryParams(paging)}`,
           );
-          return json({
-            data: result.data.map(mapNotificationAttempt),
+          const attempts = result.data.map(mapNotificationAttempt);
+          const responseBody = {
+            data: attempts,
             page: result.page,
-          });
+          };
+          return json(responseBody);
+
         }
+
       }
+
     }
     throw new NotFoundError();
+
   } catch (error) {
-    if (error instanceof UpstreamResponse) return error.response;
+
+    if (error instanceof UpstreamResponse) { return error.response; }
     throw error;
+
   }
+
 }

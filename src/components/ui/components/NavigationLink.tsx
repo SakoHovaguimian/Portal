@@ -1,20 +1,10 @@
 'use client';
 
+import type { NavigationLinkProps } from '../models/navigationLinkProps';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import type { Route } from 'next';
-import type { ComponentProps } from 'react';
 import { useNavigationGuard } from '@/providers/NavigationGuardProvider';
-import type { NavigationPermission } from '../models/navigationPermission';
-
-type NavigationLinkProps = Omit<
-  ComponentProps<typeof Link>,
-  'href' | 'onNavigate'
-> & {
-  href: string;
-  beforeNavigate?: NavigationPermission;
-  navigate?: (href: string) => void;
-};
 
 export function NavigationLink({
   href,
@@ -22,6 +12,7 @@ export function NavigationLink({
   navigate,
   ...props
 }: NavigationLinkProps) {
+
   const router = useRouter();
   const { confirmNavigation } = useNavigationGuard();
   return (
@@ -30,27 +21,35 @@ export function NavigationLink({
       data-navigation-guard="managed"
       href={href as Route}
       onNavigate={(event) => {
+
         const allowed = beforeNavigate
           ? beforeNavigate(href)
           : confirmNavigation();
         if (typeof allowed !== 'boolean') {
+
           event.preventDefault();
           void allowed.then((confirmed) => {
+
             if (confirmed) {
-              if (navigate) navigate(href);
-              else if (props.replace)
-                router.replace(href as Route, { scroll: props.scroll });
-              else router.push(href as Route, { scroll: props.scroll });
+
+              if (navigate) { navigate(href); } else if (props.replace) { router.replace(href as Route, { scroll: props.scroll }); } else { router.push(href as Route, { scroll: props.scroll }); }
+
             }
+
           });
+
         } else if (!allowed) {
           event.preventDefault();
         } else if (navigate) {
+
           event.preventDefault();
           navigate(href);
+
         }
         // Clean forms use Link's own push and prefetch behavior synchronously.
+
       }}
     />
   );
+
 }

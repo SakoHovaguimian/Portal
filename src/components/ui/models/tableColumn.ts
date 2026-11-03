@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+
 export type Column<T> = {
   key: string;
   header: string;

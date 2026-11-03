@@ -18,6 +18,7 @@ export function Meter({
   className,
   ...props
 }: MeterProps) {
+
   const helpId = useId();
   const describedBy =
     [props['aria-describedby'], description ? helpId : undefined]
@@ -56,4 +57,5 @@ export function Meter({
       </AriaMeter>
     </I18nProvider>
   );
+
 }

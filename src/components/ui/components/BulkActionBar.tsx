@@ -14,6 +14,7 @@ export function BulkActionBar({
   children,
   error,
 }: BulkActionBarProps) {
+
   return (
     <div className="grid min-w-0 gap-2 rounded-control border-control border-secondary bg-secondary_subtle p-3">
       <div className="flex min-h-11 flex-wrap items-center gap-3">
@@ -31,14 +32,14 @@ export function BulkActionBar({
               totalCount !== undefined &&
               totalCount > selectedCount &&
               onSelectAllResults && (
-                <Button
-                  variant="ghost"
-                  disabled={busy}
-                  onClick={onSelectAllResults}
-                >
-                  {copy.table.selectMatching(totalCount)}
-                </Button>
-              )}
+              <Button
+                variant="ghost"
+                disabled={busy}
+                onClick={onSelectAllResults}
+              >
+                {copy.table.selectMatching(totalCount)}
+              </Button>
+            )}
             <Button variant="ghost" disabled={busy} onClick={onClear}>
               {copy.table.clear}
             </Button>
@@ -60,4 +61,5 @@ export function BulkActionBar({
       )}
     </div>
   );
+
 }

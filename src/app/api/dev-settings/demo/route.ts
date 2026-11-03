@@ -5,10 +5,17 @@ import {
   isDevSettingsAvailable,
   writeDemoSettings,
 } from '@/services/demo/demoRuntime';
+
+// **************************************
+// MARK: - ENTER DEMO RUNTIME
+// **************************************
+
 export async function POST(request: Request) {
+
   try {
-    if (!isDevSettingsAvailable()) throw new NotFoundError();
-    if (!trustedMutation(request)) throw new OwnershipError();
+
+    if (!isDevSettingsAvailable()) { throw new NotFoundError(); }
+    if (!trustedMutation(request)) { throw new OwnershipError(); }
     const container = await getContainer();
     await writeDemoSettings({
       demoMode: true,
@@ -20,7 +27,9 @@ export async function POST(request: Request) {
       { demoMode: true },
       { headers: { 'cache-control': 'no-store' } },
     );
+
   } catch (error) {
     return errorResponse(error);
   }
+
 }

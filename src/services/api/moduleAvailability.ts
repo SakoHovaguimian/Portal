@@ -2,7 +2,12 @@ import 'server-only';
 import { NotFoundError } from '@/errors/domainErrors';
 import { portalModules } from '@/config/portalModules';
 
+// **************************************
+// MARK: - REQUIRE MODULE AVAILABILITY
+// **************************************
+
 export function requireModuleAvailability(path: string) {
+
   const pathname = new URL(path, 'http://portal.internal').pathname;
   if (
     (!portalModules.publishing &&
@@ -16,6 +21,6 @@ export function requireModuleAvailability(path: string) {
       /^\/(?:portal|admin)\/account-tools(?:\/|$)/.test(pathname)) ||
     (!portalModules.onboarding && /^\/onboarding(?:\/|$)/.test(pathname)) ||
     (!portalModules.engagement && /^\/engagement(?:\/|$)/.test(pathname))
-  )
-    throw new NotFoundError();
+  ) { throw new NotFoundError(); }
+
 }

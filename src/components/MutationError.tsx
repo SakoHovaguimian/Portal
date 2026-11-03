@@ -1,8 +1,10 @@
+import type { MutationErrorProps } from './models/mutationErrorProps';
 import { strings } from '@/strings';
 import { DomainError } from '@/errors/domainErrors';
 
-export function MutationError({ error, id }: { error: unknown; id?: string }) {
-  if (!error) return null;
+export function MutationError({ error, id }: MutationErrorProps) {
+
+  if (!error) { return null; }
   return (
     <p
       id={id}
@@ -14,4 +16,5 @@ export function MutationError({ error, id }: { error: unknown; id?: string }) {
         : strings.errors.requestFailed}
     </p>
   );
+
 }

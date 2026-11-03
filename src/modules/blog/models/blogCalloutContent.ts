@@ -1,6 +1,7 @@
 import { portalPublishingStrings } from '@/strings';
-const copy = portalPublishingStrings.builder;
 import { z } from 'zod';
+
+const copy = portalPublishingStrings.builder;
 
 export const BlogCalloutContentSchema = z
   .object({
@@ -22,6 +23,7 @@ export const BlogCalloutContentSchema = z
       .strict(),
   })
   .strict();
+
 export type BlogCalloutContent = z.infer<typeof BlogCalloutContentSchema>;
 
 export const BlogReadableCalloutContentSchema = BlogCalloutContentSchema.extend(

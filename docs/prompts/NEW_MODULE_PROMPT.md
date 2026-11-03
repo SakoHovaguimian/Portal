@@ -1,5 +1,7 @@
 # New domain module
 
+Follow the permanent [Portal code standards](../PORTAL_STANDARDS.md) for exact formatting, independent models, named callback results, service MARKs, and hook-safe Lego block composition. Preserve behavior, appearance, and state ownership.
+
 Read [architecture](../ARCHITECTURE.md), [conventions](../CONVENTIONS.md), [strings](../STRINGS.md), and the closest module.
 
 Create `src/modules/<domain>/` with screens/components, query hooks, a domain service, and feature-only models as needed. Keep independent schemas/models in separate files. Reuse shared models in `src/models` and shared primitives in `src/components/ui`.

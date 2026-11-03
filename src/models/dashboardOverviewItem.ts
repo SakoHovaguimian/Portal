@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 export const DashboardOverviewItemSchema = z.object({
   model: z.string(),
   displayName: z.string(),
@@ -6,4 +7,5 @@ export const DashboardOverviewItemSchema = z.object({
   periodCount: z.number().int().nonnegative(),
   growthPercent: z.number().nullable(),
 });
+
 export type DashboardOverviewItem = z.infer<typeof DashboardOverviewItemSchema>;

@@ -9,6 +9,7 @@ import { ShowcaseSection } from './ShowcaseSection';
 const copy = strings.designSystem;
 const panels = { edit: 'edit', preview: 'preview' } as const;
 export function MotionShowcase() {
+
   const presentation = usePresentationService();
   const [duration, setDuration] = useState(240);
   const [panel, setPanel] = useState<'edit' | 'preview'>('edit');
@@ -113,4 +114,5 @@ export function MotionShowcase() {
       </div>
     </ShowcaseSection>
   );
+
 }

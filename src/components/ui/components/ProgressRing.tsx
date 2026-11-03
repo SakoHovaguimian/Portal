@@ -18,6 +18,7 @@ export function ProgressRing({
   className,
   ...props
 }: ProgressRingProps) {
+
   const helpId = useId();
   const describedBy =
     [props['aria-describedby'], description ? helpId : undefined]
@@ -77,4 +78,5 @@ export function ProgressRing({
       </AriaProgressBar>
     </I18nProvider>
   );
+
 }

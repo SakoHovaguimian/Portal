@@ -1,12 +1,15 @@
 import { portalPublishingStrings } from '@/strings';
-const copy = portalPublishingStrings.article;
-const builderCopy = portalPublishingStrings.builder;
 import { z } from 'zod';
 import { BlogCategorySchema, StoredBlogCategorySchema } from './blogCategory';
 import { BlogCoverSchema, StoredBlogCoverSchema } from './blogCover';
 import { BlogStatusSchema } from './blogStatus';
 import { BlogContentsSchema } from './blogContent';
 import { StoredBlogContentsSchema } from './storedBlogContent';
+
+export { BlogRevisionInputSchema } from './blogRevisionInput';
+
+const copy = portalPublishingStrings.article;
+const builderCopy = portalPublishingStrings.builder;
 
 const BlogArticleFieldsSchema = z.object({
   id: z.string().uuid(),
@@ -34,6 +37,7 @@ const BlogArticleFieldsSchema = z.object({
   revision: z.number().int().min(1),
 });
 export const BlogArticleSchema = BlogArticleFieldsSchema;
+
 export const BlogMutationInputSchema = BlogArticleFieldsSchema.pick({
   slug: true,
   title: true,
@@ -68,13 +72,11 @@ export const BlogMutationInputSchema = BlogArticleFieldsSchema.pick({
     message: builderCopy.invalidContent,
     path: ['content'],
   });
-export const BlogRevisionInputSchema = z
-  .object({
-    revision: z.number().int().min(1),
-  })
-  .strict();
+
 export type BlogArticle = z.infer<typeof BlogArticleSchema>;
+
 export type BlogMutationInput = z.infer<typeof BlogMutationInputSchema>;
+
 export type BlogArticleDraft = Pick<
   BlogArticle,
   | 'slug'

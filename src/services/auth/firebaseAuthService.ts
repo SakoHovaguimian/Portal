@@ -8,26 +8,47 @@ import type { FirebaseAuthSession } from './models/firebaseAuthSession';
 import type { FirebaseAuthServiceInterface } from './firebaseAuthServiceInterface';
 import { AuthResponseSchema } from './models/authResponse';
 import { RefreshResponseSchema } from './models/refreshResponse';
+
 export class FirebaseAuthService implements FirebaseAuthServiceInterface {
+
+  // **************************************
+  // MARK: - SIGN IN WITH FIREBASE
+  // **************************************
+
   async signIn(email: string, password: string) {
+
     return this.authenticate('accounts:signInWithPassword', {
       email,
       password,
       returnSecureToken: true,
     });
+
   }
+
+  // **************************************
+  // MARK: - CREATE FIREBASE ACCOUNT
+  // **************************************
+
   async signUp(input: SignupInput) {
+
     return this.authenticate('accounts:signUp', {
       email: input.email,
       password: input.password,
       displayName: `${input.firstName} ${input.lastName}`,
       returnSecureToken: true,
     });
+
   }
+
+  // **************************************
+  // MARK: - AUTHENTICATE FIREBASE REQUEST
+  // **************************************
+
   private async authenticate(
     endpoint: string,
     body: Record<string, unknown>,
   ): Promise<FirebaseAuthSession> {
+
     const response = await fetch(
       `https://identitytoolkit.googleapis.com/v1/${endpoint}?key=${encodeURIComponent(environment.firebaseApiKey)}`,
       {
@@ -46,8 +67,15 @@ export class FirebaseAuthService implements FirebaseAuthServiceInterface {
       email: result.email,
       expiresAt: Date.now() + result.expiresIn * 1000,
     };
+
   }
+
+  // **************************************
+  // MARK: - REFRESH FIREBASE SESSION
+  // **************************************
+
   async refresh(session: FirebaseAuthSession): Promise<FirebaseAuthSession> {
+
     const response = await fetch(
       `https://securetoken.googleapis.com/v1/token?key=${encodeURIComponent(environment.firebaseApiKey)}`,
       {
@@ -69,12 +97,18 @@ export class FirebaseAuthService implements FirebaseAuthServiceInterface {
       externalId: result.user_id,
       expiresAt: Date.now() + result.expires_in * 1000,
     };
+
   }
+
+  // **************************************
+  // MARK: - PARSE FIREBASE AUTH RESPONSE
+  // **************************************
+
   private async parse(response: Response): Promise<unknown> {
+
     const payload = await response.json();
-    if (response.ok) return payload;
-    if (response.status >= 500)
-      throw new ApiError(strings.errors.unavailable, 503);
+    if (response.ok) { return payload; }
+    if (response.status >= 500) { throw new ApiError(strings.errors.unavailable, 503); }
     const code = z
       .object({ error: z.object({ message: z.string() }) })
       .safeParse(payload);
@@ -90,5 +124,7 @@ export class FirebaseAuthService implements FirebaseAuthServiceInterface {
       messages[key] || strings.auth.invalidCredentials,
       key === 'EMAIL_EXISTS' ? 409 : 401,
     );
+
   }
+
 }

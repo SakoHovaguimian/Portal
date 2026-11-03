@@ -1,6 +1,9 @@
-export interface ApiRequestOptions extends Omit<RequestInit, 'body'> {
-  body?: unknown;
-}
+import type { ApiRequestOptions } from './models/apiRequestOptions';
+
+export type { ApiRequestOptions } from './models/apiRequestOptions';
+
 export interface ApiClientInterface {
+
   request<T>(path: string, options?: ApiRequestOptions): Promise<T>;
+
 }

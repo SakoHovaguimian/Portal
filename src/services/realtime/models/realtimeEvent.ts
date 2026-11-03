@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 const BaseSchema = z.object({
   event_id: z.string().uuid(),
   occurred_at: z.string().datetime(),
@@ -20,4 +21,5 @@ export const RealtimeEventSchema = z.discriminatedUnion('event_type', [
     }),
   }),
 ]);
+
 export type RealtimeEvent = z.infer<typeof RealtimeEventSchema>;

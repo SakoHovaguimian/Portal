@@ -7,6 +7,7 @@
 
 // Screens
 export { FeatureRequestsScreen } from './FeatureRequestsScreen';
+
 export { FeatureRequestDetailScreen } from './FeatureRequestDetailScreen';
 
 // Hooks

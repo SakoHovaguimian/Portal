@@ -8,6 +8,7 @@ export const BlogImageContentSchema = z
     metaData: BlogImageSchema,
   })
   .strict();
+
 export type BlogImageContent = z.infer<typeof BlogImageContentSchema>;
 
 export const BlogReadableImageContentSchema = BlogImageContentSchema.extend({

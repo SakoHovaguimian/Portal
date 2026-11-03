@@ -1,4 +1,5 @@
 import type { MediaActor } from './mediaActor';
+
 export interface MediaRequestOptions {
   request: Request;
   path: string;

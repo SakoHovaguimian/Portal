@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { IconTileProps } from '../models/iconTileProps';
 import type { UiIntent } from '../models/uiIntent';
 import { cn } from '../lib/cn';
 
@@ -16,12 +16,8 @@ export function IconTile({
   className,
   intent = 'brand',
   size = 'md',
-}: {
-  children: ReactNode;
-  className?: string;
-  intent?: UiIntent | 'brand';
-  size?: 'sm' | 'md';
-}) {
+}: IconTileProps) {
+
   return (
     <span
       aria-hidden="true"
@@ -35,4 +31,5 @@ export function IconTile({
       {children}
     </span>
   );
+
 }

@@ -6,4 +6,5 @@ export const NotificationCategorySchema = z.enum([
   'TAG',
   'PRODUCT_UPDATE',
 ]);
+
 export type NotificationCategory = z.infer<typeof NotificationCategorySchema>;

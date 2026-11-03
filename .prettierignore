@@ -1,0 +1,6 @@
+**/*.{js,jsx,cjs,mjs,ts,tsx,cts,mts}
+node_modules/
+.next/
+out/
+dist/
+coverage/

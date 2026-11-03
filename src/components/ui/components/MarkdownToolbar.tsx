@@ -1,3 +1,4 @@
+import type { MarkdownToolbarProps } from '../models/markdownToolbarProps';
 import { strings } from '@/strings';
 import type { MarkdownAction } from '../models/markdownAction';
 import type { IconName } from '../models/iconName';
@@ -37,14 +38,8 @@ export function MarkdownToolbar({
   redo,
   canUndo,
   canRedo,
-}: {
-  disabled: boolean;
-  apply: (action: MarkdownAction) => void;
-  undo: () => void;
-  redo: () => void;
-  canUndo: boolean;
-  canRedo: boolean;
-}) {
+}: MarkdownToolbarProps) {
+
   const copy = strings.markdownEditor;
   const menus = [
     { label: copy.heading, icon: icons.heading1 },
@@ -52,26 +47,37 @@ export function MarkdownToolbar({
     { label: copy.lists, icon: icons.bullet },
     { label: copy.inserts, icon: 'plus' as const },
   ];
+
+  function renderToolbarGroup(group: (typeof groups)[number], index: number) {
+
+    const toolbarItems = group.map((action) => ({
+      id: action,
+      label: copy.actions[action],
+      icon: icons[action],
+    }));
+
+    return (
+      <IconMenu
+        key={menus[index].label}
+        label={menus[index].label}
+        icon={menus[index].icon}
+        items={toolbarItems}
+        disabled={disabled}
+        onAction={apply}
+      />
+    );
+
+  }
+
+  const toolbarGroups = groups.map(renderToolbarGroup);
+
   return (
     <div
       role="group"
       aria-label={copy.toolbar}
       className="flex w-fit max-w-full min-w-0 flex-wrap items-center gap-1 rounded-control border-control border-secondary bg-secondary_subtle p-2"
     >
-      {groups.map((group, index) => (
-        <IconMenu
-          key={menus[index].label}
-          label={menus[index].label}
-          icon={menus[index].icon}
-          items={group.map((action) => ({
-            id: action,
-            label: copy.actions[action],
-            icon: icons[action],
-          }))}
-          disabled={disabled}
-          onAction={apply}
-        />
-      ))}
+      {toolbarGroups}
       <div className="flex gap-1 border-s-control border-secondary ps-2">
         <IconButton
           label={copy.undo}
@@ -92,4 +98,5 @@ export function MarkdownToolbar({
       </div>
     </div>
   );
+
 }

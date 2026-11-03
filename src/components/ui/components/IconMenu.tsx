@@ -1,16 +1,8 @@
 'use client';
 
+import type { IconMenuProps } from '../models/iconMenuProps';
 import { useGuardedNavigate } from '@/providers/useGuardedNavigate';
-import {
-  Button,
-  Menu,
-  MenuItem,
-  MenuTrigger,
-  Popover,
-  RouterProvider,
-} from 'react-aria-components';
-import type { IconMenuItem } from '../models/iconMenuItem';
-import type { IconName } from '../models/iconName';
+import { Button, Menu, MenuItem, MenuTrigger, Popover, RouterProvider } from 'react-aria-components';
 import { buttonClassName } from '../lib/buttonStyles';
 import { UiIcon } from './UiIcon';
 import { cn } from '../lib/cn';
@@ -23,15 +15,8 @@ export function IconMenu<T extends string>({
   disabled = false,
   className,
   onAction,
-}: {
-  label: string;
-  triggerLabel?: string;
-  icon?: IconName;
-  items: IconMenuItem<T>[];
-  disabled?: boolean;
-  className?: string;
-  onAction?: (id: T) => void;
-}) {
+}: IconMenuProps<T>) {
+
   const navigate = useGuardedNavigate();
 
   return (
@@ -99,4 +84,5 @@ export function IconMenu<T extends string>({
       </MenuTrigger>
     </RouterProvider>
   );
+
 }

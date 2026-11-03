@@ -1,8 +1,9 @@
 import Image from 'next/image';
-import type { ComponentProps } from 'react';
+import type { BlogContentImageProps } from '../models/blogContentImageProps';
+
 export function BlogContentImage({
   alt,
   ...props
-}: ComponentProps<typeof Image> & { src: string }) {
+}: BlogContentImageProps) {
   return <Image {...props} alt={alt} />;
 }

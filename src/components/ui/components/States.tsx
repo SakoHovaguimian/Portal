@@ -1,10 +1,10 @@
-import type { ReactNode } from 'react';
+import type { EmptyStateProps } from '../models/emptyStateProps';
+import type { ErrorStateProps } from '../models/errorStateProps';
 import { strings } from '@/strings';
 import { Card } from './Card';
 import { Button } from './Button';
 import { IconTile } from './IconTile';
 import { UiIcon } from './UiIcon';
-import type { IconName } from '../models/iconName';
 
 export function EmptyState({
   title,
@@ -12,14 +12,8 @@ export function EmptyState({
   action,
   icon = 'box',
   variant = 'outlined',
-}: {
-  title: string;
-  description: string;
-  action?: ReactNode;
-  icon?: IconName;
-  // Plain sits inside an existing surface; card aliases the standalone outline.
-  variant?: 'card' | 'plain' | 'outlined';
-}) {
+}: EmptyStateProps) {
+
   const content = (
     <>
       <IconTile intent="neutral">
@@ -43,17 +37,15 @@ export function EmptyState({
       {content}
     </Card>
   );
+
 }
 
 export function ErrorState({
   title,
   description,
   onRetry,
-}: {
-  title: string;
-  description: string;
-  onRetry?: () => void;
-}) {
+}: ErrorStateProps) {
+
   return (
     <Card
       role="alert"
@@ -73,4 +65,5 @@ export function ErrorState({
       )}
     </Card>
   );
+
 }

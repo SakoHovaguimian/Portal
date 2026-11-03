@@ -12,7 +12,9 @@ import { AccountToolsService } from '@/modules/account-tools/services/accountToo
 import { OnboardingService } from '@/modules/onboarding/services/onboardingService';
 import { DevSettingsService } from '@/modules/dev-settings/services/devSettingsService';
 import { EngagementService } from '@/modules/engagement/services/engagementService';
+
 export class ClientServiceContainer {
+
   readonly apiClient = new BrowserApiClient();
   readonly userService = new UserService(this.apiClient);
   readonly featureRequestService = new FeatureRequestService(this.apiClient);
@@ -31,4 +33,5 @@ export class ClientServiceContainer {
   readonly devSettingsService = new DevSettingsService(
     new BrowserApiClient('/api/dev-settings'),
   );
+
 }

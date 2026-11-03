@@ -8,17 +8,23 @@ import {
 import { trustedMutation } from '@/services/api/routeSafety';
 import { getEffectiveRuntime, isDevSettingsAvailable } from './demoRuntime';
 import { portalDemoStrings as copy } from '@/strings';
+
+// **************************************
+// MARK: - REQUIRE DEVELOPER ACCESS
+// **************************************
+
 export async function requireDeveloperAccess(
   request?: Request,
   demoRequired = false,
 ) {
-  if (!isDevSettingsAvailable()) throw new NotFoundError(copy.unavailable);
-  if (request && !trustedMutation(request)) throw new OwnershipError();
+
+  if (!isDevSettingsAvailable()) { throw new NotFoundError(copy.unavailable); }
+  if (request && !trustedMutation(request)) { throw new OwnershipError(); }
   const runtime = await getEffectiveRuntime();
   const container = await getContainer();
   const session = await container.sessionService.valid();
-  if (!session) throw new AuthError();
-  if (demoRequired && (!runtime.demoMode || !session.demo))
-    throw new OwnershipError(copy.demoRequired);
+  if (!session) { throw new AuthError(); }
+  if (demoRequired && (!runtime.demoMode || !session.demo)) { throw new OwnershipError(copy.demoRequired); }
   return { runtime, container, session };
+
 }

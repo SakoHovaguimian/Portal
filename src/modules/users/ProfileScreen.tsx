@@ -1,4 +1,5 @@
 'use client';
+
 import { strings } from '@/strings';
 import { useRef, useState } from 'react';
 import {
@@ -6,11 +7,11 @@ import {
   Card,
   DatePicker,
   Field,
+  FormActions,
   Input,
-  QueryBoundary,
   Page,
   PageHeader,
-  FormActions,
+  QueryBoundary,
 } from '@/components/ui';
 import type { User } from '@/models';
 import { useSessionState } from '@/providers/AppProviders';
@@ -21,36 +22,55 @@ import {
   type ProfileDraft,
   type ProfileDraftErrors,
 } from './models/profileDraft';
+import type { ProfileFormProps } from './models/profileFormProps';
 import { useUpdateCurrentUser, useUser } from './hooks';
+
 function profileDraftFromUser(user: User): ProfileDraft {
+
   return {
     firstName: user.firstName,
     lastName: user.lastName,
     phoneNumber: user.phoneNumber ?? '',
     dateOfBirth: user.dateOfBirth?.slice(0, 10) ?? '',
   };
+
 }
+
 function equalDraft(a: ProfileDraft, b: ProfileDraft) {
+
   return (
     a.firstName === b.firstName &&
     a.lastName === b.lastName &&
     a.phoneNumber === b.phoneNumber &&
     a.dateOfBirth === b.dateOfBirth
   );
+
 }
+
 export function ProfileScreen() {
+
   const { session } = useSessionState();
   const query = useUser(session?.user.id ?? '');
-  return (
-    <Page>
-      <PageHeader title={strings.ui.profileScreen.yourProfile} />
-      <QueryBoundary query={query} retainDataOnError>
-        {(user) => <ProfileForm key={user.id} user={user} />}
-      </QueryBoundary>
-    </Page>
-  );
+
+  function renderContent() {
+
+    return (
+      <Page>
+        <PageHeader title={strings.ui.profileScreen.yourProfile} />
+        <QueryBoundary query={query} retainDataOnError>
+          {(user) => <ProfileForm key={user.id} user={user} />}
+        </QueryBoundary>
+      </Page>
+    );
+
+  }
+
+  return renderContent();
+
 }
-function ProfileForm({ user }: { user: User }) {
+
+function ProfileForm({ user }: ProfileFormProps) {
+
   const presentation = usePresentationService();
   const mutation = useUpdateCurrentUser(user.id);
   const [draft, setDraft] = useState<ProfileDraft | null>(null);
@@ -64,12 +84,18 @@ function ProfileForm({ user }: { user: User }) {
   const error =
     Object.values(errors).find(Boolean) ??
     (mutation.isError ? mutation.error.message : undefined);
+
   function change<K extends keyof ProfileDraft>(
     key: K,
     value: ProfileDraft[K],
   ) {
-    if (busyRef.current) return;
-    if (draft === null) baseline.current = profileDraftFromUser(user);
+
+    if (busyRef.current) {
+      return;
+    }
+    if (draft === null) {
+      baseline.current = profileDraftFromUser(user);
+    }
     const next = { ...current, [key]: value };
     dirtyRef.current = !equalDraft(
       next,
@@ -77,16 +103,26 @@ function ProfileForm({ user }: { user: User }) {
     );
     setDraft(dirtyRef.current ? next : null);
     setErrors((previous) => ({ ...previous, [key]: undefined }));
+
   }
+
   function submit(event: React.FormEvent<HTMLFormElement>) {
+
     event.preventDefault();
-    if (busyRef.current) return;
+    if (busyRef.current) {
+      return;
+    }
     const parsed = ProfileDraftSchema.safeParse(current);
     if (!parsed.success) {
+
       const next: ProfileDraftErrors = {};
       for (const issue of parsed.error.issues) {
+
         const key = issue.path[0] as keyof ProfileDraft;
-        if (!next[key]) next[key] = issue.message;
+        if (!next[key]) {
+          next[key] = issue.message;
+        }
+
       }
       setErrors(next);
       const key = String(parsed.error.issues[0]?.path[0]);
@@ -98,6 +134,7 @@ function ProfileForm({ user }: { user: User }) {
         )
         ?.focus();
       return;
+
     }
     setErrors({});
     busyRef.current = true;
@@ -112,6 +149,7 @@ function ProfileForm({ user }: { user: User }) {
       },
       {
         onSuccess: () => {
+
           dirtyRef.current = false;
           busyRef.current = false;
           baseline.current = null;
@@ -121,54 +159,57 @@ function ProfileForm({ user }: { user: User }) {
             title: strings.ui.profileScreen.profileUpdated,
             intent: 'success',
           });
+
         },
         onSettled: () => {
           busyRef.current = false;
         },
       },
     );
+
   }
-  return (
-    <Card className="grid gap-5">
-      <form ref={formRef} noValidate className="grid gap-4" onSubmit={submit}>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Field labelText={strings.ui.profileScreen.firstName}>
-            <Input
-              name="firstName"
-              value={current.firstName}
-              maxLength={80}
-              autoComplete="given-name"
-              disabled={mutation.isPending}
-              aria-invalid={Boolean(errors.firstName)}
-              aria-describedby={
-                errors.firstName ? 'profile-edit-error' : undefined
-              }
-              onChange={(event) => change('firstName', event.target.value)}
-            />
-          </Field>
-          <Field labelText={strings.ui.profileScreen.lastName}>
-            <Input
-              name="lastName"
-              value={current.lastName}
-              maxLength={80}
-              autoComplete="family-name"
-              disabled={mutation.isPending}
-              aria-invalid={Boolean(errors.lastName)}
-              aria-describedby={
-                errors.lastName ? 'profile-edit-error' : undefined
-              }
-              onChange={(event) => change('lastName', event.target.value)}
-            />
-          </Field>
-        </div>
-        <Field labelText={strings.ui.profileScreen.email}>
+
+  function renderNameFields() {
+
+    return (
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Field labelText={strings.ui.profileScreen.firstName}>
           <Input
-            type="email"
-            value={user.email}
-            readOnly
-            autoComplete="email"
+            name="firstName"
+            value={current.firstName}
+            maxLength={80}
+            autoComplete="given-name"
+            disabled={mutation.isPending}
+            aria-invalid={Boolean(errors.firstName)}
+            aria-describedby={
+              errors.firstName ? 'profile-edit-error' : undefined
+            }
+            onChange={(event) => change('firstName', event.target.value)}
           />
         </Field>
+        <Field labelText={strings.ui.profileScreen.lastName}>
+          <Input
+            name="lastName"
+            value={current.lastName}
+            maxLength={80}
+            autoComplete="family-name"
+            disabled={mutation.isPending}
+            aria-invalid={Boolean(errors.lastName)}
+            aria-describedby={
+              errors.lastName ? 'profile-edit-error' : undefined
+            }
+            onChange={(event) => change('lastName', event.target.value)}
+          />
+        </Field>
+      </div>
+    );
+
+  }
+
+  function renderContactFields() {
+
+    return (
+      <>
         <Field labelText={strings.ui.profileScreen.phoneNumber}>
           <Input
             name="phoneNumber"
@@ -192,25 +233,64 @@ function ProfileForm({ user }: { user: User }) {
           describedBy={errors.dateOfBirth ? 'profile-edit-error' : undefined}
           onValueChange={(value) => change('dateOfBirth', value)}
         />
-        {error && (
-          <p
-            id="profile-edit-error"
-            role="alert"
-            className="text-sm text-error-primary"
-          >
-            {error}
-          </p>
-        )}
-        <FormActions variant="plain">
-          <Button
-            loading={mutation.isPending}
-            type="submit"
-            disabled={mutation.isPending || draft === null}
-          >
-            {strings.ui.profileScreen.saveProfile}
-          </Button>
-        </FormActions>
-      </form>
-    </Card>
-  );
+      </>
+    );
+
+  }
+
+  function renderFeedback() {
+
+    return error ? (
+      <p
+        id="profile-edit-error"
+        role="alert"
+        className="text-sm text-error-primary"
+      >
+        {error}
+      </p>
+    ) : null;
+
+  }
+
+  function renderActions() {
+
+    return (
+      <FormActions variant="plain">
+        <Button
+          loading={mutation.isPending}
+          type="submit"
+          disabled={mutation.isPending || draft === null}
+        >
+          {strings.ui.profileScreen.saveProfile}
+        </Button>
+      </FormActions>
+    );
+
+  }
+
+  function renderForm() {
+
+    return (
+      <Card className="grid gap-5">
+        <form ref={formRef} noValidate className="grid gap-4" onSubmit={submit}>
+          {renderNameFields()}
+          <Field labelText={strings.ui.profileScreen.email}>
+            <Input
+              type="email"
+              value={user.email}
+              readOnly
+              autoComplete="email"
+            />
+          </Field>
+          {renderContactFields()}
+          {renderFeedback()}
+          {renderActions()}
+        </form>
+      </Card>
+    );
+
+  }
+
+  return renderForm();
+
 }

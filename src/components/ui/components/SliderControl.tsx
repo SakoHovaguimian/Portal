@@ -1,28 +1,10 @@
+import type { SliderControlProps } from '../models/sliderControlProps';
 import { useId } from 'react';
 import { I18nProvider } from 'react-aria';
-import {
-  Label,
-  Slider as AriaSlider,
-  SliderOutput,
-  SliderThumb,
-  SliderTrack,
-  type SliderProps as AriaSliderProps,
-} from 'react-aria-components';
+import { Label, Slider as AriaSlider, SliderOutput, SliderThumb, SliderTrack, type SliderProps as AriaSliderProps } from 'react-aria-components';
 import { strings } from '@/strings';
 import { cn } from '../lib/cn';
-import type { SliderOptions } from '../models/sliderOptions';
 import './ValueControls.css';
-
-interface SliderControlProps extends SliderOptions {
-  value?: number | number[];
-  defaultValue?: number | number[];
-  onValueChange?: (value: number | number[]) => void;
-  onValueCommit?: (value: number | number[]) => void;
-  names?: readonly string[];
-  thumbLabels?: readonly string[];
-  range?: boolean;
-  fillFrom?: 'start' | 'end';
-}
 
 /** Shared interaction/paint owner for single-value and ordered two-thumb sliders. */
 export function SliderControl({
@@ -53,6 +35,7 @@ export function SliderControl({
   range,
   fillFrom = 'start',
 }: SliderControlProps) {
+
   const helpId = useId();
   const vertical = orientation === 'vertical';
   const interactionProps: AriaSliderProps<number | number[]> = {
@@ -90,10 +73,68 @@ export function SliderControl({
           )}
           <SliderTrack className="ui-slider-track">
             {({ state }) => {
+
               const first = state.getThumbPercent(0) * 100;
               const last = state.getThumbPercent(state.values.length - 1) * 100;
               const start = range ? first : fillFrom === 'end' ? first : 0;
               const end = range ? last : fillFrom === 'end' ? 100 : first;
+
+              function renderMark(mark: number, index: number) {
+
+                return (
+                  <span
+                    key={`${mark}-${index}`}
+                    aria-hidden="true"
+                    className="ui-slider-mark"
+                    style={
+                      vertical
+                        ? {
+                          bottom: `${((mark - min) / (max - min)) * 100}%`,
+                        }
+                        : {
+                          insetInlineStart: `${((mark - min) / (max - min)) * 100}%`,
+                        }}
+                  />
+                );
+
+              }
+
+              const markElements = marks
+                .filter(
+                  (mark) =>
+                    Number.isFinite(mark) &&
+                    mark >= min &&
+                    mark <= max &&
+                    max > min,
+                )
+                .map(renderMark);
+
+              function renderThumb(_: number, index: number) {
+
+                return (
+                  <SliderThumb
+                    key={index}
+                    index={index}
+                    name={names?.[index]}
+                    aria-label={
+                      range
+                        ? (thumbLabels?.[index] ??
+                            (index === 0
+                              ? strings.valueControls.minimum
+                              : strings.valueControls.maximum))
+                        : undefined
+                    }
+                    isInvalid={!!errorMessage}
+                    className="ui-slider-thumb"
+                  >
+                    <span aria-hidden="true" className="ui-slider-knob" />
+                  </SliderThumb>
+                );
+
+              }
+
+              const thumbElements = state.values.map(renderThumb);
+
               return (
                 <>
                   <div aria-hidden="true" className="ui-slider-rail">
@@ -103,57 +144,16 @@ export function SliderControl({
                         vertical
                           ? { bottom: `${start}%`, height: `${end - start}%` }
                           : {
-                              insetInlineStart: `${start}%`,
-                              width: `${end - start}%`,
-                            }
-                      }
+                            insetInlineStart: `${start}%`,
+                            width: `${end - start}%`,
+                          }}
                     />
                   </div>
-                  {marks
-                    .filter(
-                      (mark) =>
-                        Number.isFinite(mark) &&
-                        mark >= min &&
-                        mark <= max &&
-                        max > min,
-                    )
-                    .map((mark, index) => (
-                      <span
-                        key={`${mark}-${index}`}
-                        aria-hidden="true"
-                        className="ui-slider-mark"
-                        style={
-                          vertical
-                            ? {
-                                bottom: `${((mark - min) / (max - min)) * 100}%`,
-                              }
-                            : {
-                                insetInlineStart: `${((mark - min) / (max - min)) * 100}%`,
-                              }
-                        }
-                      />
-                    ))}
-                  {state.values.map((_, index) => (
-                    <SliderThumb
-                      key={index}
-                      index={index}
-                      name={names?.[index]}
-                      aria-label={
-                        range
-                          ? (thumbLabels?.[index] ??
-                            (index === 0
-                              ? strings.valueControls.minimum
-                              : strings.valueControls.maximum))
-                          : undefined
-                      }
-                      isInvalid={!!errorMessage}
-                      className="ui-slider-thumb"
-                    >
-                      <span aria-hidden="true" className="ui-slider-knob" />
-                    </SliderThumb>
-                  ))}
+                  {markElements}
+                  {thumbElements}
                 </>
               );
+
             }}
           </SliderTrack>
           {trailingIcon && (
@@ -174,4 +174,5 @@ export function SliderControl({
       </AriaSlider>
     </I18nProvider>
   );
+
 }

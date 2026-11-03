@@ -15,8 +15,30 @@ export function RatingSummary({
   compact = false,
   className,
 }: RatingSummaryProps) {
+
   const score = average ?? 0;
   const hasRatings = score > 0 && count > 0;
+
+  function renderStar(value: number) {
+
+    return (
+      <span key={value} className={styles.star}>
+        <UiIcon name="star" className={styles.outline} />
+        <span
+          className={styles.fill}
+          style={{
+            width: `${hasRatings ? (compact ? 100 : Math.max(0, Math.min(1, score - value + 1)) * 100) : 0}%`,
+          }}
+        >
+          <UiIcon name="star" className={styles.filled} />
+        </span>
+      </span>
+    );
+
+  }
+
+  const stars = (compact ? [1] : [1, 2, 3, 4, 5]).map(renderStar);
+
   return (
     <span
       role="img"
@@ -28,19 +50,7 @@ export function RatingSummary({
         className="inline-flex flex-wrap items-center gap-x-2 gap-y-1"
       >
         <span className="inline-flex items-center gap-0.5">
-          {(compact ? [1] : [1, 2, 3, 4, 5]).map((value) => (
-            <span key={value} className={styles.star}>
-              <UiIcon name="star" className={styles.outline} />
-              <span
-                className={styles.fill}
-                style={{
-                  width: `${hasRatings ? (compact ? 100 : Math.max(0, Math.min(1, score - value + 1)) * 100) : 0}%`,
-                }}
-              >
-                <UiIcon name="star" className={styles.filled} />
-              </span>
-            </span>
-          ))}
+          {stars}
         </span>
         {hasRatings ? (
           <>
@@ -53,4 +63,5 @@ export function RatingSummary({
       </span>
     </span>
   );
+
 }

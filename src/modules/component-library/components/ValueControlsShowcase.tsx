@@ -6,6 +6,7 @@ import { SlidersExamples } from './SlidersExamples';
 import { ShowcaseSection } from './ShowcaseSection';
 
 export function ValueControlsShowcase() {
+
   return (
     <ShowcaseSection
       id="values"
@@ -17,4 +18,5 @@ export function ValueControlsShowcase() {
       <ProgressExamples />
     </ShowcaseSection>
   );
+
 }

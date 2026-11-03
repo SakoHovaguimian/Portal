@@ -1,21 +1,25 @@
 'use client';
-import { useRef, useState } from 'react';
-import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
+
+import { useRef, useState, type ChangeEvent, type FormEvent } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
   Card,
   Field,
   Input,
-  QueryBoundary,
   Page,
   PageHeader,
+  QueryBoundary,
 } from '@/components/ui';
 import { useServiceContainer } from '@/providers/AppProviders';
+import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
 import { useRealtime } from '@/services/realtime/RealtimeProvider';
 import { useRuntimeConfig } from '@/providers/RuntimeProvider';
 import { strings } from '@/strings';
+import type { ChatMessage } from './models/chatMessage';
+
 export function ChatScreen() {
+
   const container = useServiceContainer();
   const queryClient = useQueryClient();
   const realtime = useRealtime();
@@ -32,111 +36,184 @@ export function ChatScreen() {
   const mutation = useMutation({
     mutationFn: (value: string) => container.chatService.sendMessage(value),
     onSuccess: async () => {
+
       dirtyRef.current = false;
       busyRef.current = false;
       setMessage('');
       await queryClient.invalidateQueries({ queryKey: ['chat'] });
+
     },
     onSettled: () => {
       busyRef.current = false;
     },
   });
-  return (
-    <Page>
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+
+    event.preventDefault();
+    if (message.trim() && !busyRef.current) {
+
+      busyRef.current = true;
+      mutation.mutate(message);
+
+    }
+
+  }
+
+  function handleMessageChange(event: ChangeEvent<HTMLInputElement>) {
+
+    dirtyRef.current = event.target.value.length > 0;
+    setMessage(event.target.value);
+
+  }
+
+  function renderHeader() {
+
+    return (
       <PageHeader
         title={strings.chat.title}
         description={strings.chat.description}
       />
-      <Card className="grid gap-5">
-        <div>
-          <p className="mt-2 text-xs text-tertiary" role="status">
-            {strings.chat[realtime.status]}
-          </p>
-        </div>
-        <QueryBoundary query={query} retainDataOnError>
-          {(messages) => (
-            <div
-              role="log"
-              aria-label={strings.chat.title}
-              className="grid max-h-[50vh] gap-3 overflow-y-auto"
-            >
-              {messages.length === 0 && (
-                <p className="text-secondary">{strings.chat.empty}</p>
-              )}
-              {messages.map((item) => (
-                <article
-                  key={item.id}
-                  className="rounded-xl border-control border-secondary p-4"
-                >
-                  <p className="text-sm font-semibold">{item.author}</p>
-                  <p className="whitespace-pre-wrap wrap-break-word text-sm text-secondary">
-                    {item.message}
-                  </p>
-                  <time
-                    className="text-xs text-tertiary"
-                    dateTime={item.createdAt}
-                  >
-                    {new Date(item.createdAt).toLocaleString('en-US')}
-                  </time>
-                </article>
-              ))}
-            </div>
-          )}
-        </QueryBoundary>
-        <form
-          noValidate
-          onSubmit={(event) => {
-            event.preventDefault();
-            if (message.trim() && !busyRef.current) {
-              busyRef.current = true;
-              mutation.mutate(message);
-            }
-          }}
-          className="grid gap-3"
+    );
+
+  }
+
+  function renderRealtimeStatus() {
+
+    return (
+      <div>
+        <p className="mt-2 text-xs text-tertiary" role="status">
+          {strings.chat[realtime.status]}
+        </p>
+      </div>
+    );
+
+  }
+
+  function renderMessageRow(item: ChatMessage) {
+
+    return (
+      <article
+        key={item.id}
+        className="rounded-xl border-control border-secondary p-4"
+      >
+        <p className="text-sm font-semibold">{item.author}</p>
+        <p className="whitespace-pre-wrap wrap-break-word text-sm text-secondary">
+          {item.message}
+        </p>
+        <time className="text-xs text-tertiary" dateTime={item.createdAt}>
+          {new Date(item.createdAt).toLocaleString('en-US')}
+        </time>
+      </article>
+    );
+
+  }
+
+  function renderMessageLog(messages: ChatMessage[]) {
+
+    const messageRows = messages.map(renderMessageRow);
+
+    return (
+      <div
+        role="log"
+        aria-label={strings.chat.title}
+        className="grid max-h-[50vh] gap-3 overflow-y-auto"
+      >
+        {messages.length === 0 && (
+          <p className="text-secondary">{strings.chat.empty}</p>
+        )}
+        {messageRows}
+      </div>
+    );
+
+  }
+
+  function renderConversation() {
+
+    return (
+      <QueryBoundary query={query} retainDataOnError>
+        {(messages) => renderMessageLog(messages)}
+      </QueryBoundary>
+    );
+
+  }
+
+  function renderComposeError() {
+
+    return mutation.isError ? (
+      <p
+        id="chat-compose-error"
+        role="alert"
+        className="text-sm text-error-primary"
+      >
+        {strings.chat.failed}
+      </p>
+    ) : null;
+
+  }
+
+  function renderActions() {
+
+    return (
+      <div className="flex flex-wrap gap-2">
+        <Button
+          type="submit"
+          disabled={!message.trim() || mutation.isPending}
+          loading={mutation.isPending}
         >
-          <Field labelText={strings.chat.placeholder}>
-            <Input
-              value={message}
-              maxLength={2000}
-              disabled={mutation.isPending}
-              aria-describedby={
-                mutation.isError ? 'chat-compose-error' : undefined
-              }
-              onChange={(event) => {
-                dirtyRef.current = event.target.value.length > 0;
-                setMessage(event.target.value);
-              }}
-            />
-          </Field>
-          {mutation.isError && (
-            <p
-              id="chat-compose-error"
-              role="alert"
-              className="text-sm text-error-primary"
-            >
-              {strings.chat.failed}
-            </p>
-          )}
-          <div className="flex flex-wrap gap-2">
-            <Button
-              type="submit"
-              disabled={!message.trim() || mutation.isPending}
-              loading={mutation.isPending}
-            >
-              {strings.chat.send}
-            </Button>
-            {demoMode && (
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={realtime.simulateAlert}
-              >
-                {strings.chat.simulate}
-              </Button>
-            )}
-          </div>
-        </form>
-      </Card>
-    </Page>
-  );
+          {strings.chat.send}
+        </Button>
+        {demoMode && (
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={realtime.simulateAlert}
+          >
+            {strings.chat.simulate}
+          </Button>
+        )}
+      </div>
+    );
+
+  }
+
+  function renderComposeForm() {
+
+    return (
+      <form noValidate onSubmit={handleSubmit} className="grid gap-3">
+        <Field labelText={strings.chat.placeholder}>
+          <Input
+            value={message}
+            maxLength={2000}
+            disabled={mutation.isPending}
+            aria-describedby={
+              mutation.isError ? 'chat-compose-error' : undefined
+            }
+            onChange={handleMessageChange}
+          />
+        </Field>
+        {renderComposeError()}
+        {renderActions()}
+      </form>
+    );
+
+  }
+
+  function renderContent() {
+
+    return (
+      <Page>
+        {renderHeader()}
+        <Card className="grid gap-5">
+          {renderRealtimeStatus()}
+          {renderConversation()}
+          {renderComposeForm()}
+        </Card>
+      </Page>
+    );
+
+  }
+
+  return renderContent();
+
 }

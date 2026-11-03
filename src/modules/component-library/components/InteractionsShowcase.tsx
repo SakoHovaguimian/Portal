@@ -25,6 +25,7 @@ const copy = portalUiStrings.library;
 const views = ['overview', 'details', 'history'] as const;
 
 export function InteractionsShowcase() {
+
   const [view, setView] = useUrlState('exampleView', 'overview', views);
   const [date, setDate] = useState('');
   const [rating, setRating] = useState<number | null>(null);
@@ -34,13 +35,12 @@ export function InteractionsShowcase() {
   const [revision, setRevision] = useState(1);
   const [removed, setRemoved] = useState(false);
   const count = liked ? 13 : 12;
-  return (
-    <ShowcaseSection
-      id="interactions"
-      title={copy.title}
-      description={copy.description}
-      icon="layers"
-    >
+
+  function renderValueAndEngagementControls() {
+
+    const choiceOptions = copy.options.map((label) => ({ value: label, label }));
+
+    return (
       <div className="grid min-w-0 gap-6 lg:grid-cols-2">
         <div className="grid min-w-0 content-start gap-4">
           <DatePicker
@@ -62,7 +62,7 @@ export function InteractionsShowcase() {
               selectAllLabel={copy.selectAll}
               selectionLabel={copy.selectionCount}
               maxSelections={2}
-              options={copy.options.map((label) => ({ value: label, label }))}
+              options={choiceOptions}
             />
           </Field>
         </div>
@@ -88,12 +88,16 @@ export function InteractionsShowcase() {
               label={liked ? copy.liked : copy.like}
               count={count}
               countLabel={copy.reactions(count)}
-              onClick={() => setLiked((value) => !value)}
+              onClick={() => {
+                setLiked((value) => !value);
+              }}
             />
             <BookmarkButton
               saved={saved}
               variant="secondary"
-              onClick={() => setSaved((value) => !value)}
+              onClick={() => {
+                setSaved((value) => !value);
+              }}
             />
             <IconMenu
               label={copy.menu}
@@ -113,7 +117,9 @@ export function InteractionsShowcase() {
                 },
               ]}
               onAction={(id) => {
-                if (id === 'remove') setRemoved(true);
+
+                if (id === 'remove') { setRemoved(true); }
+
               }}
             />
           </div>
@@ -124,6 +130,13 @@ export function InteractionsShowcase() {
           )}
         </div>
       </div>
+    );
+
+  }
+
+  function renderPanels() {
+
+    return (
       <SegmentedPanels
         value={view}
         onValueChange={(next) => {
@@ -160,6 +173,13 @@ export function InteractionsShowcase() {
           },
         ]}
       />
+    );
+
+  }
+
+  function renderAccordion() {
+
+    return (
       <Accordion
         items={[
           {
@@ -174,20 +194,44 @@ export function InteractionsShowcase() {
           },
         ]}
       />
+    );
+
+  }
+
+  function renderCarousel() {
+
+    function renderCarouselCard(title: string) {
+
+      return (
+        <Card key={title} className="grid content-start gap-3">
+          <h3 className="m-0 text-base font-semibold text-primary">
+            {title}
+          </h3>
+          <p className="m-0 text-sm text-secondary">{copy.carouselBody}</p>
+        </Card>
+      );
+
+    }
+
+    const carouselCards = copy.carouselTitles.map(renderCarouselCard);
+
+    return (
       <HorizontalCarousel label={copy.carousel}>
-        {copy.carouselTitles.map((title) => (
-          <Card key={title} className="grid content-start gap-3">
-            <h3 className="m-0 text-base font-semibold text-primary">
-              {title}
-            </h3>
-            <p className="m-0 text-sm text-secondary">{copy.carouselBody}</p>
-          </Card>
-        ))}
+        {carouselCards}
       </HorizontalCarousel>
+    );
+
+  }
+
+  function renderContentTransition() {
+
+    return (
       <div className="grid min-w-0 justify-items-start gap-4">
         <Button
           variant="secondary"
-          onClick={() => setRevision((value) => value + 1)}
+          onClick={() => {
+            setRevision((value) => value + 1);
+          }}
         >
           {copy.transition}
         </Button>
@@ -197,6 +241,23 @@ export function InteractionsShowcase() {
           </p>
         </ContentTransition>
       </div>
+    );
+
+  }
+
+  return (
+    <ShowcaseSection
+      id="interactions"
+      title={copy.title}
+      description={copy.description}
+      icon="layers"
+    >
+      {renderValueAndEngagementControls()}
+      {renderPanels()}
+      {renderAccordion()}
+      {renderCarousel()}
+      {renderContentTransition()}
     </ShowcaseSection>
   );
+
 }

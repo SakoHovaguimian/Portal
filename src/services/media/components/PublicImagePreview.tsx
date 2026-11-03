@@ -1,12 +1,14 @@
 'use client';
 
 import Image from 'next/image';
+import type { PublicImagePreviewProps } from '../models/publicImagePreviewProps';
 import { useState } from 'react';
 import { isPublicImageReference } from '../models/publicImageUrl';
 import { UiIcon } from '@/components/ui';
 import { portalMediaStrings as mediaCopy } from '@/strings';
 
-export function PublicImagePreview({ src }: { src: string }) {
+export function PublicImagePreview({ src }: PublicImagePreviewProps) {
+
   const [failed, setFailed] = useState<string>();
   return (
     <div className="relative aspect-video max-h-64 overflow-hidden rounded-xl border-control border-secondary bg-secondary_subtle">
@@ -31,4 +33,5 @@ export function PublicImagePreview({ src }: { src: string }) {
       )}
     </div>
   );
+
 }

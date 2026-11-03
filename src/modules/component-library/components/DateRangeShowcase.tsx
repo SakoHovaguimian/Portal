@@ -7,6 +7,7 @@ import { ShowcaseSection } from './ShowcaseSection';
 
 const initial: DateRangeValue = { start: '2026-11-03', end: '2026-11-12' };
 export function DateRangeShowcase() {
+
   const [value, setValue] = useState<DateRangeValue | null>(initial);
   const [invalid, setInvalid] = useState<DateRangeValue | null>(null);
   return (
@@ -54,4 +55,5 @@ export function DateRangeShowcase() {
       </div>
     </ShowcaseSection>
   );
+
 }

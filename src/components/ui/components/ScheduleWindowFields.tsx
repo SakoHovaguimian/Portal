@@ -1,11 +1,10 @@
-import type { RefObject } from 'react';
+import type { ScheduleWindow } from '../models/scheduleWindow';
+import type { ScheduleWindowFieldsProps } from '../models/scheduleWindowFieldsProps';
 import { Button } from './Button';
 import { Field } from './Field';
 import { Input } from './Input';
 import { strings } from '@/strings';
 import { cn } from '../lib/cn';
-
-type Window = { opens_at: string | null; closes_at: string | null };
 
 // Shared weekly/dated schedule controls; draft ownership stays with the caller.
 export function ScheduleWindowFields({
@@ -18,18 +17,52 @@ export function ScheduleWindowFields({
   onRemove,
   removeLabel,
   compact = false,
-}: {
-  window: Window;
-  label: string;
-  prefix: string;
-  invalid: Record<string, string>;
-  fields: RefObject<Map<string, HTMLElement>>;
-  onChange: (key: keyof Window, value: string | null) => void;
-  onRemove?: () => void;
-  removeLabel: string;
-  compact?: boolean;
-}) {
+}: ScheduleWindowFieldsProps) {
+
   const copy = strings.schedule;
+
+  function renderWindowField(key: keyof ScheduleWindow) {
+
+    const field = `${prefix}.${key}`;
+    const id = field.replaceAll('.', '-');
+    const error = invalid[field] || invalid[`${prefix}.closed`];
+    return (
+      <div key={key} className="grid min-w-0 gap-1.5">
+        <Field labelText={key === 'opens_at' ? copy.opens : copy.closes}>
+          <Input
+            id={id}
+            type="time"
+            value={window[key] ?? ''}
+            ref={(element) => {
+
+              if (element) { fields.current.set(field, element); } else { fields.current.delete(field); }
+
+            }}
+            aria-invalid={Boolean(error)}
+            aria-describedby={error ? `${id}-error` : undefined}
+            onChange={(event) =>
+              onChange(key, event.target.value || null)
+            }
+            onInput={(event) =>
+              onChange(key, event.currentTarget.value || null)
+            }
+          />
+        </Field>
+        {error && (
+          <p
+            id={`${id}-error`}
+            className="m-0 text-sm text-error-primary"
+          >
+            {error}
+          </p>
+        )}
+      </div>
+    );
+
+  }
+
+  const windowFields = (['opens_at', 'closes_at'] as const).map(renderWindowField);
+
   return (
     <div
       role="group"
@@ -43,42 +76,7 @@ export function ScheduleWindowFields({
         <p className="m-0 text-xs font-medium text-secondary">{label}</p>
       )}
       <div className="grid min-w-0 items-start gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
-        {(['opens_at', 'closes_at'] as const).map((key) => {
-          const field = `${prefix}.${key}`;
-          const id = field.replaceAll('.', '-');
-          const error = invalid[field] || invalid[`${prefix}.closed`];
-          return (
-            <div key={key} className="grid min-w-0 gap-1.5">
-              <Field labelText={key === 'opens_at' ? copy.opens : copy.closes}>
-                <Input
-                  id={id}
-                  type="time"
-                  value={window[key] ?? ''}
-                  ref={(element) => {
-                    if (element) fields.current.set(field, element);
-                    else fields.current.delete(field);
-                  }}
-                  aria-invalid={Boolean(error)}
-                  aria-describedby={error ? `${id}-error` : undefined}
-                  onChange={(event) =>
-                    onChange(key, event.target.value || null)
-                  }
-                  onInput={(event) =>
-                    onChange(key, event.currentTarget.value || null)
-                  }
-                />
-              </Field>
-              {error && (
-                <p
-                  id={`${id}-error`}
-                  className="m-0 text-sm text-error-primary"
-                >
-                  {error}
-                </p>
-              )}
-            </div>
-          );
-        })}
+        {windowFields}
         {onRemove && (
           <Button
             variant="secondary"
@@ -93,10 +91,11 @@ export function ScheduleWindowFields({
       {window.opens_at &&
         window.closes_at &&
         window.closes_at < window.opens_at && (
-          <p className="m-0 text-xs text-secondary">
-            {copy.overnightHoursHint}
-          </p>
-        )}
+        <p className="m-0 text-xs text-secondary">
+          {copy.overnightHoursHint}
+        </p>
+      )}
     </div>
   );
+
 }

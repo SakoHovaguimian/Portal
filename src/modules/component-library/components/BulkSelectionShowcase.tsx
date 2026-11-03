@@ -18,6 +18,7 @@ const initialRows = copy.examples.people.map((name, index) => ({
   unavailable: index === 4,
 }));
 export function BulkSelectionShowcase() {
+
   const [rows, setRows] = useState(initialRows);
   const [keys, setKeys] = useState<string[]>([]);
   const [all, setAll] = useState(false);
@@ -30,14 +31,18 @@ export function BulkSelectionShowcase() {
     ? rows.filter((item) => !item.unavailable).length
     : keys.length;
   const clear = () => {
+
     setKeys([]);
     setAll(false);
     setFailure(false);
+
   };
   const archive = async () => {
-    if (busy || !count) return;
+
+    if (busy || !count) { return; }
     setBusy(true);
     try {
+
       const confirmed = await presentation.showAlert({
         title: copy.examples.archiveTitle,
         description: copy.examples.archiveDescription(count),
@@ -45,26 +50,29 @@ export function BulkSelectionShowcase() {
         cancelLabel: copy.examples.cancel,
         tone: 'danger',
       });
-      if (!confirmed) return;
+      if (!confirmed) { return; }
       const targets = all
         ? rows.filter((item) => !item.unavailable).map((item) => item.id)
         : keys;
-      setRows((current) =>
-        current.filter((item) => !targets.includes(item.id)),
+      setRows((current) => {
+
+        const remainingRows = current.filter((item) => !targets.includes(item.id));
+        return remainingRows;
+
+      },
       );
       setArchived((current) => current + targets.length);
       clear();
+
     } finally {
       setBusy(false);
     }
+
   };
-  return (
-    <ShowcaseSection
-      id="bulk"
-      title={copy.examples.selectionTitle}
-      description={copy.examples.selectionDescription}
-      icon="table"
-    >
+
+  function renderBulkActions() {
+
+    return (
       <BulkActionBar
         selectedCount={count}
         totalCount={rows.filter((item) => !item.unavailable).length}
@@ -72,10 +80,12 @@ export function BulkSelectionShowcase() {
         busy={busy}
         onClear={clear}
         onSelectAllResults={() => {
+
           setAll(true);
           setKeys(
             rows.filter((item) => !item.unavailable).map((item) => item.id),
           );
+
         }}
         error={failure ? copy.examples.partialFailureHint : undefined}
       >
@@ -90,23 +100,36 @@ export function BulkSelectionShowcase() {
           variant="secondary"
           disabled={count < 2 || busy}
           onClick={() => {
+
             const targets = all
               ? rows.filter((item) => !item.unavailable).map((item) => item.id)
               : keys;
             const remaining = targets.slice(0, 1);
             const succeeded = targets.slice(1);
-            setRows((current) =>
-              current.filter((item) => !succeeded.includes(item.id)),
+            setRows((current) => {
+
+              const remainingRows = current.filter((item) => !succeeded.includes(item.id));
+              return remainingRows;
+
+            },
             );
             setKeys(remaining);
             setAll(false);
             setArchived((current) => current + succeeded.length);
             setFailure(true);
+
           }}
         >
           {copy.examples.partialFailure}
         </Button>
       </BulkActionBar>
+    );
+
+  }
+
+  function renderTable() {
+
+    return (
       <DataTable
         rows={visible}
         getRowKey={(row) => row.id}
@@ -114,9 +137,11 @@ export function BulkSelectionShowcase() {
         selection={{
           selectedKeys: keys,
           onSelectionChange: (next) => {
+
             setKeys(next);
             setAll(false);
             setFailure(false);
+
           },
           getRowLabel: (row) => copy.table.selectRow(row.name),
           isRowDisabled: (row) => row.unavailable,
@@ -151,6 +176,13 @@ export function BulkSelectionShowcase() {
           },
         ]}
       />
+    );
+
+  }
+
+  function renderSummary() {
+
+    return (
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p role="status" className="m-0 text-xs text-tertiary">
           {copy.examples.archived(archived)}
@@ -159,14 +191,31 @@ export function BulkSelectionShowcase() {
           variant="ghost"
           disabled={busy}
           onClick={() => {
+
             clear();
             setRows(initialRows);
             setArchived(0);
+
           }}
         >
           {copy.examples.reset}
         </Button>
       </div>
+    );
+
+  }
+
+  return (
+    <ShowcaseSection
+      id="bulk"
+      title={copy.examples.selectionTitle}
+      description={copy.examples.selectionDescription}
+      icon="table"
+    >
+      {renderBulkActions()}
+      {renderTable()}
+      {renderSummary()}
     </ShowcaseSection>
   );
+
 }

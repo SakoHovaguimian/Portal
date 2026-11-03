@@ -1,6 +1,6 @@
 import { DirectoryFilters, Field, Select } from '@/components/ui';
 import { portalNotificationInboxStrings as copy } from '@/strings';
-import type { NotificationInboxQuery } from '../models/notificationInboxQuery';
+import type { NotificationDirectoryFiltersProps } from '../models/notificationDirectoryFiltersProps';
 
 const anyCategory = '';
 const ascendingOrder = 'asc';
@@ -9,10 +9,8 @@ const descendingOrder = 'desc';
 export function NotificationDirectoryFilters({
   query,
   update,
-}: {
-  query: NotificationInboxQuery;
-  update: (values: Record<string, string | undefined>) => void;
-}) {
+}: NotificationDirectoryFiltersProps) {
+
   return (
     <DirectoryFilters
       id="notification-search"
@@ -70,4 +68,5 @@ export function NotificationDirectoryFilters({
       }
     />
   );
+
 }

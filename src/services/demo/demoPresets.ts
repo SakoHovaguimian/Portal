@@ -3,6 +3,7 @@ import { portalDemoStrings as copy } from '@/strings';
 import type { DemoPreset } from './models/demoPreset';
 import type { DemoUser } from './models/demoUser';
 import { users } from './demoFixtures';
+
 export const demoPresetIds: Record<DemoPreset, string> = {
   populated: users[0].id,
   empty: '88888888-8888-4888-8888-888888888888',
@@ -10,18 +11,34 @@ export const demoPresetIds: Record<DemoPreset, string> = {
   admin: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
   superadmin: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
 };
+
+// **************************************
+// MARK: - FIND DEMO ACCOUNT PRESET
+// **************************************
+
 export function demoPresetForUser(id: string): DemoPreset | undefined {
-  return (Object.keys(demoPresetIds) as DemoPreset[]).find(
+
+  const preset = (Object.keys(demoPresetIds) as DemoPreset[]).find(
     (key) => demoPresetIds[key] === id,
   );
+
+  return preset;
+
 }
+
+// **************************************
+// MARK: - CREATE PRESET DEMO USERS
+// **************************************
+
 export function createDemoUsers(): DemoUser[] {
+
   const result: DemoUser[] = structuredClone(users).map((user) => ({
     ...user,
     role: 'user',
     disabled: false,
   }));
   for (const key of ['empty', 'onboarding', 'admin', 'superadmin'] as const) {
+
     const account = copy.accounts[key];
     const now = new Date().toISOString();
     result.push({
@@ -38,8 +55,10 @@ export function createDemoUsers(): DemoUser[] {
       disabled: false,
       role: key === 'admin' || key === 'superadmin' ? key : 'user',
     });
+
   }
   return result;
+
 }
 
 export const populatedDemoUsers = createDemoUsers().filter(

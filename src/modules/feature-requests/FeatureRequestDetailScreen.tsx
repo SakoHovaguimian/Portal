@@ -1,25 +1,26 @@
 'use client';
+
 import { strings } from '@/strings';
 import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { usePresentationService } from '@/presentation/PresentationProvider';
 import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
 import { Button, Card, Field, Input, QueryBoundary } from '@/components/ui';
-import {
-  FeatureRequestMutationInputSchema,
-  type FeatureRequest,
-} from '@/models/featureRequest';
+import { FeatureRequestMutationInputSchema } from '@/models/featureRequest';
+import type { FeatureRequestDetailScreenProps } from './models/featureRequestDetailScreenProps';
+import type { FeatureRequestFormProps } from './models/featureRequestFormProps';
 import {
   useDeleteFeatureRequest,
   useFeatureRequest,
   useUpdateFeatureRequest,
 } from './hooks';
+
 export function FeatureRequestDetailScreen({
   featureRequestId,
-}: {
-  featureRequestId: string;
-}) {
+}: FeatureRequestDetailScreenProps) {
+
   const query = useFeatureRequest(featureRequestId);
+
   return (
     <QueryBoundary
       query={query}
@@ -33,8 +34,11 @@ export function FeatureRequestDetailScreen({
       {(request) => <FeatureRequestForm key={request.id} request={request} />}
     </QueryBoundary>
   );
+
 }
-function FeatureRequestForm({ request }: { request: FeatureRequest }) {
+
+function FeatureRequestForm({ request }: FeatureRequestFormProps) {
+
   const router = useRouter();
   const presentation = usePresentationService();
   const updateMutation = useUpdateFeatureRequest(request.id);
@@ -51,26 +55,40 @@ function FeatureRequestForm({ request }: { request: FeatureRequest }) {
   const message = draft ?? request.message;
   const busy =
     confirmingDelete || updateMutation.isPending || deleteMutation.isPending;
+
   function change(value: string) {
-    if (busyRef.current) return;
-    if (draft === null) baseline.current = request.message;
+
+    if (busyRef.current) {
+      return;
+    }
+    if (draft === null) {
+      baseline.current = request.message;
+    }
     dirtyRef.current = value !== baseline.current;
     setDraft(dirtyRef.current ? value : null);
     setValidation(null);
+
   }
+
   function save(event: React.FormEvent<HTMLFormElement>) {
+
     event.preventDefault();
-    if (busyRef.current) return;
+    if (busyRef.current) {
+      return;
+    }
     const parsed = FeatureRequestMutationInputSchema.safeParse({ message });
     if (!parsed.success) {
+
       setValidation(strings.errors.invalidInput);
       inputRef.current?.focus();
       return;
+
     }
     busyRef.current = true;
     setValidation(null);
     updateMutation.mutate(parsed.data, {
       onSuccess: () => {
+
         dirtyRef.current = false;
         busyRef.current = false;
         setDraft(null);
@@ -78,18 +96,25 @@ function FeatureRequestForm({ request }: { request: FeatureRequest }) {
           title: strings.ui.featureRequestDetailScreen.requestUpdated,
           intent: 'success',
         });
+
       },
       onSettled: () => {
         busyRef.current = false;
       },
     });
+
   }
+
   async function remove() {
-    if (busyRef.current || confirmingRef.current) return;
+
+    if (busyRef.current || confirmingRef.current) {
+      return;
+    }
     confirmingRef.current = true;
     busyRef.current = true;
     setConfirmingDelete(true);
     try {
+
       const confirmed = await presentation.showAlert({
         title: strings.ui.featureRequestDetailScreen.deleteThisRequest,
         description:
@@ -99,26 +124,35 @@ function FeatureRequestForm({ request }: { request: FeatureRequest }) {
         cancelLabel: strings.ui.featureRequestDetailScreen.keepRequest,
         tone: 'danger',
       });
-      if (!confirmed) return;
+      if (!confirmed) {
+        return;
+      }
       await deleteMutation.mutateAsync();
       dirtyRef.current = false;
       busyRef.current = false;
       setDraft(null);
       router.push('/feature-requests');
+
     } catch {
       /* Failed deletion preserves the current draft and exposes the mutation error. */
     } finally {
+
       confirmingRef.current = false;
       busyRef.current = false;
       setConfirmingDelete(false);
+
     }
+
   }
+
   const error =
     validation ??
     updateMutation.error?.message ??
     deleteMutation.error?.message;
-  return (
-    <Card className="grid gap-5">
+
+  function renderHeader() {
+
+    return (
       <div className="grid gap-2">
         <p className="m-0 text-xs font-semibold uppercase tracking-[0.16em] text-brand-secondary">
           {strings.ui.featureRequestDetailScreen.requestDetail}
@@ -127,6 +161,13 @@ function FeatureRequestForm({ request }: { request: FeatureRequest }) {
           {strings.ui.featureRequestDetailScreen.featureRequestDetail}
         </h1>
       </div>
+    );
+
+  }
+
+  function renderForm() {
+
+    return (
       <form noValidate onSubmit={save} className="grid gap-3">
         <Field labelText={strings.ui.featureRequestDetailScreen.message}>
           <Input
@@ -167,6 +208,21 @@ function FeatureRequestForm({ request }: { request: FeatureRequest }) {
           </p>
         )}
       </form>
-    </Card>
-  );
+    );
+
+  }
+
+  function renderContent() {
+
+    return (
+      <Card className="grid gap-5">
+        {renderHeader()}
+        {renderForm()}
+      </Card>
+    );
+
+  }
+
+  return renderContent();
+
 }

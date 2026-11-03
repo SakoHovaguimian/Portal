@@ -1,12 +1,14 @@
 import { notFound } from 'next/navigation';
 import { portalModules } from '@/config/portalModules';
-import type { ReactNode } from 'react';
+import type { ChildrenProps } from '@/models/childrenProps';
 import Link from 'next/link';
 import { portalPublishingStrings, strings } from '@/strings';
 import styles from '@/modules/blog/Blog.module.css';
+
 const copy = portalPublishingStrings.article;
-export default function BlogLayout({ children }: { children: ReactNode }) {
-  if (!portalModules.publishing) notFound();
+export default function BlogLayout({ children }: ChildrenProps) {
+
+  if (!portalModules.publishing) { notFound(); }
   return (
     <div className={styles.publicContainer}>
       <nav
@@ -27,4 +29,5 @@ export default function BlogLayout({ children }: { children: ReactNode }) {
       {children}
     </div>
   );
+
 }

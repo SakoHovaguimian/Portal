@@ -6,6 +6,11 @@ import type {
 } from '../api/models';
 
 const now = new Date();
+
+// **************************************
+// MARK: - CREATE RELATIVE DEMO DATE
+// **************************************
+
 const daysAgo = (days: number) =>
   new Date(now.getTime() - days * 86400000).toISOString();
 

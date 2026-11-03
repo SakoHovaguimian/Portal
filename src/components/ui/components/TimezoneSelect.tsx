@@ -9,8 +9,22 @@ export function TimezoneSelect({
   value,
   ...props
 }: Omit<SelectProps, 'children'>) {
+
   const emptyCode = '';
   const selected = String(value ?? emptyCode);
+
+  function renderTimezoneOption(item: (typeof timezoneChoices)[number]) {
+
+    return (
+      <option key={item.code} value={item.code}>
+        {item.label}
+      </option>
+    );
+
+  }
+
+  const timezoneOptions = timezoneChoices.map(renderTimezoneOption);
+
   return (
     <Select {...props} value={selected}>
       <option value={emptyCode}>{strings.address.chooseTimezone}</option>
@@ -19,11 +33,8 @@ export function TimezoneSelect({
           {strings.address.savedTimezone(selected)}
         </option>
       )}
-      {timezoneChoices.map((item) => (
-        <option key={item.code} value={item.code}>
-          {item.label}
-        </option>
-      ))}
+      {timezoneOptions}
     </Select>
   );
+
 }

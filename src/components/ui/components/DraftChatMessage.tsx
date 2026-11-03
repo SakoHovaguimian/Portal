@@ -1,16 +1,14 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import type { DraftChatMessageProps } from '../models/draftChatMessageProps';
 import { strings } from '@/strings';
 import { UiIcon } from './UiIcon';
 
 export function DraftChatMessage({
   children,
   user = false,
-}: {
-  children: ReactNode;
-  user?: boolean;
-}) {
+}: DraftChatMessageProps) {
+
   return (
     <div
       className={`ui-chat-message flex min-w-0 items-start gap-3 ${user ? 'justify-end' : ''}`}
@@ -35,4 +33,5 @@ export function DraftChatMessage({
       </div>
     </div>
   );
+
 }

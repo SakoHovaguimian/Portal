@@ -8,8 +8,10 @@ import { useRuntimeConfig } from '@/providers/RuntimeProvider';
 import { AuthCardShell } from './AuthCardShell';
 import { LockIcon, MailIcon, UserIcon } from './authIcons';
 import { createSession, resolveSessionRedirect } from './sessionClient';
+import type { AuthRedirectProps } from './models/authRedirectProps';
 
-export function SignupScreen({ redirectTo }: { redirectTo?: string }) {
+export function SignupScreen({ redirectTo }: AuthRedirectProps) {
+
   const router = useRouter();
   const { demoMode } = useRuntimeConfig();
   const [firstName, setFirstName] = useState('');
@@ -20,13 +22,15 @@ export function SignupScreen({ redirectTo }: { redirectTo?: string }) {
   const [pending, setPending] = useState(false);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+
     event.preventDefault();
     const form = event.currentTarget;
-    if (pending) return;
+    if (pending) { return; }
     setPending(true);
     setError(null);
 
     try {
+
       const result = await createSession({
         action: 'signup',
         firstName,
@@ -39,61 +43,79 @@ export function SignupScreen({ redirectTo }: { redirectTo?: string }) {
         resolveSessionRedirect(redirectTo, result.onboardingRequired),
       );
       router.refresh();
+
     } catch (caughtError) {
+
       form.querySelector('input')?.focus();
       setError(
         caughtError instanceof Error
           ? caughtError.message
           : strings.ui.signupScreen.unableToCreateAccount,
       );
+
     } finally {
       setPending(false);
     }
+
   }
 
-  return (
-    <AuthCardShell
-      badge={strings.ui.signupScreen.onboarding}
-      title={strings.ui.signupScreen.createYourWorkspaceAccount}
-      description={strings.ui.signupScreen.createYourAccountToJoinTheWorkspace}
-      footerPrompt={strings.ui.signupScreen.alreadyHaveAnAccount}
-      footerHref={
-        redirectTo
-          ? `/login?redirectTo=${encodeURIComponent(redirectTo)}`
-          : '/login'
-      }
-      footerAction={strings.ui.signupScreen.backToLogin}
-      mockHint={demoMode ? portalDemoStrings.signupHint : undefined}
-    >
+  function renderNameFields() {
+
+    return (
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Field labelText={strings.ui.signupScreen.firstName}>
+          <Input
+            className="auth-panel-hover"
+            autoComplete="given-name"
+            placeholder={strings.ui.signupScreen.sako}
+            leadingIcon={<UserIcon className="h-5 w-5" />}
+            value={firstName}
+            aria-invalid={Boolean(error)}
+            aria-describedby={error ? 'SignupScreen-error' : undefined}
+            disabled={pending}
+            onChange={(event) => setFirstName(event.target.value)}
+          />
+        </Field>
+        <Field labelText={strings.ui.signupScreen.lastName}>
+          <Input
+            className="auth-panel-hover"
+            autoComplete="family-name"
+            placeholder={strings.ui.signupScreen.hovaguimian}
+            leadingIcon={<UserIcon className="h-5 w-5" />}
+            value={lastName}
+            aria-invalid={Boolean(error)}
+            aria-describedby={error ? 'SignupScreen-error' : undefined}
+            disabled={pending}
+            onChange={(event) => setLastName(event.target.value)}
+          />
+        </Field>
+      </div>
+    );
+
+  }
+
+  function renderSignupError() {
+
+    if (!error) {
+      return null;
+    }
+    return (
+      <p
+        id="SignupScreen-error"
+        role="alert"
+        className="auth-reveal rounded-2xl border-control border-error-secondary bg-error-secondary/10 px-4 py-3 text-sm text-error-primary"
+      >
+        {error}
+      </p>
+    );
+
+  }
+
+  function renderSignupForm() {
+
+    return (
       <form noValidate onSubmit={handleSubmit} className="grid gap-4">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Field labelText={strings.ui.signupScreen.firstName}>
-            <Input
-              className="auth-panel-hover"
-              autoComplete="given-name"
-              placeholder={strings.ui.signupScreen.sako}
-              leadingIcon={<UserIcon className="h-5 w-5" />}
-              value={firstName}
-              aria-invalid={Boolean(error)}
-              aria-describedby={error ? 'SignupScreen-error' : undefined}
-              disabled={pending}
-              onChange={(event) => setFirstName(event.target.value)}
-            />
-          </Field>
-          <Field labelText={strings.ui.signupScreen.lastName}>
-            <Input
-              className="auth-panel-hover"
-              autoComplete="family-name"
-              placeholder={strings.ui.signupScreen.hovaguimian}
-              leadingIcon={<UserIcon className="h-5 w-5" />}
-              value={lastName}
-              aria-invalid={Boolean(error)}
-              aria-describedby={error ? 'SignupScreen-error' : undefined}
-              disabled={pending}
-              onChange={(event) => setLastName(event.target.value)}
-            />
-          </Field>
-        </div>
+        {renderNameFields()}
         <Field labelText={strings.ui.signupScreen.email}>
           <Input
             className="auth-panel-hover"
@@ -121,15 +143,7 @@ export function SignupScreen({ redirectTo }: { redirectTo?: string }) {
             onChange={(event) => setPassword(event.target.value)}
           />
         </Field>
-        {error ? (
-          <p
-            id="SignupScreen-error"
-            role="alert"
-            className="auth-reveal rounded-2xl border-control border-error-secondary bg-error-secondary/10 px-4 py-3 text-sm text-error-primary"
-          >
-            {error}
-          </p>
-        ) : null}
+        {renderSignupError()}
         <Button
           type="submit"
           aria-invalid={Boolean(error)}
@@ -141,6 +155,26 @@ export function SignupScreen({ redirectTo }: { redirectTo?: string }) {
           {strings.ui.signupScreen.createAccount}
         </Button>
       </form>
+    );
+
+  }
+
+  return (
+    <AuthCardShell
+      badge={strings.ui.signupScreen.onboarding}
+      title={strings.ui.signupScreen.createYourWorkspaceAccount}
+      description={strings.ui.signupScreen.createYourAccountToJoinTheWorkspace}
+      footerPrompt={strings.ui.signupScreen.alreadyHaveAnAccount}
+      footerHref={
+        redirectTo
+          ? `/login?redirectTo=${encodeURIComponent(redirectTo)}`
+          : '/login'
+      }
+      footerAction={strings.ui.signupScreen.backToLogin}
+      mockHint={demoMode ? portalDemoStrings.signupHint : undefined}
+    >
+      {renderSignupForm()}
     </AuthCardShell>
   );
+
 }

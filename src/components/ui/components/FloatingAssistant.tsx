@@ -1,16 +1,10 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useRef, type ReactNode } from 'react';
+import type { FloatingAssistantActionProps } from '../models/floatingAssistantActionProps';
+import type { FloatingAssistantProps } from '../models/floatingAssistantProps';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import { useFloatingAssistantContext } from '../lib/floatingAssistantContext';
 import { FloatingAssistantDialog } from './FloatingAssistantDialog';
-
-interface FloatingAssistantActionProps {
-  id: string;
-  title: string;
-  description: string;
-  disabled: boolean;
-  onOpen?: () => void;
-}
 
 export function FloatingAssistantAction({
   id,
@@ -19,6 +13,7 @@ export function FloatingAssistantAction({
   disabled,
   onOpen,
 }: FloatingAssistantActionProps) {
+
   const { register, unregister } = useFloatingAssistantContext();
   const action = useRef(onOpen);
   useLayoutEffect(() => {
@@ -26,6 +21,7 @@ export function FloatingAssistantAction({
   }, [onOpen]);
   const external = Boolean(onOpen);
   useEffect(() => {
+
     register({
       id,
       title,
@@ -33,9 +29,16 @@ export function FloatingAssistantAction({
       disabled,
       ...(external ? { onOpen: () => action.current?.() } : {}),
     });
+
   }, [id, title, description, disabled, external, register]);
-  useEffect(() => () => unregister(id), [id, unregister]);
+  useEffect(() => {
+
+    const cleanup = () => unregister(id);
+    return cleanup;
+
+  }, [id, unregister]);
   return null;
+
 }
 
 export function FloatingAssistant({
@@ -45,14 +48,8 @@ export function FloatingAssistant({
   disabled,
   busy,
   children,
-}: {
-  id: string;
-  title: string;
-  description: string;
-  disabled: boolean;
-  busy: boolean;
-  children: ReactNode;
-}) {
+}: FloatingAssistantProps) {
+
   const { activeId, close, focusLauncher } = useFloatingAssistantContext();
   return (
     <>
@@ -74,4 +71,5 @@ export function FloatingAssistant({
       </FloatingAssistantDialog>
     </>
   );
+
 }

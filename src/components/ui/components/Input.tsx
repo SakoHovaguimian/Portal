@@ -1,12 +1,9 @@
 'use client';
 
-import type { ComponentPropsWithRef, ReactNode } from 'react';
+import type { InputProps } from '../models/inputProps';
 import { cn } from '../lib/cn';
-export { Field } from './Field';
 
-type InputProps = ComponentPropsWithRef<'input'> & {
-  leadingIcon?: ReactNode;
-};
+export { Field } from './Field';
 
 export function Input({
   id,
@@ -15,6 +12,7 @@ export function Input({
   leadingIcon,
   ...props
 }: InputProps) {
+
   return (
     <div className="group relative">
       {leadingIcon ? (
@@ -37,4 +35,5 @@ export function Input({
       />
     </div>
   );
+
 }

@@ -9,15 +9,21 @@ import type { AppSidebarProps } from '../models/appSidebarProps';
 import { AppSidebarContent } from './AppSidebarContent';
 
 export function MobileNavigationMenu(props: AppSidebarProps) {
+
   const [open, setOpen] = useState(false);
   const copy = strings.ui.appShell;
   useEffect(() => {
+
     const desktop = window.matchMedia('(min-width: 64rem)');
     const onResize = () => {
-      if (desktop.matches) setOpen(false);
+
+      if (desktop.matches) { setOpen(false); }
+
     };
     desktop.addEventListener('change', onResize);
-    return () => desktop.removeEventListener('change', onResize);
+    const cleanup = () => desktop.removeEventListener('change', onResize);
+    return cleanup;
+
   }, []);
 
   return (
@@ -38,21 +44,26 @@ export function MobileNavigationMenu(props: AppSidebarProps) {
           data-side="left"
           className="ui-sheet ui-mobile-navigation fixed inset-0 z-70 h-dvh w-full overflow-y-auto overscroll-y-contain bg-(--dashboard-shell-panel-solid) outline-none lg:hidden"
           onCloseAutoFocus={(event) => {
+
             if (window.matchMedia('(min-width: 64rem)').matches) {
+
               event.preventDefault();
               document
                 .getElementById('main-content')
                 ?.focus({ preventScroll: true });
+
             }
+
           }}
         >
           <Dialog.Title className="sr-only">{copy.navigation}</Dialog.Title>
           <AppSidebarContent
             {...props}
             onNavigate={(href) => {
+
               setOpen(false);
-              if (props.onNavigate) props.onNavigate(href);
-              else window.location.assign(href);
+              if (props.onNavigate) { props.onNavigate(href); } else { window.location.assign(href); }
+
             }}
             headerAction={
               <Dialog.Close asChild>
@@ -66,4 +77,5 @@ export function MobileNavigationMenu(props: AppSidebarProps) {
       </Dialog.Portal>
     </Dialog.Root>
   );
+
 }

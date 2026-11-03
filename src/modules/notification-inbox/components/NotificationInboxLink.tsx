@@ -7,6 +7,7 @@ import { useRealtime } from '@/services/realtime/RealtimeProvider';
 import { useNotificationCounts } from '../hooks';
 
 export function NotificationInboxLink() {
+
   const counts = useNotificationCounts();
   const { confirmNavigation } = useNavigationGuard();
   const unread = counts.isError ? undefined : counts.data?.unreadCount;
@@ -45,4 +46,5 @@ export function NotificationInboxLink() {
       )}
     </NavigationLink>
   );
+
 }

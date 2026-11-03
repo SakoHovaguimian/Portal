@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 export const PaginatedResultSchema = <T extends z.ZodTypeAny>(itemSchema: T) =>
   z.object({
     data: z.array(itemSchema),

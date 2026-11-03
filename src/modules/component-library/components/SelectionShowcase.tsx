@@ -4,23 +4,22 @@ import { useState } from 'react';
 import { Checkbox, Radio, SegmentedTabs, Switch } from '@/components/ui';
 import { strings } from '@/strings';
 import { ShowcaseSection } from './ShowcaseSection';
+
 const copy = strings.componentLibrary;
 const radioValues = { selected: 'selected', unselected: 'unselected' };
 
 export function SelectionShowcase() {
+
   const [on, setOn] = useState(true);
   const [off, setOff] = useState(false);
   const [checked, setChecked] = useState(true);
   const [unchecked, setUnchecked] = useState(false);
   const [radio, setRadio] = useState('selected');
   const [status, setStatus] = useState('all');
-  return (
-    <ShowcaseSection
-      id="selection"
-      title={copy.selection}
-      description={copy.selectionHint}
-      icon="settings"
-    >
+
+  function renderSelectionControls() {
+
+    return (
       <div className="grid gap-5 sm:grid-cols-3">
         <fieldset className="min-w-0">
           <legend className="mb-2 text-xs font-semibold text-primary">
@@ -82,6 +81,17 @@ export function SelectionShowcase() {
           />
         </fieldset>
       </div>
+    );
+
+  }
+
+  function renderSegmentedControls() {
+
+    const statusTabs = (['all', 'active', 'inactive', 'draft'] as const).map(
+      (value) => ({ value, label: copy[value] }),
+    );
+
+    return (
       <div className="grid gap-3">
         <h4 className="m-0 text-sm font-medium text-primary">
           {copy.segmented}
@@ -90,11 +100,23 @@ export function SelectionShowcase() {
           label={copy.segmentedLabel}
           value={status}
           onValueChange={setStatus}
-          tabs={(['all', 'active', 'inactive', 'draft'] as const).map(
-            (value) => ({ value, label: copy[value] }),
-          )}
+          tabs={statusTabs}
         />
       </div>
+    );
+
+  }
+
+  return (
+    <ShowcaseSection
+      id="selection"
+      title={copy.selection}
+      description={copy.selectionHint}
+      icon="settings"
+    >
+      {renderSelectionControls()}
+      {renderSegmentedControls()}
     </ShowcaseSection>
   );
+
 }

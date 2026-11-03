@@ -31,6 +31,7 @@ export function BookmarkButton({
   loading = false,
   ...props
 }: BookmarkButtonProps) {
+
   const pressed =
     props['aria-pressed'] ?? (props.type === 'submit' ? undefined : saved);
   // Form submissions keep their action styling; only the save toggle celebrates.
@@ -59,4 +60,5 @@ export function BookmarkButton({
       {saved ? savedLabel : (children ?? portalUiStrings.engagement.save)}
     </Button>
   );
+
 }

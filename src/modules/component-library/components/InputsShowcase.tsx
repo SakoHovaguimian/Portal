@@ -7,6 +7,7 @@ import { ShowcaseSection } from './ShowcaseSection';
 
 const copy = strings.componentLibrary;
 export function InputsShowcase() {
+
   const [description, setDescription] = useState<string>(
     copy.sampleDescription,
   );
@@ -19,55 +20,79 @@ export function InputsShowcase() {
     'disabled',
     'readOnly',
   ] as const;
-  return (
-    <ShowcaseSection
-      id="inputs"
-      title={copy.inputs}
-      description={copy.inputsHint}
-      icon="file"
-    >
-      <div className="grid gap-4 sm:grid-cols-2 2xl:grid-cols-3">
-        {states.map((state) => (
-          <div key={state}>
-            <Field labelText={copy.inputStates[state]}>
-              <Input
-                id={`example-input-${state}`}
-                leadingIcon={<UiIcon name="user" />}
-                placeholder={
-                  state === 'error' ? copy.invalidInput : copy.enterName
-                }
-                defaultValue={
-                  state === 'filled' || state === 'focused'
-                    ? copy.sampleName
-                    : undefined
-                }
-                disabled={state === 'disabled'}
-                readOnly={state === 'readOnly'}
-                aria-invalid={state === 'error' && !invalid}
-                aria-describedby={
-                  state === 'error' && !invalid
-                    ? 'example-input-error-help'
-                    : undefined
-                }
-                data-preview-state={state}
-                onChange={
-                  state === 'error'
-                    ? (event) => setInvalid(event.target.value)
-                    : undefined
-                }
-              />
-            </Field>
-            {state === 'error' && !invalid && (
-              <p
-                id="example-input-error-help"
-                className="m-0 mt-1 text-xs text-error-primary"
-              >
-                {copy.errorHint}
-              </p>
-            )}
-          </div>
-        ))}
+
+  function renderInputState(state: (typeof states)[number]) {
+
+    return (
+      <div key={state}>
+        <Field labelText={copy.inputStates[state]}>
+          <Input
+            id={`example-input-${state}`}
+            leadingIcon={<UiIcon name="user" />}
+            placeholder={
+              state === 'error' ? copy.invalidInput : copy.enterName
+            }
+            defaultValue={
+              state === 'filled' || state === 'focused'
+                ? copy.sampleName
+                : undefined
+            }
+            disabled={state === 'disabled'}
+            readOnly={state === 'readOnly'}
+            aria-invalid={state === 'error' && !invalid}
+            aria-describedby={
+              state === 'error' && !invalid
+                ? 'example-input-error-help'
+                : undefined
+            }
+            data-preview-state={state}
+            onChange={
+              state === 'error'
+                ? (event) => setInvalid(event.target.value)
+                : undefined
+            }
+          />
+        </Field>
+        {state === 'error' && !invalid && (
+          <p
+            id="example-input-error-help"
+            className="m-0 mt-1 text-xs text-error-primary"
+          >
+            {copy.errorHint}
+          </p>
+        )}
       </div>
+    );
+
+  }
+
+  const inputStates = states.map(renderInputState);
+
+  function renderCategoryOption(value: 'indica' | 'sativa' | 'hybrid' | 'cbd') {
+
+    return (
+      <option key={value} value={value}>
+        {copy[value]}
+      </option>
+    );
+
+  }
+
+  const categoryOptions = (['indica', 'sativa', 'hybrid', 'cbd'] as const).map(renderCategoryOption);
+
+  function renderInputStates() {
+
+    return (
+      <div className="grid gap-4 sm:grid-cols-2 2xl:grid-cols-3">
+        {inputStates}
+      </div>
+    );
+
+  }
+
+  function renderFieldExamples() {
+
+    return (
       <div className="grid gap-4 sm:grid-cols-2 2xl:grid-cols-3">
         <Field labelText={copy.productName}>
           <Input
@@ -96,11 +121,7 @@ export function InputsShowcase() {
         </Field>
         <Field labelText={copy.select}>
           <Select leadingIcon={<UiIcon name="tag" />} defaultValue="indica">
-            {(['indica', 'sativa', 'hybrid', 'cbd'] as const).map((value) => (
-              <option key={value} value={value}>
-                {copy[value]}
-              </option>
-            ))}
+            {categoryOptions}
           </Select>
         </Field>
         <Field labelText={copy.payment}>
@@ -111,6 +132,13 @@ export function InputsShowcase() {
           />
         </Field>
       </div>
+    );
+
+  }
+
+  function renderDescription() {
+
+    return (
       <div className="grid gap-1">
         <Field labelText={copy.descriptionLabel}>
           <TextArea
@@ -128,6 +156,21 @@ export function InputsShowcase() {
           {copy.characterCount(description.length, 500)}
         </p>
       </div>
+    );
+
+  }
+
+  return (
+    <ShowcaseSection
+      id="inputs"
+      title={copy.inputs}
+      description={copy.inputsHint}
+      icon="file"
+    >
+      {renderInputStates()}
+      {renderFieldExamples()}
+      {renderDescription()}
     </ShowcaseSection>
   );
+
 }

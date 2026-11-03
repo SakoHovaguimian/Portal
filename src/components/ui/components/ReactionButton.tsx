@@ -34,19 +34,21 @@ export function ReactionButton({
   className,
   ...props
 }: ReactionButtonProps) {
+
   const countRef = useRef<HTMLSpanElement>(null);
   const previousLiked = useRef<boolean | undefined>(
     loading ? undefined : liked,
   );
 
   useLayoutEffect(() => {
-    if (loading) return;
+
+    if (loading) { return; }
     const previous = previousLiked.current;
     previousLiked.current = liked;
-    if (previous === undefined || previous === liked) return;
+    if (previous === undefined || previous === liked) { return; }
     const counter = countRef.current;
     const duration = motionDuration('--motion-duration-base');
-    if (!duration || !counter || typeof counter.animate !== 'function') return;
+    if (!duration || !counter || typeof counter.animate !== 'function') { return; }
     const animation = counter.animate(
       [
         {
@@ -62,7 +64,9 @@ export function ReactionButton({
           .trim(),
       },
     );
-    return () => animation.cancel();
+    const cleanup = () => animation.cancel();
+    return cleanup;
+
   }, [liked, loading]);
 
   return (
@@ -93,4 +97,5 @@ export function ReactionButton({
       {countLabel && <span className="sr-only">{countLabel}</span>}
     </Button>
   );
+
 }

@@ -1,19 +1,17 @@
 'use client';
-import { portalPublishingStrings } from '@/strings';
-const copy = portalPublishingStrings.article;
 
+import { portalPublishingStrings } from '@/strings';
 import { DirectoryPagination } from '@/components/ui';
-import type { BlogPage } from '../models/blogPage';
+import type { BlogPaginationProps } from '../models/blogPaginationProps';
+
+const copy = portalPublishingStrings.article;
 
 export function BlogPagination({
   page,
   busy = false,
   onNavigateAction,
-}: {
-  page: BlogPage;
-  busy?: boolean;
-  onNavigateAction: (offset: number) => void;
-}) {
+}: BlogPaginationProps) {
+
   const hasMore = page.offset + page.data.length < page.total;
   return (
     <DirectoryPagination
@@ -30,4 +28,5 @@ export function BlogPagination({
       onNavigate={onNavigateAction}
     />
   );
+
 }

@@ -6,4 +6,5 @@ export const AccountDeletionSchema = z
     confirmationEmail: z.email(copy.validation.confirmationEmail),
   })
   .strict();
+
 export type AccountDeletion = z.infer<typeof AccountDeletionSchema>;

@@ -9,6 +9,7 @@ export function Card({
 }: PropsWithChildren<
   HTMLAttributes<HTMLDivElement> & { variant?: 'surface' | 'muted' | 'accent' }
 >) {
+
   return (
     <div
       className={cn(
@@ -23,4 +24,5 @@ export function Card({
       {children}
     </div>
   );
+
 }

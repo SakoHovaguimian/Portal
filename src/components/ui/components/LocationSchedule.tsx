@@ -1,18 +1,11 @@
+import type { LocationScheduleProps } from '../models/locationScheduleProps';
 import { locationScheduleFormat } from '../lib/locationScheduleFormat';
-import type { LocationScheduleValue } from '../models/locationSchedule';
+
 export function LocationSchedule({
   schedule,
   copy,
-}: {
-  schedule: LocationScheduleValue;
-  copy: {
-    starts: string;
-    ends: string;
-    timezone: string;
-    noEnd: string;
-    labelValue: (label: string, value: string) => string;
-  };
-}) {
+}: LocationScheduleProps) {
+
   const { timezone, format } = locationScheduleFormat(schedule.timezone);
   return (
     <div className="grid gap-1 text-sm">
@@ -41,4 +34,5 @@ export function LocationSchedule({
       </span>
     </div>
   );
+
 }

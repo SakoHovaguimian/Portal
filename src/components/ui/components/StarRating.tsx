@@ -16,10 +16,70 @@ export function StarRating({
   disabled = false,
   busy = false,
 }: StarRatingProps) {
+
   const name = useId();
   const [hovered, setHovered] = useState<number | null>(null);
   const [focused, setFocused] = useState<number | null>(null);
   const preview = disabled ? value : (hovered ?? focused ?? value);
+
+  function renderRatingOption(option: number) {
+
+    return (
+      <label
+        key={option}
+        className={styles.choice}
+        data-filled={option <= (preview ?? 0) || undefined}
+        data-selected={value === option || undefined}
+        onPointerEnter={(event) => {
+
+          if (!disabled && event.pointerType !== 'touch') { setHovered(option); }
+
+        }}
+      >
+        <input
+          type="radio"
+          className={styles.input}
+          name={name}
+          value={option}
+          checked={value === option}
+          aria-label={getOptionLabel(option)}
+          aria-describedby={describedBy}
+          aria-disabled={busy || undefined}
+          onClick={(event) => {
+
+            if (busy) { event.preventDefault(); } else if (!disabled && value === option) { onSelectedClick?.(); }
+
+          }}
+          onKeyDown={(event) => {
+
+            if (
+              busy &&
+                    [
+                      'ArrowUp',
+                      'ArrowDown',
+                      'ArrowLeft',
+                      'ArrowRight',
+                      ' ',
+                    ].includes(event.key)
+            ) { event.preventDefault(); }
+
+          }}
+          onFocus={() => setFocused(option)}
+          onChange={() => {
+
+            if (!disabled && !busy) { onValueChange(option); }
+
+          }}
+        />
+        <span className={styles.surface} aria-hidden="true">
+          <UiIcon name="star" className={styles.star} />
+        </span>
+      </label>
+    );
+
+  }
+
+  const ratingOptions = [1, 2, 3, 4, 5].map(renderRatingOption);
 
   return (
     <fieldset
@@ -36,57 +96,12 @@ export function StarRating({
           className={styles.choices}
           onPointerLeave={() => setHovered(null)}
           onBlurCapture={(event) => {
-            if (!event.currentTarget.contains(event.relatedTarget))
-              setFocused(null);
+
+            if (!event.currentTarget.contains(event.relatedTarget)) { setFocused(null); }
+
           }}
         >
-          {[1, 2, 3, 4, 5].map((option) => (
-            <label
-              key={option}
-              className={styles.choice}
-              data-filled={option <= (preview ?? 0) || undefined}
-              data-selected={value === option || undefined}
-              onPointerEnter={(event) => {
-                if (!disabled && event.pointerType !== 'touch')
-                  setHovered(option);
-              }}
-            >
-              <input
-                type="radio"
-                className={styles.input}
-                name={name}
-                value={option}
-                checked={value === option}
-                aria-label={getOptionLabel(option)}
-                aria-describedby={describedBy}
-                aria-disabled={busy || undefined}
-                onClick={(event) => {
-                  if (busy) event.preventDefault();
-                  else if (!disabled && value === option) onSelectedClick?.();
-                }}
-                onKeyDown={(event) => {
-                  if (
-                    busy &&
-                    [
-                      'ArrowUp',
-                      'ArrowDown',
-                      'ArrowLeft',
-                      'ArrowRight',
-                      ' ',
-                    ].includes(event.key)
-                  )
-                    event.preventDefault();
-                }}
-                onFocus={() => setFocused(option)}
-                onChange={() => {
-                  if (!disabled && !busy) onValueChange(option);
-                }}
-              />
-              <span className={styles.surface} aria-hidden="true">
-                <UiIcon name="star" className={styles.star} />
-              </span>
-            </label>
-          ))}
+          {ratingOptions}
         </div>
         <span
           className="min-w-24 text-sm font-semibold text-rating-active"
@@ -97,4 +112,5 @@ export function StarRating({
       </div>
     </fieldset>
   );
+
 }

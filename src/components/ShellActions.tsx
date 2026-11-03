@@ -6,7 +6,9 @@ import { Button } from '@/components/ui';
 import { useSessionState } from '@/providers/AppProviders';
 import { useRealtime } from '@/services/realtime/RealtimeProvider';
 import { strings } from '@/strings';
+
 export function ShellActions() {
+
   const router = useRouter();
   const { setSession } = useSessionState();
   const realtime = useRealtime();
@@ -19,24 +21,30 @@ export function ShellActions() {
         variant="secondary"
         disabled={pending}
         onClick={async () => {
+
           setPending(true);
           setError('');
           try {
+
             // A push-service outage must not prevent clearing the session.
             await realtime.prepareForLogout().catch(() => undefined);
             const response = await fetch('/api/auth/logout', {
               method: 'POST',
             });
-            if (!response.ok) throw new Error(strings.auth.logoutFailed);
+            if (!response.ok) { throw new Error(strings.auth.logoutFailed); }
             await queryClient.cancelQueries();
             queryClient.clear();
             setSession(null);
             router.replace('/login');
             router.refresh();
+
           } catch {
+
             setError(strings.auth.logoutFailed);
             setPending(false);
+
           }
+
         }}
       >
         {strings.ui.shellActions.logOut}
@@ -48,4 +56,5 @@ export function ShellActions() {
       )}
     </div>
   );
+
 }

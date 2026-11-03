@@ -1,22 +1,12 @@
 'use client';
 
+import type { ModalProps } from '../models/modalProps';
 import * as Dialog from '@radix-ui/react-dialog';
 import { UNSAFE_PortalProvider } from 'react-aria/PortalProvider';
-import { useRef, type ReactNode, type RefObject } from 'react';
+import { useRef } from 'react';
 import { strings } from '@/strings';
 import { IconButton } from './IconButton';
 import { UiIcon } from './UiIcon';
-
-interface ModalProps {
-  open: boolean;
-  title: string;
-  description?: string;
-  icon?: ReactNode;
-  onDismiss: () => void;
-  children: ReactNode;
-  footer?: ReactNode;
-  initialFocusRef?: RefObject<HTMLElement | null>;
-}
 
 // Workflow dialogs sit below presentation confirmations so an existing guarded
 // form can request confirmation without losing its draft or focus scope.
@@ -30,12 +20,14 @@ export function Modal({
   footer,
   initialFocusRef,
 }: ModalProps) {
+
   const returnFocusRef = useRef<HTMLElement | null>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const overlaysRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const isAnotherOverlay = (target: EventTarget | null) => {
-    if (!(target instanceof Element)) return false;
+
+    if (!(target instanceof Element)) { return false; }
     const layer = target.closest(
       '[data-ui-presentation-layer], [role="dialog"], [role="alertdialog"]',
     );
@@ -44,12 +36,51 @@ export function Modal({
       layer !== contentRef.current &&
       !contentRef.current?.contains(layer),
     );
+
   };
+
+  function renderHeader() {
+
+    return (
+      <div className="flex shrink-0 items-start gap-4 border-b-control border-secondary p-5 sm:p-6">
+        {icon && (
+          <div className="mt-0.5 flex size-11 shrink-0 items-center justify-center rounded-card border-control border-secondary bg-secondary_subtle text-secondary">
+            {icon}
+          </div>
+        )}
+        <div className="min-w-0 flex-1">
+          <Dialog.Title
+            ref={titleRef}
+            tabIndex={-1}
+            className="m-0 text-xl font-semibold text-primary outline-none"
+          >
+            {title}
+          </Dialog.Title>
+          {description && (
+            <Dialog.Description className="m-0 mt-2 text-sm text-secondary">
+              {description}
+            </Dialog.Description>
+          )}
+        </div>
+        <IconButton
+          label={strings.ui.modal.close}
+          variant="ghost"
+          onClick={onDismiss}
+        >
+          <UiIcon name="close" />
+        </IconButton>
+      </div>
+    );
+
+  }
+
   return (
     <Dialog.Root
       open={open}
       onOpenChange={(next) => {
-        if (!next) onDismiss();
+
+        if (!next) { onDismiss(); }
+
       }}
     >
       <Dialog.Portal>
@@ -59,64 +90,43 @@ export function Modal({
           className="ui-dialog fixed top-1/2 left-1/2 z-70 flex max-h-[calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-2rem)] w-[min(calc(100vw-2rem),44rem)] -translate-x-1/2 -translate-y-1/2 flex-col rounded-overlay border-control border-secondary bg-primary shadow-(--shadow-overlay) outline-none"
           {...(!description ? { 'aria-describedby': undefined } : {})}
           onOpenAutoFocus={(event) => {
+
             event.preventDefault();
             returnFocusRef.current =
               document.activeElement instanceof HTMLElement
                 ? document.activeElement
                 : null;
             (initialFocusRef?.current ?? titleRef.current)?.focus();
+
           }}
           onCloseAutoFocus={(event) => {
+
             event.preventDefault();
-            if (returnFocusRef.current?.isConnected)
-              returnFocusRef.current.focus();
+            if (returnFocusRef.current?.isConnected) { returnFocusRef.current.focus(); }
+
           }}
           onEscapeKeyDown={(event) => {
-            if (isAnotherOverlay(event.target)) return;
+
+            if (isAnotherOverlay(event.target)) { return; }
             event.preventDefault();
             // Radix observes Escape in document capture before React Aria can
             // close a child popup. Let that popup consume the first Escape.
             if (
               event.target instanceof Node &&
               overlaysRef.current?.contains(event.target)
-            )
-              return;
+            ) { return; }
             onDismiss();
+
           }}
           onInteractOutside={(event) => {
+
             event.preventDefault();
-            if (isAnotherOverlay(event.detail.originalEvent.target)) return;
+            if (isAnotherOverlay(event.detail.originalEvent.target)) { return; }
             onDismiss();
+
           }}
         >
-          <div className="flex shrink-0 items-start gap-4 border-b-control border-secondary p-5 sm:p-6">
-            {icon && (
-              <div className="mt-0.5 flex size-11 shrink-0 items-center justify-center rounded-card border-control border-secondary bg-secondary_subtle text-secondary">
-                {icon}
-              </div>
-            )}
-            <div className="min-w-0 flex-1">
-              <Dialog.Title
-                ref={titleRef}
-                tabIndex={-1}
-                className="m-0 text-xl font-semibold text-primary outline-none"
-              >
-                {title}
-              </Dialog.Title>
-              {description && (
-                <Dialog.Description className="m-0 mt-2 text-sm text-secondary">
-                  {description}
-                </Dialog.Description>
-              )}
-            </div>
-            <IconButton
-              label={strings.ui.modal.close}
-              variant="ghost"
-              onClick={onDismiss}
-            >
-              <UiIcon name="close" />
-            </IconButton>
-          </div>
+          {renderHeader()}
           <div className="ui-modal-body min-h-0 overflow-y-auto overscroll-contain p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:p-6 sm:pb-[max(1.5rem,env(safe-area-inset-bottom))]">
             <UNSAFE_PortalProvider getContainer={() => overlaysRef.current}>
               {children}
@@ -132,4 +142,5 @@ export function Modal({
       </Dialog.Portal>
     </Dialog.Root>
   );
+
 }

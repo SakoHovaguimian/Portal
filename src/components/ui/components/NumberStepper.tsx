@@ -30,6 +30,7 @@ export function NumberStepper({
   className,
   ...props
 }: NumberStepperProps) {
+
   return (
     <I18nProvider locale={locale}>
       <NumberField
@@ -66,11 +67,12 @@ export function NumberStepper({
           </Text>
         )}
         {errorMessage && (
-        <FieldError className="ui-value-help">
+          <FieldError className="ui-value-help">
             {errorMessage}
           </FieldError>
         )}
       </NumberField>
     </I18nProvider>
   );
+
 }

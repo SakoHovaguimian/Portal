@@ -7,24 +7,29 @@ import { usePresentationService } from '@/presentation/PresentationProvider';
 import { strings } from '@/strings';
 
 export function ThemeToggle() {
+
   const { mode, setPreference } = useThemePreference();
   const presentation = usePresentationService();
   const [pending, setPending] = useState(false);
   const dark = mode === 'dark';
 
   async function toggleTheme() {
-    if (pending) return;
+
+    if (pending) { return; }
     setPending(true);
     try {
       await setPreference({ mode: dark ? 'light' : 'dark' });
     } catch {
+
       await presentation.showToast({
         title: strings.ui.shellActions.themeSaveFailed,
         intent: 'danger',
       });
+
     } finally {
       setPending(false);
     }
+
   }
 
   return (
@@ -63,4 +68,5 @@ export function ThemeToggle() {
       </svg>
     </Button>
   );
+
 }

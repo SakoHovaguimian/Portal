@@ -1,7 +1,7 @@
 'use client';
 
 import { strings } from '@/strings';
-import { useMemo, type ReactNode } from 'react';
+import { useMemo } from 'react';
 import Link from 'next/link';
 import { useRuntimeConfig } from '@/providers/RuntimeProvider';
 import { useSearchParams } from 'next/navigation';
@@ -20,6 +20,10 @@ import {
   useDashboardModelDetail,
 } from './hooks';
 import { useDashboardChromeStore } from '../../stores/dashboardChromeStore';
+import type { DashboardModelSummary } from '@/models/dashboardModelSummary';
+import type { DashboardOverviewItem } from '@/models/dashboardOverviewItem';
+import type { DashboardPanelProps } from './models/dashboardPanelProps';
+import type { LineChartProps } from './models/lineChartProps';
 
 const comparisonMonths = [
   strings.ui.dashboardScreen.dec20,
@@ -115,6 +119,7 @@ function buildLinePath(
   height: number,
   padding = 10,
 ) {
+
   if (values.length === 0) {
     return '';
   }
@@ -123,16 +128,21 @@ function buildLinePath(
   const max = Math.max(...values);
   const range = Math.max(max - min, 1);
 
-  return values
-    .map((value, index) => {
-      const x =
-        padding +
-        (index * (width - padding * 2)) / Math.max(values.length - 1, 1);
-      const y =
-        height - padding - ((value - min) / range) * (height - padding * 2);
-      return `${index === 0 ? 'M' : 'L'} ${x} ${y}`;
-    })
-    .join(' ');
+  const pathSegments = values.map((value, index) => {
+
+    const x =
+      padding +
+      (index * (width - padding * 2)) / Math.max(values.length - 1, 1);
+    const y =
+      height - padding - ((value - min) / range) * (height - padding * 2);
+    const pathSegment = `${index === 0 ? 'M' : 'L'} ${x} ${y}`;
+    return pathSegment;
+
+  });
+
+  const linePath = pathSegments.join(' ');
+  return linePath;
+
 }
 
 function DashboardPanel({
@@ -142,14 +152,8 @@ function DashboardPanel({
   delta,
   children,
   legend,
-}: {
-  eyebrow: string;
-  title: string;
-  value?: string;
-  delta?: string;
-  children: ReactNode;
-  legend?: ReactNode;
-}) {
+}: DashboardPanelProps) {
+
   return (
     <Card className="grid gap-4 p-5">
       <div className="flex items-start justify-between gap-3">
@@ -176,17 +180,33 @@ function DashboardPanel({
       {children}
     </Card>
   );
+
 }
 
 function LineChart({
   primary,
   secondary,
   tertiary,
-}: {
-  primary: number[];
-  secondary?: number[];
-  tertiary?: number[];
-}) {
+}: LineChartProps) {
+
+  function renderGridLine(y: number) {
+
+    return (
+      <line
+        key={y}
+        x1="0"
+        y1={y}
+        x2="320"
+        y2={y}
+        stroke="var(--color-border-tertiary)"
+        strokeWidth="1"
+      />
+    );
+
+  }
+
+  const gridLines = [24, 62, 100, 138].map(renderGridLine);
+
   return (
     <svg
       viewBox="0 0 320 150"
@@ -194,17 +214,7 @@ function LineChart({
       preserveAspectRatio="none"
       aria-hidden="true"
     >
-      {[24, 62, 100, 138].map((y) => (
-        <line
-          key={y}
-          x1="0"
-          y1={y}
-          x2="320"
-          y2={y}
-          stroke="var(--color-border-tertiary)"
-          strokeWidth="1"
-        />
-      ))}
+      {gridLines}
       {secondary ? (
         <path
           d={buildLinePath(secondary, 320, 150, 12)}
@@ -232,10 +242,43 @@ function LineChart({
       />
     </svg>
   );
+
 }
 
 function ComparisonBars() {
+
   const maxValue = Math.max(...directRevenue, ...indirectRevenue);
+
+  function renderRevenueColumn(month: string, index: number) {
+
+    return (
+      <div
+        key={month}
+        className="flex min-w-0 flex-1 items-end justify-center gap-1.5"
+      >
+        <span
+          className="w-4 rounded-t-md bg-brand-solid/85"
+          style={{
+            height: `${(directRevenue[index] / maxValue) * 100}%`,
+          }}
+        />
+        <span
+          className="w-4 rounded-t-md bg-chart-secondary"
+          style={{
+            height: `${(indirectRevenue[index] / maxValue) * 100}%`,
+          }}
+        />
+      </div>
+    );
+
+  }
+
+  function renderMonthLabel(month: string) {
+    return <span key={month}>{month}</span>;
+  }
+
+  const revenueColumns = comparisonMonths.map(renderRevenueColumn);
+  const monthLabels = comparisonMonths.map(renderMonthLabel);
 
   return (
     <div className="grid gap-4">
@@ -253,37 +296,43 @@ function ComparisonBars() {
       </div>
       <div className="grid gap-3">
         <div className="flex h-40 items-end gap-4">
-          {comparisonMonths.map((month, index) => (
-            <div
-              key={month}
-              className="flex min-w-0 flex-1 items-end justify-center gap-1.5"
-            >
-              <span
-                className="w-4 rounded-t-md bg-brand-solid/85"
-                style={{
-                  height: `${(directRevenue[index] / maxValue) * 100}%`,
-                }}
-              />
-              <span
-                className="w-4 rounded-t-md bg-chart-secondary"
-                style={{
-                  height: `${(indirectRevenue[index] / maxValue) * 100}%`,
-                }}
-              />
-            </div>
-          ))}
+          {revenueColumns}
         </div>
         <div className="grid grid-cols-6 gap-4 text-center text-xs font-medium uppercase tracking-[0.12em] text-tertiary">
-          {comparisonMonths.map((month) => (
-            <span key={month}>{month}</span>
-          ))}
+          {monthLabels}
         </div>
       </div>
     </div>
   );
+
 }
 
 function CountriesDonut() {
+
+  const countryLegendItems = [
+    [strings.ui.dashboardScreen.unitedStates, 'var(--color-brand-500)'],
+    [strings.ui.dashboardScreen.italy, 'var(--color-chart-secondary)'],
+    [strings.ui.dashboardScreen.other, 'var(--color-chart-tertiary)'],
+  ] as const;
+
+  function renderCountryLegend(
+    [label, color]: (typeof countryLegendItems)[number],
+  ) {
+
+    return (
+      <span key={label} className="inline-flex items-center gap-2">
+        <span
+          className="h-2.5 w-2.5 rounded-full"
+          style={{ backgroundColor: color }}
+        />
+        {label}
+      </span>
+    );
+
+  }
+
+  const countryLegend = countryLegendItems.map(renderCountryLegend);
+
   return (
     <div className="grid place-items-center gap-6 py-2">
       <div
@@ -296,25 +345,34 @@ function CountriesDonut() {
         <div className="absolute inset-5 rounded-full bg-primary" />
       </div>
       <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-secondary">
-        {[
-          [strings.ui.dashboardScreen.unitedStates, 'var(--color-brand-500)'],
-          [strings.ui.dashboardScreen.italy, 'var(--color-chart-secondary)'],
-          [strings.ui.dashboardScreen.other, 'var(--color-chart-tertiary)'],
-        ].map(([label, color]) => (
-          <span key={label} className="inline-flex items-center gap-2">
-            <span
-              className="h-2.5 w-2.5 rounded-full"
-              style={{ backgroundColor: color }}
-            />
-            {label}
-          </span>
-        ))}
+        {countryLegend}
       </div>
     </div>
   );
+
 }
 
 function TopChannelsTable() {
+
+  function renderChannelRow(channel: (typeof topChannels)[number]) {
+
+    return (
+      <div
+        key={channel.source}
+        className="grid grid-cols-[1.5fr_repeat(4,minmax(0,1fr))] gap-3 px-4 py-3 text-sm text-secondary"
+      >
+        <span className="font-medium text-primary">{channel.source}</span>
+        <span>{channel.visitors}</span>
+        <span className="text-success-primary">{channel.revenue}</span>
+        <span>{channel.sales}</span>
+        <span className="text-chart-secondary">{channel.conversion}</span>
+      </div>
+    );
+
+  }
+
+  const channelRows = topChannels.map(renderChannelRow);
+
   return (
     <div className="overflow-hidden rounded-xl border-control border-secondary bg-primary">
       <div className="grid grid-cols-[1.5fr_repeat(4,minmax(0,1fr))] gap-3 border-b border-secondary bg-secondary_subtle px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-tertiary">
@@ -325,68 +383,112 @@ function TopChannelsTable() {
         <span>{strings.ui.dashboardScreen.conversion}</span>
       </div>
       <div className="divide-y divide-secondary">
-        {topChannels.map((channel) => (
-          <div
-            key={channel.source}
-            className="grid grid-cols-[1.5fr_repeat(4,minmax(0,1fr))] gap-3 px-4 py-3 text-sm text-secondary"
-          >
-            <span className="font-medium text-primary">{channel.source}</span>
-            <span>{channel.visitors}</span>
-            <span className="text-success-primary">{channel.revenue}</span>
-            <span>{channel.sales}</span>
-            <span className="text-chart-secondary">
-              {channel.conversion}
-            </span>
-          </div>
-        ))}
+        {channelRows}
       </div>
     </div>
   );
+
 }
 
 function SalesVsRefundsBars() {
+
+  const refundMagnitudes = salesVsRefundsRefunds.map((value) => Math.abs(value));
+
   const maxValue = Math.max(
     ...salesVsRefundsSales,
-    ...salesVsRefundsRefunds.map((value) => Math.abs(value)),
+    ...refundMagnitudes,
   );
+
+  function renderSalesRefundsColumn(month: string, index: number) {
+
+    return (
+      <div
+        key={month}
+        className="flex min-w-0 flex-1 flex-col items-center justify-center gap-1"
+      >
+        <div className="flex h-20 items-end">
+          <span
+            className="w-6 rounded-t-md bg-brand-solid/85"
+            style={{
+              height: `${(salesVsRefundsSales[index] / maxValue) * 100}%`,
+            }}
+          />
+        </div>
+        <div className="flex h-20 items-start">
+          <span
+            className="w-6 rounded-b-md bg-chart-refunds"
+            style={{
+              height: `${(refundMagnitudes[index] / maxValue) * 100}%`,
+            }}
+          />
+        </div>
+      </div>
+    );
+
+  }
+
+  function renderMonthLabel(month: string) {
+    return <span key={month}>{month}</span>;
+  }
+
+  const salesRefundsColumns = comparisonMonths.map(renderSalesRefundsColumn);
+  const monthLabels = comparisonMonths.map(renderMonthLabel);
 
   return (
     <div className="grid gap-4">
       <div className="flex h-44 items-center gap-4">
-        {comparisonMonths.map((month, index) => (
-          <div
-            key={month}
-            className="flex min-w-0 flex-1 flex-col items-center justify-center gap-1"
-          >
-            <div className="flex h-20 items-end">
-              <span
-                className="w-6 rounded-t-md bg-brand-solid/85"
-                style={{
-                  height: `${(salesVsRefundsSales[index] / maxValue) * 100}%`,
-                }}
-              />
-            </div>
-            <div className="flex h-20 items-start">
-              <span
-                className="w-6 rounded-b-md bg-chart-refunds"
-                style={{
-                  height: `${(Math.abs(salesVsRefundsRefunds[index]) / maxValue) * 100}%`,
-                }}
-              />
-            </div>
-          </div>
-        ))}
+        {salesRefundsColumns}
       </div>
       <div className="grid grid-cols-6 gap-4 text-center text-xs font-medium uppercase tracking-[0.12em] text-tertiary">
-        {comparisonMonths.map((month) => (
-          <span key={month}>{month}</span>
-        ))}
+        {monthLabels}
       </div>
     </div>
   );
+
 }
 
 function RefundReasonsCard() {
+
+  function renderReasonBar(reason: (typeof refundReasons)[number]) {
+
+    return (
+      <span
+        key={reason.label}
+        style={{
+          width: `${reason.value}%`,
+          backgroundColor: reason.color,
+        }}
+      />
+    );
+
+  }
+
+  function renderReasonRow(reason: (typeof refundReasons)[number]) {
+
+    return (
+      <div
+        key={reason.label}
+        className="flex items-start justify-between gap-3 text-sm"
+      >
+        <div className="flex items-start gap-2 text-secondary">
+          <span
+            className="mt-1 h-2.5 w-2.5 rounded-full"
+            style={{ backgroundColor: reason.color }}
+          />
+          <span>{reason.label}</span>
+        </div>
+        <span className="font-medium text-primary">
+          {reason.value}
+          {strings.ui.dashboardScreen.text}
+        </span>
+      </div>
+    );
+
+  }
+
+  const reasonBars = refundReasons.map(renderReasonBar);
+  const reasonRows = refundReasons.map(renderReasonRow);
+
   return (
     <Card className="grid gap-5">
       <div>
@@ -399,68 +501,71 @@ function RefundReasonsCard() {
       </div>
       <div className="rounded-xl border-control border-secondary bg-secondary_subtle p-4">
         <div className="flex h-4 overflow-hidden rounded-full">
-          {refundReasons.map((reason) => (
-            <span
-              key={reason.label}
-              style={{
-                width: `${reason.value}%`,
-                backgroundColor: reason.color,
-              }}
-            />
-          ))}
+          {reasonBars}
         </div>
         <div className="mt-4 space-y-3">
-          {refundReasons.map((reason) => (
-            <div
-              key={reason.label}
-              className="flex items-start justify-between gap-3 text-sm"
-            >
-              <div className="flex items-start gap-2 text-secondary">
-                <span
-                  className="mt-1 h-2.5 w-2.5 rounded-full"
-                  style={{ backgroundColor: reason.color }}
-                />
-                <span>{reason.label}</span>
-              </div>
-              <span className="font-medium text-primary">
-                {reason.value}
-                {strings.ui.dashboardScreen.text}
-              </span>
-            </div>
-          ))}
+          {reasonRows}
         </div>
       </div>
     </Card>
   );
+
 }
 
 export function DashboardScreen() {
+
   const searchParams = useSearchParams();
   const { demoMode } = useRuntimeConfig();
   const model = searchParams.get('model') ?? 'featureRequest';
   const search = searchParams.get('search') ?? '';
+
   const overview = useDashboardOverview();
   const models = useDashboardModels();
   const records = useDashboardRecords(model, search);
   const modelDetail = useDashboardModelDetail(model);
+
   const { density, setDensity } = useDashboardChromeStore();
 
   const columns = useMemo(() => {
+
     const rows = records.data?.data ?? [];
     const keys = Object.keys(rows[0] ?? {}).slice(0, 4);
-    return keys.map((key) => ({
-      key,
-      header:
-        modelDetail.data?.fields.find((field) => field.name === key)
-          ?.displayName || key,
-      render: (row: Record<string, unknown>) => String(row[key] ?? ''),
-    }));
+    const tableColumns = keys.map((key) => {
+
+      const field = modelDetail.data?.fields.find(
+        (candidate) => candidate.name === key,
+      );
+      const header = field?.displayName || key;
+
+      function renderCellValue(row: Record<string, unknown>) {
+
+        const cellValue = String(row[key] ?? '');
+        return cellValue;
+
+      }
+
+      const column = {
+        key,
+        header,
+        render: renderCellValue,
+      };
+
+      return column;
+
+    });
+
+    return tableColumns;
+
   }, [records.data, modelDetail.data]);
 
   const visibleRows = records.data?.data.length ?? 0;
+  const hasSampleAnalyticsData = overview.data?.models.some(
+    (item) => item.model === 'featureRequest' && item.totalCount > 0,
+  );
 
-  return (
-    <div className="grid gap-6">
+  function renderHeader() {
+
+    return (
       <PageHeader
         title={strings.ui.dashboardScreen.dashboard}
         description={
@@ -489,34 +594,66 @@ export function DashboardScreen() {
           </Button>
         }
       />
+    );
 
-      {(overview.isPending || models.isPending || records.isPending) && (
-        <Card>{strings.ui.dashboardScreen.loadingWorkspaceData}</Card>
-      )}
-      {(overview.isError || models.isError || records.isError) && (
-        <ErrorState
-          title={strings.ui.dashboardScreen.workspaceDataUnavailable}
-          description={
-            strings.ui.dashboardScreen.pleaseTryLoadingYourWorkspaceAgain
-          }
-          onRetry={() => {
-            void overview.refetch();
-            void models.refetch();
-            void records.refetch();
-          }}
-        />
-      )}
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {overview.data?.models.map((item) => (
-          <MetricCard
-            key={item.model}
-            eyebrow={item.displayName}
-            value={String(item.totalCount)}
-            caption={strings.ui.dashboardScreen.newInRange(item.periodCount)}
+  }
+
+  function renderQueryStatus() {
+
+    return (
+      <>
+        {(overview.isPending || models.isPending || records.isPending) && (
+          <Card>{strings.ui.dashboardScreen.loadingWorkspaceData}</Card>
+        )}
+        {(overview.isError || models.isError || records.isError) && (
+          <ErrorState
+            title={strings.ui.dashboardScreen.workspaceDataUnavailable}
+            description={
+              strings.ui.dashboardScreen
+                .pleaseTryLoadingYourWorkspaceAgain
+            }
+            onRetry={() => {
+
+              void overview.refetch();
+              void models.refetch();
+              void records.refetch();
+
+            }}
           />
-        ))}
-      </div>
+        )}
+      </>
+    );
 
+  }
+
+  function renderMetricCard(item: DashboardOverviewItem) {
+
+    return (
+      <MetricCard
+        key={item.model}
+        eyebrow={item.displayName}
+        value={String(item.totalCount)}
+        caption={strings.ui.dashboardScreen.newInRange(item.periodCount)}
+      />
+    );
+
+  }
+
+  function renderMetrics() {
+
+    const metricCards = overview.data?.models.map(renderMetricCard);
+
+    return (
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        {metricCards}
+      </div>
+    );
+
+  }
+
+  function renderModelExplorer() {
+
+    return (
       <Card className="grid gap-4">
         <div>
           <p className="m-0 text-xs font-semibold uppercase tracking-[0.16em] text-brand-secondary">
@@ -556,167 +693,217 @@ export function DashboardScreen() {
           </p>
         </div>
       </Card>
+    );
 
-      {demoMode &&
-        overview.data?.models.some(
-          (item) => item.model === 'featureRequest' && item.totalCount > 0,
-        ) && (
-          <>
-            <p className="text-sm text-tertiary">
-              {strings.ui.dashboardScreen.sampleAnalyticsDemoData}
-            </p>
-            <div className="grid gap-4 xl:grid-cols-2">
-              <DashboardPanel
-                eyebrow={strings.ui.dashboardScreen.sales}
-                title={strings.ui.dashboardScreen.directVsIndirect}
-                value={strings.ui.dashboardScreen.value17k3}
-              >
-                <ComparisonBars />
-              </DashboardPanel>
-              <DashboardPanel
-                eyebrow={strings.ui.dashboardScreen.orderValue}
-                title={strings.ui.dashboardScreen.avgOrderValue}
-                value={strings.ui.dashboardScreen.value72}
-                delta={strings.ui.dashboardScreen.value34}
-                legend={
-                  <div className="flex items-center gap-4 text-xs font-medium text-tertiary">
-                    <span className="inline-flex items-center gap-2">
-                      <span className="h-2.5 w-2.5 rounded-full bg-brand-solid" />
-                      {strings.ui.dashboardScreen.current}
-                    </span>
-                    <span className="inline-flex items-center gap-2">
-                      <span className="h-2.5 w-2.5 rounded-full bg-chart-neutral" />
-                      {strings.ui.dashboardScreen.previous}
-                    </span>
-                  </div>
-                }
-              >
-                <LineChart
-                  primary={avgOrderValueCurrent}
-                  secondary={avgOrderValuePrevious}
-                />
-              </DashboardPanel>
-            </div>
+  }
 
-            <div className="grid gap-4 xl:grid-cols-[360px_minmax(0,1fr)]">
-              <DashboardPanel
-                eyebrow={strings.ui.dashboardScreen.audience}
-                title={strings.ui.dashboardScreen.topCountries}
-              >
-                <CountriesDonut />
-              </DashboardPanel>
-              <DashboardPanel
-                eyebrow={strings.ui.dashboardScreen.acquisition}
-                title={strings.ui.dashboardScreen.topChannels}
-              >
-                <TopChannelsTable />
-              </DashboardPanel>
-            </div>
+  function renderDemoAnalytics() {
 
-            <div className="grid gap-4 xl:grid-cols-2">
-              <DashboardPanel
-                eyebrow={strings.ui.dashboardScreen.stores}
-                title={strings.ui.dashboardScreen.salesOverTime}
-                value={strings.ui.dashboardScreen.value1482}
-                delta={strings.ui.dashboardScreen.value22}
-                legend={
-                  <div className="flex items-center gap-4 text-xs font-medium text-tertiary">
-                    <span className="inline-flex items-center gap-2">
-                      <span className="h-2.5 w-2.5 rounded-full bg-brand-solid" />
-                      {strings.ui.dashboardScreen.current}
-                    </span>
-                    <span className="inline-flex items-center gap-2">
-                      <span className="h-2.5 w-2.5 rounded-full bg-chart-neutral" />
-                      {strings.ui.dashboardScreen.previous}
-                    </span>
-                    <span className="inline-flex items-center gap-2">
-                      <span className="h-2.5 w-2.5 rounded-full bg-chart-forecast" />
-                      {strings.ui.dashboardScreen.forecast}
-                    </span>
-                  </div>
-                }
-              >
-                <LineChart
-                  primary={salesOverTimeCurrent}
-                  secondary={salesOverTimePrevious}
-                  tertiary={salesOverTimeForecast}
-                />
-              </DashboardPanel>
-              <DashboardPanel
-                eyebrow={strings.ui.dashboardScreen.finance}
-                title={strings.ui.dashboardScreen.salesVsRefunds}
-                value={strings.ui.dashboardScreen.value6796}
-                delta={strings.ui.dashboardScreen.value342}
-              >
-                <SalesVsRefundsBars />
-              </DashboardPanel>
-            </div>
+    if (!demoMode || !hasSampleAnalyticsData) {
+      return null;
+    }
 
-            <RefundReasonsCard />
-          </>
-        )}
+    return (
+      <>
+        <p className="text-sm text-tertiary">
+          {strings.ui.dashboardScreen.sampleAnalyticsDemoData}
+        </p>
+        <div className="grid gap-4 xl:grid-cols-2">
+          <DashboardPanel
+            eyebrow={strings.ui.dashboardScreen.sales}
+            title={strings.ui.dashboardScreen.directVsIndirect}
+            value={strings.ui.dashboardScreen.value17k3}
+          >
+            <ComparisonBars />
+          </DashboardPanel>
+          <DashboardPanel
+            eyebrow={strings.ui.dashboardScreen.orderValue}
+            title={strings.ui.dashboardScreen.avgOrderValue}
+            value={strings.ui.dashboardScreen.value72}
+            delta={strings.ui.dashboardScreen.value34}
+            legend={
+              <div className="flex items-center gap-4 text-xs font-medium text-tertiary">
+                <span className="inline-flex items-center gap-2">
+                  <span className="h-2.5 w-2.5 rounded-full bg-brand-solid" />
+                  {strings.ui.dashboardScreen.current}
+                </span>
+                <span className="inline-flex items-center gap-2">
+                  <span className="h-2.5 w-2.5 rounded-full bg-chart-neutral" />
+                  {strings.ui.dashboardScreen.previous}
+                </span>
+              </div>
+            }
+          >
+            <LineChart
+              primary={avgOrderValueCurrent}
+              secondary={avgOrderValuePrevious}
+            />
+          </DashboardPanel>
+        </div>
 
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
-        <Card className="grid gap-4">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <p className="m-0 text-xs font-semibold uppercase tracking-[0.16em] text-brand-secondary">
-                {strings.ui.dashboardScreen.records}
-              </p>
-              <h3 className="mt-2 text-xl font-semibold text-primary">
-                {strings.ui.dashboardScreen.primaryDataTable}
-              </h3>
-            </div>
-            <span className="inline-flex rounded-full bg-secondary_subtle px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-tertiary">
-              {visibleRows} {strings.ui.dashboardScreen.rows}
-            </span>
-          </div>
-          {columns.length > 0 ? (
-            <DataTable columns={columns} rows={records.data?.data ?? []} />
-          ) : (
-            <p className="m-0 text-sm text-secondary">
-              {strings.ui.dashboardScreen.noRecordsAvailable}
-            </p>
-          )}
-        </Card>
+        <div className="grid gap-4 xl:grid-cols-[360px_minmax(0,1fr)]">
+          <DashboardPanel
+            eyebrow={strings.ui.dashboardScreen.audience}
+            title={strings.ui.dashboardScreen.topCountries}
+          >
+            <CountriesDonut />
+          </DashboardPanel>
+          <DashboardPanel
+            eyebrow={strings.ui.dashboardScreen.acquisition}
+            title={strings.ui.dashboardScreen.topChannels}
+          >
+            <TopChannelsTable />
+          </DashboardPanel>
+        </div>
 
-        <Card className="grid gap-4">
+        <div className="grid gap-4 xl:grid-cols-2">
+          <DashboardPanel
+            eyebrow={strings.ui.dashboardScreen.stores}
+            title={strings.ui.dashboardScreen.salesOverTime}
+            value={strings.ui.dashboardScreen.value1482}
+            delta={strings.ui.dashboardScreen.value22}
+            legend={
+              <div className="flex items-center gap-4 text-xs font-medium text-tertiary">
+                <span className="inline-flex items-center gap-2">
+                  <span className="h-2.5 w-2.5 rounded-full bg-brand-solid" />
+                  {strings.ui.dashboardScreen.current}
+                </span>
+                <span className="inline-flex items-center gap-2">
+                  <span className="h-2.5 w-2.5 rounded-full bg-chart-neutral" />
+                  {strings.ui.dashboardScreen.previous}
+                </span>
+                <span className="inline-flex items-center gap-2">
+                  <span className="h-2.5 w-2.5 rounded-full bg-chart-forecast" />
+                  {strings.ui.dashboardScreen.forecast}
+                </span>
+              </div>
+            }
+          >
+            <LineChart
+              primary={salesOverTimeCurrent}
+              secondary={salesOverTimePrevious}
+              tertiary={salesOverTimeForecast}
+            />
+          </DashboardPanel>
+          <DashboardPanel
+            eyebrow={strings.ui.dashboardScreen.finance}
+            title={strings.ui.dashboardScreen.salesVsRefunds}
+            value={strings.ui.dashboardScreen.value6796}
+            delta={strings.ui.dashboardScreen.value342}
+          >
+            <SalesVsRefundsBars />
+          </DashboardPanel>
+        </div>
+
+        <RefundReasonsCard />
+      </>
+    );
+
+  }
+
+  function renderRecordsPanel() {
+
+    const rows = records.data?.data ?? [];
+
+    return (
+      <Card className="grid gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="m-0 text-xs font-semibold uppercase tracking-[0.16em] text-brand-secondary">
-              {strings.ui.dashboardScreen.registry}
+              {strings.ui.dashboardScreen.records}
             </p>
             <h3 className="mt-2 text-xl font-semibold text-primary">
-              {strings.ui.dashboardScreen.registeredModels}
+              {strings.ui.dashboardScreen.primaryDataTable}
             </h3>
           </div>
-          <div className="grid gap-3">
-            {models.data?.map((entry) => (
-              <div
-                key={entry.key}
-                className="rounded-xl border-control border-secondary bg-secondary_subtle p-4"
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <Link
-                    className="font-semibold text-primary underline"
-                    href={`/dashboard?model=${encodeURIComponent(entry.key)}`}
-                  >
-                    {entry.displayName}
-                  </Link>
-                  <span className="inline-flex rounded-full bg-brand-primary px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-brand-secondary">
-                    {entry.recordCount}
-                  </span>
-                </div>
-                <div className="mt-2 text-sm text-secondary">
-                  {
-                    strings.ui.dashboardScreen
-                      .recordsAvailableForOperationalViews
-                  }
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
+          <span className="inline-flex rounded-full bg-secondary_subtle px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-tertiary">
+            {visibleRows} {strings.ui.dashboardScreen.rows}
+          </span>
+        </div>
+        {columns.length > 0 ? (
+          <DataTable columns={columns} rows={rows} />
+        ) : (
+          <p className="m-0 text-sm text-secondary">
+            {strings.ui.dashboardScreen.noRecordsAvailable}
+          </p>
+        )}
+      </Card>
+    );
+
+  }
+
+  function renderModelEntry(entry: DashboardModelSummary) {
+
+    return (
+      <div
+        key={entry.key}
+        className="rounded-xl border-control border-secondary bg-secondary_subtle p-4"
+      >
+        <div className="flex items-center justify-between gap-3">
+          <Link
+            className="font-semibold text-primary underline"
+            href={`/dashboard?model=${encodeURIComponent(entry.key)}`}
+          >
+            {entry.displayName}
+          </Link>
+          <span className="inline-flex rounded-full bg-brand-primary px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-brand-secondary">
+            {entry.recordCount}
+          </span>
+        </div>
+        <div className="mt-2 text-sm text-secondary">
+          {strings.ui.dashboardScreen.recordsAvailableForOperationalViews}
+        </div>
       </div>
-    </div>
-  );
+    );
+
+  }
+
+  function renderRegistry() {
+
+    const modelEntries = models.data?.map(renderModelEntry);
+
+    return (
+      <Card className="grid gap-4">
+        <div>
+          <p className="m-0 text-xs font-semibold uppercase tracking-[0.16em] text-brand-secondary">
+            {strings.ui.dashboardScreen.registry}
+          </p>
+          <h3 className="mt-2 text-xl font-semibold text-primary">
+            {strings.ui.dashboardScreen.registeredModels}
+          </h3>
+        </div>
+        <div className="grid gap-3">{modelEntries}</div>
+      </Card>
+    );
+
+  }
+
+  function renderRecordDirectory() {
+
+    return (
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
+        {renderRecordsPanel()}
+        {renderRegistry()}
+      </div>
+    );
+
+  }
+
+  function renderContent() {
+
+    return (
+      <div className="grid gap-6">
+        {renderHeader()}
+        {renderQueryStatus()}
+        {renderMetrics()}
+        {renderModelExplorer()}
+        {renderDemoAnalytics()}
+        {renderRecordDirectory()}
+      </div>
+    );
+
+  }
+
+  return renderContent();
+
 }

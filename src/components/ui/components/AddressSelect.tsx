@@ -1,8 +1,8 @@
 'use client';
 
+import type { AddressSelectProps } from '../models/addressSelectProps';
 import { addressCountries, strings } from '@/strings';
 import { addressRegions } from '../lib/addressChoices';
-import type { SelectProps } from '../models/selectProps';
 import { Select } from './Select';
 
 export function AddressSelect({
@@ -10,10 +10,8 @@ export function AddressSelect({
   country = '',
   value,
   ...props
-}: Omit<SelectProps, 'children'> & {
-  kind: 'country' | 'region';
-  country?: string;
-}) {
+}: AddressSelectProps) {
+
   const copy = strings.address;
   const emptyCode = '';
   const choices =
@@ -23,6 +21,21 @@ export function AddressSelect({
   const matched = choices.find(
     (item) => item.code === saved || item.name === saved,
   );
+
+  function renderAddressOption(item: (typeof choices)[number]) {
+
+    return (
+      <option key={item.code} value={matched === item ? saved : item.code}>
+        {kind === 'country'
+          ? copy.countryOption(item.name, item.code)
+          : item.name}
+      </option>
+    );
+
+  }
+
+  const addressOptions = choices.map(renderAddressOption);
+
   return (
     <Select
       {...props}
@@ -37,13 +50,8 @@ export function AddressSelect({
             : copy.chooseRegion}
       </option>
       {saved && !matched && <option value={saved}>{saved}</option>}
-      {choices.map((item) => (
-        <option key={item.code} value={matched === item ? saved : item.code}>
-          {kind === 'country'
-            ? copy.countryOption(item.name, item.code)
-            : item.name}
-        </option>
-      ))}
+      {addressOptions}
     </Select>
   );
+
 }

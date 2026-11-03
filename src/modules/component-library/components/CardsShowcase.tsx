@@ -11,12 +11,15 @@ import {
 import { usePresentationService } from '@/presentation/PresentationProvider';
 import { strings } from '@/strings';
 import { ShowcaseSection } from './ShowcaseSection';
+
 const copy = strings.componentLibrary;
 
 export function CardsShowcase() {
+
   const [active, setActive] = useState(true);
   const presentation = usePresentationService();
   const preview = () => {
+
     void presentation.showSheet({
       title: copy.sheetTitle,
       description: copy.sheetHint,
@@ -24,14 +27,12 @@ export function CardsShowcase() {
       confirmLabel: copy.close,
       cancelLabel: copy.cancel,
     });
+
   };
-  return (
-    <ShowcaseSection
-      id="cards"
-      title={copy.cards}
-      description={copy.cardsHint}
-      icon="leaf"
-    >
+
+  function renderCardTypes() {
+
+    return (
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="grid gap-2">
           <h4 className="m-0 text-xs font-medium text-secondary">
@@ -56,6 +57,13 @@ export function CardsShowcase() {
           />
         </div>
       </div>
+    );
+
+  }
+
+  function renderMetricsAndStatus() {
+
+    return (
       <div className="grid gap-4 sm:grid-cols-2 2xl:grid-cols-3">
         <div className="grid content-start gap-2">
           <h4 className="m-0 text-xs font-medium text-secondary">
@@ -89,6 +97,20 @@ export function CardsShowcase() {
           </CardView>
         </div>
       </div>
+    );
+
+  }
+
+  return (
+    <ShowcaseSection
+      id="cards"
+      title={copy.cards}
+      description={copy.cardsHint}
+      icon="leaf"
+    >
+      {renderCardTypes()}
+      {renderMetricsAndStatus()}
     </ShowcaseSection>
   );
+
 }

@@ -1,7 +1,8 @@
 import { portalPublishingStrings } from '@/strings';
-const copy = portalPublishingStrings.builder;
 import { z } from 'zod';
 import { BlogImageSchema, BlogReadableImageSchema } from './blogImage';
+
+const copy = portalPublishingStrings.builder;
 
 export const BlogGalleryTwoContentSchema = z
   .object({
@@ -15,6 +16,7 @@ export const BlogGalleryTwoContentSchema = z
       .strict(),
   })
   .strict();
+
 export type BlogGalleryTwoContent = z.infer<typeof BlogGalleryTwoContentSchema>;
 
 export const BlogReadableGalleryTwoContentSchema =

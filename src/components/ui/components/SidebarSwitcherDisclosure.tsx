@@ -1,18 +1,10 @@
 'use client';
 
-import { useId, useRef, useState, type ReactNode } from 'react';
+import type { SidebarSwitcherDisclosureProps } from '../models/sidebarSwitcherDisclosureProps';
+import { useId, useRef, useState } from 'react';
 import { Button } from './Button';
 import { UiIcon } from './UiIcon';
 import { cn } from '../lib/cn';
-
-interface SidebarSwitcherDisclosureProps {
-  title: string;
-  subtitle: string;
-  ariaLabel: string;
-  leading: ReactNode;
-  disabled?: boolean;
-  children: (close: () => void) => ReactNode;
-}
 
 export function SidebarSwitcherDisclosure({
   title,
@@ -22,6 +14,7 @@ export function SidebarSwitcherDisclosure({
   disabled,
   children,
 }: SidebarSwitcherDisclosureProps) {
+
   const [open, setOpen] = useState(false);
   const contentId = useId();
   const trigger = useRef<HTMLButtonElement>(null);
@@ -32,11 +25,15 @@ export function SidebarSwitcherDisclosure({
     <div
       className="rounded-card border-control border-brand/20 bg-brand-primary p-1"
       onKeyDown={(event) => {
+
         if (event.key === 'Escape' && open) {
+
           event.stopPropagation();
           close();
           trigger.current?.focus();
+
         }
+
       }}
     >
       <Button
@@ -46,7 +43,9 @@ export function SidebarSwitcherDisclosure({
         aria-label={ariaLabel}
         aria-expanded={open && !disabled}
         aria-controls={contentId}
-        onClick={() => setOpen((value) => !value)}
+        onClick={() => {
+          setOpen((value) => !value);
+        }}
         className="h-auto min-h-16 w-full min-w-0 justify-start gap-3 rounded-control p-3 text-left whitespace-normal hover:bg-secondary_subtle focus-visible:-outline-offset-2"
       >
         {leading}
@@ -71,4 +70,5 @@ export function SidebarSwitcherDisclosure({
       </div>
     </div>
   );
+
 }

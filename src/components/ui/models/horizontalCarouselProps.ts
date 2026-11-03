@@ -1,4 +1,5 @@
 import type { ReactNode, Ref, UIEventHandler } from 'react';
+
 export interface HorizontalCarouselProps {
   label: string;
   children: ReactNode;

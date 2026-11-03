@@ -23,4 +23,5 @@ export const UserMutationInputSchema = UserSchema.pick({
 });
 
 export type User = z.infer<typeof UserSchema>;
+
 export type UserMutationInput = z.infer<typeof UserMutationInputSchema>;

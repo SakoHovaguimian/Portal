@@ -10,6 +10,7 @@ export function DialogSelectField({
   type,
   ...props
 }: ComponentPropsWithRef<'button'>) {
+
   return (
     <button
       {...props}
@@ -24,4 +25,5 @@ export function DialogSelectField({
       <UiIcon name="chevronDown" className="size-4 text-tertiary" />
     </button>
   );
+
 }

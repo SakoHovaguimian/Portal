@@ -1,4 +1,4 @@
-import type { ComponentProps, ReactNode } from 'react';
+import type { RadioCardProps } from '../models/radioCardProps';
 import { Radio } from './Radio';
 import { IconTile } from './IconTile';
 import { cn } from '../lib/cn';
@@ -9,11 +9,8 @@ export function RadioCard({
   icon,
   className,
   ...props
-}: Omit<ComponentProps<typeof Radio>, 'label'> & {
-  label: string;
-  description: string;
-  icon: ReactNode;
-}) {
+}: RadioCardProps) {
+
   return (
     <Radio
       {...props}
@@ -36,4 +33,5 @@ export function RadioCard({
       }
     />
   );
+
 }

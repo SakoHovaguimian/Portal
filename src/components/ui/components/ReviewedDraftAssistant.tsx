@@ -1,36 +1,14 @@
 'use client';
 
+import type { ReviewedDraftAssistantProps } from '../models/reviewedDraftAssistantProps';
 import { strings } from '@/strings';
 import { useReviewedDraftAssistant } from '../useReviewedDraftAssistant';
-import type {
-  ReviewedDraftAssistantField,
-  ReviewedDraftAssistantResult,
-} from '../models/reviewedDraftAssistant';
 import { Button } from './Button';
 import { Checkbox } from './Checkbox';
 import { Field } from './Field';
 import { Message } from './Message';
 import { FloatingAssistant } from './FloatingAssistant';
 import { TextArea } from './TextArea';
-
-interface ReviewedDraftAssistantProps {
-  id: string;
-  title: string;
-  description: string;
-  fields: ReviewedDraftAssistantField[];
-  contextKey: string;
-  disabled: boolean;
-  generate: (
-    transcript: string,
-    signal: AbortSignal,
-  ) => Promise<ReviewedDraftAssistantResult>;
-  onApply: (suggestions: Record<string, string>) => void;
-  onBusyChange: (busy: boolean) => boolean;
-  questionsLabel: string;
-  warningsLabel: string;
-  rateLimited: string;
-  transcriptPlaceholder?: string;
-}
 
 export function ReviewedDraftAssistant({
   id,
@@ -47,6 +25,7 @@ export function ReviewedDraftAssistant({
   rateLimited,
   transcriptPlaceholder,
 }: ReviewedDraftAssistantProps) {
+
   const {
     transcript,
     transcriptRef,
@@ -78,14 +57,10 @@ export function ReviewedDraftAssistant({
   });
   const copy = strings.draftAssistant;
   const blocked = disabled || pending || speechBusy;
-  return (
-    <FloatingAssistant
-      id={id}
-      title={title}
-      description={description}
-      disabled={disabled}
-      busy={pending || speechBusy}
-    >
+
+  function renderDictation() {
+
+    return (
       <div className="grid gap-2">
         <p className="m-0 text-sm font-semibold text-primary">{copy.voice}</p>
         <p className="m-0 text-xs text-tertiary">{copy.voiceHint}</p>
@@ -121,6 +96,13 @@ export function ReviewedDraftAssistant({
         )}
         {speech.error && <Message intent="warning" title={speech.error} />}
       </div>
+    );
+
+  }
+
+  function renderTranscriptField() {
+
+    return (
       <Field labelText={copy.transcript}>
         <TextArea
           ref={transcriptRef}
@@ -134,9 +116,13 @@ export function ReviewedDraftAssistant({
           onChange={(event) => changeTranscript(event.target.value)}
         />
       </Field>
-      <p id={`${id}-transcript-help`} className="m-0 text-xs text-tertiary">
-        {copy.transcriptHint}
-      </p>
+    );
+
+  }
+
+  function renderGenerationActions() {
+
+    return (
       <div className="flex flex-wrap gap-2">
         <Button
           variant="secondary"
@@ -156,80 +142,167 @@ export function ReviewedDraftAssistant({
           </Button>
         )}
       </div>
-      {error && <Message intent="danger" title={error} />}
-      {result && (
-        <div
-          ref={resultRef}
-          tabIndex={-1}
-          className="grid min-w-0 gap-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-        >
-          <p className="m-0 text-sm text-secondary">{copy.review}</p>
-          {fields
-            .filter((field) => field.key in review)
-            .map((field) => (
-              <div key={field.key} className="grid min-w-0 gap-2">
-                <Checkbox
-                  label={field.label}
-                  checked={Boolean(selected[field.key])}
-                  disabled={blocked || stale}
-                  onChange={(event) =>
-                    setSelected((current) => ({
-                      ...current,
-                      [field.key]: event.target.checked,
-                    }))
-                  }
-                />
-                <TextArea
-                  aria-label={field.label}
-                  value={review[field.key]}
-                  maxLength={field.maxLength}
-                  rows={field.rows ?? 2}
-                  className="resize-none"
-                  disabled={blocked || stale}
-                  onChange={(event) =>
-                    setReview((current) => ({
-                      ...current,
-                      [field.key]: event.target.value,
-                    }))
-                  }
-                />
-              </div>
-            ))}
-          {!Object.keys(review).length && (
-            <Message intent="info" title={copy.noSuggestions} />
-          )}
-          {result.questions?.length ? (
-            <div className="grid gap-2">
-              <p className="m-0 text-sm font-semibold text-primary">
-                {questionsLabel}
-              </p>
-              <ul className="m-0 grid gap-2 pl-5 text-sm text-secondary">
-                {result.questions.map((question, index) => (
-                  <li key={index}>{question}</li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
-          {result.warnings?.length ? (
-            <div className="grid gap-2">
-              <p className="m-0 text-sm font-semibold text-primary">
-                {warningsLabel}
-              </p>
-              <ul className="m-0 grid gap-2 pl-5 text-sm text-secondary">
-                {result.warnings.map((warning, index) => (
-                  <li key={index}>{warning}</li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
-          {stale && <Message intent="warning" title={copy.changed} />}
-          <div className="flex flex-wrap gap-2">
-            <Button disabled={blocked || stale || !canApply} onClick={apply}>
-              {copy.apply}
-            </Button>
-          </div>
+    );
+
+  }
+
+  function renderFailure() {
+
+    return (
+      error && <Message intent="danger" title={error} />
+    );
+
+  }
+
+  function renderReview() {
+
+    if (!result) {
+      return null;
+    }
+
+    const reviewResult = result;
+
+    function renderReviewField(field: (typeof fields)[number]) {
+
+      return (
+        <div key={field.key} className="grid min-w-0 gap-2">
+          <Checkbox
+            label={field.label}
+            checked={Boolean(selected[field.key])}
+            disabled={blocked || stale}
+            onChange={(event) => {
+
+              setSelected((current) => ({
+                ...current,
+                [field.key]: event.target.checked,
+              }));
+
+            }}
+          />
+          <TextArea
+            aria-label={field.label}
+            value={review[field.key]}
+            maxLength={field.maxLength}
+            rows={field.rows ?? 2}
+            className="resize-none"
+            disabled={blocked || stale}
+            onChange={(event) => {
+
+              setReview((current) => ({
+                ...current,
+                [field.key]: event.target.value,
+              }));
+
+            }}
+          />
         </div>
-      )}
+      );
+
+    }
+
+    const reviewFields = fields
+      .filter((field) => field.key in review)
+      .map(renderReviewField);
+
+    function renderQuestions() {
+
+      if (!(reviewResult.questions?.length)) {
+        return null;
+      }
+
+      function renderQuestion(question: string, index: number) {
+
+        return (
+          <li key={index}>{question}</li>
+        );
+
+      }
+
+      const questions = reviewResult.questions.map(renderQuestion);
+
+      return (
+        <div className="grid gap-2">
+          <p className="m-0 text-sm font-semibold text-primary">
+            {questionsLabel}
+          </p>
+          <ul className="m-0 grid gap-2 pl-5 text-sm text-secondary">
+            {questions}
+          </ul>
+        </div>
+      );
+
+    }
+
+    function renderWarnings() {
+
+      if (!(reviewResult.warnings?.length)) {
+        return null;
+      }
+
+      function renderWarning(warning: string, index: number) {
+
+        return (
+          <li key={index}>{warning}</li>
+        );
+
+      }
+
+      const warnings = reviewResult.warnings.map(renderWarning);
+
+      return (
+        <div className="grid gap-2">
+          <p className="m-0 text-sm font-semibold text-primary">
+            {warningsLabel}
+          </p>
+          <ul className="m-0 grid gap-2 pl-5 text-sm text-secondary">
+            {warnings}
+          </ul>
+        </div>
+      );
+
+    }
+
+    return (
+      <div
+        ref={resultRef}
+        tabIndex={-1}
+        className="grid min-w-0 gap-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+      >
+        <p className="m-0 text-sm text-secondary">{copy.review}</p>
+        {reviewFields}
+        {!Object.keys(review).length && (
+          <Message intent="info" title={copy.noSuggestions} />
+        )}
+        {renderQuestions()}
+        {renderWarnings()}
+        {stale && <Message intent="warning" title={copy.changed} />}
+        <div className="flex flex-wrap gap-2">
+          <Button disabled={blocked || stale || !canApply} onClick={apply}>
+            {copy.apply}
+          </Button>
+        </div>
+      </div>
+    );
+
+  }
+
+  return (
+    <FloatingAssistant
+      id={id}
+      title={title}
+      description={description}
+      disabled={disabled}
+      busy={pending || speechBusy}
+    >
+      {renderDictation()}
+      {renderTranscriptField()}
+      <p id={`${id}-transcript-help`} className="m-0 text-xs text-tertiary">
+        {copy.transcriptHint}
+      </p>
+      {renderGenerationActions()}
+      {renderFailure()}
+      {renderReview()}
     </FloatingAssistant>
   );
+
 }

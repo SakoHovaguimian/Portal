@@ -5,6 +5,7 @@ import { Button, InfoPopover, Message, Tooltip, UiIcon } from '@/components/ui';
 import { usePresentationService } from '@/presentation/PresentationProvider';
 import { strings } from '@/strings';
 import { ShowcaseSection } from './ShowcaseSection';
+
 const copy = strings.componentLibrary;
 const messages = [
   {
@@ -26,15 +27,38 @@ const messages = [
 ] as const;
 
 export function FeedbackShowcase() {
+
   const [dismissed, setDismissed] = useState<string[]>([]);
   const presentation = usePresentationService();
   const toast = () => {
+
     void presentation.showToast({
       title: copy.successTitle,
       description: copy.actionPreviewHint,
       intent: 'success',
     });
+
   };
+
+  function renderMessage(message: (typeof messages)[number]) {
+
+    return (
+      <Message
+        key={message.intent}
+        {...message}
+        role="note"
+        onDismiss={() => {
+          setDismissed((current) => [...current, message.intent]);
+        }}
+      />
+    );
+
+  }
+
+  const visibleMessages = messages
+    .filter((message) => !dismissed.includes(message.intent))
+    .map(renderMessage);
+
   return (
     <ShowcaseSection
       id="feedback"
@@ -44,18 +68,7 @@ export function FeedbackShowcase() {
     >
       <div className="grid items-start gap-4 2xl:grid-cols-[minmax(0,1fr)_15rem]">
         <div className="grid gap-3">
-          {messages
-            .filter((message) => !dismissed.includes(message.intent))
-            .map((message) => (
-              <Message
-                key={message.intent}
-                {...message}
-                role="note"
-                onDismiss={() =>
-                  setDismissed((current) => [...current, message.intent])
-                }
-              />
-            ))}
+          {visibleMessages}
           {dismissed.length > 0 && (
             <Button variant="ghost" onClick={() => setDismissed([])}>
               {copy.restoreMessages}
@@ -68,6 +81,7 @@ export function FeedbackShowcase() {
             <Button
               variant="secondary"
               onClick={() => {
+
                 void presentation.showAlert({
                   title: copy.deleteTitle,
                   description: copy.deleteHint,
@@ -75,6 +89,7 @@ export function FeedbackShowcase() {
                   cancelLabel: copy.keepPreview,
                   tone: 'danger',
                 });
+
               }}
             >
               {copy.alert}
@@ -82,6 +97,7 @@ export function FeedbackShowcase() {
             <Button
               variant="secondary"
               onClick={() => {
+
                 void presentation.showSheet({
                   title: copy.sheetTitle,
                   description: copy.sheetHint,
@@ -89,6 +105,7 @@ export function FeedbackShowcase() {
                   confirmLabel: copy.close,
                   cancelLabel: copy.cancel,
                 });
+
               }}
             >
               {copy.sheet}
@@ -107,4 +124,5 @@ export function FeedbackShowcase() {
       </div>
     </ShowcaseSection>
   );
+
 }

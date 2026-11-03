@@ -1,18 +1,15 @@
 import { Badge, UiIcon } from '@/components/ui';
 import { portalNotificationInboxStrings as copy } from '@/strings';
-import type { NotificationCounts } from '../models/notificationCounts';
+import type { NotificationInboxSummaryProps } from '../models/notificationInboxSummaryProps';
 
 export function NotificationInboxSummary({
   counts,
   unavailable,
   filtered,
-}: {
-  counts?: NotificationCounts;
-  unavailable: boolean;
-  filtered: boolean;
-}) {
-  if (unavailable) return <span role="status">{copy.countUnavailable}</span>;
-  if (!counts) return <span role="status">{copy.loadingSummaryHint}</span>;
+}: NotificationInboxSummaryProps) {
+
+  if (unavailable) { return <span role="status">{copy.countUnavailable}</span>; }
+  if (!counts) { return <span role="status">{copy.loadingSummaryHint}</span>; }
   return (
     <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2">
       <Badge
@@ -32,4 +29,5 @@ export function NotificationInboxSummary({
       </span>
     </div>
   );
+
 }

@@ -1,16 +1,18 @@
+import type { SearchRouteProps } from '@/models/searchRouteProps';
 import { notFound } from 'next/navigation';
 import { portalModules } from '@/config/portalModules';
 import type { Metadata } from 'next';
 import { SavedItemsScreen } from '@/modules/engagement/SavedItemsScreen';
 import { SavedQuerySchema } from '@/modules/engagement/models/savedQuery';
 import { portalEngagementStrings as copy } from '@/strings';
+
 export const metadata: Metadata = { title: copy.title };
+
 export default async function Page({
   searchParams,
-}: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}) {
-  if (!portalModules.engagement) notFound();
+}: SearchRouteProps) {
+
+  if (!portalModules.engagement) { notFound(); }
   const search = await searchParams;
   const single = (key: string) =>
     typeof search[key] === 'string' ? search[key] : undefined;
@@ -24,4 +26,5 @@ export default async function Page({
       query={query.success ? query.data : SavedQuerySchema.parse({})}
     />
   );
+
 }

@@ -1,10 +1,11 @@
 import { portalPublishingStrings } from '@/strings';
-const copy = portalPublishingStrings.builder;
 import { z } from 'zod';
 import {
   BlogContentUrlSchema,
   BlogReadableContentUrlSchema,
 } from './blogContentUrl';
+
+const copy = portalPublishingStrings.builder;
 
 export const BlogLinkContentSchema = z
   .object({
@@ -22,6 +23,7 @@ export const BlogLinkContentSchema = z
       .strict(),
   })
   .strict();
+
 export type BlogLinkContent = z.infer<typeof BlogLinkContentSchema>;
 
 export const BlogReadableLinkContentSchema = BlogLinkContentSchema.extend({

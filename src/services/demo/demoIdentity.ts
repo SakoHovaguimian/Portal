@@ -9,17 +9,25 @@ import type { DemoPreset } from './models/demoPreset';
 import { resetDemoAccountState } from './demoResetRegistry';
 import { demoPresetIds } from './demoPresets';
 import { restartDemoOnboarding } from '@/modules/onboarding/demo/onboardingState';
+
+// **************************************
+// MARK: - CREATE DEMO IDENTITY SESSION
+// **************************************
+
 export async function createDemoIdentitySession(
   preset: DemoPreset | UserRole,
 ): Promise<ServerSession> {
+
   const key = preset === 'user' ? 'populated' : preset;
   const user = getDemoState().users.find(
     (user) => user.id === demoPresetIds[key] && !user.disabled && !user.deleted,
   );
-  if (!user) throw new AuthError(copy.accountUnavailable, 409);
+  if (!user) { throw new AuthError(copy.accountUnavailable, 409); }
   if (key === 'onboarding') {
+
     resetDemoAccountState(user.id);
     restartDemoOnboarding(user.id);
+
   }
   const auth = await new DemoFirebaseAuthService().signIn(
     user.email,
@@ -37,4 +45,5 @@ export async function createDemoIdentitySession(
       role: user.role,
     },
   };
+
 }

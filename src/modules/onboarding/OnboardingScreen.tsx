@@ -14,6 +14,7 @@ import {
   PageHeader,
   QueryBoundary,
   Stepper,
+  type StepperStep,
   Switch,
   TimezoneSelect,
 } from '@/components/ui';
@@ -23,11 +24,14 @@ import { resolveOnboardingRedirect } from '@/modules/auth/sessionClient';
 import { useSessionState } from '@/providers/AppProviders';
 import { useOnboarding, useSaveOnboarding } from './hooks';
 import { onboardingSteps } from './onboardingConfiguration';
-import type { OnboardingProgress } from './models/onboardingProgress';
+import type { OnboardingFormProps } from './models/onboardingFormProps';
+import type { OnboardingScreenProps } from './models/onboardingScreenProps';
 import type { OnboardingStep } from './models/onboardingStep';
 import { OnboardingProfileSchema } from './models/onboardingProfile';
 import { OnboardingPreferencesSchema } from './models/onboardingPreferences';
-export function OnboardingScreen({ redirectTo }: { redirectTo?: string }) {
+
+export function OnboardingScreen({ redirectTo }: OnboardingScreenProps) {
+
   const query = useOnboarding();
   return (
     <Page>
@@ -43,14 +47,14 @@ export function OnboardingScreen({ redirectTo }: { redirectTo?: string }) {
       </QueryBoundary>
     </Page>
   );
+
 }
+
 function OnboardingForm({
   progress,
   redirectTo,
-}: {
-  progress: OnboardingProgress;
-  redirectTo?: string;
-}) {
+}: OnboardingFormProps) {
+
   const router = useRouter();
   const mutation = useSaveOnboarding();
   const { session, setSession } = useSessionState();
@@ -66,19 +70,29 @@ function OnboardingForm({
   const formRef = useRef<HTMLFormElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
+
     dirtyRef.current = dirty;
     busyRef.current = mutation.isPending;
+
   }, [dirty, mutation.isPending]);
   useUnsavedFormGuard(dirtyRef, busyRef);
-  const index = onboardingSteps.findIndex((item) => item.key === step);
+  const selectedStepIndex = onboardingSteps.findIndex(
+    (item) => item.key === step,
+  );
+  const currentProgressStepIndex = onboardingSteps.findIndex(
+    (item) => item.key === progress.currentStep,
+  );
+
   async function save() {
-    if (mutation.isPending) return;
+
+    if (mutation.isPending) { return; }
     setValidation(null);
     const parsed =
       step === 'profile'
         ? OnboardingProfileSchema.safeParse(profile)
         : OnboardingPreferencesSchema.safeParse(preferences);
     if (step !== 'review' && !parsed.success) {
+
       setValidation(parsed.error.issues[0]?.message ?? copy.invalidName);
       const field = parsed.error.issues[0]?.path[0];
       formRef.current
@@ -87,8 +101,10 @@ function OnboardingForm({
         )
         ?.focus();
       return;
+
     }
     try {
+
       const next = await mutation.mutateAsync(
         step === 'profile'
           ? { step, input: profile }
@@ -100,25 +116,41 @@ function OnboardingForm({
       setPreferences(next.preferences);
       dirtyRef.current = false;
       busyRef.current = false;
-      if (step === 'profile' && session)
-        setSession({ ...session, user: { ...session.user, ...next.profile } });
+      if (step === 'profile' && session) {
+
+        const updatedSession = {
+          ...session,
+          user: { ...session.user, ...next.profile },
+        };
+        setSession(updatedSession);
+
+      }
       if (next.completedAt) {
+
         router.replace(resolveOnboardingRedirect(redirectTo));
         router.refresh();
         return;
+
       }
       setStep(next.currentStep);
       headingRef.current?.focus();
+
     } catch {
       /* Preserve profile and preferences after an unsuccessful request. */
     }
+
   }
+
   function select(target: OnboardingStep) {
-    if (dirty || mutation.isPending) return;
+
+    if (dirty || mutation.isPending) { return; }
     setStep(target);
     setValidation(null);
+
   }
-  if (progress.completedAt)
+
+  function renderCompleted() {
+
     return (
       <Message
         title={copy.completedTitle}
@@ -133,45 +165,199 @@ function OnboardingForm({
         }
       />
     );
-  return (
-    <div className="grid max-w-4xl gap-6">
+
+  }
+
+  function renderStepper() {
+
+    const steps = onboardingSteps.map<StepperStep<OnboardingStep>>(
+      (item, itemIndex) => ({
+        key: item.key,
+        label: item.title,
+        description: item.description,
+        state:
+        item.key === step
+          ? 'current'
+          : progress.completedSteps.includes(item.key)
+            ? 'complete'
+            : 'upcoming',
+        stateLabel:
+        item.key === step
+          ? copy.current
+          : progress.completedSteps.includes(item.key)
+            ? copy.complete
+            : copy.upcoming,
+        disabled: dirty || itemIndex > currentProgressStepIndex,
+      }),
+    );
+
+    return (
       <Stepper
         label={copy.stepperLabel}
         orientation="responsive"
         disabled={mutation.isPending}
-        steps={onboardingSteps.map((item, itemIndex) => ({
-          key: item.key,
-          label: item.title,
-          description: item.description,
-          state:
-            item.key === step
-              ? 'current'
-              : progress.completedSteps.includes(item.key)
-                ? 'complete'
-                : 'upcoming',
-          stateLabel:
-            item.key === step
-              ? copy.current
-              : progress.completedSteps.includes(item.key)
-                ? copy.complete
-                : copy.upcoming,
-          disabled:
-            dirty ||
-            itemIndex >
-              onboardingSteps.findIndex(
-                (value) => value.key === progress.currentStep,
-              ),
-        }))}
+        steps={steps}
         onSelect={select}
       />
+    );
+
+  }
+
+  function renderProfileFields() {
+
+    return (
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Field labelText={copy.firstName}>
+          <Input
+            name="firstName"
+            autoComplete="given-name"
+            value={profile.firstName}
+            disabled={mutation.isPending}
+            aria-invalid={Boolean(validation)}
+            aria-describedby={validation ? 'onboarding-error' : undefined}
+            onChange={(event) =>
+              setProfile({ ...profile, firstName: event.target.value })
+            }
+          />
+        </Field>
+        <Field labelText={copy.lastName}>
+          <Input
+            name="lastName"
+            autoComplete="family-name"
+            value={profile.lastName}
+            disabled={mutation.isPending}
+            aria-invalid={Boolean(validation)}
+            aria-describedby={validation ? 'onboarding-error' : undefined}
+            onChange={(event) =>
+              setProfile({ ...profile, lastName: event.target.value })
+            }
+          />
+        </Field>
+      </div>
+    );
+
+  }
+
+  function renderPreferenceFields() {
+
+    return (
+      <>
+        <Field labelText={copy.timezone}>
+          <TimezoneSelect
+            value={preferences.timezone}
+            disabled={mutation.isPending}
+            aria-invalid={Boolean(validation)}
+            aria-describedby={validation ? 'onboarding-error' : undefined}
+            onValueChange={(timezone) =>
+              setPreferences({ ...preferences, timezone })
+            }
+          />
+        </Field>
+        <Switch
+          label={copy.digest}
+          description={copy.digestDescription}
+          checked={preferences.emailDigest}
+          disabled={mutation.isPending}
+          onChange={(event) =>
+            setPreferences({
+              ...preferences,
+              emailDigest: event.target.checked,
+            })
+          }
+        />
+      </>
+    );
+
+  }
+
+  function renderReview() {
+
+    return (
+      <>
+        <p className="m-0 text-sm text-secondary">{copy.reviewDescription}</p>
+        <DescriptionList
+          items={[
+            { label: copy.firstName, value: progress.profile.firstName },
+            { label: copy.lastName, value: progress.profile.lastName },
+            {
+              label: copy.timezone,
+              value: progress.preferences.timezone,
+            },
+            {
+              label: copy.digest,
+              value: progress.preferences.emailDigest
+                ? copy.yes
+                : copy.no,
+            },
+          ]}
+        />
+      </>
+    );
+
+  }
+
+  function renderStepFields() {
+
+    if (step === 'profile') {
+      return renderProfileFields();
+    }
+    if (step === 'preferences') {
+      return renderPreferenceFields();
+    }
+    return renderReview();
+
+  }
+
+  function renderFeedback() {
+
+    if (!validation && !mutation.isError) {
+      return null;
+    }
+    return (
+      <Message
+        id="onboarding-error"
+        title={copy.errorTitle}
+        description={validation ?? mutation.error?.message}
+        intent="danger"
+      />
+    );
+
+  }
+
+  function renderFormActions() {
+
+    return (
+      <FormActions sticky={false} variant="inline">
+        {selectedStepIndex > 0 && (
+          <Button
+            variant="secondary"
+            disabled={mutation.isPending || dirty}
+            onClick={() => select(onboardingSteps[selectedStepIndex - 1].key)}
+          >
+            {copy.back}
+          </Button>
+        )}
+        <Button type="submit" loading={mutation.isPending}>
+          {step === 'review' ? copy.finish : copy.continue}
+        </Button>
+      </FormActions>
+    );
+
+  }
+
+  function renderFormCard() {
+
+    return (
       <Card>
         <form
           ref={formRef}
           noValidate
           className="grid gap-5"
           onSubmit={(event) => {
+
             event.preventDefault();
             void save();
+
           }}
         >
           <h2
@@ -179,112 +365,25 @@ function OnboardingForm({
             tabIndex={-1}
             className="m-0 text-lg font-semibold text-primary"
           >
-            {onboardingSteps[index].title}
+            {onboardingSteps[selectedStepIndex].title}
           </h2>
-          {step === 'profile' && (
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field labelText={copy.firstName}>
-                <Input
-                  name="firstName"
-                  autoComplete="given-name"
-                  value={profile.firstName}
-                  disabled={mutation.isPending}
-                  aria-invalid={Boolean(validation)}
-                  aria-describedby={validation ? 'onboarding-error' : undefined}
-                  onChange={(event) =>
-                    setProfile({ ...profile, firstName: event.target.value })
-                  }
-                />
-              </Field>
-              <Field labelText={copy.lastName}>
-                <Input
-                  name="lastName"
-                  autoComplete="family-name"
-                  value={profile.lastName}
-                  disabled={mutation.isPending}
-                  aria-invalid={Boolean(validation)}
-                  aria-describedby={validation ? 'onboarding-error' : undefined}
-                  onChange={(event) =>
-                    setProfile({ ...profile, lastName: event.target.value })
-                  }
-                />
-              </Field>
-            </div>
-          )}
-          {step === 'preferences' && (
-            <>
-              <Field labelText={copy.timezone}>
-                <TimezoneSelect
-                  value={preferences.timezone}
-                  disabled={mutation.isPending}
-                  aria-invalid={Boolean(validation)}
-                  aria-describedby={validation ? 'onboarding-error' : undefined}
-                  onValueChange={(timezone) =>
-                    setPreferences({ ...preferences, timezone })
-                  }
-                />
-              </Field>
-              <Switch
-                label={copy.digest}
-                description={copy.digestDescription}
-                checked={preferences.emailDigest}
-                disabled={mutation.isPending}
-                onChange={(event) =>
-                  setPreferences({
-                    ...preferences,
-                    emailDigest: event.target.checked,
-                  })
-                }
-              />
-            </>
-          )}
-          {step === 'review' && (
-            <>
-              <p className="m-0 text-sm text-secondary">
-                {copy.reviewDescription}
-              </p>
-              <DescriptionList
-                items={[
-                  { label: copy.firstName, value: progress.profile.firstName },
-                  { label: copy.lastName, value: progress.profile.lastName },
-                  {
-                    label: copy.timezone,
-                    value: progress.preferences.timezone,
-                  },
-                  {
-                    label: copy.digest,
-                    value: progress.preferences.emailDigest
-                      ? copy.yes
-                      : copy.no,
-                  },
-                ]}
-              />
-            </>
-          )}
-          {(validation || mutation.isError) && (
-            <Message
-              id="onboarding-error"
-              title={copy.errorTitle}
-              description={validation ?? mutation.error?.message}
-              intent="danger"
-            />
-          )}
-          <FormActions sticky={false} variant="inline">
-            {index > 0 && (
-              <Button
-                variant="secondary"
-                disabled={mutation.isPending || dirty}
-                onClick={() => select(onboardingSteps[index - 1].key)}
-              >
-                {copy.back}
-              </Button>
-            )}
-            <Button type="submit" loading={mutation.isPending}>
-              {step === 'review' ? copy.finish : copy.continue}
-            </Button>
-          </FormActions>
+          {renderStepFields()}
+          {renderFeedback()}
+          {renderFormActions()}
         </form>
       </Card>
+    );
+
+  }
+
+  if (progress.completedAt) {
+    return renderCompleted();
+  }
+  return (
+    <div className="grid max-w-4xl gap-6">
+      {renderStepper()}
+      {renderFormCard()}
     </div>
   );
+
 }

@@ -1,5 +1,6 @@
 'use client';
 
+import type { DirectoryMultiFiltersProps } from '../models/directoryMultiFiltersProps';
 import { useCallback, useRef } from 'react';
 import {
   useDirectoryFilters,
@@ -10,22 +11,6 @@ import { IconButton } from './IconButton';
 import { MultiSelect } from './MultiSelect';
 import { UiIcon } from './UiIcon';
 
-interface DirectoryMultiFiltersProps<Status extends string> {
-  id: string;
-  value: DirectoryFiltersValue<Status[]>;
-  onChange: (value: { query: string; status: Status[] }) => void;
-  statuses: readonly { value: Status; label: string }[];
-  copy: {
-    search: string;
-    placeholder: string;
-    clear: string;
-    status: string;
-    allStatuses: string;
-    selected: (count: number) => string;
-    clearStatuses: string;
-  };
-}
-
 export function DirectoryMultiFilters<Status extends string>({
   id,
   value,
@@ -33,6 +18,7 @@ export function DirectoryMultiFilters<Status extends string>({
   statuses,
   copy,
 }: DirectoryMultiFiltersProps<Status>) {
+
   const apply = useCallback(
     (next: DirectoryFiltersValue<Status[]>) =>
       onChange({ ...next, status: next.status ?? [] }),
@@ -71,8 +57,10 @@ export function DirectoryMultiFilters<Status extends string>({
             variant="ghost"
             label={copy.clear}
             onClick={() => {
+
               filters.clear();
               inputRef.current?.focus();
+
             }}
           >
             <UiIcon name="close" className="size-4" />
@@ -95,4 +83,5 @@ export function DirectoryMultiFilters<Status extends string>({
       </div>
     </form>
   );
+
 }

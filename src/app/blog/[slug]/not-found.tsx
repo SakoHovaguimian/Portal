@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import { Button, EmptyState } from '@/components/ui';
 import { portalPublishingStrings } from '@/strings';
+
 const copy = portalPublishingStrings.article;
 export default function ArticleNotFound() {
+
   return (
     <main className="grid min-h-96 justify-items-center gap-6 py-24">
       <EmptyState
@@ -14,4 +16,5 @@ export default function ArticleNotFound() {
       </Button>
     </main>
   );
+
 }

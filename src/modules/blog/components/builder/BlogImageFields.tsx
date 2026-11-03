@@ -1,7 +1,6 @@
 'use client';
-import { portalPublishingStrings } from '@/strings';
-const copy = portalPublishingStrings.builder;
 
+import { portalPublishingStrings } from '@/strings';
 import { BlogContentImage } from '../BlogContentImage';
 import {
   Button,
@@ -11,21 +10,14 @@ import {
   Message,
   UiIcon,
 } from '@/components/ui';
-import type { BlogReadableImage } from '../../models/blogImage';
-import { isBlogImageUrl } from '../../models/blogContentUrl';
+import { isBlogImageUrl } from '../../models/blogImageUrl';
+import type { BlogImageFieldsProps } from '../../models/blogImageFieldsProps';
 import { blogImageMimeTypes } from '../../models/blogMedia';
 import styles from '../../Blog.module.css';
 import { useBlogImageUpload } from '../../useBlogImageUpload';
 
-interface BlogImageFieldsProps {
-  image: BlogReadableImage;
-  fieldId: string;
-  disabled: boolean;
-  errorKeys?: string[];
-  errorId?: string;
-  onChangeAction: (image: BlogReadableImage) => void;
-  onUploadStateChangeAction: (busy: boolean) => void;
-}
+const copy = portalPublishingStrings.builder;
+
 export function BlogImageFields({
   image,
   fieldId,
@@ -35,6 +27,7 @@ export function BlogImageFields({
   onChangeAction,
   onUploadStateChangeAction,
 }: BlogImageFieldsProps) {
+
   const { picker, trigger, uploading, failure, setFailure, upload, cancel } =
     useBlogImageUpload({
       disabled,
@@ -100,8 +93,10 @@ export function BlogImageFields({
           value={image.src}
           maxLength={2000}
           onChange={(event) => {
+
             setFailure('');
             onChangeAction({ ...image, src: event.target.value });
+
           }}
         />
       </Field>
@@ -136,4 +131,5 @@ export function BlogImageFields({
       </Field>
     </div>
   );
+
 }

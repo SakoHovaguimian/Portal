@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { DeliveryStatusSchema } from './notificationDelivery';
+import { DeliveryStatusSchema } from './deliveryStatus';
 
 export const NotificationDeliveryAttemptSchema = z.object({
   id: z.string().uuid(),
@@ -10,6 +10,7 @@ export const NotificationDeliveryAttemptSchema = z.object({
   retryable: z.boolean().nullable(),
   error: z.string().nullable(),
 });
+
 export type NotificationDeliveryAttempt = z.infer<
   typeof NotificationDeliveryAttemptSchema
 >;

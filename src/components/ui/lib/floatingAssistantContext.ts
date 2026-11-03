@@ -6,14 +6,16 @@ import type { FloatingAssistantEntry } from '../models/floatingAssistantEntry';
 
 export const FloatingAssistantContext = createContext<{
   activeId: string | null;
-  register: (entry: FloatingAssistantEntry) => void;
+  register:(entry: FloatingAssistantEntry) => void;
   unregister: (id: string) => void;
   close: () => void;
   focusLauncher: () => void;
-} | null>(null);
+    } | null>(null);
 
 export function useFloatingAssistantContext() {
+
   const context = useContext(FloatingAssistantContext);
-  if (!context) throw new Error(strings.errors.provider);
+  if (!context) { throw new Error(strings.errors.provider); }
   return context;
+
 }

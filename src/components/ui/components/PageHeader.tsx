@@ -1,5 +1,4 @@
-import type { ReactNode, Ref } from 'react';
-import type { BreadcrumbItem } from '../models/breadcrumbItem';
+import type { PageHeaderProps } from '../models/pageHeaderProps';
 import { Breadcrumbs } from './Breadcrumbs';
 
 // The single h1 for a page: location, title, supporting copy, facts, and actions.
@@ -15,19 +14,8 @@ export function PageHeader({
   headingRef,
   headingLevel = 'h1',
   onNavigate,
-}: {
-  title: string;
-  description?: string;
-  descriptionAction?: ReactNode;
-  eyebrow?: string;
-  icon?: ReactNode;
-  action?: ReactNode;
-  breadcrumbs?: BreadcrumbItem[];
-  meta?: ReactNode;
-  headingRef?: Ref<HTMLHeadingElement>;
-  headingLevel?: 'h1' | 'h2' | 'h3';
-  onNavigate?: (href: string) => void;
-}) {
+}: PageHeaderProps) {
+
   const Heading = headingLevel;
   return (
     <header className="ui-page-header @container grid min-w-0 gap-4">
@@ -71,4 +59,5 @@ export function PageHeader({
       </div>
     </header>
   );
+
 }

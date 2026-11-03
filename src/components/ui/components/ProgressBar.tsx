@@ -18,6 +18,7 @@ export function ProgressBar({
   className,
   ...props
 }: ProgressBarProps) {
+
   const helpId = useId();
   const describedBy =
     [props['aria-describedby'], description ? helpId : undefined]
@@ -61,4 +62,5 @@ export function ProgressBar({
       </AriaProgressBar>
     </I18nProvider>
   );
+
 }

@@ -6,9 +6,11 @@ export function SectionCard({
   className,
   ...props
 }: ComponentProps<typeof FormSection>) {
+
   return (
     <Card className={className}>
       <FormSection {...props} />
     </Card>
   );
+
 }

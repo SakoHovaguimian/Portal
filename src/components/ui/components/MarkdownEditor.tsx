@@ -1,5 +1,6 @@
 'use client';
 
+import type { MarkdownEditorProps } from '../models/markdownEditorProps';
 import { useId, useState } from 'react';
 import { strings } from '@/strings';
 import { useMarkdownEditor } from '../lib/useMarkdownEditor';
@@ -11,16 +12,6 @@ import { TextArea } from './TextArea';
 
 const views = { write: 'write', preview: 'preview', split: 'split' } as const;
 
-interface MarkdownEditorProps {
-  id?: string;
-  value: string;
-  onValueChange: (value: string) => void;
-  disabled?: boolean;
-  required?: boolean;
-  maxLength?: number;
-  'aria-labelledby'?: string;
-}
-
 export function MarkdownEditor({
   id,
   value,
@@ -30,6 +21,7 @@ export function MarkdownEditor({
   maxLength = 100000,
   'aria-labelledby': labelledBy,
 }: MarkdownEditorProps) {
+
   const generated = useId();
   const inputId = id ?? generated;
   const [mode, setMode] = useState<'write' | 'preview' | 'split'>('write');
@@ -44,6 +36,22 @@ export function MarkdownEditor({
     write,
   } = useMarkdownEditor(value, onValueChange, maxLength, disabled);
   const copy = strings.markdownEditor;
+
+  function renderSyntaxHint(item: (typeof copy.syntax)[number]) {
+
+    return (
+      <div key={item.label} className="grid min-w-0 gap-1">
+        <span className="font-medium">{item.label}</span>
+        <code className="whitespace-pre-wrap font-mono text-xs wrap-anywhere">
+          {item.example}
+        </code>
+      </div>
+    );
+
+  }
+
+  const syntaxHints = copy.syntax.map(renderSyntaxHint);
+
   return (
     <div className="@container grid min-w-0 gap-3 font-normal">
       <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
@@ -137,16 +145,10 @@ export function MarkdownEditor({
           {copy.guide}
         </summary>
         <div className="mt-2 grid min-w-0 gap-3 rounded-control border-control border-secondary bg-secondary_subtle p-4 sm:grid-cols-2">
-          {copy.syntax.map((item) => (
-            <div key={item.label} className="grid min-w-0 gap-1">
-              <span className="font-medium">{item.label}</span>
-              <code className="whitespace-pre-wrap font-mono text-xs wrap-anywhere">
-                {item.example}
-              </code>
-            </div>
-          ))}
+          {syntaxHints}
         </div>
       </details>
     </div>
   );
+
 }

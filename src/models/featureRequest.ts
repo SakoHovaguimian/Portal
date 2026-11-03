@@ -16,6 +16,7 @@ export const FeatureRequestMutationInputSchema = z.object({
 });
 
 export type FeatureRequest = z.infer<typeof FeatureRequestSchema>;
+
 export type FeatureRequestMutationInput = z.infer<
   typeof FeatureRequestMutationInputSchema
 >;

@@ -6,9 +6,12 @@ import { useSyncExternalStore } from 'react';
 const compactQuery = '(width < 600px)';
 
 function subscribeCompact(onChange: () => void) {
+
   const query = window.matchMedia(compactQuery);
   query.addEventListener('change', onChange);
-  return () => query.removeEventListener('change', onChange);
+  const cleanup = () => query.removeEventListener('change', onChange);
+  return cleanup;
+
 }
 
 function compactSnapshot() {
@@ -20,9 +23,11 @@ function serverSnapshot() {
 }
 
 export function useCompactSectionNavigation() {
+
   return useSyncExternalStore(
     subscribeCompact,
     compactSnapshot,
     serverSnapshot,
   );
+
 }

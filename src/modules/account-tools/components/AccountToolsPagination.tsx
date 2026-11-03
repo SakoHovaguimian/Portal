@@ -1,20 +1,19 @@
 import { useEffect } from 'react';
-import { DirectoryPagination, type DirectoryPage } from '@/components/ui';
+import { DirectoryPagination } from '@/components/ui';
 import { portalAccountToolsStrings as copy } from '@/strings';
+import type { AccountToolsPaginationProps } from '../models/accountToolsPaginationProps';
 
 export function AccountToolsPagination({
   page,
   count,
   busy,
   onNavigate,
-}: {
-  page: DirectoryPage;
-  count: number;
-  busy: boolean;
-  onNavigate: (offset: number) => void;
-}) {
+}: AccountToolsPaginationProps) {
+
   useEffect(() => {
-    if (!busy && count === 0 && page.offset > 0) onNavigate(0);
+
+    if (!busy && count === 0 && page.offset > 0) { onNavigate(0); }
+
   }, [busy, count, page.offset, onNavigate]);
   return (
     <DirectoryPagination
@@ -26,4 +25,5 @@ export function AccountToolsPagination({
       onNavigate={onNavigate}
     />
   );
+
 }

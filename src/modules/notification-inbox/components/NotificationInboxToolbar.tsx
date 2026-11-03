@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import { Button, Card, SegmentedTabs, UiIcon } from '@/components/ui';
 import { portalNotificationInboxStrings as copy } from '@/strings';
-import type { NotificationInboxQuery } from '../models/notificationInboxQuery';
-import type { NotificationCounts } from '../models/notificationCounts';
+import type { NotificationInboxView } from '../models/notificationInboxView';
+import type { NotificationInboxToolbarProps } from '../models/notificationInboxToolbarProps';
 import { NotificationDirectoryFilters } from './NotificationDirectoryFilters';
 
-type InboxView = 'all' | 'unread' | 'read';
-const allView: InboxView = 'all';
-const unreadView: InboxView = 'unread';
-const readView: InboxView = 'read';
+const allView: NotificationInboxView = 'all';
+const unreadView: NotificationInboxView = 'unread';
+const readView: NotificationInboxView = 'read';
 
 export function NotificationInboxToolbar({
   query,
@@ -19,23 +18,22 @@ export function NotificationInboxToolbar({
   update,
   onReadAll,
   onArchiveAll,
-}: {
-  query: NotificationInboxQuery;
-  counts?: NotificationCounts;
-  filtered: boolean;
-  busy: boolean;
-  hasNotifications: boolean;
-  update: (values: Record<string, string | undefined>) => void;
-  onReadAll: (read: boolean) => void;
-  onArchiveAll: () => void;
-}) {
+}: NotificationInboxToolbarProps) {
+
   const [expanded, setExpanded] = useState(false);
-  const view: InboxView =
+  const view: NotificationInboxView =
     query.read === undefined ? 'all' : query.read ? 'read' : 'unread';
+
+  const toggleExpanded = () => {
+
+    const toggleExpandedValue = (value: boolean) => !value;
+    setExpanded(toggleExpandedValue);
+
+  };
   return (
     <Card className="grid gap-5">
       <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
-        <SegmentedTabs<InboxView>
+        <SegmentedTabs<NotificationInboxView>
           value={view}
           label={copy.viewLabel}
           disabled={busy}
@@ -70,7 +68,7 @@ export function NotificationInboxToolbar({
           className="px-3"
           aria-expanded={expanded}
           aria-controls={expanded ? 'notification-bulk-actions' : undefined}
-          onClick={() => setExpanded((value) => !value)}
+          onClick={toggleExpanded}
         >
           <UiIcon name="layers" />
           {copy.manageAction}
@@ -126,4 +124,5 @@ export function NotificationInboxToolbar({
       )}
     </Card>
   );
+
 }

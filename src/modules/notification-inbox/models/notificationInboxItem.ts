@@ -12,4 +12,5 @@ export const NotificationInboxItemSchema = z.object({
   publishedAt: z.iso.datetime({ offset: true }).nullable(),
   readAt: z.iso.datetime({ offset: true }).nullable(),
 });
+
 export type NotificationInboxItem = z.infer<typeof NotificationInboxItemSchema>;

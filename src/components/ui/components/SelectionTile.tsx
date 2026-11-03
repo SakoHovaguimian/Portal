@@ -1,4 +1,4 @@
-import type { ComponentPropsWithRef, ReactNode } from 'react';
+import type { SelectionTileProps } from '../models/selectionTileProps';
 import { cn } from '../lib/cn';
 import { Checkbox } from './Checkbox';
 
@@ -8,11 +8,8 @@ export function SelectionTile({
   description,
   className,
   ...props
-}: Omit<ComponentPropsWithRef<'input'>, 'type'> & {
-  label: string;
-  icon?: ReactNode;
-  description?: string;
-}) {
+}: SelectionTileProps) {
+
   return (
     <Checkbox
       {...props}
@@ -40,4 +37,5 @@ export function SelectionTile({
       }
     />
   );
+
 }

@@ -7,13 +7,20 @@ export const NotificationArchiveInputSchema = z.discriminatedUnion('scope', [
   z
     .object({
       scope: z.literal('FILTERED'),
-      filters: NotificationInboxFiltersSchema.refine(
-        (value) => Object.values(value).some((item) => item !== undefined),
-        copy.validation.filters,
-      ),
+      filters: NotificationInboxFiltersSchema.refine((value) => {
+
+        const filterValues = Object.values(value);
+        const hasActiveFilter = filterValues.some(
+          (item) => item !== undefined,
+        );
+
+        return hasActiveFilter;
+
+      }, copy.validation.filters),
     })
     .strict(),
 ]);
+
 export type NotificationArchiveInput = z.infer<
   typeof NotificationArchiveInputSchema
 >;

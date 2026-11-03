@@ -1,12 +1,7 @@
 'use client';
 
-import {
-  cloneElement,
-  isValidElement,
-  useId,
-  type ReactElement,
-  type ReactNode,
-} from 'react';
+import type { FieldProps } from '../models/fieldProps';
+import { cloneElement, isValidElement, useId, type ReactElement } from 'react';
 import { cn } from '../lib/cn';
 
 export function Field({
@@ -14,13 +9,8 @@ export function Field({
   children,
   className,
   orientation = 'vertical',
-}: {
-  labelText: string;
-  children: ReactNode;
-  className?: string;
-  // Inline places a compact label beside its control, e.g. in toolbars.
-  orientation?: 'vertical' | 'inline';
-}) {
+}: FieldProps) {
+
   const generatedId = useId();
   const control = isValidElement<{ id?: string; 'aria-labelledby'?: string }>(
     children,
@@ -52,8 +42,9 @@ export function Field({
               'aria-labelledby':
                 control.props['aria-labelledby'] ?? `${id}-label`,
             },
-          )
+        )
         : children}
     </div>
   );
+
 }

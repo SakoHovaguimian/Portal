@@ -9,16 +9,22 @@ export function Slider({
   onValueCommit,
   ...props
 }: SliderProps) {
+
   return (
     <SliderControl
       {...props}
       names={name ? [name] : undefined}
       onValueChange={(value) => {
-        if (typeof value === 'number') onValueChange?.(value);
+
+        if (typeof value === 'number') { onValueChange?.(value); }
+
       }}
       onValueCommit={(value) => {
-        if (typeof value === 'number') onValueCommit?.(value);
+
+        if (typeof value === 'number') { onValueCommit?.(value); }
+
       }}
     />
   );
+
 }

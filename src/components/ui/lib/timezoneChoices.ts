@@ -21,17 +21,25 @@ const supported = new Set([
   ...featuredTimezones.map((item) => item.code),
 ]);
 export function defaultPortalTimezone() {
+
   const code = Intl.DateTimeFormat().resolvedOptions().timeZone;
   return supported.has(code) ? code : 'UTC';
+
 }
 supported.add('UTC');
 
 export const timezoneChoices = Array.from(supported)
   .sort()
-  .map((code) => ({
-    code,
-    label: strings.address.timezoneOption(
-      featuredTimezones.find((item) => item.code === code)?.label,
+  .map((code) => {
+
+    const timezoneChoice = ({
       code,
-    ),
-  }));
+      label: strings.address.timezoneOption(
+        featuredTimezones.find((item) => item.code === code)?.label,
+        code,
+      ),
+    });
+
+    return timezoneChoice;
+
+  });

@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { MetricCardProps } from '../models/metricCardProps';
 import { Card } from './Card';
 import { IconTile } from './IconTile';
 import { UiIcon } from './UiIcon';
@@ -10,13 +10,8 @@ export function MetricCard({
   caption,
   icon,
   change,
-}: {
-  eyebrow: string;
-  value: string;
-  caption: string;
-  icon?: ReactNode;
-  change?: string;
-}) {
+}: MetricCardProps) {
+
   return (
     <Card className="grid gap-3 p-4 sm:p-4">
       <p className="m-0 text-xs font-medium text-tertiary">{eyebrow}</p>
@@ -37,4 +32,5 @@ export function MetricCard({
       </div>
     </Card>
   );
+
 }

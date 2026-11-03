@@ -12,17 +12,25 @@ const titleCaseRule = {
     },
   },
   create(context) {
-    return {
+
+    const visitors = {
       Program() {
+
         for (const violation of titleCaseViolations(context.sourceCode.text)) {
+
           context.report({
             loc: { line: violation.line, column: violation.column - 1 },
             messageId: 'titleCase',
             data: { key: violation.key, expected: violation.expected },
           });
+
         }
+
       },
     };
+
+    return visitors;
+
   },
 };
 

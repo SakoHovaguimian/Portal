@@ -1,4 +1,5 @@
 import type { SavedQuery } from './models/savedQuery';
+
 export const engagementQueryKeys = {
   all: ['portal', 'engagement'] as const,
   saved: (query: SavedQuery) =>

@@ -32,7 +32,12 @@ export function Select({
   'aria-invalid': invalid,
   ...props
 }: SelectProps) {
+
   const options = selectOptions(children);
+  const disabledOptionKeys = options
+    .filter((option) => option.disabled)
+    .map((option) => option.value);
+
   return (
     <AriaSelect
       id={id}
@@ -43,9 +48,7 @@ export function Select({
       defaultSelectedKey={String(defaultValue ?? options[0]?.value ?? '')}
       onSelectionChange={(key) => onValueChange?.(String(key ?? ''))}
       onOpenChange={onOpenChange}
-      disabledKeys={options
-        .filter((option) => option.disabled)
-        .map((option) => option.value)}
+      disabledKeys={disabledOptionKeys}
       isDisabled={disabled}
       isRequired={required}
       isInvalid={invalid === true || invalid === 'true'}
@@ -117,4 +120,5 @@ export function Select({
       </Popover>
     </AriaSelect>
   );
+
 }

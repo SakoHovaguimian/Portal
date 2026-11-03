@@ -1,8 +1,7 @@
-import type { ThemeMode } from '@/models/appearance';
-import type { ThemeId } from '@/models/themeId';
 import { getThemePreviewStyle } from '@/themes';
 import { strings } from '@/strings';
 import styles from './ThemeStudio.module.css';
+import type { ThemePreviewProps } from '../models/themePreviewProps';
 
 const copy = strings.designSystem.themeStudio;
 
@@ -10,10 +9,8 @@ const copy = strings.designSystem.themeStudio;
 export function ThemePreview({
   themeId,
   mode,
-}: {
-  themeId: ThemeId;
-  mode: ThemeMode;
-}) {
+}: ThemePreviewProps) {
+
   return (
     <span
       aria-hidden="true"
@@ -41,4 +38,5 @@ export function ThemePreview({
       </span>
     </span>
   );
+
 }

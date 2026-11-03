@@ -24,8 +24,10 @@ import { NotificationRecord } from './components/NotificationRecord';
 import { NotificationInboxToolbar } from './components/NotificationInboxToolbar';
 import { NotificationControls } from '@/services/notifications/components/NotificationControls';
 import { NotificationInboxSummary } from './components/NotificationInboxSummary';
+import type { NotificationInboxItem } from './models/notificationInboxItem';
 
 export function NotificationInboxScreen() {
+
   const directory = useNotificationDirectory();
   const query = useNotificationInbox(directory.query);
   const filters = notificationInboxFilters(directory.query);
@@ -39,16 +41,19 @@ export function NotificationInboxScreen() {
   const actions = useNotificationActions(filters);
   const { confirmNavigation } = useNavigationGuard();
   useEffect(() => {
+
     if (
       query.isSuccess &&
       !query.isFetching &&
       query.data.data.length === 0 &&
       directory.query.offset > 0
-    )
-      directory.setOffset(0);
+    ) { directory.setOffset(0); }
+
   }, [query.isSuccess, query.isFetching, query.data, directory]);
-  return (
-    <Page>
+
+  function renderHeader() {
+
+    return (
       <PageHeader
         title={copy.title}
         description={copy.description}
@@ -81,7 +86,96 @@ export function NotificationInboxScreen() {
           </div>
         }
       />
-      <NotificationControls />
+    );
+
+  }
+
+  function renderNotificationRow(item: NotificationInboxItem) {
+
+    return (
+      <li key={item.id} className="min-w-0">
+        <NotificationRecord
+          item={item}
+          busy={actions.busy}
+          onRead={actions.readItem}
+          onArchive={actions.archiveItem}
+        />
+      </li>
+    );
+
+  }
+
+  function renderNotificationList(items: NotificationInboxItem[]) {
+
+    const notificationRows = items.map(renderNotificationRow);
+    return (
+      <ul className="m-0 grid min-w-0 list-none gap-4 p-0">
+        {notificationRows}
+      </ul>
+    );
+
+  }
+
+  function renderEmptyState() {
+
+    return (
+      <Card>
+        <EmptyState
+          variant="plain"
+          title={filtered ? copy.noResultsTitle : copy.emptyTitle}
+          description={filtered ? copy.noResultsHint : copy.emptyHint}
+          action={
+            filtered && (
+              <Button variant="secondary" onClick={directory.clearFilters}>
+                {copy.clearFiltersAction}
+              </Button>
+            )
+          }
+        />
+      </Card>
+    );
+
+  }
+
+  function renderResults() {
+
+    return (
+      <section
+        id="notification-results"
+        aria-label={copy.resultsLabel}
+        aria-busy={query.isFetching || actions.busy}
+        className="relative grid min-w-0 gap-4"
+      >
+        <span
+          aria-hidden="true"
+          data-active={query.isFetching || actions.busy || undefined}
+          className="ui-progress-line"
+        />
+        <span role="status" aria-live="polite" className="sr-only">
+          {query.isFetching || actions.busy ? copy.loadingTitle : ''}
+        </span>
+        <QueryBoundary
+          query={query}
+          loadingFallback={
+            <Card className="grid min-h-64 place-items-center">
+              <InlineLoading message={copy.loadingTitle} />
+            </Card>
+          }
+        >
+          {(result) =>
+            result.data.length
+              ? renderNotificationList(result.data)
+              : renderEmptyState()
+          }
+        </QueryBoundary>
+      </section>
+    );
+
+  }
+
+  function renderInboxContent() {
+
+    return (
       <div className="grid min-w-0 gap-6">
         <NotificationInboxToolbar
           query={directory.query}
@@ -96,64 +190,7 @@ export function NotificationInboxScreen() {
           onArchiveAll={actions.archiveAll}
         />
         <MutationError error={actions.error} />
-        <section
-          id="notification-results"
-          aria-label={copy.resultsLabel}
-          aria-busy={query.isFetching || actions.busy}
-          className="relative grid min-w-0 gap-4"
-        >
-          <span
-            aria-hidden="true"
-            data-active={query.isFetching || actions.busy || undefined}
-            className="ui-progress-line"
-          />
-          <span role="status" aria-live="polite" className="sr-only">
-            {query.isFetching || actions.busy ? copy.loadingTitle : ''}
-          </span>
-          <QueryBoundary
-            query={query}
-            loadingFallback={
-              <Card className="grid min-h-64 place-items-center">
-                <InlineLoading message={copy.loadingTitle} />
-              </Card>
-            }
-          >
-            {(result) =>
-              result.data.length ? (
-                <ul className="m-0 grid min-w-0 list-none gap-4 p-0">
-                  {result.data.map((item) => (
-                    <li key={item.id} className="min-w-0">
-                      <NotificationRecord
-                        item={item}
-                        busy={actions.busy}
-                        onRead={actions.readItem}
-                        onArchive={actions.archiveItem}
-                      />
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <Card>
-                  <EmptyState
-                    variant="plain"
-                    title={filtered ? copy.noResultsTitle : copy.emptyTitle}
-                    description={filtered ? copy.noResultsHint : copy.emptyHint}
-                    action={
-                      filtered && (
-                        <Button
-                          variant="secondary"
-                          onClick={directory.clearFilters}
-                        >
-                          {copy.clearFiltersAction}
-                        </Button>
-                      )
-                    }
-                  />
-                </Card>
-              )
-            }
-          </QueryBoundary>
-        </section>
+        {renderResults()}
         {query.data && (
           <div className="min-w-0 border-t border-secondary pt-4">
             <DirectoryPagination
@@ -167,6 +204,16 @@ export function NotificationInboxScreen() {
           </div>
         )}
       </div>
+    );
+
+  }
+
+  return (
+    <Page>
+      {renderHeader()}
+      <NotificationControls />
+      {renderInboxContent()}
     </Page>
   );
+
 }

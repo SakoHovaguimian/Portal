@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { MobileRecordRowProps } from '../models/mobileRecordRowProps';
 import { cn } from '../lib/cn';
 
 // Compact record summaries keep facts below the identity and status at the end.
@@ -10,15 +10,8 @@ export function MobileRecordRow({
   footer,
   summary,
   className,
-}: {
-  title: ReactNode;
-  leading?: ReactNode;
-  description?: ReactNode;
-  children?: ReactNode;
-  footer?: ReactNode;
-  summary?: ReactNode;
-  className?: string;
-}) {
+}: MobileRecordRowProps) {
+
   return (
     <div className={cn('grid min-w-0 gap-4 p-4', className)}>
       <div className="grid min-w-0 gap-1">
@@ -43,4 +36,5 @@ export function MobileRecordRow({
       )}
     </div>
   );
+
 }

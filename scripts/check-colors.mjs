@@ -14,43 +14,61 @@ const fixedPaletteUtility =
   /\b(?:bg|text|border|ring|outline|fill|stroke|shadow|from|via|to)-(?:white|black|slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)(?:-\d+)?(?=[\s/'"`]|$)/;
 
 function sourceFiles(directory) {
-  return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+
+  const files = fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+
     const file = path.join(directory, entry.name);
     return entry.isDirectory()
       ? sourceFiles(file)
       : /\.(?:css|[cm]?[jt]sx?)$/.test(entry.name)
         ? [file]
         : [];
+
   });
+
+  return files;
+
 }
 
 function colorViolations(file) {
+
   const isThemeSource = file.startsWith(`${themeDirectory}${path.sep}`);
-  return fs
+  const violations = fs
     .readFileSync(file, 'utf8')
     .split('\n')
     .flatMap((line, index) => {
+
       const failures = [];
       // Typed themes own palettes; components still consume semantic roles.
       if (
         !isThemeSource &&
         (literalColor.test(line) || fixedPaletteUtility.test(line))
       ) {
+
         failures.push(
           `${file}:${index + 1}: Use a semantic color token from the theme adapter.`,
         );
+
       }
       for (const match of line.matchAll(
         /var\((--(?:color-|landing-|dashboard-shell-)[\w-]+)(?=[,)\s])/g,
       )) {
+
         if (!themeTokens.has(match[1])) {
+
           failures.push(
             `${file}:${index + 1}: Define ${match[1]} in src/app/theme.css.`,
           );
+
         }
+
       }
       return failures;
+
     });
+
+  return violations;
+
 }
 
 const failures = sourceFiles('src')
@@ -58,8 +76,10 @@ const failures = sourceFiles('src')
   .flatMap(colorViolations);
 
 if (failures.length) {
+
   failures.forEach((failure) => console.error(failure));
   process.exitCode = 1;
+
 } else {
   console.log('Theme color check passed.');
 }

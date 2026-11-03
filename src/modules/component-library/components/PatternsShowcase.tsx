@@ -15,14 +15,16 @@ import {
   PageHeader,
   SplitSection,
   Stepper,
+  type StepperStep,
   UiIcon,
 } from '@/components/ui';
 import { strings } from '@/strings';
 import { ShowcaseSection } from './ShowcaseSection';
+import { stepKeys, type StepKey } from '../models/stepKey';
+import type { SpecimenProps } from '../models/specimenProps';
+import type { PatternListItem } from '../models/patternListItem';
 
 const copy = strings.componentLibrary;
-const stepKeys = ['details', 'settings', 'review'] as const;
-type StepKey = (typeof stepKeys)[number];
 const rows = [
   { id: 'flower', name: copy.categoryLabels.flower, live: true },
   { id: 'edibles', name: copy.categoryLabels.edibles, live: true },
@@ -34,11 +36,8 @@ function Specimen({
   title,
   description,
   children,
-}: {
-  title: string;
-  description: string;
-  children: React.ReactNode;
-}) {
+}: SpecimenProps) {
+
   return (
     <div className="grid min-w-0 gap-3">
       <div className="grid gap-0.5">
@@ -50,18 +49,17 @@ function Specimen({
       </div>
     </div>
   );
+
 }
 
 export function PatternsShowcase() {
+
   const [step, setStep] = useState<StepKey>('settings');
   const current = stepKeys.indexOf(step);
-  return (
-    <ShowcaseSection
-      id="patterns"
-      title={copy.patterns}
-      description={copy.patternsHint}
-      icon="layers"
-    >
+
+  function renderHeaderPattern() {
+
+    return (
       <Specimen
         title={copy.patternLabels.header}
         description={copy.patternHints.header}
@@ -97,6 +95,13 @@ export function PatternsShowcase() {
           }
         />
       </Specimen>
+    );
+
+  }
+
+  function renderSplitFormPattern() {
+
+    return (
       <Specimen
         title={copy.patternLabels.split}
         description={copy.patternHints.split}
@@ -116,6 +121,13 @@ export function PatternsShowcase() {
           </div>
         </SplitSection>
       </Specimen>
+    );
+
+  }
+
+  function renderDirectoryPattern() {
+
+    return (
       <Specimen
         title={copy.patternLabels.panel}
         description={copy.patternHints.panel}
@@ -171,39 +183,90 @@ export function PatternsShowcase() {
           />
         </DataPanel>
       </Specimen>
+    );
+
+  }
+
+  function renderListAndStepperPatterns() {
+
+    const horizontalSteps: StepperStep<StepKey>[] = stepKeys.map((key, index) => ({
+      key,
+      label: copy.sampleSteps[index],
+      description: copy.sampleStepHints[index],
+      state:
+                    index < current
+                      ? 'complete'
+                      : index === current
+                        ? 'current'
+                        : 'upcoming',
+      stateLabel:
+                    index < current
+                      ? strings.address.ready
+                      : index === current
+                        ? strings.address.current
+                        : strings.address.notSaved,
+    }));
+
+    const verticalSteps: StepperStep<StepKey>[] = stepKeys.map((key, index) => ({
+      key,
+      label: copy.sampleSteps[index],
+      description: copy.sampleStepHints[index],
+      state:
+                    index < current
+                      ? 'complete'
+                      : index === current
+                        ? 'current'
+                        : 'upcoming',
+      stateLabel:
+                    index < current
+                      ? strings.address.ready
+                      : index === current
+                        ? strings.address.current
+                        : strings.address.notSaved,
+    }));
+
+    function renderStatusRow(item: PatternListItem) {
+
+      return (
+        <li key={item.label}>
+          <ListRow
+            leading={
+              <IconTile
+                size="sm"
+                intent={item.ok ? 'success' : 'warning'}
+              >
+                <UiIcon
+                  name={item.ok ? 'check' : 'warning'}
+                  className="size-4"
+                />
+              </IconTile>
+            }
+            title={item.label}
+            description={item.hint}
+            trailing={
+              <Badge dot intent={item.ok ? 'success' : 'warning'}>
+                {item.ok ? copy.active : copy.draft}
+              </Badge>
+            }
+          />
+        </li>
+      );
+
+    }
+
+    const statusRows = [
+      { label: copy.successTitle, hint: copy.successHint, ok: true },
+      { label: copy.warningTitle, hint: copy.warningHint, ok: false },
+    ].map(renderStatusRow);
+
+    return (
       <div className="grid min-w-0 gap-6">
         <Specimen
           title={copy.patternLabels.list}
           description={copy.patternHints.list}
         >
           <ListGroup>
-            {[
-              { label: copy.successTitle, hint: copy.successHint, ok: true },
-              { label: copy.warningTitle, hint: copy.warningHint, ok: false },
-            ].map((item) => (
-              <li key={item.label}>
-                <ListRow
-                  leading={
-                    <IconTile
-                      size="sm"
-                      intent={item.ok ? 'success' : 'warning'}
-                    >
-                      <UiIcon
-                        name={item.ok ? 'check' : 'warning'}
-                        className="size-4"
-                      />
-                    </IconTile>
-                  }
-                  title={item.label}
-                  description={item.hint}
-                  trailing={
-                    <Badge dot intent={item.ok ? 'success' : 'warning'}>
-                      {item.ok ? copy.active : copy.draft}
-                    </Badge>
-                  }
-                />
-              </li>
-            ))}
+            {statusRows}
           </ListGroup>
         </Specimen>
         <Specimen
@@ -218,23 +281,7 @@ export function PatternsShowcase() {
               <Stepper
                 label={copy.patternLabels.stepper}
                 onSelect={setStep}
-                steps={stepKeys.map((key, index) => ({
-                  key,
-                  label: copy.sampleSteps[index],
-                  description: copy.sampleStepHints[index],
-                  state:
-                    index < current
-                      ? 'complete'
-                      : index === current
-                        ? 'current'
-                        : 'upcoming',
-                  stateLabel:
-                    index < current
-                      ? strings.address.ready
-                      : index === current
-                        ? strings.address.current
-                        : strings.address.notSaved,
-                }))}
+                steps={horizontalSteps}
               />
             </div>
             <div className="grid min-w-0 gap-3">
@@ -245,28 +292,28 @@ export function PatternsShowcase() {
                 orientation="vertical"
                 label={copy.patternLabels.stepper}
                 onSelect={setStep}
-                steps={stepKeys.map((key, index) => ({
-                  key,
-                  label: copy.sampleSteps[index],
-                  description: copy.sampleStepHints[index],
-                  state:
-                    index < current
-                      ? 'complete'
-                      : index === current
-                        ? 'current'
-                        : 'upcoming',
-                  stateLabel:
-                    index < current
-                      ? strings.address.ready
-                      : index === current
-                        ? strings.address.current
-                        : strings.address.notSaved,
-                }))}
+                steps={verticalSteps}
               />
             </div>
           </div>
         </Specimen>
       </div>
+    );
+
+  }
+
+  return (
+    <ShowcaseSection
+      id="patterns"
+      title={copy.patterns}
+      description={copy.patternsHint}
+      icon="layers"
+    >
+      {renderHeaderPattern()}
+      {renderSplitFormPattern()}
+      {renderDirectoryPattern()}
+      {renderListAndStepperPatterns()}
     </ShowcaseSection>
   );
+
 }

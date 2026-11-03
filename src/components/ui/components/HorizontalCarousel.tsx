@@ -11,6 +11,7 @@ export function HorizontalCarousel({
   trackRef,
   onScroll,
 }: HorizontalCarouselProps) {
+
   return (
     <div
       className="ui-horizontal-carousel"
@@ -30,4 +31,5 @@ export function HorizontalCarousel({
       </div>
     </div>
   );
+
 }

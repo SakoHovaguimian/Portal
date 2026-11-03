@@ -1,4 +1,4 @@
-import type { DirectoryPage } from '../models/directoryPage';
+import type { DirectoryPaginationProps } from '../models/directoryPaginationProps';
 import { strings } from '@/strings';
 import { Button } from './Button';
 import { UiIcon } from './UiIcon';
@@ -10,14 +10,8 @@ export function DirectoryPagination({
   label,
   range,
   onNavigate,
-}: {
-  page: DirectoryPage;
-  count: number;
-  busy: boolean;
-  label: string;
-  range: (from: number, to: number) => string;
-  onNavigate: (offset: number) => void;
-}) {
+}: DirectoryPaginationProps) {
+
   const single = page.offset === 0 && !page.hasMore;
   return (
     <div className="flex min-h-(--control-height-md) flex-wrap items-center justify-between gap-3">
@@ -61,4 +55,5 @@ export function DirectoryPagination({
       )}
     </div>
   );
+
 }

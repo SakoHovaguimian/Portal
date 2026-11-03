@@ -7,7 +7,9 @@
 
 // Screens
 export { UsersScreen } from './UsersScreen';
+
 export { UserDetailScreen } from './UserDetailScreen';
+
 export { ProfileScreen } from './ProfileScreen';
 
 // Hooks

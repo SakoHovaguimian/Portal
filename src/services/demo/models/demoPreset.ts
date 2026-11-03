@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 export const DemoPresetSchema = z.enum([
   'empty',
   'populated',
@@ -6,4 +7,5 @@ export const DemoPresetSchema = z.enum([
   'admin',
   'superadmin',
 ]);
+
 export type DemoPreset = z.infer<typeof DemoPresetSchema>;

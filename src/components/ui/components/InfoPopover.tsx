@@ -1,21 +1,14 @@
 'use client';
 
-import type { ReactNode } from 'react';
-import {
-  Button as AriaButton,
-  Dialog,
-  DialogTrigger,
-  Popover,
-} from 'react-aria-components';
+import type { InfoPopoverProps } from '../models/infoPopoverProps';
+import { Button as AriaButton, Dialog, DialogTrigger, Popover } from 'react-aria-components';
 import { buttonClassName } from '../lib/buttonStyles';
 
 export function InfoPopover({
   label,
   children,
-}: {
-  label: string;
-  children: ReactNode;
-}) {
+}: InfoPopoverProps) {
+
   return (
     <DialogTrigger>
       <AriaButton className={buttonClassName('secondary')}>{label}</AriaButton>
@@ -32,4 +25,5 @@ export function InfoPopover({
       </Popover>
     </DialogTrigger>
   );
+
 }

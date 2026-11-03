@@ -45,12 +45,21 @@ export function DatePicker({
   describedBy,
   className,
 }: DatePickerProps) {
+
   const calendarTrigger = useRef<HTMLButtonElement>(null);
   const popup = useRef<HTMLDivElement>(null);
   const restoreFocus = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(
-    () => () => {
-      if (restoreFocus.current) clearTimeout(restoreFocus.current);
+    () => {
+
+      const cleanup = () => {
+
+        if (restoreFocus.current) { clearTimeout(restoreFocus.current); }
+
+      };
+
+      return cleanup;
+
     },
     [],
   );
@@ -72,18 +81,26 @@ export function DatePicker({
         maxValue={calendarDate(max) ?? undefined}
         onChange={(date) => onValueChange(date?.toString() ?? '')}
         onOpenChange={(open) => {
-          if (restoreFocus.current) clearTimeout(restoreFocus.current);
-          if (!open)
+
+          if (restoreFocus.current) { clearTimeout(restoreFocus.current); }
+          if (!open) {
+
             restoreFocus.current = setTimeout(() => {
+
               requestAnimationFrame(() => {
+
                 const focused = document.activeElement;
                 if (
                   focused === document.body ||
                   (focused && popup.current?.contains(focused))
-                )
-                  calendarTrigger.current?.focus();
+                ) { calendarTrigger.current?.focus(); }
+
               });
+
             }, motionDuration('--motion-duration-fast'));
+
+          }
+
         }}
         isDisabled={disabled}
         isInvalid={invalid}
@@ -164,8 +181,10 @@ export function DatePicker({
                     <Button
                       className={styles.clear}
                       onPress={() => {
+
                         onValueChange('');
                         state.setOpen(false);
+
                       }}
                     >
                       {copy.clearDate}
@@ -179,4 +198,5 @@ export function DatePicker({
       </AriaDatePicker>
     </I18nProvider>
   );
+
 }

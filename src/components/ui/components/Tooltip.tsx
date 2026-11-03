@@ -1,11 +1,7 @@
 'use client';
 
-import type { ReactNode } from 'react';
-import {
-  Button as AriaButton,
-  Tooltip as AriaTooltip,
-  TooltipTrigger,
-} from 'react-aria-components';
+import type { TooltipProps } from '../models/tooltipProps';
+import { Button as AriaButton, Tooltip as AriaTooltip, TooltipTrigger } from 'react-aria-components';
 import { buttonClassName } from '../lib/buttonStyles';
 
 export function Tooltip({
@@ -14,13 +10,8 @@ export function Tooltip({
   children,
   className,
   triggerClassName,
-}: {
-  label: string;
-  content: ReactNode;
-  children: ReactNode;
-  className?: string;
-  triggerClassName?: string;
-}) {
+}: TooltipProps) {
+
   return (
     <TooltipTrigger delay={200}>
       <AriaButton
@@ -33,11 +24,12 @@ export function Tooltip({
         offset={8}
         className={
           className ??
-          'ui-tooltip z-100 max-w-64 rounded-overlay border-control border-secondary bg-primary px-4 py-3 text-xs text-secondary shadow-(--shadow-overlay)'
+        'ui-tooltip z-100 max-w-64 rounded-overlay border-control border-secondary bg-primary px-4 py-3 text-xs text-secondary shadow-(--shadow-overlay)'
         }
       >
         {content}
       </AriaTooltip>
     </TooltipTrigger>
   );
+
 }

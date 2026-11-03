@@ -1,3 +1,4 @@
+import type { TableRowLinkProps } from '../models/tableRowLinkProps';
 import type { Route } from 'next';
 import Link from 'next/link';
 import styles from './DataTable.module.css';
@@ -7,19 +8,19 @@ import styles from './DataTable.module.css';
 export function TableRowLink({
   href,
   onNavigate,
-}: {
-  href: string;
-  onNavigate?: (href: string) => void;
-}) {
+}: TableRowLinkProps) {
+
   return (
     <Link
       href={href as Route}
       onNavigate={
         onNavigate
           ? (event) => {
-              event.preventDefault();
-              onNavigate(href);
-            }
+
+            event.preventDefault();
+            onNavigate(href);
+
+          }
           : undefined
       }
       aria-hidden="true"
@@ -28,4 +29,5 @@ export function TableRowLink({
       className={styles.link}
     />
   );
+
 }

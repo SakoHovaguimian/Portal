@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { FormActionsProps } from '../models/formActionsProps';
 import { strings } from '@/strings';
 import { cn } from '../lib/cn';
 
@@ -8,14 +8,8 @@ export function FormActions({
   sticky = true,
   live = false,
   variant = 'panel',
-}: {
-  children: ReactNode;
-  description?: string;
-  sticky?: boolean;
-  // Announces description changes, e.g. saving and saved notices.
-  live?: boolean;
-  variant?: 'panel' | 'inline' | 'plain';
-}) {
+}: FormActionsProps) {
+
   return (
     <div
       role="group"
@@ -45,4 +39,5 @@ export function FormActions({
       </div>
     </div>
   );
+
 }

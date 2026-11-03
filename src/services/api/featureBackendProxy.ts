@@ -7,12 +7,17 @@ import { handlePublicImageRequest } from '@/services/media/server/handlePublicIm
 import { handleLiveNotificationInboxRequest } from '@/modules/notification-inbox/server/handleLiveNotificationInboxRequest';
 import { handleLiveAccountToolsRequest } from '@/modules/account-tools/server/handleLiveAccountToolsRequest';
 
+// **************************************
+// MARK: - PROXY OPTIONAL FEATURE REQUEST
+// **************************************
+
 export async function featureBackendProxy(
   request: Request,
   path: string,
   session: ServerSession,
   forward: BackendForward,
 ) {
+
   const options = {
     request,
     path,
@@ -21,23 +26,30 @@ export async function featureBackendProxy(
     forward,
   };
   if (portalModules.media) {
+
     const media = await handlePublicImageRequest(options);
-    if (media) return media;
+    if (media) { return media; }
+
   }
   if (portalModules.publishing) {
+
     const blog = await handlePublishingRequest(options);
-    if (blog) return blog;
+    if (blog) { return blog; }
+
   }
   if (portalModules.notifications) {
+
     const notifications = await handleLiveNotificationInboxRequest(
       request,
       path,
       forward,
       session.user.id,
     );
-    if (notifications) return notifications;
+    if (notifications) { return notifications; }
+
   }
-  if (portalModules.accountTools)
+  if (portalModules.accountTools) {
+
     return handleLiveAccountToolsRequest(
       request,
       path,
@@ -45,5 +57,8 @@ export async function featureBackendProxy(
       session.user.id,
       session.user.role,
     );
+
+  }
   return null;
+
 }

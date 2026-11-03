@@ -1,5 +1,4 @@
-import type { PropsWithChildren, ReactNode } from 'react';
-import type { AppSession } from '@/models';
+import type { AppShellProps } from '../models/appShellProps';
 import { strings } from '@/strings';
 import { AppSidebar, type AppSidebarItem } from './AppSidebar';
 import { MobileNavigationMenu } from './MobileNavigationMenu';
@@ -54,16 +53,8 @@ export function AppShell({
   activePath,
   onNavigate,
   navigationItems,
-}: PropsWithChildren<{
-  session: AppSession;
-  utilitySlot?: ReactNode;
-  accountSlot?: ReactNode;
-  bannerSlot?: ReactNode;
-  contextSlot?: ReactNode;
-  activePath?: string;
-  onNavigate?: (href: string) => void;
-  navigationItems?: AppSidebarItem[];
-}>) {
+}: AppShellProps) {
+
   const items = (navigationItems ?? navigation).map((item) => ({
     ...item,
     active: activePath === item.href || activePath?.startsWith(`${item.href}/`),
@@ -76,6 +67,41 @@ export function AppShell({
     activePath,
     contextSlot,
   };
+
+  function renderHeader() {
+
+    return (
+      <header className="top-0 z-30 border-b-control border-(--dashboard-shell-border) bg-(--dashboard-shell-topbar) backdrop-blur lg:sticky">
+        <div className="mx-auto flex min-h-16 max-w-352 flex-wrap items-center justify-between gap-3 px-(--space-page) py-3">
+          <div className="flex min-w-0 items-center gap-3">
+            <MobileNavigationMenu
+              key={`${session.user.id}:${activePath}`}
+              {...sidebar}
+            />
+            <p className="m-0 flex min-w-0 items-center gap-2 text-sm font-medium text-tertiary">
+              <span
+                aria-hidden="true"
+                className="size-2 shrink-0 rounded-full bg-brand-solid"
+              />
+              {strings.ui.appShell.workspace}
+            </p>
+          </div>
+          {utilitySlot && (
+            <div className="flex shrink-0 items-center gap-3">
+              {utilitySlot}
+            </div>
+          )}
+        </div>
+        {bannerSlot && (
+          <div className="mx-auto max-w-352 px-(--space-page) pb-3">
+            {bannerSlot}
+          </div>
+        )}
+      </header>
+    );
+
+  }
+
   return (
     <div className="ui-app-shell min-h-dvh bg-(--dashboard-shell-bg) lg:ps-(--dashboard-sidebar-width)">
       <a
@@ -86,33 +112,7 @@ export function AppShell({
       </a>
       <AppSidebar {...sidebar} />
       <div className="min-w-0">
-        <header className="top-0 z-30 border-b-control border-(--dashboard-shell-border) bg-(--dashboard-shell-topbar) backdrop-blur lg:sticky">
-          <div className="mx-auto flex min-h-16 max-w-352 flex-wrap items-center justify-between gap-3 px-(--space-page) py-3">
-            <div className="flex min-w-0 items-center gap-3">
-              <MobileNavigationMenu
-                key={`${session.user.id}:${activePath}`}
-                {...sidebar}
-              />
-              <p className="m-0 flex min-w-0 items-center gap-2 text-sm font-medium text-tertiary">
-                <span
-                  aria-hidden="true"
-                  className="size-2 shrink-0 rounded-full bg-brand-solid"
-                />
-                {strings.ui.appShell.workspace}
-              </p>
-            </div>
-            {utilitySlot && (
-              <div className="flex shrink-0 items-center gap-3">
-                {utilitySlot}
-              </div>
-            )}
-          </div>
-          {bannerSlot && (
-            <div className="mx-auto max-w-352 px-(--space-page) pb-3">
-              {bannerSlot}
-            </div>
-          )}
-        </header>
+        {renderHeader()}
         <main
           id="main-content"
           tabIndex={-1}
@@ -123,4 +123,5 @@ export function AppShell({
       </div>
     </div>
   );
+
 }
