@@ -8706,7 +8706,8 @@ export const componentBrowserStrings = {
   clearSearch: 'Clear Component Search',
   navigation: 'Component Categories',
   open: (name: string) => `Explore ${name}`,
-  results: (count: number) => `${count} Component Families`,
+  results: (count: number) =>
+    `${count} Component ${count === 1 ? 'Family' : 'Families'}`,
   preview: 'Interactive Preview',
   previous: 'Previous Family',
   next: 'Next Family',

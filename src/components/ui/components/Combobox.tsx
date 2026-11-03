@@ -77,7 +77,11 @@ export function Combobox({
       items={items}
       onSelectionChange={(key) => {
         clearTimeout(timer.current);
-        onValueChange(key === null ? null : String(key));
+        const next = key === null ? null : String(key);
+        // React Aria also invokes this when reverting text to the same committed ID.
+        // Sync the text even when the caller's selected value does not change.
+        setText(options.find((option) => option.id === next)?.label ?? '');
+        onValueChange(next);
       }}
       onInputChange={(next) => {
         setText(next);
