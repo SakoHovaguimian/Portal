@@ -51,7 +51,7 @@ export function PresentationProvider({ children, service: preferenceService }: P
     if (!presentation || exitingToastRef.current.has(id)) { return; }
     const timer = timersRef.current.get(id);
     if (timer) { clearTimeout(timer); }
-    const duration = presentation.enabled && !prefersReducedMotion() ? presentation.durationMs : 0;
+    const duration = presentation.enabled && document.documentElement.dataset.presentationMotion !== 'off' && !prefersReducedMotion() ? presentation.durationMs : 0;
     if (!duration) {
 
       removeToast(id);
@@ -152,7 +152,7 @@ export function PresentationProvider({ children, service: preferenceService }: P
     current.resolve(value);
     setClosedOverlay(current);
     setActiveOverlay(null);
-    const duration = current.resolvedMotion.enabled && !prefersReducedMotion() ? current.resolvedMotion.durationMs : 0;
+    const duration = current.resolvedMotion.enabled && document.documentElement.dataset.presentationMotion !== 'off' && !prefersReducedMotion() ? current.resolvedMotion.durationMs : 0;
     if (!duration) {
       queueMicrotask(() => finishOverlayExit(current.id));
     } else {

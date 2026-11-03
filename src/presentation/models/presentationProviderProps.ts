@@ -3,5 +3,5 @@ import type { PresentationMotionPreferenceService } from '@/services/presentatio
 
 export interface PresentationProviderProps {
   children: ReactNode;
-  service?: PresentationMotionPreferenceService;
+  service: PresentationMotionPreferenceService;
 }

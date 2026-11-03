@@ -4,17 +4,15 @@ import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties }
 import { defaultAppearancePreference } from '@/models/appearancePreference';
 import { ThemeIdSchema } from '@/models/themeId';
 import { getTheme } from '@/themes';
-import { PresentationMotionPreferenceService, presentationMotionStorageKey, presentationMotionChangeEvent } from '@/services/presentation-motion/presentationMotionPreferenceService';
+import { presentationMotionStorageKey, presentationMotionChangeEvent, type PresentationMotionPreferenceService } from '@/services/presentation-motion/presentationMotionPreferenceService';
 import { PresentationMotionConfigSchema, defaultPresentationMotionConfig, type PresentationMotionConfig } from './models/presentationMotionConfig';
 import type { ResolvedPresentationMotionConfig } from './models/resolvedPresentationMotionConfig';
 import type { ResolvedPresentationMotion } from './models/resolvedPresentationMotion';
 import type { MotionTarget } from './models/motionTarget';
 import type { PresentationMotionOverride } from './models/presentationMotionOverride';
 
-export function usePresentationMotion(service?: PresentationMotionPreferenceService) {
+export function usePresentationMotion(preferenceService: PresentationMotionPreferenceService) {
 
-  const [fallbackService] = useState(() => new PresentationMotionPreferenceService());
-  const preferenceService = service ?? fallbackService;
   const [motionConfig, setMotionConfigState] = useState<PresentationMotionConfig>(defaultPresentationMotionConfig);
   const savedRef = useRef(motionConfig);
   const [previews, setPreviews] = useState(new Map<string, Partial<PresentationMotionConfig>>());
