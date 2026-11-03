@@ -38,7 +38,7 @@ English-language workspace for operators managing people, requests, and conversa
 - Login/signup opens the allowed internal return path, default dashboard. Invalid credentials keep entries and show an error.
 - Create request clears the field only on success and refreshes the list/counts. Edit stays on detail with a success toast. Delete confirms through the shared dialog, disables duplicate actions, and returns to the list after success.
 - Profile save keeps entries on failure and updates the public session after success. Email is read-only pending a dedicated identity flow.
-- Chat retains unsent text after failure, clears after successful API creation, and refreshes from the authoritative query. Socket/push events invalidate that query; they do not become a separate state store.
+- Chat places outgoing messages immediately in an in-memory outbox and clears the composer for the next message. Pending/failed items retain text, attachments, reply scope, and an idempotent retry key. Server responses reconcile without duplicate rows; failed work remains retryable. Reactions and reversible message actions project immediately and serialize per message with rollback on failure. Socket/push events refresh authoritative queries. Shift+Enter sends outside IME composition; Enter inserts a newline.
 - Notifications require an explicit click before requesting permission. Denied/unsupported/unconfigured/demo states explain availability. Sign-out revokes browser push and clears query data.
 - Consent choices have equally reachable actions and remain editable in Appearance. Changing consent never grants notification permission.
 
@@ -75,3 +75,7 @@ Do not write tests. Run static checks, a demo build, and manual browser/HTTP wor
 ## Added Component Contracts
 
 AvatarGroup overflow is discoverable by keyboard and touch through its people popover. File selection never implies a network upload; domain code owns transfer, validation, and cancellation. Table page selection never silently expands to matching results, and callers invalidate selection when the query scope changes. Bulk mutation results retain recoverable failures. Combobox commits IDs rather than arbitrary typed text; remote owners cancel or ignore stale responses. Date ranges have inclusive ordered date-only endpoints and emit null when cleared. Switch selection pulses share the theme-owned checkbox/radio motion and are disabled by either reduced-motion setting.
+
+## Workspace And Theme Refinements
+
+Protected pages share the full-width outer container. Only the chat workspace bounds its content to the remaining dynamic viewport; other screens keep document scrolling. Conversation details use a wide modal variant and structured sections. Avatar, overflow-avatar, switch-track, and switch-thumb corners are theme-owned; presence dots retain functional circles. Blueprint uses sharp geometry and Cupertino explicitly retains familiar circular/pill controls. Overlay Duration in the Motion specimen uses the shared Slider. Active demo response simulations are visible in the shell with a non-destructive action to restore normal responses for that browser.

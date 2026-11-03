@@ -21,11 +21,11 @@ export function Switch({
         className,
       )}
     >
-      <span className="ui-switch-frame relative isolate inline-flex shrink-0">
+      <span className="ui-switch-frame relative isolate inline-flex shrink-0 rounded-switch-track">
         <input
           type="checkbox"
           role="switch"
-          className="ui-switch peer absolute inset-0 m-0 h-full w-full cursor-pointer appearance-none rounded-full border-control border-control-border bg-quaternary focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand disabled:cursor-not-allowed disabled:opacity-50"
+          className="ui-switch peer absolute inset-0 m-0 h-full w-full cursor-pointer appearance-none rounded-switch-track border-control border-control-border bg-quaternary focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brand disabled:cursor-not-allowed disabled:opacity-50"
           onChange={(event) => {
 
             setInteracted(true);
@@ -36,7 +36,7 @@ export function Switch({
         />
         <span
           aria-hidden="true"
-          className="ui-switch-thumb pointer-events-none absolute rounded-full bg-switch-thumb shadow-xs peer-disabled:opacity-70"
+          className="ui-switch-thumb pointer-events-none absolute rounded-switch-thumb bg-switch-thumb shadow-xs peer-disabled:opacity-70"
         />
       </span>
       <span className="min-w-0 wrap-anywhere">

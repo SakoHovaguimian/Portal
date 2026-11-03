@@ -7,6 +7,7 @@ import { useRef } from 'react';
 import { strings } from '@/strings';
 import { IconButton } from './IconButton';
 import { UiIcon } from './UiIcon';
+import { cn } from '../lib/cn';
 
 // Workflow dialogs sit below presentation confirmations so an existing guarded
 // form can request confirmation without losing its draft or focus scope.
@@ -19,6 +20,7 @@ export function Modal({
   children,
   footer,
   initialFocusRef,
+  size = 'default',
 }: ModalProps) {
 
   const returnFocusRef = useRef<HTMLElement | null>(null);
@@ -87,7 +89,7 @@ export function Modal({
         <Dialog.Overlay className="ui-backdrop fixed inset-0 z-60 bg-(--dashboard-shell-overlay) backdrop-blur-sm" />
         <Dialog.Content
           ref={contentRef}
-          className="ui-dialog fixed top-1/2 left-1/2 z-70 flex max-h-[calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-2rem)] w-[min(calc(100vw-2rem),44rem)] -translate-x-1/2 -translate-y-1/2 flex-col rounded-overlay border-control border-secondary bg-primary shadow-(--shadow-overlay) outline-none"
+          className={cn('ui-dialog fixed top-1/2 left-1/2 z-70 flex max-h-[calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-2rem)] w-[min(calc(100vw-2rem),44rem)] -translate-x-1/2 -translate-y-1/2 flex-col rounded-overlay border-control border-secondary bg-primary shadow-(--shadow-overlay) outline-none', size === 'wide' && 'w-[min(calc(100vw-2rem),64rem)]')}
           {...(!description ? { 'aria-describedby': undefined } : {})}
           onOpenAutoFocus={(event) => {
 

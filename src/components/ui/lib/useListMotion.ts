@@ -6,7 +6,7 @@ import { motionDuration } from './motionPreferences';
 // Animate ordered items between their old and new positions without delaying state.
 export function useListMotion<
   T extends HTMLOListElement | HTMLUListElement = HTMLOListElement,
->(skipAnimationRef?: { current: boolean }) {
+>(skipAnimationRef?: { current: boolean }, durationToken: Parameters<typeof motionDuration>[0] = '--motion-duration-base') {
 
   const listRef = useRef<T>(null);
   const previous = useRef(new Map<string, DOMRect>());
@@ -30,7 +30,7 @@ export function useListMotion<
       items.every((item, index) => item.dataset.motionKey === oldKeys[index])
     ) { return; }
     const next = new Map<string, DOMRect>();
-    const duration = skip ? 0 : motionDuration('--motion-duration-base');
+    const duration = skip ? 0 : motionDuration(durationToken);
     const easing = getComputedStyle(list)
       .getPropertyValue('--motion-ease-out')
       .trim();

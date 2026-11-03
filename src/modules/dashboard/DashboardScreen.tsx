@@ -1,6 +1,7 @@
 'use client';
 
 import { strings } from '@/strings';
+import { portalModules } from '@/config/portalModules';
 import { useMemo } from 'react';
 import Link from 'next/link';
 import { useRuntimeConfig } from '@/providers/RuntimeProvider';
@@ -516,7 +517,9 @@ export function DashboardScreen() {
 
   const searchParams = useSearchParams();
   const { demoMode } = useRuntimeConfig();
-  const model = searchParams.get('model') ?? 'featureRequest';
+  const fallbackModel = portalModules.featureRequests ? 'featureRequest' : portalModules.users ? 'user' : '';
+  const requestedModel = searchParams.get('model') ?? fallbackModel;
+  const model = (requestedModel === 'user' && !portalModules.users) || (requestedModel === 'featureRequest' && !portalModules.featureRequests) ? fallbackModel : requestedModel;
   const search = searchParams.get('search') ?? '';
 
   const overview = useDashboardOverview();
@@ -602,7 +605,7 @@ export function DashboardScreen() {
 
     return (
       <>
-        {(overview.isPending || models.isPending || records.isPending) && (
+        {(overview.isPending || models.isPending || (Boolean(model) && records.isPending)) && (
           <Card>{strings.ui.dashboardScreen.loadingWorkspaceData}</Card>
         )}
         {(overview.isError || models.isError || records.isError) && (
@@ -616,7 +619,7 @@ export function DashboardScreen() {
 
               void overview.refetch();
               void models.refetch();
-              void records.refetch();
+              if (model) { void records.refetch(); }
 
             }}
           />
@@ -685,7 +688,7 @@ export function DashboardScreen() {
             {strings.ui.dashboardScreen.selectedModel}
           </p>
           <p className="mt-2 text-sm font-semibold text-primary">
-            {modelDetail.data?.displayName || model}
+            {modelDetail.data?.displayName || model || strings.ui.dashboardScreen.noRecordsAvailable}
           </p>
           <p className="mt-1 text-sm text-secondary">
             {visibleRows}{' '}

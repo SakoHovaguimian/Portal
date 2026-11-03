@@ -5,7 +5,7 @@ import { extendTailwindMerge } from 'tailwind-merge';
 // tailwind-merge mistakes border-control for a color and drops the stroke.
 const mergeClasses = extendTailwindMerge({
   extend: {
-    theme: { radius: ['control', 'card', 'overlay', 'chip'] },
+    theme: { radius: ['control', 'card', 'overlay', 'chip', 'avatar', 'switch-track', 'switch-thumb'] },
     classGroups: {
       'border-w': [{ border: ['control'] }],
       'border-w-x': [{ 'border-x': ['control'] }],

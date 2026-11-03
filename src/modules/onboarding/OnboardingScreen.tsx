@@ -380,7 +380,7 @@ function OnboardingForm({
     return renderCompleted();
   }
   return (
-    <div className="grid max-w-4xl gap-6">
+    <div className="grid w-full gap-6">
       {renderStepper()}
       {renderFormCard()}
     </div>

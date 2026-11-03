@@ -47,7 +47,7 @@ async function handle(
     const session = await container.sessionService.valid();
     if (!session) { throw new AuthError(strings.errors.sessionExpired); }
     const upstreamPath = `/${path.map(encodeURIComponent).join('/')}${request.nextUrl.search}`;
-    requireModuleAvailability(upstreamPath);
+    requireModuleAvailability(upstreamPath, session.user.id);
     if (container.demoMode) {
 
       const current = getDemoState().users.find(

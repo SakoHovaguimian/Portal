@@ -11,8 +11,9 @@ import {
 } from '@/components/ui';
 import { NotificationControls } from '@/services/notifications/components/NotificationControls';
 import { CookieConsentControls } from '@/services/privacy/components/CookieConsentControls';
-import { strings } from '@/strings';
+import { strings, portalOverlayMotionStrings } from '@/strings';
 import { ThemeControls } from './components/ThemeControls';
+import { OverlayMotionControls } from './components/OverlayMotionControls';
 
 export function AppearanceScreen() {
 
@@ -36,6 +37,13 @@ export function AppearanceScreen() {
         description={strings.designSystem.themeHint}
       >
         <ThemeControls />
+      </PageSection>
+      <PageSection
+        id="overlay-motion"
+        title={portalOverlayMotionStrings.title}
+        description={portalOverlayMotionStrings.description}
+      >
+        <OverlayMotionControls />
       </PageSection>
       <SplitSection
         id="notifications"

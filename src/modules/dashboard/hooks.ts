@@ -35,6 +35,7 @@ export function useDashboardRecords(model = 'featureRequest', search = '') {
   const container = useServiceContainer();
   const recordsQuery = useQuery({
     queryKey: queryKeys.dashboard.records(model, search).queryKey,
+    enabled: Boolean(model),
     queryFn: () =>
       container.dashboardService.listRecords({
         model,
@@ -54,6 +55,7 @@ export function useDashboardModelDetail(model: string) {
   const container = useServiceContainer();
   const modelDetailQuery = useQuery({
     queryKey: queryKeys.dashboard.modelDetail(model).queryKey,
+    enabled: Boolean(model),
     queryFn: () => container.dashboardService.getModelDetail(model),
     staleTime: staleTimes.dashboard,
   });

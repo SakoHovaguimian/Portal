@@ -5,6 +5,7 @@ export interface UploadFieldProps extends FileListProps {
   label: string;
   description?: string;
   accept?: string;
+  acceptedTypesLabel?: string;
   multiple?: boolean;
   maxFiles?: number;
   maxSizeBytes?: number;

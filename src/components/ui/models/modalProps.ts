@@ -9,4 +9,5 @@ export interface ModalProps {
   children: ReactNode;
   footer?: ReactNode;
   initialFocusRef?: RefObject<HTMLElement | null>;
+  size?: 'default' | 'wide';
 }

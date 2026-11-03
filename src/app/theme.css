@@ -916,6 +916,8 @@
   --color-segmented-text: var(--portal-color-segmented-text);
   --radius-track: var(--portal-radius-track);
   --radius-slider-thumb: var(--portal-radius-slider-thumb);
+  --radius-switch-track: var(--portal-radius-switch-track);
+  --radius-switch-thumb: var(--portal-radius-switch-thumb);
   --slider-thumb-width: var(--portal-slider-thumb-width);
   --slider-thumb-height: var(--portal-slider-thumb-height);
   --slider-track-height: var(--portal-slider-track-height);
@@ -1021,6 +1023,7 @@
   --font-weight-bold: var(--portal-font-weight-bold);
   --heading-letter-spacing: var(--portal-heading-letter-spacing);
   --radius-control: var(--portal-radius-control);
+  --radius-avatar: var(--portal-radius-avatar);
   --radius-card: var(--portal-radius-card);
   --radius-overlay: var(--portal-radius-overlay);
   --radius-chip: var(--portal-radius-chip);

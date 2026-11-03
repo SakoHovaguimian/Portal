@@ -14,6 +14,7 @@ import {
 import { portalEngagementStrings as copy } from '@/strings';
 import { usePublicEngagement } from '../usePublicEngagement';
 import type { BlogEngagementControlsProps } from '../models/blogEngagementControlsProps';
+import { PresentationMotionPreferenceService } from '@/services/presentation-motion/presentationMotionPreferenceService';
 import {
   PresentationProvider,
   usePresentationService,
@@ -195,9 +196,10 @@ function BlogEngagementContent({
 export function BlogEngagementControls(props: BlogEngagementControlsProps) {
 
   const [client] = useState(createQueryClient);
+  const [motionService] = useState(() => new PresentationMotionPreferenceService());
   return (
     <QueryClientProvider client={client}>
-      <PresentationProvider>
+      <PresentationProvider service={motionService}>
         <BlogEngagementContent key={props.articleId} {...props} />
       </PresentationProvider>
     </QueryClientProvider>

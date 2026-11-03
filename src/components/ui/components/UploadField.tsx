@@ -16,6 +16,7 @@ export function UploadField({
   description,
   files,
   accept,
+  acceptedTypesLabel,
   multiple = true,
   maxFiles,
   maxSizeBytes,
@@ -76,7 +77,7 @@ export function UploadField({
           </p>
           <p className="m-0 mt-1 text-xs text-tertiary">
             {copy.upload.limits(
-              accept,
+              acceptedTypesLabel ?? accept,
               Number.isFinite(limit) ? limit : undefined,
               maxSizeBytes,
             )}

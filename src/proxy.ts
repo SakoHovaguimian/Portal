@@ -5,6 +5,7 @@ import {
   decodeSession,
   sessionCookieName,
 } from '@/services/session/sessionCodec';
+import { getDefaultProjectRoute } from '@/config/projectRoutes';
 
 // **************************************
 // MARK: - PROXY PROTECTED ROUTE
@@ -27,7 +28,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(url);
 
   }
-  if (session && authRoute) { return NextResponse.redirect(new URL('/dashboard', request.url)); }
+  if (session && authRoute) { return NextResponse.redirect(new URL(getDefaultProjectRoute(session.user.role), request.url)); }
   return NextResponse.next();
 
 }
@@ -44,6 +45,7 @@ export const config = {
     '/profile/:path*',
     '/experience/:path*',
     '/chat/:path*',
+    '/jobs/:path*',
     '/notifications/:path*',
     '/saved/:path*',
     '/onboarding/:path*',

@@ -59,6 +59,7 @@ export const duskTheme = {
   radius: {
     small: '0.5rem',
     control: '0.75rem',
+    avatar: '0.75rem',
     card: '1.125rem',
     overlay: '1.5rem',
     chip: '9999px',

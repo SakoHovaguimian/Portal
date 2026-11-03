@@ -2,11 +2,10 @@
 
 import type { OverlayQueueItem } from './models/overlayQueueItem';
 import type { OverlayQueueConfig } from './models/overlayQueueConfig';
-import type { PresentationMotionConfig } from './models/presentationMotionConfig';
-import type { MotionTarget } from './models/motionTarget';
 import type { PresentationService } from './models/presentationService';
 import { strings } from '@/strings';
-import type { ChildrenProps } from '@/models/childrenProps';
+import type { PresentationProviderProps } from './models/presentationProviderProps';
+import { usePresentationMotion } from './usePresentationMotion';
 import { motionDuration } from '@/components/ui/lib/motionPreferences';
 import {
   createContext,
@@ -25,18 +24,13 @@ import {
 } from '@/components/ui';
 import type {
   AlertPresentation,
-  PresentationMotionOverride,
   SheetPresentation,
   ToastPresentation,
 } from './types';
 
-const defaultMotion: PresentationMotionConfig = {
-  enabled: true,
-};
-
 const PresentationContext = createContext<PresentationService | null>(null);
 
-export function PresentationProvider({ children }: ChildrenProps) {
+export function PresentationProvider({ children, service: preferenceService }: PresentationProviderProps) {
 
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const [activeOverlay, setActiveOverlay] = useState<OverlayQueueItem | null>(
@@ -48,32 +42,11 @@ export function PresentationProvider({ children }: ChildrenProps) {
   );
   const resolvedOverlayId = useRef<string | null>(null);
   const alertReturnFocusRef = useRef<HTMLElement | null>(null);
-  const [motionConfig, setMotionConfig] =
-    useState<PresentationMotionConfig>(defaultMotion);
+  const motion = usePresentationMotion(preferenceService);
+  const { resolveMotion } = motion;
   const queueRef = useRef<OverlayQueueItem[]>([]);
-  const timersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(
-    new Map(),
-  );
+  const timersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
   const toastMotionRef = useRef(new Map<string, boolean>());
-
-  const resolveMotion = useCallback(
-    (target: MotionTarget, override?: PresentationMotionOverride) => {
-
-      const durationKey =
-        target === 'toast'
-          ? motionConfig.toastDurationMs
-          : target === 'alert'
-            ? motionConfig.alertDurationMs
-            : motionConfig.sheetDurationMs;
-
-      return {
-        enabled: override?.enabled ?? motionConfig.enabled,
-        durationMs: override?.durationMs ?? durationKey,
-      };
-
-    },
-    [motionConfig],
-  );
 
   const dismissToast = useCallback((id: string) => {
 
@@ -299,21 +272,20 @@ export function PresentationProvider({ children }: ChildrenProps) {
         showSheet,
         dismissToast,
         clearToasts,
-        getMotionConfig: () => motionConfig,
-        setMotionConfig: (config) => {
-
-          setMotionConfig((current) => ({
-            ...current,
-            ...config,
-          }));
-
-        },
+        motionConfig: motion.motionConfig,
+        effectiveMotionConfig: motion.effectiveMotionConfig,
+        reducedMotion: motion.reducedMotion,
+        getMotionDefaults: motion.getMotionDefaults,
+        getMotionConfig: motion.getMotionConfig,
+        setMotionConfig: motion.setMotionConfig,
+        resetMotionConfig: motion.resetMotionConfig,
+        configureMotion: motion.configureMotion,
       });
 
       return presentationService;
 
     },
-    [clearToasts, dismissToast, motionConfig, showAlert, showSheet, showToast],
+    [clearToasts, dismissToast, motion, showAlert, showSheet, showToast],
   );
 
   const alert =

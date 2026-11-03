@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { buttonClassName, Card } from '@/components/ui';
 import type { AuthCardShellProps } from './models/authCardShellProps';
+import { ProjectBrand } from '@/components/ProjectBrand';
+import { projectConfiguration } from '@/config/projectConfiguration';
 
 export function AuthCardShell({
   badge,
@@ -17,6 +19,7 @@ export function AuthCardShell({
 
     return (
       <div className="border-b border-secondary bg-secondary_subtle px-6 py-6 sm:px-8">
+        {projectConfiguration.branding.logoPath && <ProjectBrand className="mb-5" />}
         <div className="auth-reveal mb-4 inline-flex rounded-full border-control border-brand/40 bg-brand-primary px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-brand-secondary">
           {badge}
         </div>

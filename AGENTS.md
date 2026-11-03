@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Portal is a Node 22 / TypeScript web template using Next.js 16.2.10, React 19.2.4, Tailwind v4, and TanStack Query. It is one npm application. This file is the task index; detailed rules live in the linked guides.
+Portal is a Node 22 / TypeScript web template using Next.js 16.4.5, React 19.2.4, Tailwind v4, and TanStack Query. It is one npm application. This file is the task index; detailed rules live in the linked guides.
 
 ## Standing rules
 
@@ -21,25 +21,27 @@ Portal is a Node 22 / TypeScript web template using Next.js 16.2.10, React 19.2.
 
 Choose the matching rows below. Read the guide and nearest implementation, then follow direct callers and contracts. Explicit user instructions take precedence. Verify actual container wiring and scripts before assuming a feature is active. Repair stale links when found.
 
-| When working on…                   | Read / inspect                                                                                                                                                                                           |
-| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Setup or adapting the template     | [Overview](README.md), [new project checklist](docs/NEW_PROJECT_CHECKLIST.md), [.env.example](.env.example)                                                                                              |
-| Architecture and state ownership   | [Architecture](docs/ARCHITECTURE.md), [client container](src/clientContainer.ts), [server container](src/container.ts)                                                                                   |
-| New domain module                  | [Module guide](docs/prompts/NEW_MODULE_PROMPT.md), [feature requests](src/modules/feature-requests/)                                                                                                     |
-| Foundational services              | [Service guide](docs/prompts/NEW_SERVICE_PROMPT.md), [services](src/services/)                                                                                                                           |
-| Code formatting and composition    | [Portal code standards](docs/PORTAL_STANDARDS.md), [conventions](docs/CONVENTIONS.md)                                                                                                                    |
-| Models, validation, API mapping    | [Conventions](docs/CONVENTIONS.md), [models](src/models/), [transport models](src/services/api/models/), [mappers](src/services/api/domainMappers.ts)                                                    |
-| API routes and backend integration | [Backend contract](docs/BACKEND_CONTRACT.md), [proxy route](src/app/api/backend/[...path]/route.ts), [API client](src/services/api/apiClient.ts)                                                         |
-| Authentication or session refresh  | [Auth guide](docs/AUTH.md), [auth service](src/services/auth/), [session service](src/services/session/)                                                                                                 |
-| Demo fixtures and mutations        | [Demo guide](docs/DEMO_MODE.md), [demo API](src/services/demo/demoApiClient.ts), [demo state](src/services/demo/demoState.ts)                                                                            |
-| Optional modules and publishing    | [Publishing](docs/BLOG.md), [module manifest](src/config/portalModules.ts), [module adapters](src/services/api/featureBackendProxy.ts), [demo/reset composition](src/services/api/demoModuleHandlers.ts) |
-| Query hooks, caching, mutations    | [Query guide](docs/prompts/NEW_QUERY_HOOK_FAMILY_PROMPT.md), [query keys](src/queries/queryKeys.ts), [feature hooks](src/modules/feature-requests/hooks.ts)                                              |
-| Chat, alerts, browser push         | [Realtime guide](docs/REALTIME.md), [provider](src/services/realtime/RealtimeProvider.tsx), [notification service](src/services/notifications/webNotificationService.ts)                                 |
-| Analytics and consent              | [Analytics guide](docs/ANALYTICS.md), [privacy services](src/services/privacy/), [analytics service](src/services/analytics/analyticsService.ts)                                                         |
-| Copy, errors, accessibility labels | [Strings rules](docs/STRINGS.md), [strings file](src/strings.ts), [static checker](scripts/check-strings.mjs)                                                                                            |
-| UI, themes, shared controls        | [UI system](docs/UI_SYSTEM.md), [loadable themes](docs/THEMING.md), [Design context](DESIGN.md), [behavior contract](UX-CONTRACT.md), [shared UI](src/components/ui/), [presentation](src/presentation/) |
-| Sliders, progress, numeric values  | [Value controls](docs/VALUE_CONTROLS.md), [shared controls](src/components/ui/components/Slider.tsx), [Cupertino theme](src/themes/presets/cupertino.ts)                                                 |
-| Verification and continuity        | [Conventions](docs/CONVENTIONS.md), [migration notes](docs/MIGRATION.md), [verification record](docs/VERIFICATION.md)                                                                                    |
+| When working on…                   | Read / inspect                                                                                                                                                                                                       |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Setup or adapting the template     | [Initializer](docs/PROJECT_INITIALIZER.md), [project configuration](src/config/projectConfiguration.ts), [Overview](README.md), [new project checklist](docs/NEW_PROJECT_CHECKLIST.md), [.env.example](.env.example) |
+| Architecture and state ownership   | [Architecture](docs/ARCHITECTURE.md), [client container](src/clientContainer.ts), [server container](src/container.ts)                                                                                               |
+| New domain module                  | [Module guide](docs/prompts/NEW_MODULE_PROMPT.md), [feature requests](src/modules/feature-requests/)                                                                                                                 |
+| Foundational services              | [Service guide](docs/prompts/NEW_SERVICE_PROMPT.md), [services](src/services/)                                                                                                                                       |
+| Code formatting and composition    | [Portal code standards](docs/PORTAL_STANDARDS.md), [conventions](docs/CONVENTIONS.md)                                                                                                                                |
+| Models, validation, API mapping    | [Conventions](docs/CONVENTIONS.md), [models](src/models/), [transport models](src/services/api/models/), [mappers](src/services/api/domainMappers.ts)                                                                |
+| API routes and backend integration | [Backend contract](docs/BACKEND_CONTRACT.md), [proxy route](src/app/api/backend/[...path]/route.ts), [API client](src/services/api/apiClient.ts)                                                                     |
+| Authentication or session refresh  | [Auth guide](docs/AUTH.md), [auth service](src/services/auth/), [session service](src/services/session/)                                                                                                             |
+| Demo fixtures and mutations        | [Demo guide](docs/DEMO_MODE.md), [demo API](src/services/demo/demoApiClient.ts), [demo state](src/services/demo/demoState.ts)                                                                                        |
+| Optional modules and publishing    | [Publishing](docs/BLOG.md), [module manifest](src/config/portalModules.ts), [module adapters](src/services/api/featureBackendProxy.ts), [demo/reset composition](src/services/api/demoModuleHandlers.ts)             |
+| Query hooks, caching, mutations    | [Query guide](docs/prompts/NEW_QUERY_HOOK_FAMILY_PROMPT.md), [query keys](src/queries/queryKeys.ts), [feature hooks](src/modules/feature-requests/hooks.ts)                                                          |
+| Chat, alerts, browser push         | [Chat](docs/CHAT.md), [Realtime guide](docs/REALTIME.md), [provider](src/services/realtime/RealtimeProvider.tsx), [notification service](src/services/notifications/webNotificationService.ts)                       |
+| Background jobs and workers        | [Job system](docs/BACKGROUND_JOBS.md), [job module](src/modules/background-jobs/)                                                                                                                                    |
+| Dependency maintenance             | [Dependency guide](docs/DEPENDENCIES.md), [audit workflow](.github/workflows/dependency-audit.yml)                                                                                                                   |
+| Analytics and consent              | [Analytics guide](docs/ANALYTICS.md), [privacy services](src/services/privacy/), [analytics service](src/services/analytics/analyticsService.ts)                                                                     |
+| Copy, errors, accessibility labels | [Strings rules](docs/STRINGS.md), [strings file](src/strings.ts), [static checker](scripts/check-strings.mjs)                                                                                                        |
+| UI, themes, shared controls        | [UI system](docs/UI_SYSTEM.md), [loadable themes](docs/THEMING.md), [Design context](DESIGN.md), [behavior contract](UX-CONTRACT.md), [shared UI](src/components/ui/), [presentation](src/presentation/)             |
+| Sliders, progress, numeric values  | [Value controls](docs/VALUE_CONTROLS.md), [shared controls](src/components/ui/components/Slider.tsx), [Cupertino theme](src/themes/presets/cupertino.ts)                                                             |
+| Verification and continuity        | [Conventions](docs/CONVENTIONS.md), [migration notes](docs/MIGRATION.md), [verification record](docs/VERIFICATION.md)                                                                                                |
 
 ## Verify and maintain
 

@@ -1,6 +1,7 @@
 import 'server-only';
 import { portalPublishingStrings } from '@/strings';
 import { BlogArticleSchema, type BlogArticle } from '../models/blogArticle';
+import { projectConfiguration } from '@/config/projectConfiguration';
 
 const copy = portalPublishingStrings.article;
 
@@ -15,6 +16,7 @@ const demoGlobal = globalThis as typeof globalThis & {
 
 export function createDemoBlogArticles(): BlogArticle[] {
 
+  if (projectConfiguration.starterData === 'empty') { return []; }
   const articles = [copy.demo.title, copy.demo.secondTitle, copy.demo.draftTitle].map(
     (title, index) => {
 

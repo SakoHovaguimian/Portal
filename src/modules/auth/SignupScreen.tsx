@@ -40,7 +40,7 @@ export function SignupScreen({ redirectTo }: AuthRedirectProps) {
       });
 
       router.push(
-        resolveSessionRedirect(redirectTo, result.onboardingRequired),
+        resolveSessionRedirect(redirectTo, result.onboardingRequired, result.user.role),
       );
       router.refresh();
 

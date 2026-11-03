@@ -41,3 +41,9 @@ Choose capabilities in `src/config/portalModules.ts` and implement their backend
 Every module implements equivalent validation, authorization, paging, mutation behavior, and cancellation in demo mode. Register global and per-account cleanup with `demoResetRegistry`; response simulation never corrupts records or contacts live providers.
 
 Socket/push event contracts are in [REALTIME.md](REALTIME.md). This is a template integration boundary; the exact JobLens construction-project and Obelisk business endpoints differ. Adapt the domain services and matching demo handlers together when targeting those APIs. Do not silently call an endpoint that only resembles the contract.
+
+## Conversation Chat And Background Jobs
+
+The original `/chat/messages` endpoint remains a compatibility shared log. The richer UI uses conversation-scoped endpoints and private attachments documented in [CHAT.md](CHAT.md). Live adapters validate mutation shape and file signatures, but the backend must enforce membership, message ownership, roles, bounded storage, attachment authorization, and idempotency on every request.
+
+The browser jobs facade `/portal/jobs` maps to backend `/jobs`, including owner-scoped listing/detail and cancel/retry actions. See [BACKGROUND_JOBS.md](BACKGROUND_JOBS.md) for states, attempts, progress, request keys, cancellation, durable-worker requirements, and explicit retry semantics. The local server demo runner is process-local; live mode requires the backend's durable queue. No live failure substitutes fixtures. Disabled project capabilities are blocked at page and proxy boundaries, including the raw `/jobs` alias.

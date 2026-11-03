@@ -19,6 +19,7 @@ import { simulateDemoRequest } from './demoSimulation';
 import type { DemoRequestHandler } from './models/demoRequestHandler';
 import { handleDemoOnboardingRequest } from '@/modules/onboarding/demo/handleDemoOnboardingRequest';
 import { mapUserMutationToTransport } from '../api/domainMappers';
+import { portalModules } from '@/config/portalModules';
 
 export class DemoApiClient {
 
@@ -239,7 +240,7 @@ export class DemoApiClient {
           field_count: 7,
           record_count: empty ? 0 : visibleRequests.length,
         },
-      ];
+      ].filter((model) => model.key === 'user' ? portalModules.users : portalModules.featureRequests);
       if (id === 'overview') {
 
         const overviewResponse = json({
@@ -274,7 +275,7 @@ export class DemoApiClient {
       if (id === 'models') {
 
         const meta = dashboardModelMeta[parts[2]];
-        if (!meta) { throw new NotFoundError(); }
+        if (!meta || !models.some((model) => model.key === parts[2])) { throw new NotFoundError(); }
         return json({
           ...meta,
           total_records: empty
@@ -288,7 +289,7 @@ export class DemoApiClient {
       if (id === 'records') {
 
         const model = url.searchParams.get('model');
-        if (model !== 'user' && model !== 'featureRequest') { throw new NotFoundError(); }
+        if ((model !== 'user' && model !== 'featureRequest') || !models.some((item) => item.key === model)) { throw new NotFoundError(); }
         const rows = model === 'user' ? state.users : visibleRequests;
         const recordsResponse = json(
           page(

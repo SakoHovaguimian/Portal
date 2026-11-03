@@ -40,7 +40,7 @@ export function Avatar({
           : name || copy.avatar.unknown
       }
       className={cn(
-        'relative inline-flex shrink-0 items-center justify-center rounded-full bg-brand-secondary font-semibold text-brand-secondary',
+        'relative inline-flex shrink-0 items-center justify-center rounded-avatar bg-brand-secondary font-semibold text-brand-secondary',
         sizes[size],
         className,
       )}
@@ -57,7 +57,7 @@ export function Avatar({
           sizes="64px"
           src={src}
           alt={copy.avatar.decorativeAlt}
-          className="rounded-full object-cover"
+          className="rounded-[inherit] object-cover"
           onError={() => setFailed(src)}
         />
       )}

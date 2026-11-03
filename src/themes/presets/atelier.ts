@@ -59,6 +59,7 @@ export const atelierTheme = {
   radius: {
     small: '0.125rem',
     control: '0.25rem',
+    avatar: '0.25rem',
     card: '0.375rem',
     overlay: '0.5rem',
     chip: '0.25rem',

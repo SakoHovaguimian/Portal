@@ -13,6 +13,8 @@ import { portalNavigation } from '@/config/portalNavigation';
 import { portalModules } from '@/config/portalModules';
 import { NotificationInboxLink } from '@/modules/notification-inbox/components/NotificationInboxLink';
 import { portalModuleStrings } from '@/strings';
+import { getDefaultProjectRoute } from '@/config/projectRoutes';
+import { DemoSimulationNotice } from '@/modules/dev-settings/components/DemoSimulationNotice';
 
 export function ProtectedShell({
   children,
@@ -23,7 +25,7 @@ export function ProtectedShell({
   const pathname = usePathname();
   const { session } = useSessionState();
   const runtime = useRuntimeConfig();
-  const back = useGuardedBack('/dashboard');
+  const back = useGuardedBack(getDefaultProjectRoute((session ?? initialSession).user.role));
   const current = session ?? initialSession;
 
   function renderUtilities() {
@@ -44,9 +46,11 @@ export function ProtectedShell({
   return (
     <AppShell
       session={current}
+      contentLayout={pathname === '/chat' ? 'workspace' : 'page'}
       navigationItems={portalNavigation(current.user, runtime)}
       accountSlot={<ShellActions />}
       utilitySlot={renderUtilities()}
+      bannerSlot={runtime.demoMode && runtime.devSettingsEnabled ? <DemoSimulationNotice /> : undefined}
       activePath={pathname}
       onNavigate={(href) => {
 

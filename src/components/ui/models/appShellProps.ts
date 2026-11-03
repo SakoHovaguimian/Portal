@@ -11,4 +11,5 @@ export type AppShellProps = PropsWithChildren<{
   activePath?: string;
   onNavigate?: (href: string) => void;
   navigationItems?: AppSidebarItem[];
+  contentLayout?: 'page' | 'workspace';
 }>;

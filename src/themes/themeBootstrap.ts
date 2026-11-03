@@ -74,7 +74,7 @@ export function getThemeBootstrapScript(): string {
     if (!value || !['light', 'dark'].includes(value.mode) || ('themeId' in value && !themes.includes(value.themeId))) {
       value = fallback;
     } else {
-      value = { themeId: value.themeId || 'portal', mode: value.mode };
+      value = { themeId: value.themeId || fallback.themeId, mode: value.mode };
     }
 
   } catch (error) {

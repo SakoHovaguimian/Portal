@@ -59,6 +59,7 @@ export const studioTheme = {
   radius: {
     small: '0.625rem',
     control: '0.875rem',
+    avatar: '0.875rem',
     card: '1.5rem',
     overlay: '2rem',
     chip: '9999px',

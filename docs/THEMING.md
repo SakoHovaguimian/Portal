@@ -95,3 +95,9 @@ Appearance stays in the existing `semantic-web-theme` storage key as `{themeId, 
 Old `{mode, accent}` records load as Portal and preserve light/dark mode. Obsolete accent overrides are ignored; the selected theme owns its colors. Changes synchronize across browser tabs through the existing storage event.
 
 The Next font variables use `--font-portal-*` on the document root. Theme-owned `--font-body/display/mono` can therefore change without a font-loader class on the body overriding them. Browser theme switching makes no font-service, backend, Firebase, analytics, or notification calls.
+
+## Avatar And Switch Shapes
+
+`ThemeDefinition.radius.avatar` owns avatar corners, including image clipping and group overflow controls. `compileTheme` maps it through the prefixed runtime adapter to `--radius-avatar` / `rounded-avatar`. Every preset supplies this role; Blueprint uses zero, while Cupertino explicitly keeps circular avatars. Presence markers retain their circular semantic shape.
+
+Optional `controls.switchTrackRadius` and `controls.switchThumbRadius` fall back to the theme's control and small radii. The compiler maps them to `--radius-switch-track` and `--radius-switch-thumb` through `theme.css`. Switch frames, checkbox input geometry, thumb, and interaction halo use the same roles. Cupertino supplies explicit pill/circle values. Avoid screen-local theme ID checks or hardcoded rounding.

@@ -4,6 +4,8 @@ import { strings } from '@/strings';
 import type { Route } from 'next';
 import type { AuthSessionCreationResponse } from './models/authSessionCreationResponse';
 import type { AuthSessionErrorResponse } from './models/authSessionErrorResponse';
+import { getDefaultProjectRoute, isProjectPathEnabled } from '@/config/projectRoutes';
+import type { UserRole } from '@/models/userRole';
 
 const allowedRedirectPrefixes = [
   '/dashboard',
@@ -14,6 +16,7 @@ const allowedRedirectPrefixes = [
   '/experience',
   '/dev-settings',
   '/chat',
+  '/jobs',
   '/blog',
   '/onboarding',
   '/admin',
@@ -52,7 +55,7 @@ export async function createSession(body: Record<string, unknown>) {
 // MARK: - RESOLVE AUTH REDIRECT
 // **************************************
 
-export function resolveAuthRedirect(redirectTo?: string): Route {
+export function resolveAuthRedirect(redirectTo?: string, role?: UserRole): Route {
 
   if (
     !redirectTo ||
@@ -60,12 +63,13 @@ export function resolveAuthRedirect(redirectTo?: string): Route {
     redirectTo.startsWith('//') ||
     redirectTo.includes('\\') ||
     /[\u0000-\u001f\u007f]/.test(redirectTo)
-  ) { return '/dashboard'; }
+  ) { return getDefaultProjectRoute(role); }
   try {
 
     const target = new URL(redirectTo, 'http://portal.internal');
     const isAllowedRedirect =
       target.origin === 'http://portal.internal' &&
+      isProjectPathEnabled(target.pathname) &&
       allowedRedirectPrefixes.some(
         (prefix) =>
           target.pathname === prefix ||
@@ -78,7 +82,7 @@ export function resolveAuthRedirect(redirectTo?: string): Route {
   } catch {
     /* Invalid destinations use the default workspace. */
   }
-  return '/dashboard';
+  return getDefaultProjectRoute(role);
 
 }
 
@@ -96,7 +100,7 @@ export function resolveOnboardingRedirect(redirectTo?: string): Route {
         'redirectTo',
       ) ?? undefined,
     );
-    if (new URL(target, 'http://portal.internal').pathname === '/onboarding') { return '/dashboard'; }
+    if (new URL(target, 'http://portal.internal').pathname === '/onboarding') { return getDefaultProjectRoute(); }
 
   }
   return target;
@@ -110,9 +114,10 @@ export function resolveOnboardingRedirect(redirectTo?: string): Route {
 export function resolveSessionRedirect(
   redirectTo: string | undefined,
   onboardingRequired = false,
+  role?: UserRole,
 ): Route {
 
-  const target = resolveAuthRedirect(redirectTo);
+  const target = resolveAuthRedirect(redirectTo, role);
   return onboardingRequired
     ? (`/onboarding?redirectTo=${encodeURIComponent(resolveOnboardingRedirect(target))}` as Route)
     : target;

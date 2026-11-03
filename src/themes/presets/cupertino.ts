@@ -59,6 +59,7 @@ export const cupertinoTheme = {
   radius: {
     small: '0.375rem',
     control: '0.625rem',
+    avatar: '9999px',
     card: '1.25rem',
     overlay: '1.75rem',
     chip: '0.625rem',
@@ -154,6 +155,8 @@ export const cupertinoTheme = {
     sliderVerticalLength: '10rem',
     progressTrackHeight: '0.375rem',
     progressRingStroke: '6',
+    switchTrackRadius: '9999px',
+    switchThumbRadius: '9999px',
     switchWidth: '3.1875rem',
     switchHeight: '1.9375rem',
     switchInset: '0.125rem',

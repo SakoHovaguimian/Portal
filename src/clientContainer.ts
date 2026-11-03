@@ -12,6 +12,8 @@ import { AccountToolsService } from '@/modules/account-tools/services/accountToo
 import { OnboardingService } from '@/modules/onboarding/services/onboardingService';
 import { DevSettingsService } from '@/modules/dev-settings/services/devSettingsService';
 import { EngagementService } from '@/modules/engagement/services/engagementService';
+import { BackgroundJobService } from '@/modules/background-jobs/services/backgroundJobService';
+import { PresentationMotionPreferenceService } from '@/services/presentation-motion/presentationMotionPreferenceService';
 
 export class ClientServiceContainer {
 
@@ -21,7 +23,9 @@ export class ClientServiceContainer {
   readonly dashboardService = new DashboardService(this.apiClient);
   readonly themePreferenceService = new ThemePreferenceService();
   readonly motionPreferenceService = new MotionPreferenceService();
+  readonly presentationMotionPreferenceService = new PresentationMotionPreferenceService();
   readonly chatService = new ChatService(this.apiClient);
+  readonly backgroundJobService = new BackgroundJobService(this.apiClient);
   readonly blogService = new BlogService(this.apiClient);
   readonly publicImageService = new PublicImageService(this.apiClient);
   readonly notificationInboxService = new NotificationInboxService(

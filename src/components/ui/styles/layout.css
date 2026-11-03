@@ -36,6 +36,12 @@ body:has(.ui-floating-assistant) .ui-page {
   html:has(.ui-app-shell) {
     overscroll-behavior-y: none;
   }
+
+  /* Paint behind the sidebar's curved edge without shifting header content. */
+  .ui-app-topbar {
+    margin-inline-start: calc(-1 * var(--dashboard-sidebar-radius));
+    padding-inline-start: var(--dashboard-sidebar-radius);
+  }
 }
 
 /* Keep actions reachable on spacious screens without covering mobile fields. */

@@ -59,6 +59,7 @@ export const portalTheme = {
   radius: {
     small: '0.375rem',
     control: '0.625rem',
+    avatar: '0.625rem',
     card: '0.875rem',
     overlay: '1.25rem',
     chip: '9999px',

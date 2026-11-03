@@ -11,6 +11,8 @@ export type ThemeControls = {
   sliderVerticalLength: string;
   progressTrackHeight: string;
   progressRingStroke: string;
+  switchTrackRadius?: string;
+  switchThumbRadius?: string;
   switchWidth: string;
   switchHeight: string;
   switchInset: string;

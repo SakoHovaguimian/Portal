@@ -3,6 +3,7 @@ import { strings } from '@/strings';
 import { AppSidebar, type AppSidebarItem } from './AppSidebar';
 import { MobileNavigationMenu } from './MobileNavigationMenu';
 import { UiIcon } from '../components/UiIcon';
+import { cn } from '../lib/cn';
 
 const navigation: AppSidebarItem[] = [
   {
@@ -53,6 +54,7 @@ export function AppShell({
   activePath,
   onNavigate,
   navigationItems,
+  contentLayout = 'page',
 }: AppShellProps) {
 
   const items = (navigationItems ?? navigation).map((item) => ({
@@ -71,8 +73,8 @@ export function AppShell({
   function renderHeader() {
 
     return (
-      <header className="top-0 z-30 border-b-control border-(--dashboard-shell-border) bg-(--dashboard-shell-topbar) backdrop-blur lg:sticky">
-        <div className="mx-auto flex min-h-16 max-w-352 flex-wrap items-center justify-between gap-3 px-(--space-page) py-3">
+      <header className="ui-app-topbar top-0 z-30 shrink-0 border-b-control border-(--dashboard-shell-border) bg-(--dashboard-shell-topbar) backdrop-blur lg:sticky">
+        <div className="mx-auto flex min-h-16 w-full flex-wrap items-center justify-between gap-3 px-(--space-page) py-3">
           <div className="flex min-w-0 items-center gap-3">
             <MobileNavigationMenu
               key={`${session.user.id}:${activePath}`}
@@ -93,7 +95,7 @@ export function AppShell({
           )}
         </div>
         {bannerSlot && (
-          <div className="mx-auto max-w-352 px-(--space-page) pb-3">
+          <div className="mx-auto w-full px-(--space-page) pb-3 empty:hidden">
             {bannerSlot}
           </div>
         )}
@@ -111,12 +113,12 @@ export function AppShell({
         {strings.componentLibrary.skipToContent}
       </a>
       <AppSidebar {...sidebar} />
-      <div className="min-w-0">
+      <div className={cn('min-w-0', contentLayout === 'workspace' && 'flex h-dvh min-h-0 flex-col')}>
         {renderHeader()}
         <main
           id="main-content"
           tabIndex={-1}
-          className="mx-auto flex w-full min-w-0 max-w-352 flex-col gap-(--space-section) px-(--space-page) pt-(--space-section) pb-12 outline-none lg:pb-16"
+          className={cn('mx-auto flex w-full min-w-0 flex-col gap-(--space-section) px-(--space-page) pt-(--space-section) pb-12 outline-none lg:pb-16', contentLayout === 'workspace' && 'min-h-0 flex-1 overflow-hidden py-(--space-page) lg:pb-(--space-page)')}
         >
           {children}
         </main>

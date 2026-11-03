@@ -9,6 +9,7 @@ import {
 import type { DemoState } from './models/demoState';
 import type { DemoPasswordRecord } from './models/demoPasswordRecord';
 import { strings } from '@/strings';
+import { projectConfiguration } from '@/config/projectConfiguration';
 
 // **************************************
 // MARK: - CREATE DEMO PASSWORD RECORD
@@ -52,7 +53,7 @@ export function getDemoState(): DemoState {
     globalDemo.portalDemoState = {
       generation: crypto.randomUUID(),
       users,
-      featureRequests: structuredClone(featureRequests),
+      featureRequests: projectConfiguration.starterData === 'empty' ? [] : structuredClone(featureRequests),
       credentials: new Map(
         users.map((user) => [
           user.external_id,
@@ -60,7 +61,7 @@ export function getDemoState(): DemoState {
         ]),
       ),
       refreshTokens: new Map(),
-      messages: [
+      messages: projectConfiguration.starterData === 'empty' ? [] : [
         {
           id: '77777777-7777-4777-8777-777777777777',
           userId: users[0].id,

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Button, Field, Input, SegmentedPanels } from '@/components/ui';
+import { Button, Field, Input, SegmentedPanels, Slider } from '@/components/ui';
 import { usePresentationService } from '@/presentation/PresentationProvider';
 import { strings } from '@/strings';
 import { ShowcaseSection } from './ShowcaseSection';
@@ -51,20 +51,16 @@ export function MotionShowcase() {
         ]}
       />
       <div className="grid gap-3">
-        <Field labelText={copy.overlayTiming}>
-          <Input
-            type="range"
-            min={0}
-            max={700}
-            step={10}
-            value={duration}
-            aria-valuetext={strings.componentLibrary.milliseconds(duration)}
-            onChange={(event) => setDuration(Number(event.target.value))}
-          />
-        </Field>
-        <p className="m-0 text-sm text-tertiary">
-          {strings.componentLibrary.milliseconds(duration)}
-        </p>
+        <Slider
+          label={copy.overlayTiming}
+          description={copy.timingHint}
+          min={0}
+          max={700}
+          step={10}
+          value={duration}
+          onValueChange={setDuration}
+          formatOptions={{ style: 'unit', unit: 'millisecond', unitDisplay: 'short' }}
+        />
         <div className="flex flex-wrap gap-3">
           <Button
             variant="secondary"

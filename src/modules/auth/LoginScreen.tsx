@@ -41,7 +41,7 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
       const result = await createSession({ action: 'login', email, password });
 
       router.push(
-        resolveSessionRedirect(redirectTo, result.onboardingRequired),
+        resolveSessionRedirect(redirectTo, result.onboardingRequired, result.user.role),
       );
       router.refresh();
 
@@ -69,7 +69,7 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
 
       const result = await createSession({ action: 'preset', preset });
       router.push(
-        resolveSessionRedirect(redirectTo, result.onboardingRequired),
+        resolveSessionRedirect(redirectTo, result.onboardingRequired, result.user.role),
       );
       router.refresh();
 

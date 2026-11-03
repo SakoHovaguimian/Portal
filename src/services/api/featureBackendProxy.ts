@@ -6,6 +6,8 @@ import { handlePublishingRequest } from '@/modules/blog/server/handlePublishingR
 import { handlePublicImageRequest } from '@/services/media/server/handlePublicImageRequest';
 import { handleLiveNotificationInboxRequest } from '@/modules/notification-inbox/server/handleLiveNotificationInboxRequest';
 import { handleLiveAccountToolsRequest } from '@/modules/account-tools/server/handleLiveAccountToolsRequest';
+import { handleLiveChatRequest } from '@/modules/chat/server/handleLiveChatRequest';
+import { handleLiveBackgroundJobRequest } from '@/modules/background-jobs/server/handleLiveBackgroundJobRequest';
 
 // **************************************
 // MARK: - PROXY OPTIONAL FEATURE REQUEST
@@ -18,6 +20,18 @@ export async function featureBackendProxy(
   forward: BackendForward,
 ) {
 
+  if (portalModules.chat) {
+
+    const chat = await handleLiveChatRequest(request, path, forward);
+    if (chat) { return chat; }
+
+  }
+  if (portalModules.backgroundJobs) {
+
+    const job = await handleLiveBackgroundJobRequest(request, path, forward, session.user.id);
+    if (job) { return job; }
+
+  }
   const options = {
     request,
     path,

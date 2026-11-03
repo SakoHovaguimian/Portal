@@ -6,6 +6,8 @@ import { NotificationChannelSchema } from '../models/notificationChannel';
 import type { NotificationPreference } from '../models/notificationPreference';
 import type { DemoNotificationInboxState } from './models/demoNotificationInboxState';
 import type { DemoInboxNotification } from './models/demoInboxNotification';
+import { projectConfiguration } from '@/config/projectConfiguration';
+import { getDefaultProjectRoute, isProjectPathEnabled } from '@/config/projectRoutes';
 
 const owner = globalThis as typeof globalThis & {
   portalNotificationInboxState?: DemoNotificationInboxState;
@@ -82,6 +84,7 @@ export function getDemoNotificationInboxState(): DemoNotificationInboxState {
             ).toISOString();
             return {
               ...template,
+              destination: isProjectPathEnabled(template.destination) ? template.destination : getDefaultProjectRoute(),
               id: crypto.randomUUID(),
               userId: user.id,
               createdAt: instant,
@@ -124,7 +127,7 @@ export function getDemoNotificationInboxState(): DemoNotificationInboxState {
       },
     );
     owner.portalNotificationInboxState = {
-      notifications,
+      notifications: projectConfiguration.starterData === 'empty' ? [] : notifications,
       preferences: new Map(),
       settings: new Map(),
     };

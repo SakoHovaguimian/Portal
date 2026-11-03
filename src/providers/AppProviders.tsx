@@ -36,7 +36,7 @@ export function AppProviders({
         <ThemePreferenceProvider service={container.themePreferenceService}>
           <MotionPreferenceProvider service={container.motionPreferenceService}>
             <QueryClientProvider client={queryClient}>
-              <PresentationProvider>
+              <PresentationProvider service={container.presentationMotionPreferenceService}>
                 <NavigationGuardProvider>
                   <FloatingAssistantProvider>
                     <RealtimeProvider>

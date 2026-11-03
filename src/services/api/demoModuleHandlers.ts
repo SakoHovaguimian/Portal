@@ -18,6 +18,10 @@ import {
   resetDemoEngagementState,
   resetUserDemoEngagement,
 } from '@/modules/engagement/server/demoEngagementState';
+import { handleDemoChatRequest } from '@/modules/chat/server/handleDemoChatRequest';
+import { resetDemoChatState, resetDemoChatAccount } from '@/modules/chat/server/demoChatState';
+import { handleDemoBackgroundJobRequest } from '@/modules/background-jobs/server/handleDemoBackgroundJobRequest';
+import { resetDemoBackgroundJobs } from '@/modules/background-jobs/server/demoJobQueue';
 
 // **************************************
 // MARK: - COMPOSE DEMO MODULE HANDLERS
@@ -26,6 +30,10 @@ import {
 /** Compose optional domain handlers here; request simulation stays in DemoApiClient. */
 export function createDemoModuleHandlers(): DemoRequestHandler[] {
 
+  registerDemoReset('chat', resetDemoChatState);
+  registerDemoAccountReset('chat', resetDemoChatAccount);
+  registerDemoReset('jobs', () => resetDemoBackgroundJobs());
+  registerDemoAccountReset('jobs', resetDemoBackgroundJobs);
   registerDemoReset('publishing', resetDemoBlogState);
   registerDemoReset('media', resetDemoPublicImages);
   registerDemoReset('notifications', resetDemoNotificationInboxState);
@@ -43,6 +51,18 @@ export function createDemoModuleHandlers(): DemoRequestHandler[] {
         actor: context.current,
         demoMode: true,
       };
+      if (portalModules.chat) {
+
+        const chat = await handleDemoChatRequest(context.request, context.path, context.current, { empty: context.empty });
+        if (chat) { return chat; }
+
+      }
+      if (portalModules.backgroundJobs) {
+
+        const job = await handleDemoBackgroundJobRequest(context.request, context.path, context.current.id, { empty: context.empty });
+        if (job) { return job; }
+
+      }
       if (portalModules.media) {
 
         const media = await handlePublicImageRequest(options);

@@ -6,6 +6,7 @@ import type { NotificationDelivery } from '../models/notificationDelivery';
 import type { NotificationDeliveryAttempt } from '../models/notificationDeliveryAttempt';
 import type { DemoAccountDevice } from './models/demoAccountDevice';
 import { AccountDeviceTypeSchema } from '../models/accountDeviceType';
+import { projectConfiguration } from '@/config/projectConfiguration';
 
 const globalAccountTools = globalThis as typeof globalThis & {
   portalAccountToolsState?: DemoAccountToolsState;
@@ -109,9 +110,9 @@ export function getDemoAccountToolsState(): DemoAccountToolsState {
       ],
     ]);
     globalAccountTools.portalAccountToolsState = {
-      devices,
-      deliveries,
-      attempts,
+      devices: projectConfiguration.starterData === 'empty' ? [] : devices,
+      deliveries: projectConfiguration.starterData === 'empty' ? [] : deliveries,
+      attempts: projectConfiguration.starterData === 'empty' ? new Map() : attempts,
     };
 
   }

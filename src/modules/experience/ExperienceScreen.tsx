@@ -1,7 +1,7 @@
 'use client';
 
 import { strings } from '@/strings';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui';
 import { usePresentationService } from '@/presentation/PresentationProvider';
@@ -141,6 +141,19 @@ const faqItems = [
 export function ExperienceScreen() {
 
   const presentation = usePresentationService();
+  const motionPreviewDisposer = useRef<(() => void) | null>(null);
+  useEffect(() => {
+
+    const cleanup = () => {
+
+      motionPreviewDisposer.current?.();
+      motionPreviewDisposer.current = null;
+
+    };
+
+    return cleanup;
+
+  }, []);
   const [scrollY, setScrollY] = useState(0);
   const [activeSection, setActiveSection] =
     useState<(typeof sections)[number]['id']>('hero');
@@ -958,7 +971,8 @@ export function ExperienceScreen() {
               variant="secondary"
               onClick={async () => {
 
-                presentation.setMotionConfig({
+                motionPreviewDisposer.current?.();
+                motionPreviewDisposer.current = presentation.configureMotion({
                   enabled: true,
                   toastDurationMs: 170,
                   alertDurationMs: 180,
@@ -980,7 +994,8 @@ export function ExperienceScreen() {
               variant="secondary"
               onClick={async () => {
 
-                presentation.setMotionConfig({
+                motionPreviewDisposer.current?.();
+                motionPreviewDisposer.current = presentation.configureMotion({
                   enabled: true,
                   toastDurationMs: 280,
                   alertDurationMs: 300,
@@ -1002,7 +1017,8 @@ export function ExperienceScreen() {
               variant="ghost"
               onClick={async () => {
 
-                presentation.setMotionConfig({ enabled: false });
+                motionPreviewDisposer.current?.();
+                motionPreviewDisposer.current = presentation.configureMotion({ enabled: false });
                 await presentation.showToast({
                   title: strings.ui.experienceScreen.motionDisabled,
                   description:
@@ -1019,12 +1035,8 @@ export function ExperienceScreen() {
             <Button
               onClick={async () => {
 
-                presentation.setMotionConfig({
-                  enabled: true,
-                  toastDurationMs: undefined,
-                  alertDurationMs: undefined,
-                  sheetDurationMs: undefined,
-                });
+                motionPreviewDisposer.current?.();
+                motionPreviewDisposer.current = null;
                 await presentation.showAlert({
                   title: strings.ui.experienceScreen.defaultMotionRestored,
                   description:

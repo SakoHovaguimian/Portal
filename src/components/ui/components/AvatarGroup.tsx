@@ -43,11 +43,11 @@ export function AvatarGroup({
       <DialogTrigger>
         <Button
           aria-label={copy.avatar.showMore(hidden.length)}
-          className="-ms-2 inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full outline-none hover:opacity-80 focus-visible:ring-2 focus-visible:ring-brand"
+          className="-ms-2 inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-avatar outline-none hover:opacity-80 focus-visible:ring-2 focus-visible:ring-brand"
         >
           <span
             className={cn(
-              'inline-flex items-center justify-center rounded-full bg-secondary text-xs font-semibold text-secondary ring-2 ring-primary',
+              'inline-flex items-center justify-center rounded-avatar bg-secondary text-xs font-semibold text-secondary ring-2 ring-primary',
               size === 'sm'
                 ? 'size-8'
                 : size === 'lg'

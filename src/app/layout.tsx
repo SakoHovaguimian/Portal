@@ -16,10 +16,14 @@ import {
   Sora,
 } from 'next/font/google';
 import { ThemeScript } from '@/components/ui';
+import { projectConfiguration } from '@/config/projectConfiguration';
 
 export const metadata: Metadata = {
   title: { default: strings.app.name, template: `%s | ${strings.app.name}` },
   description: strings.app.description,
+  ...(projectConfiguration.branding.iconPath
+    ? { icons: { icon: projectConfiguration.branding.iconPath } }
+    : {}),
 };
 
 const bodyFont = IBM_Plex_Sans({
@@ -86,8 +90,8 @@ export default async function RootLayout({
       className={fontVariables}
       lang="en"
       data-scroll-behavior="smooth"
-      data-theme="light"
-      data-theme-id="portal"
+      data-theme={projectConfiguration.appearance.mode}
+      data-theme-id={projectConfiguration.appearance.themeId}
       suppressHydrationWarning
     >
       <body className="bg-primary text-primary antialiased">

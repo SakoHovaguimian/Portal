@@ -4,13 +4,14 @@ import type { DevSettingsCommand } from './models/devSettingsCommand';
 
 export const devSettingsQueryKey = ['dev-settings'] as const;
 
-export function useDevSettings() {
+export function useDevSettings(enabled = true) {
 
   const { devSettingsService } = useServiceContainer();
   const settingsQuery = useQuery({
     queryKey: devSettingsQueryKey,
     queryFn: ({ signal }) => devSettingsService.read(signal),
     retry: false,
+    enabled,
   });
 
   return settingsQuery;

@@ -59,6 +59,7 @@ export const blueprintTheme = {
   radius: {
     small: '0rem',
     control: '0rem',
+    avatar: '0rem',
     card: '0rem',
     overlay: '0rem',
     chip: '0rem',

@@ -19,7 +19,7 @@ The client listens to `portal.event`. Events must pass `RealtimeEventSchema` bef
 
 Supported chat types: `chat.message_created`, `chat.message_updated`, `chat.message_deleted`. Alert type: `notification`, with `data: { title, body }`. Alerts use the shared toast provider and invalidate inbox records/counts. A bounded event-ID set deduplicates foreground Socket.IO/FCM delivery. Unmount/logout disconnects sockets and foreground listeners. Transport reconnects retry with delay; server handshake rejection also obtains a fresh ticket.
 
-This generic Portal contract is intentionally smaller than JobLens project chat. Implement its backend publication/authorization or adapt the event schema and handler to your domain together.
+The expanded [chat module](CHAT.md) uses conversation membership, direct messages, groups, private attachments, replies, and message actions. Backend event publication must enforce the same membership boundaries. Existing chat message events invalidate the shared chat query family; demo mode uses HTTP polling and an immediate local outbox without Socket.IO.
 
 ## Firebase Messaging
 

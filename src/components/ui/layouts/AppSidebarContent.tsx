@@ -6,6 +6,8 @@ import { NavigationLink } from '../components/NavigationLink';
 import { InitialsAvatar } from '../components/InitialsAvatar';
 import { SidebarLinks } from '../components/SidebarLinks';
 import { cn } from '../lib/cn';
+import { getDefaultProjectRoute } from '@/config/projectRoutes';
+import { ProjectBrand } from '@/components/ProjectBrand';
 
 export function AppSidebarContent({
   session,
@@ -17,7 +19,7 @@ export function AppSidebarContent({
   headerAction,
 }: AppSidebarContentProps) {
 
-  const homeHref = '/dashboard';
+  const homeHref = getDefaultProjectRoute(session.user.role);
   const displayName =
     `${session.user.firstName} ${session.user.lastName}`.trim();
   const primaryItems = items.filter((item) => item.placement !== 'bottom');
@@ -40,7 +42,7 @@ export function AppSidebarContent({
             className="inline-flex min-h-(--control-height-md) cursor-pointer items-center font-display text-2xl font-semibold tracking-tight text-brand-secondary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand"
             navigate={onNavigate}
           >
-            {strings.app.name}
+            <ProjectBrand />
           </NavigationLink>
           {headerAction}
         </div>

@@ -3,6 +3,8 @@ import type { IconName } from '../models/iconName';
 import { cn } from '../lib/cn';
 
 const paths: Record<IconName, string> = {
+  smile: 'M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0ZM8 9h.01M16 9h.01M8 14a4 4 0 0 0 8 0',
+  shift: 'm12 3 9 9h-5v9H8v-9H3l9-9Z',
   image: 'M3 3h18v18H3V3Zm0 14 6-6 4 4 3-3 5 5M15 7h.01',
   upload: 'M12 16V3m-5 5 5-5 5 5M3 15v6h18v-6',
   bell: 'M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4',
@@ -79,6 +81,7 @@ const paths: Record<IconName, string> = {
   dollar: 'M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6',
   chart: 'M5 20v-7m7 7V8m7 12V3',
   arrowUp: 'M12 20V4m-6 6 6-6 6 6',
+  arrowDown: 'M12 4v16m-6-6 6 6 6-6',
   info: 'M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0Zm9-1v6m0-10h.01',
   warning: 'm12 3 10 18H2L12 3Zm0 6v5m0 3h.01',
   mail: 'M3 5h18v14H3V5Zm0 0 9 8 9-8',

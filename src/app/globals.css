@@ -292,6 +292,16 @@ input[type='number'] {
 html {
   scrollbar-gutter: stable;
 }
+
+/* The root gutter already reserves scrollbar space. Radix's body margin would
+   reserve it a second time; retain its scroll lock and focus isolation. */
+@supports (scrollbar-gutter: stable) {
+  html body[data-scroll-locked] {
+    margin-right: 0 !important;
+    --removed-body-scroll-bar-size: 0px;
+  }
+}
+
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--color-border-primary) var(--color-bg-secondary);

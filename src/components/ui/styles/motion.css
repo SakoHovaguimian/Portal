@@ -185,7 +185,7 @@
   pointer-events: none;
 }
 .ui-switch-frame::after {
-  border-radius: 9999px;
+  border-radius: var(--radius-switch-track);
   background: var(--color-switch-on);
 }
 .ui-choice-label[data-interacted]

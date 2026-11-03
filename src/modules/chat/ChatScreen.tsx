@@ -1,219 +1,110 @@
 'use client';
-
-import { useRef, useState, type ChangeEvent, type FormEvent } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  Button,
-  Card,
-  Field,
-  Input,
-  Page,
-  PageHeader,
-  QueryBoundary,
-} from '@/components/ui';
-import { useServiceContainer } from '@/providers/AppProviders';
+import { useEffect, useRef, useState } from 'react';
+import { Button, Modal, Page, PageHeader, QueryBoundary, UiIcon } from '@/components/ui';
 import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
-import { useRealtime } from '@/services/realtime/RealtimeProvider';
-import { useRuntimeConfig } from '@/providers/RuntimeProvider';
-import { strings } from '@/strings';
-import type { ChatMessage } from './models/chatMessage';
+import { useUrlState } from '@/providers/useUrlState';
+import { portalChatStrings as copy } from '@/strings';
+import type { ChatConversation } from './models/chatConversation';
+import type { ChatDraft } from './models/chatDraft';
+import { useChatOutbox } from './useChatOutbox';
+import { useChatMessageActions } from './useChatMessageActions';
+import { useChatWorkspace, useConversationMessages } from './hooks';
+import { ConversationList } from './components/ConversationList';
+import { ConversationThread } from './components/ConversationThread';
+import { ConversationDetails } from './components/ConversationDetails';
+import { CreateConversationDialog } from './components/CreateConversationDialog';
+
+const emptyConversations: ChatConversation[] = [];
 
 export function ChatScreen() {
 
-  const container = useServiceContainer();
-  const queryClient = useQueryClient();
-  const realtime = useRealtime();
-  const { demoMode } = useRuntimeConfig();
-  const [message, setMessage] = useState('');
+  const workspace = useChatWorkspace();
+  const outbox = useChatOutbox(workspace.userId);
+  const messageActions = useChatMessageActions(workspace.userId);
+  const conversations = workspace.conversations.data ?? emptyConversations;
+  const allowed = ['', ...conversations.map((conversation) => conversation.id)];
+  const [selectedId, setSelectedId] = useUrlState('conversation', '', allowed);
+  const [folder, setFolder] = useUrlState('folder', 'inbox', ['inbox', 'archived']);
+  const [search, setSearch] = useState('');
+  const [createdId, setCreatedId] = useState('');
+  const [creating, setCreating] = useState(false);
+  const [details, setDetails] = useState(false);
+  const [drafts, setDrafts] = useState<Record<string, ChatDraft>>({});
   const dirtyRef = useRef(false);
   const busyRef = useRef(false);
+  const hasUnsentMessages = outbox.items.some((item) => item.status !== 'sent');
   useUnsavedFormGuard(dirtyRef, busyRef);
-  const query = useQuery({
-    queryKey: ['chat', 'messages'],
-    queryFn: ({ signal }) => container.chatService.listMessages(signal),
-    refetchInterval: demoMode || realtime.status === 'offline' ? 5000 : false,
-  });
-  const mutation = useMutation({
-    mutationFn: (value: string) => container.chatService.sendMessage(value),
-    onSuccess: async () => {
+  const selected = conversations.find((conversation) => conversation.id === selectedId);
+  const messages = useConversationMessages(selected?.id ?? null);
+  const activeDraft = selected ? drafts[selected.id] ?? { body: '', files: [], replyToId: null, clientId: '' } : null;
+
+  useEffect(() => {
+    dirtyRef.current = hasUnsentMessages || Object.values(drafts).some((item) => Boolean(item.body.trim() || item.files.length));
+  }, [drafts, hasUnsentMessages]);
+
+  function changeDraft(draft: ChatDraft) {
+
+    if (!selected) { return; }
+    const next = { ...drafts, [selected.id]: { ...draft, clientId: draft.clientId && draft.body === activeDraft?.body && draft.files === activeDraft?.files && draft.replyToId === activeDraft?.replyToId ? draft.clientId : crypto.randomUUID() } };
+    dirtyRef.current = hasUnsentMessages || Object.values(next).some((item) => Boolean(item.body.trim() || item.files.length));
+    setDrafts(next);
+
+  }
+
+  async function select(id: string) {
+
+    if (busyRef.current) { return; }
+    // Conversation changes preserve drafts in memory, so the page-exit guard is only needed for navigation away.
+    dirtyRef.current = false;
+    try {
+
+      await setSelectedId(id); setDetails(false);
+
+    } finally { dirtyRef.current = hasUnsentMessages || Object.values(drafts).some((item) => Boolean(item.body.trim() || item.files.length)); }
+
+  }
+
+  useEffect(() => {
+
+    if (createdId && conversations.some((conversation) => conversation.id === createdId)) {
 
       dirtyRef.current = false;
-      busyRef.current = false;
-      setMessage('');
-      await queryClient.invalidateQueries({ queryKey: ['chat'] });
+      void setSelectedId(createdId).finally(() => {
 
-    },
-    onSettled: () => {
-      busyRef.current = false;
-    },
-  });
+        setCreatedId(''); dirtyRef.current = hasUnsentMessages || Object.values(drafts).some((item) => Boolean(item.body.trim() || item.files.length));
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-
-    event.preventDefault();
-    if (message.trim() && !busyRef.current) {
-
-      busyRef.current = true;
-      mutation.mutate(message);
+      });
 
     }
 
+  }, [conversations, createdId, drafts, hasUnsentMessages, setSelectedId]);
+
+  function renderDetails(variant: 'sidebar' | 'dialog' = 'sidebar') {
+    return selected ? <ConversationDetails key={selected.id} variant={variant} onMessageSelect={() => setDetails(false)} conversation={selected} messages={messages.data ?? []} people={workspace.people.data ?? []} userId={workspace.userId} onChanged={() => {}} /> : null;
   }
 
-  function handleMessageChange(event: ChangeEvent<HTMLInputElement>) {
-
-    dirtyRef.current = event.target.value.length > 0;
-    setMessage(event.target.value);
-
-  }
-
-  function renderHeader() {
-
-    return (
-      <PageHeader
-        title={strings.chat.title}
-        description={strings.chat.description}
-      />
-    );
-
-  }
-
-  function renderRealtimeStatus() {
-
-    return (
-      <div>
-        <p className="mt-2 text-xs text-tertiary" role="status">
-          {strings.chat[realtime.status]}
-        </p>
-      </div>
-    );
-
-  }
-
-  function renderMessageRow(item: ChatMessage) {
-
-    return (
-      <article
-        key={item.id}
-        className="rounded-xl border-control border-secondary p-4"
-      >
-        <p className="text-sm font-semibold">{item.author}</p>
-        <p className="whitespace-pre-wrap wrap-break-word text-sm text-secondary">
-          {item.message}
-        </p>
-        <time className="text-xs text-tertiary" dateTime={item.createdAt}>
-          {new Date(item.createdAt).toLocaleString('en-US')}
-        </time>
-      </article>
-    );
-
-  }
-
-  function renderMessageLog(messages: ChatMessage[]) {
-
-    const messageRows = messages.map(renderMessageRow);
-
-    return (
-      <div
-        role="log"
-        aria-label={strings.chat.title}
-        className="grid max-h-[50vh] gap-3 overflow-y-auto"
-      >
-        {messages.length === 0 && (
-          <p className="text-secondary">{strings.chat.empty}</p>
+  return (
+    <Page className="flex h-full min-h-0 flex-1 flex-col gap-5 [&>.ui-page-header]:shrink-0">
+      <PageHeader title={copy.title} description={copy.description} action={<Button onClick={() => setCreating(true)} disabled={workspace.people.isPending || workspace.people.isError}><UiIcon name="plus" className="size-4" />{copy.newConversation}</Button>} />
+      <QueryBoundary query={workspace.conversations} retainDataOnError>
+        {() => (
+          <div className="grid min-h-0 min-w-0 flex-1 overflow-hidden rounded-card border-control border-secondary bg-primary shadow-(--shadow-control) lg:grid-cols-[280px_minmax(0,1fr)] 2xl:grid-cols-[280px_minmax(0,1fr)_320px]">
+            <div className={`min-h-0 min-w-0 border-r-control border-secondary ${selected ? 'hidden lg:block' : ''}`}><ConversationList conversations={conversations} selectedId={selectedId || null} search={search} archived={folder === 'archived'} onSearch={setSearch} onArchived={(value) => { void setFolder(value ? 'archived' : 'inbox'); }} onSelect={(id) => { void select(id); }} onCreate={() => setCreating(true)} /></div>
+            <div className={`min-h-0 min-w-0 ${selected ? '' : 'hidden lg:block'}`}>
+              {selected && activeDraft ? <ConversationThread actions={messageActions} key={selected.id} conversation={selected} messages={messages.data ?? []} userId={workspace.userId} draft={activeDraft} onDraft={changeDraft} onBack={() => { void select(''); }} onDetails={() => setDetails(true)} outbox={outbox.items.filter((item) => item.conversationId === selected.id)} onSend={(draft) => outbox.send(selected.id, draft)} demoMode={workspace.demoMode} loading={messages.isPending} failed={messages.isError} onRetry={() => { void messages.refetch(); }} /> : <div className="flex h-full flex-col items-center justify-center gap-3 bg-secondary_subtle px-8 text-center"><span className="mb-2 flex size-16 items-center justify-center rounded-full border-control border-secondary bg-primary"><UiIcon name="mail" className="size-7 text-brand-secondary" /></span><h2 className="m-0 max-w-xs text-2xl font-semibold tracking-tight">{copy.emptyTitle}</h2><p className="m-0 max-w-xs text-sm leading-relaxed text-tertiary">{copy.emptyHint}</p><Button variant="secondary" className="mt-3" onClick={() => setCreating(true)}>{copy.newConversation}</Button></div>}
+            </div>
+            <aside aria-label={copy.details} className="hidden min-h-0 min-w-0 overflow-y-auto border-l-control border-secondary bg-primary 2xl:block">{renderDetails()}</aside>
+          </div>
         )}
-        {messageRows}
-      </div>
-    );
-
-  }
-
-  function renderConversation() {
-
-    return (
-      <QueryBoundary query={query} retainDataOnError>
-        {(messages) => renderMessageLog(messages)}
       </QueryBoundary>
-    );
+      {workspace.people.isError && <div role="alert" className="flex flex-wrap items-center gap-3"><p className="text-sm text-error-primary">{copy.loadFailedHint}</p><Button variant="secondary" onClick={() => { void workspace.people.refetch(); }}>{copy.retry}</Button></div>}
+      {creating && <CreateConversationDialog people={workspace.people.data ?? []} onDismiss={() => setCreating(false)} onCreated={(id) => {
 
-  }
+        setCreating(false); setCreatedId(id);
 
-  function renderComposeError() {
-
-    return mutation.isError ? (
-      <p
-        id="chat-compose-error"
-        role="alert"
-        className="text-sm text-error-primary"
-      >
-        {strings.chat.failed}
-      </p>
-    ) : null;
-
-  }
-
-  function renderActions() {
-
-    return (
-      <div className="flex flex-wrap gap-2">
-        <Button
-          type="submit"
-          disabled={!message.trim() || mutation.isPending}
-          loading={mutation.isPending}
-        >
-          {strings.chat.send}
-        </Button>
-        {demoMode && (
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={realtime.simulateAlert}
-          >
-            {strings.chat.simulate}
-          </Button>
-        )}
-      </div>
-    );
-
-  }
-
-  function renderComposeForm() {
-
-    return (
-      <form noValidate onSubmit={handleSubmit} className="grid gap-3">
-        <Field labelText={strings.chat.placeholder}>
-          <Input
-            value={message}
-            maxLength={2000}
-            disabled={mutation.isPending}
-            aria-describedby={
-              mutation.isError ? 'chat-compose-error' : undefined
-            }
-            onChange={handleMessageChange}
-          />
-        </Field>
-        {renderComposeError()}
-        {renderActions()}
-      </form>
-    );
-
-  }
-
-  function renderContent() {
-
-    return (
-      <Page>
-        {renderHeader()}
-        <Card className="grid gap-5">
-          {renderRealtimeStatus()}
-          {renderConversation()}
-          {renderComposeForm()}
-        </Card>
-      </Page>
-    );
-
-  }
-
-  return renderContent();
+      }} />}
+      {details && selected && <Modal open size="wide" title={copy.details} onDismiss={() => setDetails(false)}>{renderDetails('dialog')}</Modal>}
+    </Page>
+  );
 
 }
