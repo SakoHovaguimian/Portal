@@ -1,6 +1,6 @@
 'use client';
 
-import { parseDate } from '@internationalized/date';
+import { calendarDate } from '../lib/calendarDate';
 import { useEffect, useRef } from 'react';
 import { I18nProvider } from 'react-aria';
 import {
@@ -26,15 +26,6 @@ import { motionDuration } from '../lib/motionPreferences';
 import type { DatePickerProps } from '../models/datePickerProps';
 import { UiIcon } from './UiIcon';
 import styles from './DatePicker.module.css';
-
-function calendarDate(value?: string) {
-  if (!value) return null;
-  try {
-    return parseDate(value);
-  } catch {
-    return null;
-  }
-}
 
 /** A date-only field with an app-owned, accent-colored calendar. */
 export function DatePicker({

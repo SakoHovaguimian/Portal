@@ -101,3 +101,13 @@
 .clear:hover {
   background: var(--color-bg-secondary_hover);
 }
+
+.day[data-selection-start],
+.day[data-selection-end] {
+  box-shadow: inset 0 0 0 var(--border-width-control) var(--color-border-brand);
+}
+.range
+  .day[data-selected]:not([data-selection-start]):not([data-selection-end]) {
+  background: var(--color-bg-brand-primary);
+  color: var(--color-text-brand-secondary);
+}

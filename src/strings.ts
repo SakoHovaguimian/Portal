@@ -8543,3 +8543,222 @@ export const portalEditStrings = {
   nameTooLong: 'Use 80 characters or fewer for each name.',
   invalidDate: 'Enter a valid date or clear the date field.',
 } as const;
+
+export const componentExpansionStrings = {
+  avatar: {
+    decorativeAlt: '',
+    unknown: 'Unknown Person',
+    fallback: '?',
+    statuses: { online: 'Online', offline: 'Offline', busy: 'Busy' },
+    withStatus: (name: string, status: string) => `${name}, ${status}`,
+    overflow: (count: number) => `+${count}`,
+    showMore: (count: number) => `Show ${count} More People`,
+    overflowNames: (names: string[]) => names.join(', '),
+  },
+  upload: {
+    fileList: 'Files',
+    choose: 'Choose Files',
+    cancel: 'Cancel',
+    retry: 'Retry',
+    remove: 'Remove',
+    dropHint: 'Drag files here or choose them from your device.',
+    fullHint: 'The file limit is reached. Remove a file to choose another.',
+    failedHint: 'This file could not be uploaded. Try again.',
+    statuses: {
+      ready: 'Ready',
+      uploading: 'Uploading',
+      complete: 'Complete',
+      error: 'Failed',
+      cancelled: 'Cancelled',
+    },
+    cancelFile: (name: string) => `Cancel Upload Of ${name}`,
+    retryFile: (name: string) => `Retry Upload Of ${name}`,
+    removeFile: (name: string) => `Remove ${name}`,
+    progress: (name: string) => `Uploading ${name}`,
+    // @preserve-case: File sizes use standard unit abbreviations.
+    fileSize: (bytes: number) =>
+      bytes < 1024
+        ? `${bytes} B`
+        : bytes < 1024 * 1024
+          ? `${(bytes / 1024).toFixed(1)} KB`
+          : `${(bytes / (1024 * 1024)).toFixed(1)} MB`,
+    // @sentence-case: Informational upload constraints.
+    limits: (accept?: string, count?: number, size?: number) =>
+      [
+        accept || 'All file types',
+        count === undefined ? 'Multiple files' : `Up to ${count} files`,
+        size === undefined
+          ? ''
+          : `Up to ${Math.round(size / (1024 * 1024))} MB per file`,
+      ]
+        .filter(Boolean)
+        .join(' · '),
+    // @sentence-case: Validation feedback for rejected files.
+    rejection: (name: string, reason: 'type' | 'size' | 'count') =>
+      reason === 'type'
+        ? `${name}: choose a supported file type.`
+        : reason === 'size'
+          ? `${name}: this file exceeds the size limit.`
+          : `${name}: the file count limit is reached.`,
+  },
+  table: {
+    selectPage: 'Select All Available Rows On This Page',
+    actions: 'Bulk Actions',
+    clear: 'Clear Selection',
+    selected: (count: number) => `${count} Selected`,
+    allSelected: (count: number) => `All ${count} Matching Results Selected`,
+    selectMatching: (count: number) => `Select All ${count} Matching Results`,
+    selectRow: (name: string) => `Select ${name}`,
+  },
+  combobox: {
+    clear: (label: string) => `Clear ${label}`,
+    open: (label: string) => `Open ${label}`,
+    loading: 'Loading Options',
+    empty: 'No Matching Options',
+    unavailable: 'Options Unavailable',
+    retry: 'Try Again',
+  },
+  examples: {
+    avatarsTitle: 'Avatars And Groups',
+    avatarsDescription:
+      'People, image fallbacks, presence, and a compact group with an accessible overflow summary.',
+    avatarSizes: 'Sizes',
+    avatarFallback: 'Image Fallback',
+    avatarPresence: 'Presence',
+    avatarGroup: 'Project Team',
+    // @preserve-case: Synthetic people in local component previews.
+    people: [
+      'Alex Morgan',
+      'Jordan Lee',
+      'Sam Rivera',
+      'Taylor Kim',
+      'Casey Chen',
+      'Robin Patel',
+    ],
+    uploadTitle: 'Upload Field And File List',
+    uploadDescription:
+      'Choose local files, inspect validation, and explore progress, cancellation, and retry without sending anything.',
+    uploadLabel: 'Project Attachments',
+    disabledUploadLabel: 'Disabled Upload',
+    uploadHint:
+      'Images and PDFs only. Up to five files, with a 5 MB limit per file. Files stay in this browser preview.',
+    simulate: 'Run Local Upload Preview',
+    simulateFailure: 'Preview A Failure',
+    reset: 'Reset Example',
+    failureHint:
+      'This is a simulated upload failure. Retry to complete the local preview.',
+    // @preserve-case: Demo file names are data.
+    fileNames: ['Workspace Overview.pdf', 'Brand Reference.png'],
+    comboTitle: 'Combobox And Autocomplete',
+    comboDescription:
+      'Search a local collection or explore a simulated remote source with loading, empty, and recovery states.',
+    assignee: 'Assignee',
+    assigneePlaceholder: 'Search for a teammate…',
+    selectedPerson: (name: string) => `Selected: ${name}`,
+    unassigned: 'Unassigned',
+    remoteLabel: 'Remote Search Preview',
+    remoteHint:
+      'Results are simulated locally after a short delay. No request leaves this page.',
+    remoteError: 'The simulated source is unavailable. Try again.',
+    failSearch: 'Simulate Search Failure',
+    disabledLabel: 'Disabled Combobox',
+    readonlyLabel: 'Read-Only Combobox',
+    rangeTitle: 'Date Range Picker',
+    rangeDescription:
+      'An inclusive date-only range with typed segments, keyboard calendar selection, limits, and clearing.',
+    rangeLabel: 'Reporting Period',
+    rangeHint:
+      'Both endpoints are included. This example permits dates in November and December 2026.',
+    rangeDisabled: 'Disabled Range',
+    rangeReadOnly: 'Read-Only Range',
+    rangeInvalid: 'Invalid Range',
+    rangeError: 'Choose a reporting period within the permitted dates.',
+    rangeSummary: (start: string, end: string) => `${start} – ${end}`,
+    rangeEmpty: 'No Period Selected',
+    selectionTitle: 'Table Selection And Bulk Actions',
+    selectionDescription:
+      'Select individual records or the current page, then explicitly expand the scope to all matching results.',
+    nameColumn: 'Name',
+    roleColumn: 'Role',
+    statusColumn: 'Status',
+    memberRole: 'Team Member',
+    disabledRole: 'Selection Unavailable',
+    archive: 'Archive Selected',
+    archiveTitle: 'Archive Selected Records?',
+    archiveDescription: (count: number) =>
+      `This local preview will archive ${count} selected records. Reset the example to restore them.`,
+    cancel: 'Keep Records',
+    archived: (count: number) => `${count} Records Archived`,
+    partialFailure: 'Preview Partial Failure',
+    partialFailureHint:
+      'Some records could not be archived. The remaining selection is ready to retry.',
+  },
+};
+
+export const componentBrowserStrings = {
+  title: 'Component Library',
+  description: 'Find a building block. Explore its behavior. Make it your own.',
+  eyebrow: 'THE PORTAL TOOLKIT',
+  catalog: 'All Components',
+  back: 'Back To Catalog',
+  search: 'Search Components',
+  searchPlaceholder: 'Search by name or use case…',
+  clearSearch: 'Clear Component Search',
+  navigation: 'Component Categories',
+  open: (name: string) => `Explore ${name}`,
+  results: (count: number) => `${count} Component Families`,
+  preview: 'Interactive Preview',
+  previous: 'Previous Family',
+  next: 'Next Family',
+  newLabel: 'New',
+  emptyTitle: 'No Components Found',
+  emptyDescription: 'Try another term or browse all categories.',
+  reset: 'Clear Search And Filters',
+  localTitle: 'A Local Playground',
+  localDescription:
+    'Examples use local state. Change values, open menus, and explore states without affecting workspace data.',
+  categories: {
+    all: 'All Components',
+    foundations: 'Foundations',
+    inputs: 'Inputs And Selection',
+    data: 'Data And Navigation',
+    feedback: 'Feedback And Layers',
+    media: 'Media And Editing',
+  },
+  categoryHints: {
+    all: 'The complete toolkit, organized around the work you need to do.',
+    foundations:
+      'Theme, motion, and the building blocks of a consistent interface.',
+    inputs: 'Capture values, make choices, and guide people through forms.',
+    data: 'Present records, move between views, and act on collections.',
+    feedback: 'Explain what is happening and help people move forward.',
+    media: 'Work with files, images, rich content, and reviewed suggestions.',
+  },
+  // @preserve-case: Search aliases name technical components and use cases.
+  keywords: {
+    theme: 'appearance light dark palette',
+    foundations: 'icons typography colors tokens avatar',
+    motion: 'animation transition reduced',
+    patterns: 'page header breadcrumb directory pagination',
+    buttons: 'button icon action cta',
+    inputs: 'input password textarea field money color timezone address',
+    values:
+      'slider range number stepper progress meter activity skeleton loading',
+    interactions: 'date accordion rating star reaction bookmark carousel',
+    selection: 'checkbox radio switch select dropdown',
+    tiles: 'radio card chip selection',
+    cards: 'card metric quick actions',
+    sections: 'form section actions',
+    feedback: 'message badge tooltip popover modal alert sheet toast',
+    empty: 'empty error recovery loading',
+    table: 'table columns sorting records',
+    collections: 'list reorder drag stepper tabs',
+    editing: 'markdown editor assistant chat draft',
+    media: 'image mosaic preview media file',
+    avatars: 'avatar group person profile initials presence',
+    uploads: 'upload file list attachment dropzone progress retry cancel',
+    combobox: 'combobox autocomplete search async options',
+    dateRange: 'date range calendar period start end',
+    bulk: 'table selection bulk action select all checkbox',
+  },
+};

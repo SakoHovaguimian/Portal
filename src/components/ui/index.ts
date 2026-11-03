@@ -141,3 +141,25 @@ export type { RatingSummaryProps } from './models/ratingSummaryProps';
 export type { HorizontalCarouselProps } from './models/horizontalCarouselProps';
 
 export type { CalendarLabels } from './models/calendarLabels';
+
+export * from './components/Avatar';
+export * from './components/AvatarGroup';
+export * from './components/FileList';
+export * from './components/UploadField';
+export * from './components/BulkActionBar';
+export * from './components/Combobox';
+export * from './components/DateRangePicker';
+export * from './models/avatarProps';
+export * from './models/avatarGroupProps';
+export * from './models/uploadFile';
+export * from './models/fileRejection';
+export * from './models/fileListProps';
+export * from './models/uploadFieldProps';
+export * from './models/tableSelection';
+export * from './models/bulkActionBarProps';
+export * from './models/comboboxOption';
+export * from './models/comboboxProps';
+export * from './models/dateRangeValue';
+export * from './models/dateRangePickerProps';
+
+export type { DataTableProps } from './models/dataTableProps';

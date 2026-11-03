@@ -1,10 +1,12 @@
-import type { ReactNode } from 'react';
 import { cn } from '../lib/cn';
 import { Button } from './Button';
 import { UiIcon } from './UiIcon';
 import { strings } from '@/strings';
 import { TableRowLink } from './TableRowLink';
 import styles from './DataTable.module.css';
+import type { DataTableProps } from '../models/dataTableProps';
+import { TableSelectionCheckbox } from './TableSelectionCheckbox';
+import { componentExpansionStrings } from '@/strings';
 
 import type { Column } from '../models/tableColumn';
 export type { Column } from '../models/tableColumn';
@@ -45,21 +47,44 @@ export function DataTable<T>({
   onRowNavigate,
   renderMobileRow,
   embedded = false,
-}: {
-  columns: Column<T>[];
-  rows: T[];
-  caption?: string;
-  getRowKey?: (row: T) => string;
-  // Include a visible, named record link in the row for keyboard/screen readers.
-  // Undefined leaves unavailable rows passive. Other controls keep their actions.
-  getRowHref?: (row: T) => string | undefined;
-  onRowNavigate?: (href: string) => void;
-  renderMobileRow?: (row: T) => ReactNode;
-  // Drops the outer frame when a DataPanel already owns the surface.
-  embedded?: boolean;
-}) {
+  selection,
+}: DataTableProps<T>) {
+  const rowKey = (row: T, index: number) => getRowKey?.(row) ?? String(index);
+  const enabledKeys = rows.flatMap((row, index) =>
+    selection?.isRowDisabled?.(row) ? [] : [rowKey(row, index)],
+  );
+  const selected = new Set(selection?.selectedKeys ?? []);
+  const pageSelected = enabledKeys.filter((key) => selected.has(key)).length;
+  const toggleRow = (key: string, checked: boolean) => {
+    const next = new Set(selected);
+    if (checked) next.add(key);
+    else next.delete(key);
+    selection?.onSelectionChange([...next]);
+  };
+  const togglePage = (checked: boolean) => {
+    const next = new Set(selected);
+    enabledKeys.forEach((key) => {
+      if (checked) next.add(key);
+      else next.delete(key);
+    });
+    selection?.onSelectionChange([...next]);
+  };
+  const pageCheckbox = selection && (
+    <TableSelectionCheckbox
+      label={componentExpansionStrings.table.selectPage}
+      checked={enabledKeys.length > 0 && pageSelected === enabledKeys.length}
+      indeterminate={pageSelected > 0 && pageSelected < enabledKeys.length}
+      disabled={selection.disabled || enabledKeys.length === 0}
+      onChange={togglePage}
+    />
+  );
   return (
     <>
+      {renderMobileRow && selection && (
+        <div className="border-b-control border-secondary px-4 py-2 md:hidden">
+          {pageCheckbox}
+        </div>
+      )}
       {renderMobileRow && columns.some((column) => column.sort) && (
         <div
           role="group"
@@ -100,6 +125,20 @@ export function DataTable<T>({
                 )}
               >
                 <div className={href ? styles.content : 'contents'}>
+                  {selection && (
+                    <div className="relative z-20 px-4 pt-3">
+                      <TableSelectionCheckbox
+                        label={selection.getRowLabel(row)}
+                        checked={selected.has(rowKey(row, index))}
+                        disabled={
+                          selection.disabled || selection.isRowDisabled?.(row)
+                        }
+                        onChange={(checked) =>
+                          toggleRow(rowKey(row, index), checked)
+                        }
+                      />
+                    </div>
+                  )}
                   {renderMobileRow(row)}
                 </div>
                 {href && (
@@ -127,6 +166,11 @@ export function DataTable<T>({
             <caption className="sr-only">{caption}</caption>
             <thead className="bg-secondary_subtle">
               <tr>
+                {selection && (
+                  <th scope="col" className="w-14 px-4 py-3">
+                    {pageCheckbox}
+                  </th>
+                )}
                 {columns.map((column) => (
                   <th
                     key={column.key}
@@ -163,10 +207,27 @@ export function DataTable<T>({
                     key={getRowKey?.(row) ?? index}
                     className={cn(
                       'ui-table-row hover:bg-secondary_subtle',
+                      selection &&
+                        selected.has(rowKey(row, index)) &&
+                        'bg-brand-primary',
                       href &&
                         'cursor-pointer has-[:focus-visible]:outline-2 has-[:focus-visible]:-outline-offset-2 has-[:focus-visible]:outline-brand',
                     )}
                   >
+                    {selection && (
+                      <td className="relative z-20 w-14 px-4 py-3">
+                        <TableSelectionCheckbox
+                          label={selection.getRowLabel(row)}
+                          checked={selected.has(rowKey(row, index))}
+                          disabled={
+                            selection.disabled || selection.isRowDisabled?.(row)
+                          }
+                          onChange={(checked) =>
+                            toggleRow(rowKey(row, index), checked)
+                          }
+                        />
+                      </td>
+                    )}
                     {columns.map((column) => (
                       <td
                         key={column.key}

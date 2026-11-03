@@ -1,97 +1,59 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { Badge, Button, Message, Page, PageHeader } from '@/components/ui';
-import { portalUiStrings, strings } from '@/strings';
-import { FoundationsShowcase } from './components/FoundationsShowcase';
-import { PatternsShowcase } from './components/PatternsShowcase';
-import { ButtonsShowcase } from './components/ButtonsShowcase';
-import { InputsShowcase } from './components/InputsShowcase';
-import { SelectionShowcase } from './components/SelectionShowcase';
-import { TilesShowcase } from './components/TilesShowcase';
-import { CardsShowcase } from './components/CardsShowcase';
-import { SectionsShowcase } from './components/SectionsShowcase';
-import { FeedbackShowcase } from './components/FeedbackShowcase';
-import { EmptyStatesShowcase } from './components/EmptyStatesShowcase';
-import { TableShowcase } from './components/TableShowcase';
-import { ThemeControls } from '@/modules/settings/components/ThemeControls';
-import { MotionShowcase } from './components/MotionShowcase';
-import { EditingShowcase } from './components/EditingShowcase';
-import { CollectionShowcase } from './components/CollectionShowcase';
-import { InteractionsShowcase } from './components/InteractionsShowcase';
-import { MediaShowcase } from './components/MediaShowcase';
-import { ValueControlsShowcase } from './components/ValueControlsShowcase';
-const copy = strings.componentLibrary;
-
-const sections = [
-  ['theme', strings.designSystem.theme],
-  ['foundations', copy.foundations],
-  ['motion', strings.designSystem.motion],
-  ['patterns', copy.patterns],
-  ['buttons', copy.buttons],
-  ['inputs', copy.inputs],
-  ['values', strings.valueControls.title],
-  ['interactions', portalUiStrings.library.title],
-  ['selection', copy.selection],
-  ['tiles', copy.tiles],
-  ['cards', copy.cards],
-  ['sections', copy.formSections],
-  ['feedback', copy.feedback],
-  ['empty-states', copy.emptyStates],
-  ['table', copy.table],
-  ['collections', strings.designSystem.reorder],
-  ['editing', strings.designSystem.advanced],
-  ['media', strings.designSystem.media],
-] as const;
-
-// Tracks the reading position, including sections too short to reach the top.
-function useActiveSection() {
-  const [active, setActive] = useState<string>(sections[0][0]);
-  useEffect(() => {
-    const elements = sections.flatMap(([id]) => {
-      const element = document.getElementById(id);
-      return element ? [element] : [];
-    });
-    let frame: number | undefined;
-    const update = () => {
-      frame = undefined;
-      const root = document.scrollingElement;
-      const last = elements.at(-1);
-      if (!root || !last) return;
-
-      if (root.scrollTop + root.clientHeight >= root.scrollHeight - 2) {
-        setActive(last.id);
-        return;
-      }
-
-      const readingLine = window.innerHeight * 0.2;
-      let current = elements[0];
-      for (const element of elements) {
-        if (element.getBoundingClientRect().top > readingLine) break;
-        current = element;
-      }
-      if (current) setActive(current.id);
-    };
-    const scheduleUpdate = () => {
-      if (frame === undefined) frame = window.requestAnimationFrame(update);
-    };
-    const observer = new ResizeObserver(scheduleUpdate);
-    elements.forEach((element) => observer.observe(element));
-    window.addEventListener('scroll', scheduleUpdate, { passive: true });
-    window.addEventListener('resize', scheduleUpdate);
-    scheduleUpdate();
-    return () => {
-      observer.disconnect();
-      window.removeEventListener('scroll', scheduleUpdate);
-      window.removeEventListener('resize', scheduleUpdate);
-      if (frame !== undefined) window.cancelAnimationFrame(frame);
-    };
-  }, []);
-  return active;
-}
+import { useRef, useState } from 'react';
+import {
+  Badge,
+  Button,
+  IconButton,
+  Input,
+  Page,
+  PageHeader,
+  UiIcon,
+} from '@/components/ui';
+import { componentBrowserStrings as copy } from '@/strings';
+import { useUrlState } from '@/providers/useUrlState';
+import {
+  componentCategories,
+  componentIds,
+  componentSpecimens,
+} from './componentSpecimens';
+import { ComponentCatalog } from './components/ComponentCatalog';
 
 export function ComponentLibraryScreen() {
-  const active = useActiveSection();
+  const [selected, setSelected] = useUrlState(
+    'component',
+    'catalog',
+    componentIds,
+  );
+  const [category, setCategory] = useUrlState(
+    'category',
+    'all',
+    componentCategories,
+  );
+  const [query, setQuery] = useState('');
+  const [visited, setVisited] = useState<string[]>([selected]);
+  const search = useRef<HTMLInputElement>(null);
+  const previewHeading = useRef<HTMLHeadingElement>(null);
+  const active = componentSpecimens.find((item) => item.id === selected);
+  const normalized = query.trim().toLocaleLowerCase('en-US');
+  const filtered = componentSpecimens.filter(
+    (item) =>
+      (category === 'all' || category === item.category) &&
+      `${item.title} ${item.description} ${item.keywords}`
+        .toLocaleLowerCase('en-US')
+        .includes(normalized),
+  );
+  const open = async (id: string) => {
+    setVisited((current) =>
+      current.includes(id) ? current : [...current, id],
+    );
+    await setSelected(id);
+    requestAnimationFrame(() => {
+      previewHeading.current?.focus();
+      previewHeading.current?.scrollIntoView({ block: 'start' });
+    });
+  };
+  const position = componentSpecimens.findIndex((item) => item.id === selected);
   return (
     <Page>
       <PageHeader
@@ -99,72 +61,161 @@ export function ComponentLibraryScreen() {
         description={copy.description}
         meta={
           <>
-            <Badge intent="brand">{copy.version}</Badge>
-            <span>{copy.system}</span>
+            <Badge intent="brand">{copy.eyebrow}</Badge>
+            <span>{copy.results(componentSpecimens.length)}</span>
           </>
         }
       />
-      <div className="grid min-w-0 items-start gap-8 xl:grid-cols-[13rem_minmax(0,1fr)] xl:gap-10">
-        <div className="min-w-0 xl:sticky xl:top-24">
+      <div className="grid min-w-0 items-start gap-6 xl:grid-cols-[12rem_minmax(0,1fr)] xl:gap-8">
+        <aside className="min-w-0 xl:sticky xl:top-24">
           <nav
             aria-label={copy.navigation}
-            className="min-w-0 xl:max-h-[calc(100dvh-7rem)] xl:overflow-y-auto xl:pr-2"
+            className="flex min-w-0 flex-wrap gap-1 xl:grid"
           >
-            <p className="m-0 mb-2 hidden px-3 text-xs font-semibold text-tertiary xl:block">
-              {copy.onThisPage}
-            </p>
-            <ul className="m-0 flex list-none flex-wrap gap-1 p-0 xl:grid">
-              {sections.map(([id, label]) => (
-                <li key={id}>
-                  <Button
-                    variant="ghost"
-                    asChild
-                    className="min-h-10 w-full justify-start px-3 py-2 text-left data-active:bg-brand-primary data-active:text-brand-secondary"
-                  >
-                    <a
-                      href={`#${id}`}
-                      data-active={active === id || undefined}
-                      aria-current={active === id ? 'location' : undefined}
-                    >
-                      {label}
-                    </a>
-                  </Button>
-                </li>
-              ))}
-            </ul>
+            {componentCategories.map((key) => (
+              <Button
+                key={key}
+                variant="ghost"
+                aria-pressed={category === key}
+                className="min-h-11 justify-between gap-3 px-3 text-left aria-pressed:bg-brand-primary aria-pressed:text-brand-secondary"
+                onClick={async () => {
+                  await setCategory(key);
+                  await setSelected('catalog');
+                }}
+              >
+                <span>{copy.categories[key]}</span>
+                <span className="text-xs tabular-nums text-tertiary">
+                  {key === 'all'
+                    ? componentSpecimens.length
+                    : componentSpecimens.filter((item) => item.category === key)
+                        .length}
+                </span>
+              </Button>
+            ))}
           </nav>
-        </div>
-        <div className="grid min-w-0 gap-12">
-          <Message
-            intent="neutral"
-            title={copy.localPreview}
-            description={copy.localPreviewHint}
-            role="note"
-          />
-          <section
-            id="theme"
-            aria-label={strings.designSystem.theme}
-            className="rounded-xl border-control border-secondary bg-primary p-4 sm:p-6"
-          >
-            <ThemeControls />
-          </section>
-          <FoundationsShowcase />
-          <MotionShowcase />
-          <PatternsShowcase />
-          <ButtonsShowcase />
-          <InputsShowcase />
-          <ValueControlsShowcase />
-          <InteractionsShowcase />
-          <SelectionShowcase />
-          <TilesShowcase />
-          <CardsShowcase />
-          <SectionsShowcase />
-          <FeedbackShowcase />
-          <EmptyStatesShowcase />
-          <TableShowcase />
-          <CollectionShowcase />
-          <EditingShowcase />
-          <MediaShowcase />
+          <div className="mt-6 hidden border-t-control border-secondary px-3 pt-5 xl:block">
+            <UiIcon name="code" className="mb-3 size-5 text-tertiary" />
+            <p className="m-0 text-xs font-medium text-secondary">
+              {copy.localTitle}
+            </p>
+            <p className="m-0 mt-2 text-xs leading-relaxed text-tertiary">
+              {copy.localDescription}
+            </p>
+          </div>
+        </aside>
+        <div className="grid min-w-0 gap-6">
+          {!active && (
+            <>
+              <div className="flex min-w-0 flex-wrap items-center justify-between gap-4">
+                <div className="min-w-0">
+                  <h2 className="m-0 text-lg font-semibold text-primary">
+                    {copy.categories[category]}
+                  </h2>
+                  <p className="m-0 mt-1 text-sm text-tertiary">
+                    {copy.categoryHints[category]}
+                  </p>
+                </div>
+                <div
+                  role="search"
+                  className="flex min-w-0 flex-1 basis-64 items-center gap-1 md:max-w-sm"
+                >
+                  <Input
+                    ref={search}
+                    aria-label={copy.search}
+                    type="search"
+                    value={query}
+                    placeholder={copy.searchPlaceholder}
+                    leadingIcon={<UiIcon name="search" />}
+                    onChange={(event) => setQuery(event.target.value)}
+                  />
+                  {query && (
+                    <IconButton
+                      variant="ghost"
+                      label={copy.clearSearch}
+                      onClick={() => {
+                        setQuery('');
+                        search.current?.focus();
+                      }}
+                    >
+                      <UiIcon name="close" className="size-4" />
+                    </IconButton>
+                  )}
+                </div>
+              </div>
+              <p role="status" className="m-0 text-xs text-tertiary">
+                {copy.results(filtered.length)}
+              </p>
+              <ComponentCatalog
+                items={filtered}
+                onOpen={(id) => void open(id)}
+                onReset={() => {
+                  setQuery('');
+                  void setCategory('all');
+                  search.current?.focus();
+                }}
+              />
+            </>
+          )}
+          {active && (
+            <>
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b-control border-secondary pb-4">
+                <Button
+                  variant="ghost"
+                  onClick={async () => {
+                    await setSelected('catalog');
+                    requestAnimationFrame(() => search.current?.focus());
+                  }}
+                >
+                  <UiIcon name="chevronLeft" className="size-4" />
+                  {copy.back}
+                </Button>
+                <div className="flex gap-1">
+                  <IconButton
+                    variant="ghost"
+                    label={copy.previous}
+                    disabled={position <= 0}
+                    onClick={() =>
+                      void open(componentSpecimens[position - 1].id)
+                    }
+                  >
+                    <UiIcon name="chevronLeft" />
+                  </IconButton>
+                  <IconButton
+                    variant="ghost"
+                    label={copy.next}
+                    disabled={position >= componentSpecimens.length - 1}
+                    onClick={() =>
+                      void open(componentSpecimens[position + 1].id)
+                    }
+                  >
+                    <UiIcon name="chevronRight" />
+                  </IconButton>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <h2
+                  ref={previewHeading}
+                  tabIndex={-1}
+                  className="m-0 scroll-mt-24 text-xs font-semibold tracking-wide text-tertiary outline-none"
+                >
+                  {copy.preview}
+                </h2>
+                <Badge>{copy.categories[active.category]}</Badge>
+              </div>
+            </>
+          )}
+          {componentSpecimens
+            .filter((item) => item.id === selected || visited.includes(item.id))
+            .map(({ id, Preview }) => (
+              <div
+                key={id}
+                hidden={id !== selected}
+                inert={id !== selected}
+                className="min-w-0"
+              >
+                <Preview />
+              </div>
+            ))}
         </div>
       </div>
     </Page>
