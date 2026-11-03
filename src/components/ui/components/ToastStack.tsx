@@ -49,7 +49,7 @@ export function ToastStack({
               : ({
                 '--ui-overlay-duration':
                   toast.motionDurationMs === undefined
-                    ? 'var(--motion-duration-enter)'
+                    ? 'var(--presentation-toast-duration, calc(var(--motion-duration-enter) * 1.5))'
                     : `${toast.motionDurationMs}ms`,
               } as CSSProperties)
           }

@@ -286,56 +286,96 @@
 .ui-drop-zone[data-dragging='true'] {
   scale: var(--motion-hover-scale);
 }
+/* Overlay transforms are independent of Tailwind's centering translate property. */
+.ui-backdrop,
+.ui-dialog {
+  --ui-overlay-default-duration: var(--presentation-alert-duration, calc(var(--motion-duration-enter) * 1.5));
+}
+.ui-sheet,
+.ui-backdrop[data-motion-target='sheet'] {
+  --ui-overlay-default-duration: var(--presentation-sheet-duration, calc(var(--motion-duration-enter) * 1.5));
+}
+.ui-dialog,
+.ui-sheet,
+.ui-toast {
+  --ui-overlay-default-scale: var(--presentation-scale, clamp(0.88, calc(var(--motion-enter-scale) - 0.03), 0.96));
+  --ui-overlay-default-travel: var(--presentation-travel, 20px);
+  --ui-overlay-default-ease: var(--presentation-ease, var(--motion-ease-out));
+  transform-origin: center 60%;
+}
 .ui-backdrop[data-state='open'] {
-  animation: ui-fade-in var(--ui-overlay-duration, var(--motion-duration-enter))
-    var(--motion-ease-out);
+  animation: ui-fade-in var(--ui-overlay-duration, var(--ui-overlay-default-duration)) var(--ui-overlay-ease, var(--presentation-ease, var(--motion-ease-out))) both;
 }
 .ui-backdrop[data-state='closed'] {
-  animation: ui-fade-out var(--motion-duration-fast) var(--motion-ease-out);
+  animation: ui-fade-out var(--ui-overlay-duration, var(--ui-overlay-default-duration)) var(--ui-overlay-ease, var(--presentation-ease, var(--motion-ease-out))) both;
 }
 .ui-dialog[data-state='open'] {
-  animation: ui-dialog-enter
-    var(--ui-overlay-duration, var(--motion-duration-enter))
-    var(--motion-ease-out);
+  animation: ui-dialog-enter var(--ui-overlay-duration, var(--ui-overlay-default-duration)) var(--ui-overlay-ease, var(--ui-overlay-default-ease)) both;
 }
 .ui-dialog[data-state='closed'] {
-  animation: ui-dialog-exit var(--motion-duration-fast) var(--motion-ease-out);
+  animation: ui-dialog-exit var(--ui-overlay-duration, var(--ui-overlay-default-duration)) var(--ui-overlay-ease, var(--ui-overlay-default-ease)) both;
+  pointer-events: none;
+}
+.ui-dialog[data-alignment='right'] {
+  --ui-dialog-x: var(--ui-overlay-travel, var(--ui-overlay-default-travel));
+  --ui-dialog-y: 0px;
+  transform-origin: right center;
+}
+.ui-dialog[data-alignment='top'] {
+  --ui-dialog-y: calc(var(--ui-overlay-travel, var(--ui-overlay-default-travel)) * -1);
+  transform-origin: center top;
 }
 .ui-sheet[data-state='open'] {
-  animation: ui-sheet-enter
-    var(--ui-overlay-duration, var(--motion-duration-enter))
-    var(--motion-ease-out);
+  animation: ui-sheet-enter var(--ui-overlay-duration, var(--ui-overlay-default-duration)) var(--ui-overlay-ease, var(--ui-overlay-default-ease)) both;
 }
 .ui-sheet[data-state='closed'] {
-  animation: ui-sheet-exit var(--motion-duration-fast) var(--motion-ease-out);
+  animation: ui-sheet-exit var(--ui-overlay-duration, var(--ui-overlay-default-duration)) var(--ui-overlay-ease, var(--ui-overlay-default-ease)) both;
+  pointer-events: none;
 }
 .ui-sheet[data-side='left'] {
-  --ui-sheet-x: -1.5rem;
+  --ui-sheet-x: calc(var(--ui-overlay-travel, var(--ui-overlay-default-travel)) * -1);
   --ui-sheet-y: 0px;
+  transform-origin: left center;
 }
 .ui-sheet[data-side='right'] {
-  --ui-sheet-x: 1.5rem;
+  --ui-sheet-x: var(--ui-overlay-travel, var(--ui-overlay-default-travel));
   --ui-sheet-y: 0px;
+  transform-origin: right center;
 }
 .ui-sheet[data-side='bottom'] {
   --ui-sheet-x: 0px;
-  --ui-sheet-y: 1.5rem;
+  --ui-sheet-y: var(--ui-overlay-travel, var(--ui-overlay-default-travel));
+  transform-origin: center bottom;
 }
 .ui-toast {
-  animation: ui-content-enter
-    var(--ui-overlay-duration, var(--motion-duration-enter))
-    var(--motion-ease-out);
+  --ui-overlay-default-duration: var(--presentation-toast-duration, calc(var(--motion-duration-enter) * 1.5));
+  --ui-toast-y: var(--ui-overlay-travel, var(--ui-overlay-default-travel));
+  --ui-toast-x: 0px;
+  animation: ui-toast-enter var(--ui-overlay-duration, var(--ui-overlay-default-duration)) var(--ui-overlay-ease, var(--ui-overlay-default-ease)) both;
+  transform-origin: center bottom;
 }
 .ui-toast[data-position^='top'] {
-  --ui-content-offset: -0.5rem;
+  --ui-toast-y: calc(var(--ui-overlay-travel, var(--ui-overlay-default-travel)) * -1);
+  transform-origin: center top;
+}
+.ui-toast[data-position$='right'] {
+  --ui-toast-x: calc(var(--ui-overlay-travel, var(--ui-overlay-default-travel)) * 0.35);
+  transform-origin: right center;
+}
+.ui-toast[data-position$='left'] {
+  --ui-toast-x: calc(var(--ui-overlay-travel, var(--ui-overlay-default-travel)) * -0.35);
+  transform-origin: left center;
 }
 .ui-toast[data-exiting='true'] {
-  animation: ui-content-exit var(--motion-duration-fast) var(--motion-ease-out)
-    forwards;
+  animation: ui-toast-exit var(--ui-overlay-duration, var(--ui-overlay-default-duration)) var(--ui-overlay-ease, var(--ui-overlay-default-ease)) both;
   pointer-events: none;
 }
 .ui-toast .ui-message {
   animation: none;
+}
+:root[data-presentation-motion='off'] :is(.ui-backdrop, .ui-dialog, .ui-sheet, .ui-toast) {
+  animation: none !important;
+  transition: none !important;
 }
 [data-motion='off'],
 [data-motion='off'] * {
@@ -491,41 +531,61 @@
 @keyframes ui-dialog-enter {
   from {
     opacity: 0;
-    scale: var(--motion-enter-scale);
+    transform: translate(var(--ui-dialog-x, 0px), var(--ui-dialog-y, var(--ui-overlay-travel, var(--ui-overlay-default-travel)))) scale(var(--ui-overlay-scale, var(--ui-overlay-default-scale)));
   }
   to {
     opacity: 1;
-    scale: 1;
+    transform: translate(0, 0) scale(1);
   }
 }
 @keyframes ui-dialog-exit {
   from {
     opacity: 1;
-    scale: 1;
+    transform: translate(0, 0) scale(1);
   }
   to {
     opacity: 0;
-    scale: var(--motion-enter-scale);
+    transform: translate(var(--ui-dialog-x, 0px), var(--ui-dialog-y, var(--ui-overlay-travel, var(--ui-overlay-default-travel)))) scale(var(--ui-overlay-scale, var(--ui-overlay-default-scale)));
   }
 }
 @keyframes ui-sheet-enter {
   from {
     opacity: 0;
-    transform: translate(var(--ui-sheet-x), var(--ui-sheet-y));
+    transform: translate(var(--ui-sheet-x), var(--ui-sheet-y)) scale(calc(1 - (1 - var(--ui-overlay-scale, var(--ui-overlay-default-scale))) * 0.35));
   }
   to {
     opacity: 1;
-    transform: translate(0, 0);
+    transform: translate(0, 0) scale(1);
   }
 }
 @keyframes ui-sheet-exit {
   from {
     opacity: 1;
-    transform: translate(0, 0);
+    transform: translate(0, 0) scale(1);
   }
   to {
     opacity: 0;
-    transform: translate(var(--ui-sheet-x), var(--ui-sheet-y));
+    transform: translate(var(--ui-sheet-x), var(--ui-sheet-y)) scale(calc(1 - (1 - var(--ui-overlay-scale, var(--ui-overlay-default-scale))) * 0.35));
+  }
+}
+@keyframes ui-toast-enter {
+  from {
+    opacity: 0;
+    transform: translate(var(--ui-toast-x), var(--ui-toast-y)) scale(var(--ui-overlay-scale, var(--ui-overlay-default-scale)));
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+}
+@keyframes ui-toast-exit {
+  from {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(var(--ui-toast-x), var(--ui-toast-y)) scale(var(--ui-overlay-scale, var(--ui-overlay-default-scale)));
   }
 }
 

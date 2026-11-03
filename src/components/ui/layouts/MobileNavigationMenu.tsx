@@ -38,7 +38,7 @@ export function MobileNavigationMenu(props: AppSidebarProps) {
         </IconButton>
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay className="ui-backdrop fixed inset-0 z-60 bg-(--dashboard-shell-overlay) lg:hidden" />
+        <Dialog.Overlay data-motion-target="sheet" className="ui-backdrop fixed inset-0 z-60 bg-(--dashboard-shell-overlay) lg:hidden" />
         <Dialog.Content
           aria-describedby={undefined}
           data-side="left"

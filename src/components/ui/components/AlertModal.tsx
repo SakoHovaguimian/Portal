@@ -141,7 +141,7 @@ export function AlertModal({
               ? ({
                 '--ui-overlay-duration':
                     motionDurationMs === undefined
-                      ? 'var(--motion-duration-enter)'
+                      ? 'var(--presentation-alert-duration, calc(var(--motion-duration-enter) * 1.5))'
                       : `${motionDurationMs}ms`,
               } as CSSProperties)
               : undefined
@@ -189,7 +189,7 @@ export function AlertModal({
               ? ({
                 '--ui-overlay-duration':
                     motionDurationMs === undefined
-                      ? 'var(--motion-duration-enter)'
+                      ? 'var(--presentation-alert-duration, calc(var(--motion-duration-enter) * 1.5))'
                       : `${motionDurationMs}ms`,
               } as CSSProperties)
               : undefined

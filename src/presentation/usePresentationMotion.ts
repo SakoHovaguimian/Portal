@@ -86,7 +86,7 @@ export function usePresentationMotion(service?: PresentationMotionPreferenceServ
 
     const theme = getTheme(themeId);
     const duration = Math.min(1000, Math.round(theme.motion.enter * 1.5));
-    return { enabled: true, alertDurationMs: duration, sheetDurationMs: duration, toastDurationMs: duration, scale: Math.max(0.88, Math.min(0.96, theme.motion.enterScale - 0.03)), travelPx: 20, easing: 'smooth' };
+    return { enabled: true, alertDurationMs: duration, sheetDurationMs: duration, toastDurationMs: duration, scale: Math.round(Math.max(0.88, Math.min(0.96, theme.motion.enterScale - 0.03)) * 100) / 100, travelPx: 20, easing: 'smooth' };
 
   }, [themeId]);
   const effectiveMotionConfig = useMemo<ResolvedPresentationMotionConfig>(() => {
