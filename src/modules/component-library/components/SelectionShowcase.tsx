@@ -52,7 +52,8 @@ export function SelectionShowcase() {
             checked={unchecked}
             onChange={(event) => setUnchecked(event.target.checked)}
           />
-          <Checkbox label={copy.disabled} defaultChecked disabled />
+          <Checkbox label={copy.disabled} disabled />
+          <Checkbox label={copy.disabledChecked} defaultChecked disabled />
         </fieldset>
         <fieldset className="min-w-0">
           <legend className="mb-2 text-xs font-semibold text-primary">
@@ -73,6 +74,12 @@ export function SelectionShowcase() {
             onChange={() => setRadio('unselected')}
           />
           <Radio name="library-radio-disabled" label={copy.disabled} disabled />
+          <Radio
+            name="library-radio-disabled-selected"
+            label={copy.disabledSelected}
+            defaultChecked
+            disabled
+          />
         </fieldset>
       </div>
       <div className="grid gap-3">

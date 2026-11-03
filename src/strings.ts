@@ -7008,6 +7008,8 @@ export const strings = {
     on: 'On',
     off: 'Off',
     disabled: 'Disabled',
+    disabledChecked: 'Disabled And Checked',
+    disabledSelected: 'Disabled And Selected',
     checkboxes: 'Checkboxes',
     checked: 'Checked',
     unchecked: 'Unchecked',
