@@ -9,6 +9,5 @@ export interface ComponentSpecimen {
   category: Exclude<ComponentCategory, 'all'>;
   icon: IconName;
   keywords: string;
-  isNew?: boolean;
   Preview: ComponentType;
 }

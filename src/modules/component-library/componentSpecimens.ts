@@ -47,7 +47,6 @@ export const componentSpecimens: readonly ComponentSpecimen[] = [
     icon: 'user',
     keywords: browser.keywords.avatars,
     Preview: AvatarsShowcase,
-    isNew: true,
   },
   {
     id: 'uploads',
@@ -57,7 +56,6 @@ export const componentSpecimens: readonly ComponentSpecimen[] = [
     icon: 'upload',
     keywords: browser.keywords.uploads,
     Preview: UploadsShowcase,
-    isNew: true,
   },
   {
     id: 'bulk',
@@ -67,7 +65,6 @@ export const componentSpecimens: readonly ComponentSpecimen[] = [
     icon: 'table',
     keywords: browser.keywords.bulk,
     Preview: BulkSelectionShowcase,
-    isNew: true,
   },
   {
     id: 'combobox',
@@ -77,7 +74,6 @@ export const componentSpecimens: readonly ComponentSpecimen[] = [
     icon: 'search',
     keywords: browser.keywords.combobox,
     Preview: ComboboxShowcase,
-    isNew: true,
   },
   {
     id: 'dateRange',
@@ -87,7 +83,6 @@ export const componentSpecimens: readonly ComponentSpecimen[] = [
     icon: 'calendar',
     keywords: browser.keywords.dateRange,
     Preview: DateRangeShowcase,
-    isNew: true,
   },
   {
     id: 'theme',
@@ -97,7 +92,6 @@ export const componentSpecimens: readonly ComponentSpecimen[] = [
     icon: 'sun',
     keywords: browser.keywords.theme,
     Preview: ThemeControls,
-    isNew: false,
   },
   {
     id: 'foundations',
@@ -107,7 +101,6 @@ export const componentSpecimens: readonly ComponentSpecimen[] = [
     icon: 'layers',
     keywords: browser.keywords.foundations,
     Preview: FoundationsShowcase,
-    isNew: false,
   },
   {
     id: 'motion',
@@ -117,7 +110,6 @@ export const componentSpecimens: readonly ComponentSpecimen[] = [
     icon: 'sparkles',
     keywords: browser.keywords.motion,
     Preview: MotionShowcase,
-    isNew: false,
   },
   {
     id: 'buttons',
@@ -127,7 +119,6 @@ export const componentSpecimens: readonly ComponentSpecimen[] = [
     icon: 'plus',
     keywords: browser.keywords.buttons,
     Preview: ButtonsShowcase,
-    isNew: false,
   },
   {
     id: 'inputs',
@@ -137,7 +128,6 @@ export const componentSpecimens: readonly ComponentSpecimen[] = [
     icon: 'file',
     keywords: browser.keywords.inputs,
     Preview: InputsShowcase,
-    isNew: false,
   },
   {
     id: 'values',
@@ -147,7 +137,6 @@ export const componentSpecimens: readonly ComponentSpecimen[] = [
     icon: 'filter',
     keywords: browser.keywords.values,
     Preview: ValueControlsShowcase,
-    isNew: false,
   },
   {
     id: 'selection',
@@ -157,7 +146,6 @@ export const componentSpecimens: readonly ComponentSpecimen[] = [
     icon: 'check',
     keywords: browser.keywords.selection,
     Preview: SelectionShowcase,
-    isNew: false,
   },
   {
     id: 'tiles',
@@ -167,7 +155,6 @@ export const componentSpecimens: readonly ComponentSpecimen[] = [
     icon: 'grid',
     keywords: browser.keywords.tiles,
     Preview: TilesShowcase,
-    isNew: false,
   },
   {
     id: 'sections',
@@ -177,7 +164,6 @@ export const componentSpecimens: readonly ComponentSpecimen[] = [
     icon: 'file',
     keywords: browser.keywords.sections,
     Preview: SectionsShowcase,
-    isNew: false,
   },
   {
     id: 'patterns',
@@ -187,7 +173,6 @@ export const componentSpecimens: readonly ComponentSpecimen[] = [
     icon: 'layers',
     keywords: browser.keywords.patterns,
     Preview: PatternsShowcase,
-    isNew: false,
   },
   {
     id: 'table',
@@ -197,7 +182,6 @@ export const componentSpecimens: readonly ComponentSpecimen[] = [
     icon: 'table',
     keywords: browser.keywords.table,
     Preview: TableShowcase,
-    isNew: false,
   },
   {
     id: 'cards',
@@ -207,7 +191,6 @@ export const componentSpecimens: readonly ComponentSpecimen[] = [
     icon: 'card',
     keywords: browser.keywords.cards,
     Preview: CardsShowcase,
-    isNew: false,
   },
   {
     id: 'collections',
@@ -217,7 +200,6 @@ export const componentSpecimens: readonly ComponentSpecimen[] = [
     icon: 'listBullet',
     keywords: browser.keywords.collections,
     Preview: CollectionShowcase,
-    isNew: false,
   },
   {
     id: 'feedback',
@@ -227,7 +209,6 @@ export const componentSpecimens: readonly ComponentSpecimen[] = [
     icon: 'bell',
     keywords: browser.keywords.feedback,
     Preview: FeedbackShowcase,
-    isNew: false,
   },
   {
     id: 'empty',
@@ -237,7 +218,6 @@ export const componentSpecimens: readonly ComponentSpecimen[] = [
     icon: 'info',
     keywords: browser.keywords.empty,
     Preview: EmptyStatesShowcase,
-    isNew: false,
   },
   {
     id: 'interactions',
@@ -247,7 +227,6 @@ export const componentSpecimens: readonly ComponentSpecimen[] = [
     icon: 'star',
     keywords: browser.keywords.interactions,
     Preview: InteractionsShowcase,
-    isNew: false,
   },
   {
     id: 'media',
@@ -257,7 +236,6 @@ export const componentSpecimens: readonly ComponentSpecimen[] = [
     icon: 'image',
     keywords: browser.keywords.media,
     Preview: MediaShowcase,
-    isNew: false,
   },
   {
     id: 'editing',
@@ -267,7 +245,6 @@ export const componentSpecimens: readonly ComponentSpecimen[] = [
     icon: 'code',
     keywords: browser.keywords.editing,
     Preview: EditingShowcase,
-    isNew: false,
   },
 ];
 export const componentIds = [

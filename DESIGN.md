@@ -63,7 +63,7 @@ AppShell owns a theme-sized sidebar (17rem in Portal) at 64rem and above. Short 
 
 Page → PageHeader → content. Directories use DataPanel and DataTable; mobile summaries use MobileRecordRow below 48rem. Tables without summaries keep a labeled, focusable horizontal scroller. Settings use SectionStack/SplitSection; explicit actions use FormActions, with sticky actions only on spacious desktop. Document scrolling remains natural for forms and inactive panels remain mounted for drafts.
 
-Component-library navigation uses one scroll legend. It stays to the left on desktop and becomes a wrapping list at compact widths. There is no second section dropdown.
+The component library is a searchable catalog with category navigation, left-aligned specimen cards, and a focused preview per family. Categories stay left on desktop and wrap at compact widths. Preview/category URLs restore with browser history; visited examples keep local state while hidden. Catalog cards use existing surface, border, typography, and motion roles without promotional badges.
 
 ## Elevation & Depth
 

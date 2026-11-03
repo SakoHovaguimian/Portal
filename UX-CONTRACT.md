@@ -22,6 +22,9 @@ English-language workspace for operators managing people, requests, and conversa
 | Capability          | Canonical owner                                                                         | Source of truth                          | Allowed variants                                                    | Verification                                                 |
 | ------------------- | --------------------------------------------------------------------------------------- | ---------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------ |
 | Select/Listbox      | Select/MultiSelect in src/components/ui                                                 | DESIGN + this contract                   | authored popup, country/timezone options, compact segmented choices | keyboard, popup width/collision, modal Escape                |
+| Table Selection | DataTable.selection + BulkActionBar | UI system + domain query/permissions | page keys; explicit caller-owned all-results scope | mixed header, disabled rows, mobile, partial failure |
+| Combobox | Combobox in src/components/ui | UI system | local filtering / caller-owned remote search | keyboard, clear, IME-safe debounce, loading/error/retry |
+| Upload | UploadField + FileList | UI system + media domain validation | local selection / caller-owned transfer | type/size/count, progress, cancel/retry |
 | Stepper             | src/components/ui/components/Stepper.tsx                                                | UI system                                | horizontal (default), vertical, responsive                          | narrow/desktop, disabled, aria-current                       |
 | Values And Progress | Slider/RangeSlider, NumberStepper, ProgressBar/ProgressRing, Meter in src/components/ui | [Value controls](docs/VALUE_CONTROLS.md) | single/range, icons, vertical, reverse fill, measured/indeterminate | keyboard, limits, disabled/read-only/invalid, reduced motion |
 | Date                | DatePicker and Field/Input in src/components/ui                                         | This contract                            | authored date-only; native date-of-birth                            | keyboard/browser                                             |
@@ -43,7 +46,7 @@ English-language workspace for operators managing people, requests, and conversa
 
 Lists use server paging contracts (default 25), URL query filters, and stable domain query keys. Empty, loading, and failure states are visible; failure offers retry. Profile forms load only after their query succeeds. Protected routes independently require a session on the server and API. Route metadata uses the single `src/strings.ts` catalog.
 
-Tables preserve horizontal access on narrow screens. Mobile navigation opens a full-screen modal with the same links and account controls, safe areas, Escape, focus trap, and restoration. Desktop uses the fixed sidebar. Screens own their PageHeader h1. The library has one scroll legend and no second section dropdown. Query and mutation errors preserve safe input. Do not persist passwords/tokens or private form drafts in browser storage.
+Tables preserve horizontal access on narrow screens. Mobile navigation opens a full-screen modal with the same links and account controls, safe areas, Escape, focus trap, and restoration. Desktop uses the fixed sidebar. Screens own their PageHeader h1. The library uses a searchable catalog with category filters and one focused preview; preview/category choices use URL history and visited examples preserve local state. Local catalog search is transient discovery state. Query and mutation errors preserve safe input. Do not persist passwords/tokens or private form drafts in browser storage.
 
 ## Forms, overlays, and feedback
 
@@ -68,3 +71,7 @@ Sliders retain standard arrow/Home/End/Page key behavior and 44px targets. Range
 ## Verification policy
 
 Do not write tests. Run static checks, a demo build, and manual browser/HTTP workflows. Record evidence and external integration limits in [docs/VERIFICATION.md](docs/VERIFICATION.md). The static design audit is supplementary and does not establish complete accessibility or production integration correctness.
+
+## Added Component Contracts
+
+AvatarGroup overflow is discoverable by keyboard and touch through its people popover. File selection never implies a network upload; domain code owns transfer, validation, and cancellation. Table page selection never silently expands to matching results, and callers invalidate selection when the query scope changes. Bulk mutation results retain recoverable failures. Combobox commits IDs rather than arbitrary typed text; remote owners cancel or ignore stale responses. Date ranges have inclusive ordered date-only endpoints and emit null when cleared. Switch selection pulses share the theme-owned checkbox/radio motion and are disabled by either reduced-motion setting.

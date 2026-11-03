@@ -1,4 +1,4 @@
-import { Badge, Button, EmptyState, IconTile, UiIcon } from '@/components/ui';
+import { Button, EmptyState, IconTile, UiIcon } from '@/components/ui';
 import { componentBrowserStrings as copy } from '@/strings';
 import type { ComponentSpecimen } from '../models/componentSpecimen';
 
@@ -38,11 +38,7 @@ export function ComponentCatalog({
             <IconTile>
               <UiIcon name={item.icon} />
             </IconTile>
-            {item.isNew ? (
-              <Badge intent="brand">{copy.newLabel}</Badge>
-            ) : (
-              <UiIcon name="arrowRight" className="size-4 text-tertiary" />
-            )}
+            <UiIcon name="arrowRight" className="size-4 text-tertiary" />
           </span>
           <span className="grid w-full min-w-0 gap-2">
             <span className="text-sm font-semibold wrap-anywhere text-primary">

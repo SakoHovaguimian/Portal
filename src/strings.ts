@@ -8686,7 +8686,7 @@ export const componentExpansionStrings = {
     archive: 'Archive Selected',
     archiveTitle: 'Archive Selected Records?',
     archiveDescription: (count: number) =>
-      `This local preview will archive ${count} selected records. Reset the example to restore them.`,
+      `This local preview will archive ${count} selected ${count === 1 ? 'record' : 'records'}. Reset the example to restore them.`,
     cancel: 'Keep Records',
     archived: (count: number) => `${count} Records Archived`,
     partialFailure: 'Preview Partial Failure',
@@ -8710,7 +8710,6 @@ export const componentBrowserStrings = {
   preview: 'Interactive Preview',
   previous: 'Previous Family',
   next: 'Next Family',
-  newLabel: 'New',
   emptyTitle: 'No Components Found',
   emptyDescription: 'Try another term or browse all categories.',
   reset: 'Clear Search And Filters',
