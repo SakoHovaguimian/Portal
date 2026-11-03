@@ -1,6 +1,6 @@
 # Reusable UI foundation
 
-Every Portal project starts with the LeafLaunch Web component foundation in `src/components/ui`. Open the authenticated `/dev-settings/components` route to inspect foundations, motion, page patterns, controls, states, tables, reordering, Markdown, and media. Examples use local state only. Appearance and the library share the same theme/motion controls. The component browser uses a searchable card catalog, six category choices, and one focused family preview. Category and preview choices live in URL history; visited previews remain mounted to preserve local state.
+Every Portal project starts with the LeafLaunch Web component foundation in `src/components/ui`. Open the authenticated `/dev-settings/components` route to inspect foundations, motion, page patterns, controls, states, tables, reordering, Markdown, and media. Examples use local state only. Appearance and the library share the same theme/motion controls. The component browser uses a searchable card catalog, six category choices (a shared Select on phones), and one focused family preview. Category and preview choices live in URL history; visited previews remain mounted to preserve local state.
 
 ## Ownership and inventory
 

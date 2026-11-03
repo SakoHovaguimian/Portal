@@ -32,7 +32,7 @@ export function ComponentCatalog({
           variant="ghost"
           aria-label={copy.open(item.title)}
           onClick={() => onOpen(item.id)}
-          className="group grid min-h-52 min-w-0 content-start justify-stretch justify-items-stretch gap-5 rounded-card border-control border-secondary bg-primary p-5 text-left whitespace-normal shadow-(--shadow-card) hover:border-brand hover:bg-secondary_subtle"
+          className="group grid h-full min-h-52 min-w-0 content-start justify-stretch justify-items-stretch gap-5 rounded-card border-control border-secondary bg-primary p-5 text-left whitespace-normal shadow-(--shadow-card) hover:border-brand hover:bg-secondary_subtle"
         >
           <span className="flex w-full items-center justify-between gap-3">
             <IconTile>

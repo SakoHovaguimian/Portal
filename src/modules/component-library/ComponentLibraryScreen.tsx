@@ -8,6 +8,7 @@ import {
   Input,
   Page,
   PageHeader,
+  Select,
   UiIcon,
 } from '@/components/ui';
 import { componentBrowserStrings as copy } from '@/strings';
@@ -68,9 +69,28 @@ export function ComponentLibraryScreen() {
       />
       <div className="grid min-w-0 items-start gap-6 xl:grid-cols-[12rem_minmax(0,1fr)] xl:gap-8">
         <aside className="min-w-0 xl:sticky xl:top-24">
+          <div className="sm:hidden">
+            <Select
+              aria-label={copy.navigation}
+              value={category}
+              onValueChange={async (next) => {
+                const key = componentCategories.find((item) => item === next);
+                if (key) {
+                  await setCategory(key);
+                  await setSelected('catalog');
+                }
+              }}
+            >
+              {componentCategories.map((key) => (
+                <option key={key} value={key}>
+                  {copy.categories[key]}
+                </option>
+              ))}
+            </Select>
+          </div>
           <nav
             aria-label={copy.navigation}
-            className="flex min-w-0 flex-wrap gap-1 xl:grid"
+            className="hidden min-w-0 flex-wrap gap-1 sm:flex xl:grid"
           >
             {componentCategories.map((key) => (
               <Button
@@ -119,15 +139,17 @@ export function ComponentLibraryScreen() {
                   role="search"
                   className="flex min-w-0 flex-1 basis-64 items-center gap-1 md:max-w-sm"
                 >
-                  <Input
-                    ref={search}
-                    aria-label={copy.search}
-                    type="search"
-                    value={query}
-                    placeholder={copy.searchPlaceholder}
-                    leadingIcon={<UiIcon name="search" />}
-                    onChange={(event) => setQuery(event.target.value)}
-                  />
+                  <div className="min-w-0 flex-1">
+                    <Input
+                      ref={search}
+                      aria-label={copy.search}
+                      type="search"
+                      value={query}
+                      placeholder={copy.searchPlaceholder}
+                      leadingIcon={<UiIcon name="search" />}
+                      onChange={(event) => setQuery(event.target.value)}
+                    />
+                  </div>
                   {query && (
                     <IconButton
                       variant="ghost"
