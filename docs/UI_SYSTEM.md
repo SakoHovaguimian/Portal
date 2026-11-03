@@ -114,3 +114,13 @@ SOFTWARE.
 The catalog's `component` and `category` query parameters are shareable and restore with Back/Forward. Search is intentionally transient, local discovery state. Hidden visited examples use hidden/inert semantics; unvisited examples are not mounted. The Theme family retains the existing shared theme/motion controls. All catalog cards align their icon and copy to the same left edge.
 
 Switches now share the checkbox/radio pop and halo when a person enables the control. Initial checked values and disabled switches do not trigger it. The halo uses the switch's own theme color. Device and saved reduced-motion settings suppress both frame motion and halo.
+
+## Overlay Motion Preferences
+
+Appearance → Overlay Entrances uses shared Sliders and Select to tune entrance duration, starting scale, travel distance, and feel for alerts, side menus, and toasts. `PresentationMotionPreferenceService` is constructed in the client container (and the existing public engagement composition boundary) and injected into `PresentationProvider`. Its validated browser preference is stored under `portal-presentation-motion` and synchronized across tabs.
+
+Theme defaults resolve to 320–420 ms, a theme-derived starting scale, and 20 px travel. Reset removes overrides so later theme changes remain authoritative. Per-request `motion` settings and scoped `configureMotion` previews are separate from saved preferences. Legacy Experience presets dispose their temporary overrides on replacement and unmount. Saved/device Reduced Motion always suppresses movement.
+
+Dialogs scale and translate independently from their fixed centering; sheets enter from their edge with subtle scale; toasts use position-aware travel and scale. Presentation actions resolve immediately. Only visual queue turnover waits for the exit animation's completion, with a bounded fallback for disabled/removed CSS. Toast removal follows the same exit snapshot. A caller that conditionally unmounts a generic Modal can show its entrance but must keep it mounted with `open=false` to retain an exit.
+
+The document reserves a stable scrollbar gutter. On supporting browsers, the shared body scroll-lock rule suppresses the overlay library's additional right margin; it preserves scroll locking, focus containment, and nested overlays without shifting the page width. Browsers without stable-gutter support retain the library's normal compensation.
