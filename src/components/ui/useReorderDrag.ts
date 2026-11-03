@@ -75,5 +75,17 @@ export function useReorderDrag(
     if (to <= index && index < from) return rows[from].height;
     return 0;
   }
-  return { drag, start, move, drop, cancel, offset };
+  // Visual slot while dragging, so edge rows can take the group's outer corners.
+  function position(id: string, index: number) {
+    if (!drag) return index;
+    const rows = geometry.current;
+    const from = rows.findIndex((row) => row.id === drag.id);
+    const to = rows.findIndex((row) => row.id === drag.target);
+    const current = rows.findIndex((row) => row.id === id);
+    if (id === drag.id) return to;
+    if (from < current && current <= to) return current - 1;
+    if (to <= current && current < from) return current + 1;
+    return current;
+  }
+  return { drag, start, move, drop, cancel, offset, position };
 }

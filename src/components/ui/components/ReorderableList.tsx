@@ -70,6 +70,11 @@ export function ReorderableList<T extends { id: string }>({
         <li
           key={item.id}
           data-motion-key={item.id}
+          data-variant={variant}
+          data-first={reorder.position(item.id, index) === 0 || undefined}
+          data-last={
+            reorder.position(item.id, index) === items.length - 1 || undefined
+          }
           data-reordering={Boolean(reorder.drag) || undefined}
           data-dragging={reorder.drag?.id === item.id || undefined}
           className={cn(

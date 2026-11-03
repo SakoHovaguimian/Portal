@@ -67,6 +67,23 @@
   color: var(--color-text-brand-secondary);
 }
 
+/* Liked and saved toggles share one accent treatment: accent icon and label on an 18% accent container. */
+.ui-engagement-toggle[aria-pressed='true'] {
+  --tw-ring-color: color-mix(
+    in srgb,
+    var(--color-accent) 32%,
+    var(--color-border-secondary)
+  );
+  background-color: color-mix(in srgb, var(--color-accent) 18%, transparent);
+  color: var(--color-accent);
+}
+@media (hover: hover) and (pointer: fine) {
+  .ui-engagement-toggle[aria-pressed='true']:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--color-accent) 24%, transparent);
+    color: var(--color-accent);
+  }
+}
+
 :is(.ui-button, .ui-sidebar-link, .ui-choice, .ui-switch):focus-visible,
 .ui-selection-tile:has(:focus-visible),
 .ui-segment:has(:focus-visible),
