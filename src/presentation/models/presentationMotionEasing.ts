@@ -5,4 +5,5 @@ export const PresentationMotionEasingSchema = z.enum([
   'spring',
   'snappy',
 ]);
+
 export type PresentationMotionEasing = z.infer<typeof PresentationMotionEasingSchema>;

@@ -72,6 +72,8 @@ export function SheetPanel({
   content,
   motionEnabled = true,
   motionDurationMs,
+  motionStyle,
+  onExitComplete,
 }: SheetPanelProps) {
 
   const returnFocusRef = useRef<HTMLElement | null>(null);
@@ -167,6 +169,7 @@ export function SheetPanel({
     >
       <Dialog.Portal>
         <Dialog.Overlay
+          data-motion-target="sheet"
           data-ui-presentation-layer="true"
           data-motion={motionEnabled ? undefined : 'off'}
           className={cn(
@@ -175,15 +178,21 @@ export function SheetPanel({
           style={
             motionEnabled
               ? ({
+                ...motionStyle,
                 '--ui-overlay-duration':
                     motionDurationMs === undefined
-                      ? 'var(--presentation-sheet-duration, calc(var(--motion-duration-enter) * 1.5))'
+                      ? 'var(--presentation-sheet-duration, clamp(320ms, calc(var(--motion-duration-enter) * 1.5), 420ms))'
                       : `${motionDurationMs}ms`,
               } as CSSProperties)
               : undefined
           }
         />
         <Dialog.Content
+          onAnimationEnd={(event) => {
+
+            if (event.target === event.currentTarget && event.animationName === 'ui-sheet-exit') { onExitComplete?.(); }
+
+          }}
           data-ui-presentation-layer="true"
           data-side={side}
           data-motion={motionEnabled ? undefined : 'off'}
@@ -213,9 +222,10 @@ export function SheetPanel({
           style={
             motionEnabled
               ? ({
+                ...motionStyle,
                 '--ui-overlay-duration':
                     motionDurationMs === undefined
-                      ? 'var(--presentation-sheet-duration, calc(var(--motion-duration-enter) * 1.5))'
+                      ? 'var(--presentation-sheet-duration, clamp(320ms, calc(var(--motion-duration-enter) * 1.5), 420ms))'
                       : `${motionDurationMs}ms`,
               } as CSSProperties)
               : undefined

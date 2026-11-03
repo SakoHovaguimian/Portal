@@ -4,6 +4,7 @@ import { useId, useRef, useState } from 'react';
 import { Badge, Button, Field, Message, Select, Slider, UiIcon } from '@/components/ui';
 import { usePresentationService } from '@/presentation/PresentationProvider';
 import type { PresentationMotionConfig } from '@/presentation/models/presentationMotionConfig';
+import { PresentationMotionEasingSchema } from '@/presentation/models/presentationMotionEasing';
 import { strings, portalOverlayMotionStrings as copy } from '@/strings';
 import type { OverlayMotionDraft } from '../models/overlayMotionDraft';
 
@@ -159,9 +160,9 @@ export function OverlayMotionControls() {
         <div className="grid min-w-0 gap-2">
           <Field labelText={copy.feelLabel}>
             <Select value={easing} disabled={pending} onValueChange={changeFeel} aria-describedby={feelDescriptionId}>
-              <option value="smooth">{copy.smooth}</option>
-              <option value="spring">{copy.spring}</option>
-              <option value="snappy">{copy.snappy}</option>
+              <option value={PresentationMotionEasingSchema.enum.smooth}>{copy.smooth}</option>
+              <option value={PresentationMotionEasingSchema.enum.spring}>{copy.spring}</option>
+              <option value={PresentationMotionEasingSchema.enum.snappy}>{copy.snappy}</option>
             </Select>
           </Field>
           <p id={feelDescriptionId} className="m-0 text-xs text-tertiary">{copy.feelHint}</p>

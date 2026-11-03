@@ -10,5 +10,7 @@ export const PresentationMotionConfigSchema = z.object({
   travelPx: z.number().min(0).max(64).optional(),
   easing: PresentationMotionEasingSchema.optional(),
 }).strict();
+
 export type PresentationMotionConfig = z.infer<typeof PresentationMotionConfigSchema>;
+
 export const defaultPresentationMotionConfig: PresentationMotionConfig = { enabled: true };

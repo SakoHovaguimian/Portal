@@ -3,113 +3,81 @@
 import type { OverlayQueueItem } from './models/overlayQueueItem';
 import type { OverlayQueueConfig } from './models/overlayQueueConfig';
 import type { PresentationService } from './models/presentationService';
-import { strings } from '@/strings';
 import type { PresentationProviderProps } from './models/presentationProviderProps';
+import type { ResolvedPresentationMotion } from './models/resolvedPresentationMotion';
+import { strings } from '@/strings';
+import { prefersReducedMotion } from '@/components/ui/lib/motionPreferences';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { AlertModal, SheetPanel, ToastStack, type ToastItem } from '@/components/ui';
+import type { AlertPresentation, SheetPresentation, ToastPresentation } from './types';
 import { usePresentationMotion } from './usePresentationMotion';
-import { motionDuration } from '@/components/ui/lib/motionPreferences';
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import {
-  AlertModal,
-  SheetPanel,
-  ToastStack,
-  type ToastItem,
-} from '@/components/ui';
-import type {
-  AlertPresentation,
-  SheetPresentation,
-  ToastPresentation,
-} from './types';
 
 const PresentationContext = createContext<PresentationService | null>(null);
 
 export function PresentationProvider({ children, service: preferenceService }: PresentationProviderProps) {
 
   const [toasts, setToasts] = useState<ToastItem[]>([]);
-  const [activeOverlay, setActiveOverlay] = useState<OverlayQueueItem | null>(
-    null,
-  );
+  const [activeOverlay, setActiveOverlay] = useState<OverlayQueueItem | null>(null);
   const activeOverlayRef = useRef<OverlayQueueItem | null>(null);
-  const [closedOverlay, setClosedOverlay] = useState<OverlayQueueItem | null>(
-    null,
-  );
-  const resolvedOverlayId = useRef<string | null>(null);
+  const [closedOverlay, setClosedOverlay] = useState<OverlayQueueItem | null>(null);
+  const closingOverlayRef = useRef<OverlayQueueItem | null>(null);
+  const overlayTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const alertReturnFocusRef = useRef<HTMLElement | null>(null);
   const motion = usePresentationMotion(preferenceService);
   const { resolveMotion } = motion;
   const queueRef = useRef<OverlayQueueItem[]>([]);
-  const timersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
-  const toastMotionRef = useRef(new Map<string, boolean>());
+  const timersRef = useRef(new Map<string, ReturnType<typeof setTimeout>>());
+  const toastMotionRef = useRef(new Map<string, ResolvedPresentationMotion>());
+  const exitingToastRef = useRef(new Set<string>());
 
+  const removeToast = useCallback((id: string) => {
+
+    const timer = timersRef.current.get(id);
+    if (timer) { clearTimeout(timer); }
+    timersRef.current.delete(id);
+    toastMotionRef.current.delete(id);
+    exitingToastRef.current.delete(id);
+    setToasts((current) => {
+
+      const remaining = current.filter((toast) => toast.id !== id);
+      return remaining;
+
+    });
+
+  }, []);
   const dismissToast = useCallback((id: string) => {
 
-    if (!toastMotionRef.current.has(id)) { return; }
+    const presentation = toastMotionRef.current.get(id);
+    if (!presentation || exitingToastRef.current.has(id)) { return; }
     const timer = timersRef.current.get(id);
-    if (timer) {
-
-      clearTimeout(timer);
-      timersRef.current.delete(id);
-
-    }
-    const duration = toastMotionRef.current.get(id)
-      ? motionDuration('--motion-duration-fast')
-      : 0;
+    if (timer) { clearTimeout(timer); }
+    const duration = presentation.enabled && !prefersReducedMotion() ? presentation.durationMs : 0;
     if (!duration) {
 
-      toastMotionRef.current.delete(id);
-      setToasts((current) => {
-
-        const remainingToasts = current.filter((toast) => toast.id !== id);
-        return remainingToasts;
-
-      });
+      removeToast(id);
       return;
 
     }
+    exitingToastRef.current.add(id);
     setToasts((current) => {
 
-      const exitingToasts = current.map((toast) =>
-        toast.id === id ? { ...toast, exiting: true } : toast,
-      );
+      const exiting = current.map((toast) => toast.id === id ? { ...toast, exiting: true } : toast);
+      return exiting;
 
-      return exitingToasts;
+    });
+    // Animation completion is authoritative; this bounded fallback handles removed/disabled CSS.
+    timersRef.current.set(id, setTimeout(() => removeToast(id), duration + 80));
 
-    },
-    );
-    timersRef.current.set(
-      id,
-      setTimeout(() => {
-
-        timersRef.current.delete(id);
-        toastMotionRef.current.delete(id);
-        setToasts((current) => {
-
-          const remainingToasts = current.filter((toast) => toast.id !== id);
-          return remainingToasts;
-
-        });
-
-      }, duration),
-    );
-
-  }, []);
-
+  }, [removeToast]);
   const clearToasts = useCallback(() => {
 
     timersRef.current.forEach((timer) => clearTimeout(timer));
     timersRef.current.clear();
     toastMotionRef.current.clear();
+    exitingToastRef.current.clear();
     setToasts([]);
 
   }, []);
-
   const advanceOverlayQueue = useCallback(() => {
 
     const next = queueRef.current.shift() ?? null;
@@ -117,189 +85,124 @@ export function PresentationProvider({ children, service: preferenceService }: P
     setActiveOverlay(next);
 
   }, []);
+  const finishOverlayExit = useCallback((id: string) => {
 
-  const enqueueOverlay = useCallback(
-    (overlay: OverlayQueueConfig) => {
+    if (closingOverlayRef.current?.id !== id) { return; }
+    if (overlayTimerRef.current) { clearTimeout(overlayTimerRef.current); }
+    overlayTimerRef.current = null;
+    closingOverlayRef.current = null;
+    activeOverlayRef.current = null;
+    setClosedOverlay(null);
+    advanceOverlayQueue();
 
-      const overlayConfirmation = new Promise<boolean>((resolve) => {
+  }, [advanceOverlayQueue]);
+  const enqueueOverlay = useCallback((overlay: OverlayQueueConfig) => {
 
-        const queueItem = { ...overlay, resolve } as OverlayQueueItem;
+    const confirmation = new Promise<boolean>((resolve) => {
 
-        // Track occupancy synchronously, keeping showAlert/showSheet stable
-        // while overlays open/close and preserving same-tick queue requests.
-        if (activeOverlayRef.current) {
+      const queueItem = { ...overlay, resolve, resolvedMotion: resolveMotion(overlay.kind, overlay.motion) } as OverlayQueueItem;
+      if (activeOverlayRef.current || closingOverlayRef.current) {
 
-          queueRef.current.push(queueItem);
-          return;
+        queueRef.current.push(queueItem);
+        return;
 
-        }
+      }
+      activeOverlayRef.current = queueItem;
+      setActiveOverlay(queueItem);
 
-        activeOverlayRef.current = queueItem;
-        setActiveOverlay(queueItem);
+    });
 
-      });
+    return confirmation;
 
-      return overlayConfirmation;
+  }, [resolveMotion]);
+  const showToast = useCallback(async (request: Omit<ToastPresentation, 'kind'>) => {
 
-    },
-    [],
-  );
+    const id = crypto.randomUUID();
+    const resolved = resolveMotion('toast', request.motion);
+    const toast: ToastItem = {
+      id, title: request.title, description: request.description, appearance: request.appearance,
+      intent: request.intent ?? 'info', position: request.position ?? 'top-right',
+      actionLabel: request.actionLabel, onAction: request.onAction, meta: request.meta,
+      motionEnabled: resolved.enabled, motionDurationMs: resolved.durationMs, motionStyle: resolved.style,
+    };
+    toastMotionRef.current.set(id, resolved);
+    setToasts((current) => [...current, toast]);
+    timersRef.current.set(id, setTimeout(() => dismissToast(id), request.durationMs ?? 4200));
+    return id;
 
-  const showToast = useCallback(
-    async (request: Omit<ToastPresentation, 'kind'>) => {
+  }, [dismissToast, resolveMotion]);
+  const showAlert = useCallback(async (request: Omit<AlertPresentation, 'kind'>) => {
 
-      const id = crypto.randomUUID();
-      const motion = resolveMotion('toast', request.motion);
-      const toast: ToastItem = {
-        id,
-        title: request.title,
-        description: request.description,
-        appearance: request.appearance,
-        intent: request.intent ?? 'info',
-        position: request.position ?? 'top-right',
-        actionLabel: request.actionLabel,
-        onAction: request.onAction,
-        meta: request.meta,
-        motionEnabled: motion.enabled,
-        motionDurationMs: motion.durationMs,
-      };
+    const id = crypto.randomUUID();
+    return enqueueOverlay({ ...request, kind: 'alert', id });
 
-      toastMotionRef.current.set(id, motion.enabled);
-      setToasts((current) => [...current, toast]);
-      const timer = setTimeout(
-        () => dismissToast(id),
-        request.durationMs ?? 4200,
-      );
-      timersRef.current.set(id, timer);
-      return id;
+  }, [enqueueOverlay]);
+  const showSheet = useCallback(async (request: Omit<SheetPresentation, 'kind'>) => {
 
-    },
-    [dismissToast, resolveMotion],
-  );
+    const id = crypto.randomUUID();
+    return enqueueOverlay({ ...request, kind: 'sheet', id });
 
-  const showAlert = useCallback(
-    async (request: Omit<AlertPresentation, 'kind'>) => {
+  }, [enqueueOverlay]);
+  const resolveOverlay = useCallback((value: boolean) => {
 
-      const id = crypto.randomUUID();
-      return enqueueOverlay({
-        kind: 'alert',
-        id,
-        title: request.title,
-        description: request.description,
-        tone: request.tone,
-        alignment: request.alignment,
-        confirmLabel: request.confirmLabel,
-        cancelLabel: request.cancelLabel,
-        details: request.details,
-        motion: request.motion,
-      });
+    const current = activeOverlayRef.current;
+    if (!current || closingOverlayRef.current) { return; }
+    closingOverlayRef.current = current;
+    // The caller receives its result immediately; only the visual queue waits for exit.
+    current.resolve(value);
+    setClosedOverlay(current);
+    setActiveOverlay(null);
+    const duration = current.resolvedMotion.enabled && !prefersReducedMotion() ? current.resolvedMotion.durationMs : 0;
+    if (!duration) {
+      queueMicrotask(() => finishOverlayExit(current.id));
+    } else {
+      overlayTimerRef.current = setTimeout(() => finishOverlayExit(current.id), duration + 80);
+    }
 
-    },
-    [enqueueOverlay],
-  );
+  }, [finishOverlayExit]);
 
-  const showSheet = useCallback(
-    async (request: Omit<SheetPresentation, 'kind'>) => {
+  useEffect(() => {
 
-      const id = crypto.randomUUID();
-      return enqueueOverlay({
-        kind: 'sheet',
-        id,
-        title: request.title,
-        description: request.description,
-        tone: request.tone,
-        side: request.side,
-        size: request.size,
-        confirmLabel: request.confirmLabel,
-        cancelLabel: request.cancelLabel,
-        details: request.details,
-        content: request.content,
-        motion: request.motion,
-      });
+    if (motion.effectiveMotionConfig.enabled) { return; }
+    const closing = closingOverlayRef.current;
+    if (closing) { finishOverlayExit(closing.id); }
+    for (const id of exitingToastRef.current) { removeToast(id); }
 
-    },
-    [enqueueOverlay],
-  );
+  }, [motion.effectiveMotionConfig.enabled, finishOverlayExit, removeToast]);
+  useEffect(() => {
 
-  const resolveOverlay = useCallback(
-    (value: boolean) => {
+    const cleanup = () => {
 
-      if (!activeOverlay || resolvedOverlayId.current === activeOverlay.id) { return; }
-      resolvedOverlayId.current = activeOverlay.id;
-      activeOverlay.resolve(value);
-      setClosedOverlay(activeOverlay);
-      setActiveOverlay(null);
-      queueMicrotask(advanceOverlayQueue);
+      timersRef.current.forEach((timer) => clearTimeout(timer));
+      timersRef.current.clear();
+      toastMotionRef.current.clear();
+      exitingToastRef.current.clear();
+      if (overlayTimerRef.current) { clearTimeout(overlayTimerRef.current); }
+      activeOverlayRef.current?.resolve(false);
+      queueRef.current.forEach((item) => item.resolve(false));
+      queueRef.current = [];
 
-    },
-    [activeOverlay, advanceOverlayQueue],
-  );
+    };
 
-  useEffect(
-    () => {
+    return cleanup;
 
-      const cleanup = () => {
+  }, []);
+  const service = useMemo<PresentationService>(() => {
 
-        timersRef.current.forEach((timer) => clearTimeout(timer));
-        timersRef.current.clear();
-        toastMotionRef.current.clear();
+    const presentation: PresentationService = {
+      present: (request) => request.kind === 'toast' ? showToast(request) : request.kind === 'alert' ? showAlert(request) : showSheet(request),
+      showToast, showAlert, showSheet, dismissToast, clearToasts,
+      motionConfig: motion.motionConfig, effectiveMotionConfig: motion.effectiveMotionConfig,
+      reducedMotion: motion.reducedMotion, getMotionDefaults: motion.getMotionDefaults,
+      getMotionConfig: motion.getMotionConfig, setMotionConfig: motion.setMotionConfig,
+      resetMotionConfig: motion.resetMotionConfig, configureMotion: motion.configureMotion,
+    };
 
-      };
+    return presentation;
 
-      return cleanup;
-
-    },
-    [],
-  );
-
-  const service = useMemo<PresentationService>(
-    () => {
-
-      const presentationService: PresentationService = ({
-        present: (request) => {
-
-          if (request.kind === 'toast') {
-            return showToast(request);
-          }
-          if (request.kind === 'alert') {
-            return showAlert(request);
-          }
-          return showSheet(request);
-
-        },
-        showToast,
-        showAlert,
-        showSheet,
-        dismissToast,
-        clearToasts,
-        motionConfig: motion.motionConfig,
-        effectiveMotionConfig: motion.effectiveMotionConfig,
-        reducedMotion: motion.reducedMotion,
-        getMotionDefaults: motion.getMotionDefaults,
-        getMotionConfig: motion.getMotionConfig,
-        setMotionConfig: motion.setMotionConfig,
-        resetMotionConfig: motion.resetMotionConfig,
-        configureMotion: motion.configureMotion,
-      });
-
-      return presentationService;
-
-    },
-    [clearToasts, dismissToast, motion, showAlert, showSheet, showToast],
-  );
-
-  const alert =
-    activeOverlay?.kind === 'alert'
-      ? activeOverlay
-      : closedOverlay?.kind === 'alert'
-        ? closedOverlay
-        : null;
-  const sheet =
-    activeOverlay?.kind === 'sheet'
-      ? activeOverlay
-      : closedOverlay?.kind === 'sheet'
-        ? closedOverlay
-        : null;
+  }, [clearToasts, dismissToast, motion, showAlert, showSheet, showToast]);
+  const alert = activeOverlay?.kind === 'alert' ? activeOverlay : closedOverlay?.kind === 'alert' ? closedOverlay : null;
+  const sheet = activeOverlay?.kind === 'sheet' ? activeOverlay : closedOverlay?.kind === 'sheet' ? closedOverlay : null;
 
   function renderAlert() {
 
@@ -315,8 +218,14 @@ export function PresentationProvider({ children, service: preferenceService }: P
         confirmLabel={alert?.confirmLabel}
         cancelLabel={alert?.cancelLabel}
         details={alert?.details}
-        motionEnabled={resolveMotion('alert', alert?.motion).enabled}
-        motionDurationMs={resolveMotion('alert', alert?.motion).durationMs}
+        motionEnabled={alert?.resolvedMotion.enabled}
+        motionDurationMs={alert?.resolvedMotion.durationMs}
+        motionStyle={alert?.resolvedMotion.style}
+        onExitComplete={() => {
+
+          if (alert) { finishOverlayExit(alert.id); }
+
+        }}
         onCancel={() => resolveOverlay(false)}
         onConfirm={() => resolveOverlay(true)}
       />
@@ -338,8 +247,14 @@ export function PresentationProvider({ children, service: preferenceService }: P
         cancelLabel={sheet?.cancelLabel}
         details={sheet?.details}
         content={sheet?.content}
-        motionEnabled={resolveMotion('sheet', sheet?.motion).enabled}
-        motionDurationMs={resolveMotion('sheet', sheet?.motion).durationMs}
+        motionEnabled={sheet?.resolvedMotion.enabled}
+        motionDurationMs={sheet?.resolvedMotion.durationMs}
+        motionStyle={sheet?.resolvedMotion.style}
+        onExitComplete={() => {
+
+          if (sheet) { finishOverlayExit(sheet.id); }
+
+        }}
         onCancel={() => resolveOverlay(false)}
         onConfirm={() => resolveOverlay(true)}
       />
@@ -350,7 +265,7 @@ export function PresentationProvider({ children, service: preferenceService }: P
   return (
     <PresentationContext.Provider value={service}>
       {children}
-      <ToastStack toasts={toasts} onDismiss={dismissToast} />
+      <ToastStack toasts={toasts} onDismiss={dismissToast} onExitComplete={removeToast} />
       {renderAlert()}
       {renderSheet()}
     </PresentationContext.Provider>
@@ -361,13 +276,7 @@ export function PresentationProvider({ children, service: preferenceService }: P
 export function usePresentationService() {
 
   const value = useContext(PresentationContext);
-  if (!value) {
-
-    throw new Error(
-      strings.ui.presentationProvider.presentationServiceNotAvailable,
-    );
-
-  }
+  if (!value) { throw new Error(strings.ui.presentationProvider.presentationServiceNotAvailable); }
   return value;
 
 }

@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import type { SheetTone } from './sheetTone';
 import type { SheetSide } from './sheetSide';
 import type { SheetSize } from './sheetSize';
@@ -18,4 +18,6 @@ export interface SheetPanelProps {
   content?: ReactNode;
   motionEnabled?: boolean;
   motionDurationMs?: number;
+  motionStyle?: CSSProperties;
+  onExitComplete?: () => void;
 }

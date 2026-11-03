@@ -50,6 +50,8 @@ export function AlertModal({
   details,
   motionEnabled = true,
   motionDurationMs,
+  motionStyle,
+  onExitComplete,
   restoreFocusRef,
 }: AlertModalProps) {
 
@@ -139,17 +141,24 @@ export function AlertModal({
           style={
             motionEnabled
               ? ({
+                ...motionStyle,
                 '--ui-overlay-duration':
                     motionDurationMs === undefined
-                      ? 'var(--presentation-alert-duration, calc(var(--motion-duration-enter) * 1.5))'
+                      ? 'var(--presentation-alert-duration, clamp(320ms, calc(var(--motion-duration-enter) * 1.5), 420ms))'
                       : `${motionDurationMs}ms`,
               } as CSSProperties)
               : undefined
           }
         />
         <Dialog.Content
+          onAnimationEnd={(event) => {
+
+            if (event.target === event.currentTarget && event.animationName === 'ui-dialog-exit') { onExitComplete?.(); }
+
+          }}
           data-ui-presentation-layer="true"
           role="alertdialog"
+          data-alignment={alignment}
           data-motion={motionEnabled ? undefined : 'off'}
           onOpenAutoFocus={() => {
 
@@ -187,9 +196,10 @@ export function AlertModal({
           style={
             motionEnabled
               ? ({
+                ...motionStyle,
                 '--ui-overlay-duration':
                     motionDurationMs === undefined
-                      ? 'var(--presentation-alert-duration, calc(var(--motion-duration-enter) * 1.5))'
+                      ? 'var(--presentation-alert-duration, clamp(320ms, calc(var(--motion-duration-enter) * 1.5), 420ms))'
                       : `${motionDurationMs}ms`,
               } as CSSProperties)
               : undefined

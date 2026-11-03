@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import type { ToastIntent } from './toastIntent';
 import type { ToastPosition } from './toastPosition';
 
@@ -12,6 +12,7 @@ export type ToastItem = {
   exiting?: boolean;
   motionEnabled?: boolean;
   motionDurationMs?: number;
+  motionStyle?: CSSProperties;
   actionLabel?: string;
   onAction?: () => void | Promise<void>;
   meta?: ReactNode;

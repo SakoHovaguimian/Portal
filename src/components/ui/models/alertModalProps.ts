@@ -1,4 +1,4 @@
-import type { ReactNode, RefObject } from 'react';
+import type { CSSProperties, ReactNode, RefObject } from 'react';
 import type { AlertTone } from './alertTone';
 import type { AlertAlignment } from './alertAlignment';
 
@@ -15,5 +15,7 @@ export interface AlertModalProps {
   details?: ReactNode;
   motionEnabled?: boolean;
   motionDurationMs?: number;
+  motionStyle?: CSSProperties;
+  onExitComplete?: () => void;
   restoreFocusRef?: RefObject<HTMLElement | null>;
 }

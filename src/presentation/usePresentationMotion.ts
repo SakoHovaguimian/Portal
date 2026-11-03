@@ -53,6 +53,7 @@ export function usePresentationMotion(service?: PresentationMotionPreferenceServ
       window.removeEventListener(presentationMotionChangeEvent, restore);
 
     };
+
     return cleanup;
 
   }, [preferenceService]);
@@ -78,6 +79,7 @@ export function usePresentationMotion(service?: PresentationMotionPreferenceServ
       device.removeEventListener('change', synchronize);
 
     };
+
     return cleanup;
 
   }, []);
@@ -85,7 +87,7 @@ export function usePresentationMotion(service?: PresentationMotionPreferenceServ
   const defaults = useMemo<ResolvedPresentationMotionConfig>(() => {
 
     const theme = getTheme(themeId);
-    const duration = Math.min(1000, Math.round(theme.motion.enter * 1.5));
+    const duration = Math.max(320, Math.min(420, Math.round(theme.motion.enter * 1.5)));
     return { enabled: true, alertDurationMs: duration, sheetDurationMs: duration, toastDurationMs: duration, scale: Math.round(Math.max(0.88, Math.min(0.96, theme.motion.enterScale - 0.03)) * 100) / 100, travelPx: 20, easing: 'smooth' };
 
   }, [themeId]);
@@ -121,7 +123,7 @@ export function usePresentationMotion(service?: PresentationMotionPreferenceServ
 
     const operation = saveQueue.current.catch(() => undefined).then(async () => {
 
-      const next = PresentationMotionConfigSchema.parse({ ...savedRef.current, ...patch });
+      const next = PresentationMotionConfigSchema.parse(JSON.parse(JSON.stringify({ ...savedRef.current, ...patch })));
       const saved = await preferenceService.savePreference(next);
       savedRef.current = saved;
       setMotionConfigState(saved);
@@ -146,7 +148,7 @@ export function usePresentationMotion(service?: PresentationMotionPreferenceServ
   }, [preferenceService]);
   const configureMotion = useCallback((patch: Partial<PresentationMotionConfig>) => {
 
-    const preview = PresentationMotionConfigSchema.partial().parse(patch);
+    const preview = PresentationMotionConfigSchema.partial().parse(JSON.parse(JSON.stringify(patch)));
     const id = crypto.randomUUID();
     setPreviews((current) => new Map(current).set(id, preview));
     const cleanup = () => {
@@ -160,6 +162,7 @@ export function usePresentationMotion(service?: PresentationMotionPreferenceServ
       });
 
     };
+
     return cleanup;
 
   }, []);

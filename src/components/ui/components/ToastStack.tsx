@@ -24,6 +24,7 @@ const positions: Record<ToastPosition, string> = {
 export function ToastStack({
   toasts,
   onDismiss,
+  onExitComplete,
 }: ToastStackProps) {
 
   function renderToastGroup(position: ToastPosition) {
@@ -35,6 +36,11 @@ export function ToastStack({
       return (
         <div
           key={toast.id}
+          onAnimationEnd={(event) => {
+
+            if (event.target === event.currentTarget && event.animationName === 'ui-toast-exit') { onExitComplete?.(toast.id); }
+
+          }}
           data-position={position}
           data-exiting={toast.exiting || undefined}
           data-motion={toast.motionEnabled === false ? 'off' : undefined}
@@ -47,9 +53,10 @@ export function ToastStack({
             toast.motionEnabled === false
               ? undefined
               : ({
+                ...toast.motionStyle,
                 '--ui-overlay-duration':
                   toast.motionDurationMs === undefined
-                    ? 'var(--presentation-toast-duration, calc(var(--motion-duration-enter) * 1.5))'
+                    ? 'var(--presentation-toast-duration, clamp(320ms, calc(var(--motion-duration-enter) * 1.5), 420ms))'
                     : `${toast.motionDurationMs}ms`,
               } as CSSProperties)
           }

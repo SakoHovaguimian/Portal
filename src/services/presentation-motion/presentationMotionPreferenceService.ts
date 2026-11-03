@@ -5,6 +5,7 @@ import {
 } from '@/presentation/models/presentationMotionConfig';
 
 export const presentationMotionStorageKey = 'portal-presentation-motion';
+
 export const presentationMotionChangeEvent = 'portal-presentation-motion-change';
 
 export class PresentationMotionPreferenceService {
@@ -27,7 +28,7 @@ export class PresentationMotionPreferenceService {
 
   async savePreference(value: PresentationMotionConfig): Promise<PresentationMotionConfig> {
 
-    const preference = PresentationMotionConfigSchema.parse(value);
+    const preference = PresentationMotionConfigSchema.parse(JSON.parse(JSON.stringify(value)));
     localStorage.setItem(presentationMotionStorageKey, JSON.stringify(preference));
     window.dispatchEvent(new Event(presentationMotionChangeEvent));
     return preference;
