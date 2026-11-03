@@ -5,9 +5,9 @@ import {
 } from '../models/chatMessage';
 export class ChatService {
   constructor(private readonly api: ApiClientInterface) {}
-  async listMessages() {
+  async listMessages(signal?: AbortSignal) {
     return ChatMessageSchema.array().parse(
-      await this.api.request('/chat/messages'),
+      await this.api.request('/chat/messages', { signal }),
     );
   }
   async sendMessage(message: string) {

@@ -34,7 +34,7 @@ export function SegmentedChoices<T extends string>({
               className={cn(
                 'ui-segment text-sm has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-brand',
                 active
-                  ? 'text-(--color-text-primary_on-brand)'
+                  ? 'text-segmented-text'
                   : disabled
                     ? 'text-secondary'
                     : 'text-secondary hover:text-primary',
@@ -59,9 +59,7 @@ export function SegmentedChoices<T extends string>({
                 <span
                   className={cn(
                     'relative z-10 mt-0.5 block text-xs',
-                    active
-                      ? 'text-(--color-text-primary_on-brand)'
-                      : 'text-tertiary',
+                    active ? 'text-segmented-text' : 'text-tertiary',
                   )}
                 >
                   {tab.meta}

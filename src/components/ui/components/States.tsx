@@ -39,7 +39,7 @@ export function EmptyState({
       {content}
     </div>
   ) : (
-    <Card className="ui-state grid justify-items-center gap-3 border-2 border-dotted py-10 text-center shadow-none">
+    <Card className="ui-state grid justify-items-center gap-3 border-control border-dotted py-10 text-center shadow-none">
       {content}
     </Card>
   );

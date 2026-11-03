@@ -1,6 +1,7 @@
 import 'server-only';
 import { AuthError } from '@/errors/domainErrors';
 import { strings } from '@/strings';
+import { createDemoOnboarding } from '@/modules/onboarding/demo/onboardingState';
 import type { SignupInput } from '@/models/auth';
 import type { FirebaseAuthSession } from '@/services/auth/models/firebaseAuthSession';
 import type { FirebaseAuthServiceInterface } from '@/services/auth/firebaseAuthServiceInterface';
@@ -12,7 +13,13 @@ export class DemoFirebaseAuthService implements FirebaseAuthServiceInterface {
       (user) => user.email.toLowerCase() === email.trim().toLowerCase(),
     );
     const credential = user && state.credentials.get(user.external_id);
-    if (!user || !credential || !passwordMatches(password, credential))
+    if (
+      !user ||
+      user.disabled ||
+      user.deleted ||
+      !credential ||
+      !passwordMatches(password, credential)
+    )
       throw new AuthError(strings.auth.invalidCredentials);
     return this.session(user.external_id, user.email);
   }
@@ -33,14 +40,25 @@ export class DemoFirebaseAuthService implements FirebaseAuthServiceInterface {
       created_at: now,
       updated_at: now,
       deleted: false,
+      disabled: false,
+      role: 'user' as const,
     };
     state.users.push(user);
+    createDemoOnboarding(user);
     state.credentials.set(user.external_id, passwordRecord(input.password));
     return this.session(user.external_id, email);
   }
   async refresh(session: FirebaseAuthSession): Promise<FirebaseAuthSession> {
     const state = getDemoState();
-    if (state.refreshTokens.get(session.refreshToken) !== session.externalId)
+    const user = state.users.find(
+      (user) => user.external_id === session.externalId,
+    );
+    if (
+      !user ||
+      user.disabled ||
+      user.deleted ||
+      state.refreshTokens.get(session.refreshToken) !== session.externalId
+    )
       throw new AuthError(strings.errors.sessionExpired);
     state.refreshTokens.delete(session.refreshToken);
     return this.session(session.externalId, session.email);

@@ -2,7 +2,12 @@
 
 import { labels, strings } from '@/strings';
 import * as Dialog from '@radix-ui/react-dialog';
-import { useRef, type CSSProperties, type ReactNode } from 'react';
+import {
+  useRef,
+  type CSSProperties,
+  type ReactNode,
+  type RefObject,
+} from 'react';
 import { Button } from './Button';
 import { cn } from '../lib/cn';
 
@@ -27,9 +32,10 @@ const accentClasses: Record<AlertTone, string> = {
 
 const layoutClasses: Record<AlertAlignment, string> = {
   center:
-    'left-1/2 top-1/2 w-[min(92vw,34rem)] -translate-x-1/2 -translate-y-1/2 rounded-2xl',
-  top: 'left-1/2 top-6 w-[min(92vw,40rem)] -translate-x-1/2 rounded-2xl',
-  right: 'right-0 top-0 h-dvh w-[min(94vw,34rem)] rounded-none rounded-l-2xl',
+    'left-1/2 top-1/2 w-[min(92vw,34rem)] -translate-x-1/2 -translate-y-1/2 rounded-overlay',
+  top: 'left-1/2 top-6 w-[min(92vw,40rem)] -translate-x-1/2 rounded-overlay',
+  right:
+    'right-0 top-0 h-dvh w-[min(94vw,34rem)] rounded-none rounded-l-overlay',
 };
 
 interface AlertModalProps {
@@ -45,6 +51,7 @@ interface AlertModalProps {
   details?: ReactNode;
   motionEnabled?: boolean;
   motionDurationMs?: number;
+  restoreFocusRef?: RefObject<HTMLElement | null>;
 }
 
 export function AlertModal({
@@ -59,9 +66,11 @@ export function AlertModal({
   onConfirm,
   details,
   motionEnabled = true,
-  motionDurationMs = 240,
+  motionDurationMs,
+  restoreFocusRef,
 }: AlertModalProps) {
-  const returnFocusRef = useRef<HTMLElement | null>(null);
+  const localReturnFocusRef = useRef<HTMLElement | null>(null);
+  const returnFocusRef = restoreFocusRef ?? localReturnFocusRef;
   return (
     <Dialog.Root
       open={open}
@@ -69,6 +78,7 @@ export function AlertModal({
     >
       <Dialog.Portal>
         <Dialog.Overlay
+          data-ui-presentation-layer="true"
           data-motion={motionEnabled ? undefined : 'off'}
           className={cn(
             'ui-backdrop fixed inset-0 z-80 bg-(--dashboard-shell-overlay) backdrop-blur-sm',
@@ -76,18 +86,27 @@ export function AlertModal({
           style={
             motionEnabled
               ? ({
-                  '--ui-overlay-duration': `${motionDurationMs}ms`,
+                  '--ui-overlay-duration':
+                    motionDurationMs === undefined
+                      ? 'var(--motion-duration-enter)'
+                      : `${motionDurationMs}ms`,
                 } as CSSProperties)
               : undefined
           }
         />
         <Dialog.Content
+          data-ui-presentation-layer="true"
+          role="alertdialog"
           data-motion={motionEnabled ? undefined : 'off'}
           onOpenAutoFocus={() => {
-            returnFocusRef.current =
-              document.activeElement instanceof HTMLElement
-                ? document.activeElement
-                : null;
+            const focused = document.activeElement;
+            // Consecutive confirmations share the original workflow trigger.
+            if (
+              focused instanceof HTMLElement &&
+              focused !== document.body &&
+              !focused.closest('[role="alertdialog"]')
+            )
+              returnFocusRef.current = focused;
           }}
           onCloseAutoFocus={(event) => {
             event.preventDefault();
@@ -106,14 +125,17 @@ export function AlertModal({
             }
           }}
           className={cn(
-            'ui-dialog fixed z-90 max-h-[calc(100dvh-2rem)] overflow-y-auto border bg-primary p-6 shadow-(--dashboard-shell-shadow-lg) outline-none',
+            'ui-dialog fixed z-90 max-h-[calc(100dvh-2rem)] overflow-y-auto border-control bg-primary p-6 shadow-(--shadow-overlay) outline-none',
             toneClasses[tone],
             layoutClasses[alignment],
           )}
           style={
             motionEnabled
               ? ({
-                  '--ui-overlay-duration': `${motionDurationMs}ms`,
+                  '--ui-overlay-duration':
+                    motionDurationMs === undefined
+                      ? 'var(--motion-duration-enter)'
+                      : `${motionDurationMs}ms`,
                 } as CSSProperties)
               : undefined
           }
@@ -122,7 +144,7 @@ export function AlertModal({
             <div className="flex flex-col items-start gap-4 text-left">
               <div
                 className={cn(
-                  'inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold tracking-[0.16em]',
+                  'inline-flex items-center gap-2 rounded-chip px-3 py-1 text-xs font-semibold tracking-[0.16em]',
                   accentClasses[tone],
                 )}
               >
@@ -139,11 +161,11 @@ export function AlertModal({
               </div>
             </div>
             {details ? (
-              <div className="rounded-xl border border-secondary bg-secondary_subtle p-4 text-sm text-secondary">
+              <div className="rounded-card border-control border-secondary bg-secondary_subtle p-4 text-sm text-secondary">
                 {details}
               </div>
             ) : null}
-            <div className="mt-auto flex flex-wrap justify-center gap-3 border-t border-secondary pt-5">
+            <div className="mt-auto flex flex-wrap justify-center gap-3 border-t-control border-secondary pt-5">
               <Button variant="secondary" onClick={onCancel}>
                 {cancelLabel}
               </Button>

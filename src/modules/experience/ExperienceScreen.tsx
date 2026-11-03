@@ -86,10 +86,10 @@ const faqItems = [
       strings.ui.experienceScreen.yesTheSameCardAndShellHierarchyCarriesThrough,
   },
   {
-    question: strings.ui.experienceScreen.canWeSwapTheAccentThemePerUser,
+    question: strings.ui.experienceScreen.canWeSwapTheThemePerUser,
     answer:
       strings.ui.experienceScreen
-        .yesAccentChoiceStillLivesInAppearancePreferencesAnd,
+        .yesThemeChoiceLivesInAppearancePreferences,
   },
   {
     question: strings.ui.experienceScreen.willFormControlsMatchTheDashboard,
@@ -367,7 +367,7 @@ export function ExperienceScreen() {
                 key={section.id}
                 type="button"
                 onClick={() => scrollToSection(section.id)}
-                className={`bouncy-button rounded-lg border px-4 py-2 text-sm font-medium transition ${
+                className={`bouncy-button rounded-lg border-control px-4 py-2 text-sm font-medium transition ${
                   activeSection === section.id
                     ? 'border-brand/60 bg-brand-primary text-primary shadow-(--dashboard-shell-shadow)'
                     : 'border-secondary bg-primary text-secondary hover:border-primary hover:text-primary'
@@ -378,7 +378,7 @@ export function ExperienceScreen() {
             ))}
             <Link
               href={'/dashboard' as never}
-              className="bouncy-button rounded-lg bg-brand-solid px-4 py-2 text-sm font-semibold text-(--color-text-primary_on-brand) shadow-(--dashboard-shell-shadow) transition hover:bg-brand-solid_hover"
+              className="bouncy-button rounded-lg bg-brand-solid px-4 py-2 text-sm font-semibold text-text-primary_on-brand shadow-(--dashboard-shell-shadow) transition hover:bg-brand-solid_hover"
             >
               {strings.ui.experienceScreen.backToDashboard}
             </Link>
@@ -392,7 +392,7 @@ export function ExperienceScreen() {
           className="experience-reveal grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]"
           data-visible={visibleState('hero')}
         >
-          <article className="rounded-3xl border border-secondary bg-primary p-6 shadow-(--dashboard-shell-shadow-lg) sm:p-8 lg:p-10">
+          <article className="rounded-3xl border-control border-secondary bg-primary p-6 shadow-(--dashboard-shell-shadow-lg) sm:p-8 lg:p-10">
             <p className="m-0 text-xs font-semibold uppercase tracking-[0.18em] text-brand-secondary">
               {strings.ui.experienceScreen.restyledSystem}
             </p>
@@ -417,7 +417,7 @@ export function ExperienceScreen() {
               ].map((chip) => (
                 <span
                   key={chip}
-                  className="inline-flex rounded-full border border-secondary bg-secondary_subtle px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-secondary"
+                  className="inline-flex rounded-full border-control border-secondary bg-secondary_subtle px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-secondary"
                 >
                   {chip}
                 </span>
@@ -426,7 +426,7 @@ export function ExperienceScreen() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href={'/dashboard' as never}
-                className="bouncy-button rounded-lg bg-brand-solid px-5 py-3 text-sm font-semibold text-(--color-text-primary_on-brand) shadow-(--dashboard-shell-shadow) transition hover:bg-brand-solid_hover"
+                className="bouncy-button rounded-lg bg-brand-solid px-5 py-3 text-sm font-semibold text-text-primary_on-brand shadow-(--dashboard-shell-shadow) transition hover:bg-brand-solid_hover"
               >
                 {strings.ui.experienceScreen.enterPortal}
               </Link>
@@ -434,7 +434,7 @@ export function ExperienceScreen() {
                 variant="ghost"
                 type="button"
                 onClick={() => scrollToSection('solutions')}
-                className="bouncy-button rounded-lg border border-secondary bg-primary px-5 py-3 text-sm font-semibold text-primary transition hover:bg-secondary_subtle"
+                className="bouncy-button rounded-lg border-control border-secondary bg-primary px-5 py-3 text-sm font-semibold text-primary transition hover:bg-secondary_subtle"
               >
                 {strings.ui.experienceScreen.exploreTheSystem}
               </Button>
@@ -445,7 +445,7 @@ export function ExperienceScreen() {
             className="grid gap-4"
             style={{ transform: `translate3d(0, ${-heroParallax}px, 0)` }}
           >
-            <article className="rounded-3xl border border-secondary bg-primary p-5 shadow-(--dashboard-shell-shadow)">
+            <article className="rounded-3xl border-control border-secondary bg-primary p-5 shadow-(--dashboard-shell-shadow)">
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <p className="m-0 text-xs font-semibold uppercase tracking-[0.16em] text-tertiary">
@@ -459,7 +459,7 @@ export function ExperienceScreen() {
                   {strings.ui.experienceScreen.active}
                 </span>
               </div>
-              <div className="mt-5 grid gap-4 rounded-2xl border border-secondary bg-secondary_subtle p-4">
+              <div className="mt-5 grid gap-4 rounded-2xl border-control border-secondary bg-secondary_subtle p-4">
                 <div className="grid gap-3 sm:grid-cols-3">
                   {[
                     strings.ui.experienceScreen.conversion,
@@ -468,7 +468,7 @@ export function ExperienceScreen() {
                   ].map((label, index) => (
                     <div
                       key={label}
-                      className="rounded-xl border border-secondary bg-primary p-4"
+                      className="rounded-xl border-control border-secondary bg-primary p-4"
                     >
                       <p className="m-0 text-xs font-semibold uppercase tracking-[0.16em] text-tertiary">
                         {label}
@@ -479,7 +479,7 @@ export function ExperienceScreen() {
                     </div>
                   ))}
                 </div>
-                <div className="rounded-xl border border-secondary bg-primary p-4">
+                <div className="rounded-xl border-control border-secondary bg-primary p-4">
                   <div className="flex items-center justify-between gap-3">
                     <p className="m-0 text-sm font-semibold text-primary">
                       {strings.ui.experienceScreen.trafficOverview}
@@ -507,7 +507,7 @@ export function ExperienceScreen() {
               {showcaseStats.map((item) => (
                 <article
                   key={item.label}
-                  className="rounded-2xl border border-secondary bg-primary p-4 shadow-(--dashboard-shell-shadow)"
+                  className="rounded-2xl border-control border-secondary bg-primary p-4 shadow-(--dashboard-shell-shadow)"
                 >
                   <p className="m-0 text-xs font-semibold uppercase tracking-[0.16em] text-tertiary">
                     {item.label}
@@ -550,7 +550,7 @@ export function ExperienceScreen() {
                 key={solution.title}
                 type="button"
                 onClick={() => void handleSolutionPresentation(index)}
-                className="bouncy-button group grid min-h-60 gap-4 rounded-[24px] border border-secondary bg-primary p-6 text-left shadow-(--dashboard-shell-shadow) transition duration-200 hover:border-primary"
+                className="bouncy-button group grid min-h-60 gap-4 rounded-card border-control border-secondary bg-primary p-6 text-left shadow-(--dashboard-shell-shadow) transition duration-200 hover:border-primary"
               >
                 <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-brand-primary text-sm font-semibold uppercase tracking-[0.16em] text-brand-secondary">
                   {strings.ui.experienceScreen.value0}
@@ -577,7 +577,7 @@ export function ExperienceScreen() {
           className="experience-reveal grid gap-4 xl:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)]"
           data-visible={visibleState('workflow')}
         >
-          <article className="grid gap-5 rounded-3xl border border-secondary bg-primary p-6 shadow-(--dashboard-shell-shadow) sm:p-8">
+          <article className="grid gap-5 rounded-3xl border-control border-secondary bg-primary p-6 shadow-(--dashboard-shell-shadow) sm:p-8">
             <div className="grid gap-3">
               <p className="m-0 text-xs font-semibold uppercase tracking-[0.18em] text-brand-secondary">
                 {strings.ui.experienceScreen.workflow}
@@ -606,7 +606,7 @@ export function ExperienceScreen() {
               ].map((item, index) => (
                 <div
                   key={item}
-                  className="flex gap-4 rounded-2xl border border-secondary bg-secondary_subtle p-4"
+                  className="flex gap-4 rounded-2xl border-control border-secondary bg-secondary_subtle p-4"
                 >
                   <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-primary text-sm font-semibold text-brand-secondary">
                     {index + 1}
@@ -618,7 +618,7 @@ export function ExperienceScreen() {
           </article>
 
           <div className="grid gap-4">
-            <article className="rounded-3xl border border-secondary bg-primary p-6 shadow-(--dashboard-shell-shadow)">
+            <article className="rounded-3xl border-control border-secondary bg-primary p-6 shadow-(--dashboard-shell-shadow)">
               <p className="m-0 text-xs font-semibold uppercase tracking-[0.18em] text-brand-secondary">
                 {strings.ui.experienceScreen.whatChanged}
               </p>
@@ -642,7 +642,7 @@ export function ExperienceScreen() {
                 ].map(([title, description]) => (
                   <div
                     key={title}
-                    className="rounded-2xl border border-secondary bg-secondary_subtle p-4"
+                    className="rounded-2xl border-control border-secondary bg-secondary_subtle p-4"
                   >
                     <h3 className="m-0 text-base font-semibold text-primary">
                       {title}
@@ -659,7 +659,7 @@ export function ExperienceScreen() {
 
         <section
           id="gallery"
-          className="experience-reveal grid gap-6 rounded-3xl border border-secondary bg-primary p-6 shadow-(--dashboard-shell-shadow)"
+          className="experience-reveal grid gap-6 rounded-3xl border-control border-secondary bg-primary p-6 shadow-(--dashboard-shell-shadow)"
           data-visible={visibleState('gallery')}
         >
           <div className="grid gap-2">
@@ -674,7 +674,7 @@ export function ExperienceScreen() {
             </h2>
           </div>
           <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-            <article className="rounded-[24px] border border-secondary bg-secondary_subtle p-5">
+            <article className="rounded-card border-control border-secondary bg-secondary_subtle p-5">
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <p className="m-0 text-xs font-semibold uppercase tracking-[0.16em] text-tertiary">
@@ -690,7 +690,7 @@ export function ExperienceScreen() {
               </div>
               <div className="mt-5 grid gap-4">
                 <div className="grid gap-4 md:grid-cols-2">
-                  <div className="rounded-xl border border-secondary bg-primary p-4">
+                  <div className="rounded-xl border-control border-secondary bg-primary p-4">
                     <p className="m-0 text-sm font-semibold text-primary">
                       {strings.ui.experienceScreen.revenueMix}
                     </p>
@@ -702,7 +702,7 @@ export function ExperienceScreen() {
                       }}
                     />
                   </div>
-                  <div className="rounded-xl border border-secondary bg-primary p-4">
+                  <div className="rounded-xl border-control border-secondary bg-primary p-4">
                     <p className="m-0 text-sm font-semibold text-primary">
                       {strings.ui.experienceScreen.topChannels}
                     </p>
@@ -731,7 +731,7 @@ export function ExperienceScreen() {
                     </div>
                   </div>
                 </div>
-                <div className="rounded-xl border border-secondary bg-primary p-4">
+                <div className="rounded-xl border-control border-secondary bg-primary p-4">
                   <p className="m-0 text-sm font-semibold text-primary">
                     {strings.ui.experienceScreen.recentActivity}
                   </p>
@@ -769,7 +769,7 @@ export function ExperienceScreen() {
               ].map((item, index) => (
                 <article
                   key={item}
-                  className="rounded-2xl border border-secondary bg-secondary_subtle p-4"
+                  className="rounded-2xl border-control border-secondary bg-secondary_subtle p-4"
                 >
                   <p className="m-0 text-xs font-semibold uppercase tracking-[0.14em] text-brand-secondary">
                     {strings.ui.experienceScreen.value0}
@@ -786,7 +786,7 @@ export function ExperienceScreen() {
 
         <section
           id="motion"
-          className="experience-reveal grid gap-6 rounded-3xl border border-secondary bg-primary p-6 shadow-(--dashboard-shell-shadow)"
+          className="experience-reveal grid gap-6 rounded-3xl border-control border-secondary bg-primary p-6 shadow-(--dashboard-shell-shadow)"
           data-visible={visibleState('motion')}
         >
           <div className="grid gap-2">
@@ -867,9 +867,9 @@ export function ExperienceScreen() {
               onClick={async () => {
                 presentation.setMotionConfig({
                   enabled: true,
-                  toastDurationMs: 220,
-                  alertDurationMs: 240,
-                  sheetDurationMs: 260,
+                  toastDurationMs: undefined,
+                  alertDurationMs: undefined,
+                  sheetDurationMs: undefined,
                 });
                 await presentation.showAlert({
                   title: strings.ui.experienceScreen.defaultMotionRestored,
@@ -904,7 +904,7 @@ export function ExperienceScreen() {
             </h2>
           </div>
           <div className="grid gap-4 lg:grid-cols-3">
-            <article className="rounded-[24px] border border-secondary bg-primary p-6 shadow-(--dashboard-shell-shadow)">
+            <article className="rounded-card border-control border-secondary bg-primary p-6 shadow-(--dashboard-shell-shadow)">
               <h3 className="text-xl font-semibold text-primary">
                 {strings.ui.experienceScreen.contactDetails}
               </h3>
@@ -921,7 +921,7 @@ export function ExperienceScreen() {
                 </p>
               </div>
             </article>
-            <article className="rounded-[24px] border border-secondary bg-primary p-6 shadow-(--dashboard-shell-shadow)">
+            <article className="rounded-card border-control border-secondary bg-primary p-6 shadow-(--dashboard-shell-shadow)">
               <h3 className="text-xl font-semibold text-primary">
                 {strings.ui.experienceScreen.officeHours}
               </h3>
@@ -937,7 +937,7 @@ export function ExperienceScreen() {
                 </p>
               </div>
             </article>
-            <article className="rounded-[24px] border border-secondary bg-primary p-6 shadow-(--dashboard-shell-shadow)">
+            <article className="rounded-card border-control border-secondary bg-primary p-6 shadow-(--dashboard-shell-shadow)">
               <h3 className="text-xl font-semibold text-primary">
                 {strings.ui.experienceScreen.mockAddress}
               </h3>
@@ -974,7 +974,7 @@ export function ExperienceScreen() {
               return (
                 <article
                   key={faq.question}
-                  className="rounded-2xl border border-secondary bg-primary shadow-(--dashboard-shell-shadow)"
+                  className="rounded-2xl border-control border-secondary bg-primary shadow-(--dashboard-shell-shadow)"
                 >
                   <Button
                     variant="ghost"

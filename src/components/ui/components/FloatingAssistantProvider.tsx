@@ -55,7 +55,7 @@ export function FloatingAssistantProvider({
       className={
         inline
           ? undefined
-          : 'max-w-[calc(100vw-2rem)] rounded-full px-5 py-3 shadow-(--dashboard-shell-shadow-lg)'
+          : 'max-w-[calc(100vw-2rem)] rounded-control px-5 py-3 shadow-(--shadow-overlay)'
       }
       disabled={entries.every((entry) => entry.disabled)}
       aria-haspopup="dialog"
@@ -92,7 +92,7 @@ export function FloatingAssistantProvider({
           <Button
             key={entry.id}
             variant="secondary"
-            className="justify-start gap-4 rounded-xl p-4 text-start"
+            className="justify-start gap-4 rounded-card p-4 text-start"
             disabled={entry.disabled}
             onClick={() => {
               transferring.current = true;

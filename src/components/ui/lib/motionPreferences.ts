@@ -7,7 +7,12 @@ export function prefersReducedMotion() {
 }
 
 export function motionDuration(
-  token: '--motion-duration-fast' | '--motion-duration-base',
+  token:
+    | '--motion-duration-press'
+    | '--motion-duration-fast'
+    | '--motion-duration-base'
+    | '--motion-duration-enter'
+    | '--motion-duration-celebration',
 ) {
   if (prefersReducedMotion()) return 0;
   const value = getComputedStyle(document.documentElement)

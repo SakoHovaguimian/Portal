@@ -1,5 +1,6 @@
 'use client';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
@@ -20,16 +21,24 @@ export function ChatScreen() {
   const realtime = useRealtime();
   const { demoMode } = useRuntimeConfig();
   const [message, setMessage] = useState('');
+  const dirtyRef = useRef(false);
+  const busyRef = useRef(false);
+  useUnsavedFormGuard(dirtyRef, busyRef);
   const query = useQuery({
     queryKey: ['chat', 'messages'],
-    queryFn: () => container.chatService.listMessages(),
+    queryFn: ({ signal }) => container.chatService.listMessages(signal),
     refetchInterval: demoMode || realtime.status === 'offline' ? 5000 : false,
   });
   const mutation = useMutation({
     mutationFn: (value: string) => container.chatService.sendMessage(value),
     onSuccess: async () => {
+      dirtyRef.current = false;
+      busyRef.current = false;
       setMessage('');
       await queryClient.invalidateQueries({ queryKey: ['chat'] });
+    },
+    onSettled: () => {
+      busyRef.current = false;
     },
   });
   return (
@@ -44,7 +53,7 @@ export function ChatScreen() {
             {strings.chat[realtime.status]}
           </p>
         </div>
-        <QueryBoundary query={query}>
+        <QueryBoundary query={query} retainDataOnError>
           {(messages) => (
             <div
               role="log"
@@ -57,7 +66,7 @@ export function ChatScreen() {
               {messages.map((item) => (
                 <article
                   key={item.id}
-                  className="rounded-xl border border-secondary p-4"
+                  className="rounded-xl border-control border-secondary p-4"
                 >
                   <p className="text-sm font-semibold">{item.author}</p>
                   <p className="whitespace-pre-wrap wrap-break-word text-sm text-secondary">
@@ -78,7 +87,10 @@ export function ChatScreen() {
           noValidate
           onSubmit={(event) => {
             event.preventDefault();
-            if (message.trim() && !mutation.isPending) mutation.mutate(message);
+            if (message.trim() && !busyRef.current) {
+              busyRef.current = true;
+              mutation.mutate(message);
+            }
           }}
           className="grid gap-3"
         >
@@ -87,11 +99,21 @@ export function ChatScreen() {
               value={message}
               maxLength={2000}
               disabled={mutation.isPending}
-              onChange={(event) => setMessage(event.target.value)}
+              aria-describedby={
+                mutation.isError ? 'chat-compose-error' : undefined
+              }
+              onChange={(event) => {
+                dirtyRef.current = event.target.value.length > 0;
+                setMessage(event.target.value);
+              }}
             />
           </Field>
           {mutation.isError && (
-            <p role="alert" className="text-sm text-error-primary">
+            <p
+              id="chat-compose-error"
+              role="alert"
+              className="text-sm text-error-primary"
+            >
               {strings.chat.failed}
             </p>
           )}
@@ -99,8 +121,9 @@ export function ChatScreen() {
             <Button
               type="submit"
               disabled={!message.trim() || mutation.isPending}
+              loading={mutation.isPending}
             >
-              {mutation.isPending ? strings.chat.sending : strings.chat.send}
+              {strings.chat.send}
             </Button>
             {demoMode && (
               <Button

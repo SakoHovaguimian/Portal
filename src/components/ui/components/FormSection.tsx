@@ -27,7 +27,7 @@ export function FormSection({
   return (
     <section
       aria-labelledby={`${id}-title`}
-      className={cn('grid min-w-0 gap-4', className)}
+      className={cn('grid min-w-0 gap-(--space-field)', className)}
     >
       <div className="flex flex-wrap items-start gap-3">
         {icon && <IconTile size="sm">{icon}</IconTile>}

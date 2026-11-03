@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Badge, Button, Message, Page, PageHeader } from '@/components/ui';
-import { strings } from '@/strings';
+import { portalUiStrings, strings } from '@/strings';
 import { FoundationsShowcase } from './components/FoundationsShowcase';
 import { PatternsShowcase } from './components/PatternsShowcase';
 import { ButtonsShowcase } from './components/ButtonsShowcase';
@@ -18,7 +18,9 @@ import { ThemeControls } from '@/modules/settings/components/ThemeControls';
 import { MotionShowcase } from './components/MotionShowcase';
 import { EditingShowcase } from './components/EditingShowcase';
 import { CollectionShowcase } from './components/CollectionShowcase';
+import { InteractionsShowcase } from './components/InteractionsShowcase';
 import { MediaShowcase } from './components/MediaShowcase';
+import { ValueControlsShowcase } from './components/ValueControlsShowcase';
 const copy = strings.componentLibrary;
 
 const sections = [
@@ -28,6 +30,8 @@ const sections = [
   ['patterns', copy.patterns],
   ['buttons', copy.buttons],
   ['inputs', copy.inputs],
+  ['values', strings.valueControls.title],
+  ['interactions', portalUiStrings.library.title],
   ['selection', copy.selection],
   ['tiles', copy.tiles],
   ['cards', copy.cards],
@@ -140,7 +144,7 @@ export function ComponentLibraryScreen() {
           <section
             id="theme"
             aria-label={strings.designSystem.theme}
-            className="rounded-xl border border-secondary bg-primary p-4 sm:p-6"
+            className="rounded-xl border-control border-secondary bg-primary p-4 sm:p-6"
           >
             <ThemeControls />
           </section>
@@ -149,6 +153,8 @@ export function ComponentLibraryScreen() {
           <PatternsShowcase />
           <ButtonsShowcase />
           <InputsShowcase />
+          <ValueControlsShowcase />
+          <InteractionsShowcase />
           <SelectionShowcase />
           <TilesShowcase />
           <CardsShowcase />

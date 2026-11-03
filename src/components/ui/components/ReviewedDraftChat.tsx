@@ -165,7 +165,7 @@ export function ReviewedDraftChat({
           onDecline={decline}
         />
       )}
-      <div className="grid min-w-0 gap-3 border-t border-secondary pt-4">
+      <div className="grid min-w-0 gap-3 border-t-control border-secondary pt-4">
         <Field labelText={copy.input}>
           <TextArea
             ref={transcriptRef}

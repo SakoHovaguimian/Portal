@@ -6,7 +6,7 @@
 .ui-stepper-list {
   display: grid;
   grid-template-columns: repeat(var(--ui-step-count), minmax(0, 1fr));
-  gap: 1rem;
+  gap: calc(var(--spacing) * 4);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -21,7 +21,7 @@
   justify-items: stretch;
   align-items: start;
   align-content: start;
-  padding: 0 0 0.75rem;
+  padding: 0 0 calc(var(--spacing) * 3);
   box-shadow: none;
   --motion-button-press-scale: 1;
 }
@@ -29,12 +29,12 @@
   opacity: 0.5;
 }
 .ui-step-marker {
-  width: 1.75rem;
-  height: 1.75rem;
+  width: calc(var(--spacing) * 7);
+  height: calc(var(--spacing) * 7);
 }
 .ui-step-description {
   display: none;
-  padding-inline-start: 2.375rem;
+  padding-inline-start: calc(var(--spacing) * 9.5);
 }
 .ui-stepper-connector {
   display: none;
@@ -54,12 +54,12 @@
 .ui-stepper:is([data-orientation='vertical'], [data-orientation='responsive'])
   .ui-stepper-list {
   grid-template-columns: minmax(0, 1fr);
-  gap: 1.25rem;
+  gap: calc(var(--spacing) * 5);
 }
 .ui-stepper:is([data-orientation='vertical'], [data-orientation='responsive'])
   .ui-step {
-  padding: 0.5rem;
-  min-height: 4.5rem;
+  padding: calc(var(--spacing) * 2);
+  min-height: calc(var(--spacing) * 18);
 }
 .ui-stepper:is([data-orientation='vertical'], [data-orientation='responsive'])
   .ui-step-bar {
@@ -67,22 +67,22 @@
 }
 .ui-stepper:is([data-orientation='vertical'], [data-orientation='responsive'])
   .ui-step-marker {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: calc(var(--spacing) * 10);
+  height: calc(var(--spacing) * 10);
 }
 .ui-stepper:is([data-orientation='vertical'], [data-orientation='responsive'])
   .ui-step-description {
   display: block;
-  padding-inline-start: 3.125rem;
+  padding-inline-start: calc(var(--spacing) * 12.5);
 }
 .ui-stepper:is([data-orientation='vertical'], [data-orientation='responsive'])
   .ui-stepper-connector {
   display: block;
   position: absolute;
-  inset-inline-start: 1.75rem;
-  top: 3.25rem;
-  bottom: -1.5rem;
-  width: 2px;
+  inset-inline-start: calc(var(--spacing) * 7);
+  top: calc(var(--spacing) * 13);
+  bottom: calc(var(--spacing) * -6);
+  width: var(--border-width-control);
   overflow: hidden;
   border-radius: 999px;
   background: var(--color-border-secondary);
@@ -94,21 +94,21 @@
   }
   .ui-stepper[data-orientation='responsive'] .ui-stepper-list {
     grid-template-columns: repeat(var(--ui-step-count), minmax(0, 1fr));
-    gap: 1rem;
+    gap: calc(var(--spacing) * 4);
   }
   .ui-stepper[data-orientation='responsive'] .ui-step {
-    padding: 0 0 0.75rem;
-    min-height: 2.75rem;
+    padding: 0 0 calc(var(--spacing) * 3);
+    min-height: calc(var(--spacing) * 11);
   }
   .ui-stepper[data-orientation='responsive'] .ui-step-bar {
     display: block;
   }
   .ui-stepper[data-orientation='responsive'] .ui-step-marker {
-    width: 1.75rem;
-    height: 1.75rem;
+    width: calc(var(--spacing) * 7);
+    height: calc(var(--spacing) * 7);
   }
   .ui-stepper[data-orientation='responsive'] .ui-step-description {
-    padding-inline-start: 2.375rem;
+    padding-inline-start: calc(var(--spacing) * 9.5);
   }
   .ui-stepper[data-orientation='responsive'] .ui-stepper-connector {
     display: none;
@@ -122,7 +122,7 @@
     background: Highlight;
   }
   .ui-step[aria-current='step'] .ui-step-marker {
-    outline: 2px solid Highlight;
+    outline: var(--control-focus-outline-width) solid Highlight;
     outline-offset: 3px;
   }
 }
@@ -131,6 +131,6 @@
   .ui-stepper[data-orientation='horizontal'] .ui-step-heading {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.5rem;
+    gap: calc(var(--spacing) * 2);
   }
 }

@@ -9,7 +9,7 @@ import type { FeatureRequestTransport } from '@/services/api/models';
 import { mapFeatureRequestTransportToDomain } from '@/services/api/domainMappers';
 export class FeatureRequestService {
   constructor(private readonly api: ApiClientInterface) {}
-  async listFeatureRequests(query: FeatureRequestQuery) {
+  async listFeatureRequests(query: FeatureRequestQuery, signal?: AbortSignal) {
     const params = new URLSearchParams({
       query: query.query || '',
       limit: String(query.limit),
@@ -17,13 +17,14 @@ export class FeatureRequestService {
     });
     const page = await this.api.request<
       PaginatedResult<FeatureRequestTransport>
-    >(`/feature-requests?${params}`);
+    >(`/feature-requests?${params}`, { signal });
     return { ...page, data: page.data.map(mapFeatureRequestTransportToDomain) };
   }
-  async getFeatureRequestById(id: string) {
+  async getFeatureRequestById(id: string, signal?: AbortSignal) {
     return mapFeatureRequestTransportToDomain(
       await this.api.request<FeatureRequestTransport>(
         `/feature-requests/${encodeURIComponent(id)}`,
+        { signal },
       ),
     );
   }

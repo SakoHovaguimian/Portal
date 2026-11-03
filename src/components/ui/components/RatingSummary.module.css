@@ -1,0 +1,39 @@
+.summary {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  color: var(--color-rating-active);
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+}
+
+.star {
+  position: relative;
+  display: inline-grid;
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.outline,
+.filled {
+  display: block;
+  width: 1.125rem;
+  height: 1.125rem;
+  stroke-width: 1.5;
+}
+
+.outline {
+  stroke: var(--color-rating-inactive);
+}
+
+.fill {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  overflow: hidden;
+}
+
+.filled {
+  fill: var(--color-rating-active);
+  stroke: var(--color-rating-active);
+}

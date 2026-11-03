@@ -34,7 +34,7 @@
 .ui-select[data-open] .ui-select-trigger,
 .ui-input[data-preview-state='focused'] {
   border-color: var(--color-border-brand);
-  @apply inset-ring-[length:calc(var(--control-selected-border-width)-1px)] inset-ring-[color:var(--color-border-brand)];
+  @apply inset-ring-[length:max(0px,calc(var(--control-selected-border-width)-var(--border-width-control)))] inset-ring-[color:var(--color-border-brand)];
 }
 
 .ui-button[data-variant='destructive'] {
@@ -48,7 +48,9 @@
 }
 
 /* These inputs have fixed frames, so a real border cannot move surrounding content. */
-.ui-choice:is(:checked, :indeterminate),
+/* A radio is also :indeterminate while its group has no selection, so scope that state to checkboxes. */
+.ui-checkbox:is(:checked, :indeterminate),
+.ui-radio:checked,
 .ui-switch:checked {
   border-width: var(--control-selected-border-width);
 }
@@ -56,7 +58,8 @@
 /* Both the measured pill and its first-render fallback share the same stroke. */
 .ui-segmented-indicator,
 .ui-segment-fallback {
-  border: var(--control-selected-border-width) solid var(--color-border-brand);
+  border: var(--control-selected-border-width) var(--border-style-control)
+    var(--color-border-brand);
 }
 
 .ui-chip[data-selected='true'] {
@@ -131,7 +134,7 @@
     [aria-current]:not([aria-current='false'])
   ) {
   border-color: var(--color-selection-border);
-  @apply inset-ring-[length:calc(var(--control-selected-border-width)-1px)] inset-ring-[color:var(--color-selection-border)];
+  @apply inset-ring-[length:max(0px,calc(var(--control-selected-border-width)-var(--border-width-control)))] inset-ring-[color:var(--color-selection-border)];
 }
 .ui-button[data-variant='ghost']:not(.ui-step, .ui-section-card):is(
     [aria-pressed='true'],

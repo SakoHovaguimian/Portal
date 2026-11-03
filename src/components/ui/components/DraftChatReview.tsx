@@ -41,7 +41,7 @@ export function DraftChatReview({
     <div
       ref={resultRef}
       tabIndex={-1}
-      className="grid min-w-0 gap-4 rounded-xl border border-secondary p-4 focus-visible:outline-2 focus-visible:outline-brand"
+      className="grid min-w-0 gap-4 rounded-card border-control border-secondary p-4 focus-visible:outline-2 focus-visible:outline-brand"
     >
       <p className="m-0 text-sm font-semibold text-primary">{copy.preview}</p>
       <p className="m-0 text-xs text-secondary">{copy.previewHint}</p>
@@ -95,7 +95,7 @@ export function DraftChatReview({
                   value={review[field.key]}
                   maxLength={field.maxLength}
                   rows={field.rows ?? 1}
-                  className="min-h-12 resize-none"
+                  className="min-h-(--control-height-lg) resize-none"
                   disabled={blocked || stale}
                   onChange={(event) =>
                     setReview((current) => ({

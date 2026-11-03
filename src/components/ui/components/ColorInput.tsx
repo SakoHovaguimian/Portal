@@ -14,7 +14,7 @@ import {
 } from 'react-aria-components';
 import { strings } from '@/strings';
 import type { ColorInputProps } from '../models/colorInputProps';
-import { Button } from './Button';
+import { ColorPickerValueField } from './ColorPickerValueField';
 import { UiIcon } from './UiIcon';
 
 export function ColorInput({
@@ -30,15 +30,15 @@ export function ColorInput({
       <AriaButton
         {...props}
         isDisabled={disabled}
-        className="ui-input flex min-h-12 w-full min-w-0 cursor-pointer items-center gap-3 rounded-lg border border-control-border bg-primary px-4 py-2.5 text-left text-sm text-primary outline-none hover:border-primary focus-visible:border-brand focus-visible:ring-4 focus-visible:ring-brand/12 aria-invalid:border-error aria-invalid:focus-visible:ring-error/12 disabled:cursor-not-allowed disabled:border-secondary disabled:bg-disabled_subtle disabled:text-disabled"
+        className="ui-input shadow-(--shadow-control) flex min-h-(--control-height-lg) w-full min-w-0 cursor-pointer items-center gap-3 rounded-control border-control border-control-border bg-primary px-4 py-2.5 text-left text-sm text-primary outline-none hover:border-primary focus-visible:border-brand focus-visible:ring-4 focus-visible:ring-brand/12 aria-invalid:border-error aria-invalid:focus-visible:ring-error/12 disabled:cursor-not-allowed disabled:border-secondary disabled:bg-disabled_subtle disabled:text-disabled"
       >
         {value ? (
           <ColorSwatch
             color={value}
-            className="size-5 shrink-0 rounded border border-secondary"
+            className="size-5 shrink-0 rounded border-control border-secondary"
           />
         ) : (
-          <span className="size-5 shrink-0 rounded border border-secondary bg-secondary_subtle" />
+          <span className="size-5 shrink-0 rounded border-control border-secondary bg-secondary_subtle" />
         )}
         <span className="min-w-0 flex-1 font-mono wrap-anywhere">
           {value || copy.choose}
@@ -47,7 +47,7 @@ export function ColorInput({
       </AriaButton>
       <Popover
         offset={6}
-        className="ui-popover z-100 w-72 max-w-[calc(100vw-1.5rem)] rounded-xl border border-secondary bg-primary p-4 shadow-(--dashboard-shell-shadow-lg)"
+        className="ui-popover z-100 max-h-[min(30rem,var(--available-height))] w-72 max-w-[calc(100vw-1.5rem)] overflow-y-auto overscroll-contain rounded-overlay border-control border-secondary bg-primary p-4 shadow-(--shadow-overlay)"
       >
         <Dialog aria-label={label} className="outline-none">
           {({ close }) => (
@@ -62,7 +62,7 @@ export function ColorInput({
                     colorSpace="hsb"
                     xChannel="saturation"
                     yChannel="brightness"
-                    className="h-44 w-full rounded-lg border border-secondary"
+                    className="h-44 w-full rounded-control border-control border-secondary"
                   >
                     <ColorThumb className="size-5 rounded-full border-2 border-primary shadow-xs data-focus-visible:outline-2 data-focus-visible:outline-offset-2 data-focus-visible:outline-brand" />
                   </ColorArea>
@@ -70,26 +70,19 @@ export function ColorInput({
                     aria-label={copy.hue}
                     colorSpace="hsb"
                     channel="hue"
-                    className="flex min-h-11 items-center"
+                    className="flex min-h-(--control-height-md) items-center"
                   >
                     <SliderTrack className="h-4 w-full rounded-full">
                       <ColorThumb className="top-1/2 size-5 rounded-full border-2 border-primary shadow-xs data-focus-visible:outline-2 data-focus-visible:outline-offset-2 data-focus-visible:outline-brand" />
                     </SliderTrack>
                   </ColorSlider>
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="font-mono text-sm text-primary">
-                      {color.toString('hex')}
-                    </span>
-                    <Button
-                      variant="secondary"
-                      onClick={() => {
-                        onChange(color.toString('hex'));
-                        close();
-                      }}
-                    >
-                      {copy.done}
-                    </Button>
-                  </div>
+                  <ColorPickerValueField
+                    value={color.toString('hex')}
+                    onDone={() => {
+                      onChange(color.toString('hex'));
+                      close();
+                    }}
+                  />
                 </div>
               )}
             </ColorPicker>

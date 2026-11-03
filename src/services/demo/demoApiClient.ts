@@ -13,12 +13,20 @@ import { ChatMessageInputSchema } from '@/modules/chat/models/chatMessage';
 import type { ServerSession } from '@/services/session/models/serverSession';
 import { getDemoState } from './demoState';
 import { dashboardModelMeta } from './demoFixtures';
+import { getDemoContext } from './demoRuntime';
+import { simulateDemoRequest } from './demoSimulation';
+import type { DemoRequestHandler } from './models/demoRequestHandler';
+import { handleDemoOnboardingRequest } from '@/modules/onboarding/demo/handleDemoOnboardingRequest';
 import { mapUserMutationToTransport } from '../api/domainMappers';
 const PageQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(25),
   offset: z.coerce.number().int().min(0).default(0),
 });
 export class DemoApiClient {
+  constructor(private readonly handlers: DemoRequestHandler[] = []) {}
+  register(handler: DemoRequestHandler) {
+    this.handlers.push(handler);
+  }
   async proxy(
     request: Request,
     path: string,
@@ -26,7 +34,8 @@ export class DemoApiClient {
   ): Promise<Response> {
     const state = getDemoState();
     const current = state.users.find((user) => user.id === session.user.id);
-    if (!current) throw new AuthError(strings.errors.sessionExpired);
+    if (!current || current.disabled || current.deleted)
+      throw new AuthError(strings.errors.sessionExpired);
     const url = new URL(path, 'http://portal.internal');
     const parts = url.pathname
       .split('/')
@@ -34,13 +43,21 @@ export class DemoApiClient {
       .map(decodeURIComponent);
     const [resource, id] = parts;
     const method = request.method;
+    const context = await getDemoContext();
+    if (resource !== 'onboarding')
+      await simulateDemoRequest(context, request.signal);
+    const empty = context.scenario === 'empty' && method === 'GET';
     const json = (body: unknown, status = 200) =>
       Response.json(body, { status, headers: { 'cache-control': 'no-store' } });
     const input = async () =>
-      request.json().catch(() => {
-        throw new ValidationError(strings.errors.invalidInput);
-      });
-    const page = <T>(rows: T[]) => {
+      request
+        .json()
+        .then((value) => z.record(z.string(), z.unknown()).parse(value))
+        .catch(() => {
+          throw new ValidationError(strings.errors.invalidInput);
+        });
+    const page = <T>(allRows: T[]) => {
+      const rows = empty ? [] : allRows;
       const { limit, offset } = PageQuerySchema.parse(
         Object.fromEntries(url.searchParams),
       );
@@ -51,6 +68,22 @@ export class DemoApiClient {
         offset,
       };
     };
+    for (const handler of [handleDemoOnboardingRequest, ...this.handlers]) {
+      const response = await handler({
+        request,
+        path,
+        url,
+        parts,
+        session,
+        current,
+        state,
+        json,
+        input,
+        page,
+        empty,
+      });
+      if (response) return response;
+    }
     const search = (
       url.searchParams.get('query') ||
       url.searchParams.get('search') ||
@@ -75,7 +108,7 @@ export class DemoApiClient {
       const user =
         id === 'profile' ? current : state.users.find((user) => user.id === id);
       if (!user) throw new NotFoundError();
-      if (method === 'GET') return json(user);
+      if (method === 'GET' && parts.length === 2) return json(user);
       if (method === 'PUT' && id !== 'profile') {
         if (user.id !== current.id) throw new OwnershipError();
         const raw = await input();
@@ -139,13 +172,13 @@ export class DemoApiClient {
           key: 'user',
           display_name: strings.ui.demoApiClient.users,
           field_count: 10,
-          record_count: state.users.length,
+          record_count: empty ? 0 : state.users.length,
         },
         {
           key: 'featureRequest',
           display_name: strings.ui.demoApiClient.featureRequests,
           field_count: 7,
-          record_count: visibleRequests.length,
+          record_count: empty ? 0 : visibleRequests.length,
         },
       ];
       if (id === 'overview')
@@ -154,13 +187,12 @@ export class DemoApiClient {
             model: model.key,
             display_name: model.display_name,
             total_count: model.record_count,
-            period_count: (model.key === 'user'
-              ? state.users
-              : visibleRequests
-            ).filter(
-              (item) =>
-                Date.parse(item.created_at) >= Date.now() - 30 * 86400000,
-            ).length,
+            period_count: empty
+              ? 0
+              : (model.key === 'user' ? state.users : visibleRequests).filter(
+                  (item) =>
+                    Date.parse(item.created_at) >= Date.now() - 30 * 86400000,
+                ).length,
             growth_percent: null,
           })),
           date_range: {
@@ -174,8 +206,11 @@ export class DemoApiClient {
         if (!meta) throw new NotFoundError();
         return json({
           ...meta,
-          total_records:
-            parts[2] === 'user' ? state.users.length : visibleRequests.length,
+          total_records: empty
+            ? 0
+            : parts[2] === 'user'
+              ? state.users.length
+              : visibleRequests.length,
         });
       }
       if (id === 'records') {
@@ -193,7 +228,8 @@ export class DemoApiClient {
       }
     }
     if (resource === 'chat' && id === 'messages') {
-      if (method === 'GET') return json(state.messages.slice(-100));
+      if (method === 'GET')
+        return json(empty ? [] : state.messages.slice(-100));
       if (method === 'POST') {
         const body = ChatMessageInputSchema.parse(await input());
         const message = {

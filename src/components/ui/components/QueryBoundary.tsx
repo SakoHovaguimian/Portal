@@ -1,11 +1,13 @@
 'use client';
 
-import { strings } from '@/strings';
+import { portalUiStrings, strings } from '@/strings';
+import { DomainError } from '@/errors/domainErrors';
 import type { UseQueryResult } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { Card } from './Card';
 import { Button } from './Button';
 import { Spinner } from './Spinner';
+import { Message } from './Message';
 
 /**
  * Loading skeleton that matches the Card layout
@@ -33,9 +35,11 @@ function LoadingState({
 function QueryErrorState({
   error,
   onRetry,
+  busy,
 }: {
   error: Error;
   onRetry?: () => void;
+  busy?: boolean;
 }) {
   const message = getErrorMessage(error);
 
@@ -44,7 +48,7 @@ function QueryErrorState({
       role="alert"
       className="grid gap-3 border-error_subtle bg-error-primary"
     >
-      <span className="inline-flex w-fit items-center rounded-full bg-error px-2.5 py-1 text-xs font-semibold tracking-[0.14em] text-on-error">
+      <span className="inline-flex w-fit items-center rounded-chip bg-error px-2.5 py-1 text-xs font-semibold tracking-[0.14em] text-on-error">
         {strings.ui.queryBoundary.error}
       </span>
       <h3 className="m-0 text-lg font-semibold text-primary">
@@ -52,7 +56,7 @@ function QueryErrorState({
       </h3>
       <p className="m-0 text-sm text-secondary">{message}</p>
       {onRetry ? (
-        <Button variant="secondary" onClick={onRetry}>
+        <Button variant="secondary" loading={busy} onClick={onRetry}>
           {strings.ui.queryBoundary.tryAgain}
         </Button>
       ) : null}
@@ -77,7 +81,8 @@ function getErrorMessage(error: unknown): string {
     if (anyError.code === 'NOT_FOUND_ERROR' || anyError.status === 404) {
       return strings.ui.queryBoundary.theRequestedResourceCouldNotBeFound;
     }
-    if (anyError.code) return error.message;
+    if (error instanceof DomainError && error.status < 500)
+      return error.message;
     return strings.errors.requestFailed;
   }
   return strings.ui.queryBoundary.anUnexpectedErrorOccurred;
@@ -96,6 +101,8 @@ interface QueryBoundaryProps<T> {
   showError?: boolean;
   /** Pads the error state when rendered inside a DataPanel or other surface */
   inset?: boolean;
+  /** Retain mounted content after a non-authoritative background refresh failure. */
+  retainDataOnError?: boolean;
 }
 
 /**
@@ -128,14 +135,31 @@ export function QueryBoundary<T>({
   loadingMessage,
   showError = true,
   inset = false,
+  retainDataOnError = false,
 }: QueryBoundaryProps<T>): ReactNode {
   if (query.isLoading) {
     return loadingFallback ?? <LoadingState message={loadingMessage} />;
   }
 
-  if (query.isError && showError) {
+  const status =
+    query.error instanceof DomainError
+      ? query.error.status
+      : (query.error as { status?: number } | null)?.status;
+  const forbidden =
+    [401, 403, 404].includes(status ?? 0) ||
+    ['AUTH_ERROR', 'OWNERSHIP_ERROR', 'NOT_FOUND', 'NOT_FOUND_ERROR'].includes(
+      (query.error as { code?: string } | null)?.code ?? '',
+    );
+  const retained = retainDataOnError && query.data !== undefined && !forbidden;
+  if (query.isError && (showError || forbidden) && !retained) {
     const error = (
-      <QueryErrorState error={query.error} onRetry={() => query.refetch()} />
+      <QueryErrorState
+        error={query.error}
+        busy={query.isFetching}
+        onRetry={() => {
+          if (!query.isFetching) void query.refetch();
+        }}
+      />
     );
     return inset ? <div className="p-4 sm:p-6">{error}</div> : error;
   }
@@ -144,6 +168,34 @@ export function QueryBoundary<T>({
     return null;
   }
 
+  if (retainDataOnError) {
+    // The same children slot remains mounted while the refresh notice changes.
+    return (
+      <>
+        {retained && query.isError && showError ? (
+          <div className={inset ? 'p-4 sm:p-6' : undefined}>
+            <Message
+              intent="warning"
+              title={portalUiStrings.queryBoundary.refreshFailed}
+              description={portalUiStrings.queryBoundary.refreshHint}
+              action={
+                <Button
+                  variant="secondary"
+                  loading={query.isFetching}
+                  onClick={() => {
+                    if (!query.isFetching) void query.refetch();
+                  }}
+                >
+                  {strings.ui.queryBoundary.tryAgain}
+                </Button>
+              }
+            />
+          </div>
+        ) : null}
+        {children(query.data)}
+      </>
+    );
+  }
   return children(query.data);
 }
 

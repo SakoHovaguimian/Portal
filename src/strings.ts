@@ -5846,12 +5846,135 @@ export const addressCountries: {
 // All authored display copy belongs in this file. See docs/STRINGS.md.
 // Copy casing and narrow prose/data exceptions: docs/STRINGS.md#copy-casing.
 export const strings = {
+  valueControls: {
+    minimum: 'Minimum',
+    maximum: 'Maximum',
+    decrease: 'Decrease Value',
+    increase: 'Increase Value',
+    title: 'Progress And Value Controls',
+    description:
+      'Adjust values, choose a range, and follow progress. Every control follows your theme.',
+    slidersTitle: 'Sliders',
+    progressTitle: 'Progress Indicators',
+    loadingTitle: 'Loading Placeholders',
+    brightness: 'Brightness',
+    brightnessHint:
+      'Use the arrow keys for small adjustments, or Home and End to reach the limits.',
+    exposure: 'Exposure',
+    exposureHint: 'The fill extends from the value to the maximum.',
+    priceRange: 'Price Range',
+    priceRangeHint: 'Adjust either end. The minimum cannot pass the maximum.',
+    stepped: 'Text Size',
+    vertical: 'Intensity',
+    disabled: 'Unavailable',
+    invalid: 'Selection Needs Attention',
+    // @sentence-case: Complete slider validation message.
+    invalidMessage: 'Choose a value of at least 25 to continue.',
+    readOnly: 'Read-Only Quantity',
+    quantity: 'Quantity',
+    quantityHint: 'Enter a number or use the buttons. Available from 1 to 12.',
+    upload: 'File Transfer',
+    uploadHint: 'A local preview. No files are uploaded.',
+    processing: 'Processing',
+    complete: 'Complete',
+    paused: 'Paused',
+    failed: 'Transfer Interrupted',
+    failedHint:
+      'The connection was interrupted. Retry to continue the preview.',
+    retry: 'Retry Transfer',
+    storage: 'Storage Used',
+    storageHint: 'A meter shows a measurement, rather than a task in progress.',
+    activity: 'Loading Content',
+    download: 'Download',
+    run: 'Run Progress Preview',
+    pause: 'Pause Preview',
+    reset: 'Reset Controls',
+    skeletonHint: 'Placeholders keep the layout steady while content loads.',
+    simulateFailure: 'Simulate Interruption',
+  },
   designSystem: {
+    themeStudio: {
+      title: 'Choose Your Theme',
+      description:
+        'Choose a complete look for your workspace. Every theme brings its own colors, typography, shapes, and details.',
+      themeGroup: 'Workspace Theme',
+      selectedTheme: (name: string) => `${name} Selected`,
+      previewHeading: 'Your Workspace',
+      previewProject: 'Release Plan',
+      previewAction: 'Review',
+      previewMetric: '12',
+      previewMetricLabel: 'Open Tasks',
+      preferencesTitle: 'Make It Yours',
+      preferencesHint:
+        'Use your theme in light or dark, and choose how much motion feels right.',
+      liveTitle: 'Try The Details',
+      liveHint:
+        'These are the same controls and tables used throughout Portal. Try them to feel the selected theme.',
+      projectLabel: 'Project Name',
+      projectSample: 'Portal Workspace',
+      notifyLabel: 'Notify The Team',
+      notifyHint: 'A local preview; no notifications are sent.',
+      toastAction: 'Preview Toast',
+      resetAction: 'Reset Preview',
+      toastTitle: 'Looking Good',
+      toastDescription: 'Your selected theme carries through to feedback, too.',
+      tableCaption: 'Theme Preview Tasks',
+      taskColumn: 'Task',
+      statusColumn: 'Status',
+      ownerColumn: 'Owner',
+      rows: [
+        {
+          task: 'Review The Design',
+          status: 'In Progress',
+          owner: 'You',
+        },
+        {
+          task: 'Prepare The Release',
+          status: 'Ready',
+          owner: 'Team',
+        },
+      ],
+      themes: {
+        cupertino: {
+          name: 'macOS / iOS',
+          description:
+            'System typography, blue accents, green switches, and the familiar feel of Apple controls.',
+        },
+        portal: {
+          name: 'Portal',
+          description:
+            'The original. Familiar curves and a balanced workspace.',
+        },
+        studio: {
+          name: 'Studio',
+          description:
+            'Soft corners, generous space, and confident cobalt blue.',
+        },
+        atelier: {
+          name: 'Atelier',
+          description:
+            'Warm paper, expressive serif headings, and quiet surfaces.',
+        },
+        blueprint: {
+          name: 'Blueprint',
+          description:
+            'Precise edges, compact rhythm, and technical typography.',
+        },
+        arcade: {
+          name: 'Arcade',
+          description: 'Bold outlines, playful type, and shadows with an edge.',
+        },
+        dusk: {
+          name: 'Dusk',
+          description:
+            'Plum and slate, refined type, and softly elevated panels.',
+        },
+      },
+    },
     recordRange: (from: number, to: number) => `Showing Records ${from}–${to}`,
     theme: 'Theme',
     themeHint:
       'Appearance applies to every component and stays with this browser.',
-    accent: 'Accent',
     mode: 'Color Mode',
     motion: 'Motion',
     motionHint:
@@ -6334,10 +6457,10 @@ export const strings = {
       // @sentence-case: Supporting prose.
       yesTheSameCardAndShellHierarchyCarriesThrough:
         'Yes. The same card and shell hierarchy carries through; only the tonal palette changes.',
-      canWeSwapTheAccentThemePerUser: 'Can We Swap The Accent Theme Per User?',
+      canWeSwapTheThemePerUser: 'Can We Swap The Theme Per User?',
       // @sentence-case: Supporting prose.
-      yesAccentChoiceStillLivesInAppearancePreferencesAnd:
-        'Yes. Accent choice still lives in appearance preferences and propagates through the semantic token layer.',
+      yesThemeChoiceLivesInAppearancePreferences:
+        'Yes. Choose a complete theme in Appearance. Its colors, type, corners, shadows, and spacing apply throughout the workspace.',
       willFormControlsMatchTheDashboard:
         'Will Form Controls Match The Dashboard?',
       // @sentence-case: Supporting prose.
@@ -6388,7 +6511,7 @@ export const strings = {
       accentUsageGuardrails: 'Accent Usage Guardrails',
       // @sentence-case: Supporting prose.
       useTheSelectedAccentForActiveStatesChipsAnd:
-        'Use the selected accent for active states, chips, and primary actions.',
+        'Use the theme’s action color for active states, chips, and primary actions.',
       // @sentence-case: Supporting prose.
       keepLargeBackgroundsMostlyNeutral:
         'Keep large backgrounds mostly neutral.',
@@ -6614,10 +6737,10 @@ export const strings = {
       appearance: 'Appearance',
       // @sentence-case: Supporting prose.
       tuneLightDarkAndAccentBehaviorFromOneToken:
-        'Tune light, dark, and accent behavior from one token layer.',
+        'Choose a complete theme and switch between its light and dark modes.',
       // @sentence-case: Supporting prose.
       neutralGraysAndWhitesCarryTheLayoutWhileThe:
-        'Neutral grays and whites carry the layout, while the selected accent stays concentrated in active states, badges, and key actions.',
+        'Neutral grays and whites carry the layout, while the theme’s action color stays concentrated in active states, badges, and key actions.',
       light: 'Light',
       // @sentence-case: Supporting prose.
       brightShellBackgroundWhiteCardsAndSoftGraySeparators:
@@ -6803,17 +6926,17 @@ export const strings = {
     accessibleGreen:
       'Action colors keep text readable in light and dark themes.',
     radius: 'Border Radius',
-    radiusLabels: ['None', 'Small', 'Medium', 'Large', 'XL', '2XL'],
+    radiusLabels: ['None', 'Small', 'Control', 'Card', 'Overlay', 'Sidebar'],
     spacing: 'Spacing',
-    spacingHint: '4px Base · 8px Rhythm',
+    spacingHint: 'Spacing Follows The Selected Theme',
     // @preserve-case: CSS unit.
     pixels: (value: number) => `${value}px`,
     icons: 'Icons / Outline Style',
     iconsHint: 'Consistent strokes and rounded caps.',
     typography: 'Readable Type',
-    typographyHint: '18px Body · 16px Controls · 14px Captions',
+    typographyHint: 'Shared Body, Control, And Caption Styles',
     motion: 'Interaction Motion',
-    motionHint: '90ms Press · 140ms Feedback · 200ms Selection',
+    motionHint: 'Press, Feedback, And Selection Follow The Theme',
     reducedMotionHint:
       'System Reduce Motion removes movement and keeps state changes immediate.',
     buttons: 'Buttons',
@@ -7292,24 +7415,6 @@ export const strings = {
 } as const;
 
 export const labels = {
-  accents: {
-    brand: 'Leaf Green',
-    aqua: 'Aqua',
-    blue: 'Blue',
-    indigo: 'Indigo',
-    mint: 'Mint',
-    salmon: 'Salmon',
-    violet: 'Violet',
-    amber: 'Amber',
-    teal: 'Teal',
-    rose: 'Rose',
-    sky: 'Sky',
-    emerald: 'Emerald',
-    seafoam: 'Seafoam',
-    coral: 'Coral',
-    sunset: 'Sunset',
-    orchid: 'Orchid',
-  },
   tones: {
     neutral: 'Notice',
     info: 'Information',
@@ -7323,4 +7428,1116 @@ export const labels = {
     top: 'Top Panel',
     bottom: 'Bottom Panel',
   },
+} as const;
+
+export const portalDemoStrings = {
+  latencyHint: 'Enter a whole number from 0 to 5000 milliseconds.',
+  notificationsAvailable:
+    'Preview notification opt-in for this account. No browser permission or external message is requested.',
+  notificationsEnabled:
+    'Simulated notifications are enabled for this account. No external messages are sent.',
+  title: 'Developer Settings',
+  description:
+    'Preview local accounts, request states, and repeatable setup flows.',
+  presetsTitle: 'Demo Accounts',
+  presetsDescription:
+    'Each account has its own records. All accounts use password123.',
+  seedPassword: 'password123',
+  accounts: {
+    empty: {
+      label: 'New User',
+      description: 'Completed setup with no private records.',
+      email: 'new@example.com',
+      firstName: 'Jamie',
+      lastName: 'New',
+    },
+    populated: {
+      label: 'Populated User',
+      description: 'A workspace with saved requests and activity.',
+      email: 'sako@example.com',
+      firstName: 'Sako',
+      lastName: 'Template',
+    },
+    onboarding: {
+      label: 'Onboarding',
+      description: 'Restart setup when you choose this account.',
+      email: 'onboarding@example.com',
+      firstName: 'Alex',
+      lastName: 'Welcome',
+    },
+    admin: {
+      label: 'Admin',
+      description: 'Manage shared content and workspace operations.',
+      email: 'admin@example.com',
+      firstName: 'Morgan',
+      lastName: 'Admin',
+    },
+    superadmin: {
+      label: 'SuperAdmin',
+      description: 'Manage accounts and platform access.',
+      email: 'superadmin@example.com',
+      firstName: 'Taylor',
+      lastName: 'Owner',
+    },
+  },
+  selectAccount: 'Choose An Account',
+  signInPreset: 'Open Demo Account',
+  runtimeTitle: 'Runtime',
+  runtimeDescription: 'Changing runtime signs you out and clears cached data.',
+  demoModeLabel: 'Demo Mode',
+  demoModeDescription:
+    'Demo data stays in this server process. External integrations are disabled.',
+  demoModeStatus: 'Demo Mode',
+  liveModeStatus: 'Live Mode',
+  scenarioTitle: 'Request Simulation',
+  scenarioDescription:
+    'Empty responses leave saved data intact. Loading finishes after a bounded delay.',
+  scenarioLabel: 'Scenario',
+  latencyLabel: 'Latency In Milliseconds',
+  scenarios: {
+    populated: 'Populated',
+    loading: 'Loading',
+    empty: 'Empty',
+    error: 'Error',
+  },
+  applyAction: 'Apply Settings',
+  savedTitle: 'Settings Saved',
+  savedDescription: 'The next request uses these settings.',
+  roleTitle: 'Switch Account',
+  roleDescription: 'Open another demo account with independently owned data.',
+  roleUnavailableDescription: 'Switching accounts is available in demo mode.',
+  accountLabel: 'Account',
+  switchAction: 'Switch Account',
+  roleConfirmationTitle: 'Switch Demo Account',
+  roleConfirmationDescription:
+    'Unsaved work will be discarded and cached data cleared.',
+  resetTitle: 'Reset Demo Data',
+  resetDescription:
+    'Restore all registered fixtures and remove accounts created during this demo session.',
+  resetAction: 'Reset Demo Data',
+  resetConfirmationTitle: 'Reset Demo Data',
+  resetConfirmationDescription:
+    'This resets local demo records for every demo account and invalidates other demo sessions.',
+  cancelAction: 'Cancel',
+  errorTitle: 'Unable To Save',
+  errorDescription: 'Your selections are preserved. Try again.',
+  unavailable: 'Developer settings are unavailable.',
+  demoRequired: 'This action requires an authenticated demo session.',
+  accountUnavailable:
+    'This demo account is unavailable. Reset the demo data to restore it.',
+  simulatedError:
+    'The demo request failed. Choose another scenario to continue.',
+  signupHint:
+    'New demo accounts begin setup and remain available until the demo data is reset.',
+} as const;
+
+export const portalOnboardingStrings = {
+  title: 'Set Up Your Account',
+  description:
+    'Add your profile and preferences. Your saved progress resumes when you return.',
+  stepperLabel: 'Account Setup Progress',
+  current: 'Current Step',
+  complete: 'Complete',
+  upcoming: 'Upcoming',
+  steps: {
+    profile: { title: 'Profile', description: 'Confirm your name.' },
+    preferences: {
+      title: 'Preferences',
+      description: 'Choose your workspace defaults.',
+    },
+    review: { title: 'Review', description: 'Finish and open your workspace.' },
+  },
+  firstName: 'First Name',
+  lastName: 'Last Name',
+  timezone: 'Timezone',
+  digest: 'Email Digest',
+  digestDescription: 'Save your preference without sending a demo email.',
+  back: 'Back',
+  continue: 'Save And Continue',
+  finish: 'Finish Setup',
+  saving: 'Saving',
+  reviewTitle: 'Ready To Continue',
+  reviewDescription: 'Review your saved choices before completing setup.',
+  yes: 'Enabled',
+  no: 'Disabled',
+  errorTitle: 'Unable To Save Setup',
+  invalidName: 'Enter your first and last name.',
+  invalidTimezone: 'Choose a valid timezone.',
+  completedTitle: 'Setup Complete',
+  completedDescription: 'Your account is ready.',
+  restart: 'Restart Setup',
+  required: 'Complete account setup before opening this page.',
+  invalidStep: 'Save the previous steps before continuing.',
+} as const;
+export const portalUiStrings = {
+  colorInput: {
+    hex: 'HEX Color',
+    copy: 'Copy',
+    done: 'Done',
+    invalidHex: 'Enter a six-digit HEX color.',
+    hexHint: 'Use six hexadecimal digits, with or without #.',
+    copied: 'Color Copied',
+    copyFailed:
+      'The color could not be copied. Select and copy the value manually.',
+  },
+  datePicker: {
+    openCalendar: (label: string) => `Open ${label} Calendar`,
+    previousMonth: 'Previous Month',
+    nextMonth: 'Next Month',
+    clearDate: 'Clear Date',
+  },
+  engagement: { save: 'Save', saved: 'Saved' },
+  queryBoundary: {
+    refreshFailed: 'Unable To Refresh',
+    refreshHint:
+      'Showing the last available information. Try again to load the latest changes.',
+  },
+  library: {
+    title: 'Reusable Interactions',
+    description:
+      'Calendar, disclosure, feedback, save, and scrolling patterns share the active theme and motion preferences.',
+    date: 'Scheduled Date',
+    dateHint: 'A date-only value with an app-owned calendar.',
+    rating: 'Your Rating',
+    ratingOption: (value: number) => `${value} Of 5 Stars`,
+    ratingValue: (value: number | null) =>
+      value ? `${value} Of 5` : 'Choose A Rating',
+    ratingSummary: 'Rated 4.5 Out Of 5 From 24 Ratings',
+    average: '4.5',
+    count: '24 Ratings',
+    noRatings: 'No Ratings Yet',
+    like: 'Like',
+    liked: 'Liked',
+    reactions: (count: number) => `${count} Reactions`,
+    accordionTitle: 'How Does Disclosure Work?',
+    accordionBody:
+      'Expand a section with the pointer, Enter, or Space. Each section owns an accessible trigger and preserves its contents while collapsed.',
+    accordionSecond: 'What Happens To Motion Preferences?',
+    accordionSecondBody:
+      'The shared controls respect both the saved motion choice and the device’s reduced motion preference.',
+    carousel: 'Reusable Pattern Examples',
+    carouselTitles: [
+      'Review A Draft',
+      'Save A Record',
+      'Explore A Collection',
+      'Share Feedback',
+    ],
+    carouselBody:
+      'Native scrolling supports touch, trackpad, and keyboard navigation.',
+    tabs: 'History-Aware Views',
+    tabOverview: 'Overview',
+    tabDetails: 'Details',
+    tabHistory: 'History',
+    tabOverviewBody:
+      'Choose another view, then use browser Back to restore this one.',
+    tabDetailsBody:
+      'Committed view choices create URL history and survive a reload.',
+    tabHistoryBody:
+      'Browser Back and Forward restore the selected view without leaving the application.',
+    limitedSelect: 'Choose Up To Two',
+    selectPlaceholder: 'Choose Examples',
+    selectionCount: (count: number) => `${count} Selected`,
+    options: ['Calendar', 'Disclosure', 'Rating', 'Carousel'],
+    clear: 'Clear Selection',
+    selectAll: 'Select All',
+    color: 'Accent Color',
+    menu: 'Example Actions',
+    menuOpen: 'Open Component Library',
+    menuRemove: 'Remove Example',
+    menuRemoved: 'Example Removed',
+    transition: 'Refresh Preview',
+    transitionValue: (revision: number) =>
+      `Preview revision ${revision}. The content transition keeps focus and layout ownership with its caller.`,
+  },
+} as const;
+
+export const portalPublishingStrings = {
+  article: {
+    // @sentence-case: Topic validation message.
+    invalidTopic: 'Enter a topic between 2 and 80 characters.',
+    addTopic: 'Add Topic',
+    newTopicLabel: 'New Topic',
+    useTopic: 'Use Topic',
+    cancelTopic: 'Cancel',
+    addCover: 'Add Cover Illustration',
+    customCover: 'Custom Illustration',
+    coverFromArticle: (title: string) => `Illustration From ${title}`,
+    reusableOptionsHint:
+      'Save this article to make its new topic and cover available to other articles.',
+    optionsErrorHint:
+      'Saved topics and covers could not be loaded. Your current choices are still available.',
+    retryOptions: 'Retry Saved Choices',
+
+    decorativeAlt: '',
+    publicTitle: 'Articles & Stories',
+    siteName: 'Portal',
+    home: 'Home',
+    signIn: 'Sign In',
+    demo: {
+      title: 'A Better Starting Point',
+      description:
+        'A reusable publishing foundation gives every new project a clear place to begin. Explore the blocks, preview a draft, and make it your own.',
+      secondTitle: 'Making Space For Clear Ideas',
+      secondDescription:
+        'Simple structure helps readers find what matters. Use short sections, useful examples, and a clear next step.',
+      draftTitle: 'Your Next Article',
+      draftDescription:
+        'This private working draft is a place to try the editor before publishing an article of your own.',
+      heading: 'Start With The Reader',
+      body: 'A useful article answers a real question. Give readers context, explain the idea clearly, and leave them with a practical next step.',
+      quote: 'Good structure makes room for good ideas.',
+      items: [
+        'Choose one idea.',
+        'Add context and examples.',
+        'Preview before publishing.',
+      ],
+      calloutTitle: 'Make It Your Own',
+      callout:
+        'Topics, covers, and content blocks belong to your application. Adapt this module to the audience you serve.',
+      footer: 'Return to the editor whenever the idea grows.',
+    },
+    publicEyebrow: 'The Journal',
+    publicDescription:
+      'Thoughtful reads, lived experiences, and practical ideas for your next project.',
+    publicMetadataTitle: 'The Journal',
+    allArticles: 'All Articles',
+    backToJournal: 'Back To The Journal',
+    readArticle: 'Read Article',
+    searchLabel: 'Search Articles',
+    searchPlaceholder: 'Find a little clarity…',
+    clearSearch: 'Clear Search',
+    categoryLabel: 'Topic',
+    allCategories: 'All Topics',
+    categories: {
+      ideas: 'Ideas',
+      community: 'Community',
+      guides: 'Guides',
+      stories: 'Stories',
+    },
+    statuses: { draft: 'Draft', published: 'Published' },
+    emptyTitle: 'A New Chapter Is Coming',
+    emptyDescription:
+      'There are no published articles yet. Come back soon for thoughtful reads from the team.',
+    noResultsTitle: 'A Different Path To Explore',
+    noResultsDescription:
+      'No articles match those filters. Try another topic or a different search.',
+    resetFilters: 'View All Articles',
+    paginationLabel: 'Article Pages',
+    // @sentence-case: A dynamic count summary.
+    articleRange: (from: number, to: number, total: number) =>
+      `${from}–${to} of ${total} articles`,
+    // @sentence-case: Editorial byline, not an action or title.
+    authorByline: (author: string) => `By ${author}`,
+    readingTime: (minutes: number) => `${minutes} Min Read`,
+    coverAlt: (title: string) => `Illustration for “${title}”`,
+    relatedTitle: 'More Along The Path',
+    articleUnavailableTitle: 'This Read Is Taking A Moment',
+    articleUnavailableDescription:
+      'We could not load the journal. Please try again in a moment.',
+    retry: 'Try Again',
+    loadingTitle: 'Opening The Journal',
+    loadingDescription: 'Gathering thoughtful reads for your work.',
+    notFoundTitle: 'This Article Is Not Here',
+    notFoundDescription:
+      'It may have moved or is not currently published. There are more reads waiting in the journal.',
+    adminTitle: 'Publishing',
+    adminDescription:
+      'Make room for thoughtful stories. Write, preview, and publish articles at your own pace.',
+    newArticle: 'Write An Article',
+    newTitle: 'A New Chapter',
+    editTitle: 'Edit Article',
+    formDescription:
+      'A clear, considered read can help readers understand an idea.',
+    articleDetails: 'The First Impression',
+    articleDetailsDescription:
+      'Give your article a clear title, a useful introduction, and a topic that helps readers find it.',
+    bodyTitle: 'The Story',
+    bodyDescription:
+      'Use headings, quotes, and ordered or bulleted lists to give your article a comfortable rhythm. Preview before publishing.',
+    titleLabel: 'Article Title',
+    titlePlaceholder: 'A small moment worth sharing',
+    slugLabel: 'Article Address',
+    slugHint:
+      'Use lowercase letters, numbers, and hyphens. This becomes the public link.',
+    descriptionLabel: 'Introduction',
+    descriptionPlaceholder: 'A few sentences to invite the reader in…',
+    authorLabel: 'Author',
+    coverLabel: 'Cover Illustration',
+    coverOptions: { none: 'No Cover' },
+    contentLabel: 'Article Content',
+    contentHint:
+      'Write in Markdown. Headings, quotes, ordered lists, bullets, and links are supported.',
+    preview: 'Preview Article',
+    previewTitle: 'A Reader’s View',
+    previewDescription:
+      'This private preview shows the current form. Save your changes before sharing a public link.',
+    // @sentence-case: Complete editor guidance or validation message.
+    previewEmpty: 'Your story will appear here as you write.',
+    closePreview: 'Back To Writing',
+    saveDraft: 'Save Draft',
+    saveChanges: 'Save Changes',
+    publish: 'Publish Article',
+    unpublish: 'Unpublish Article',
+    delete: 'Delete Article',
+    cancel: 'Cancel',
+    backToArticles: 'Back To Articles',
+    openPublic: 'View Published Article',
+    draftHint:
+      'Only administrators can see this draft. Publish when the article is ready for readers.',
+    publishedHint:
+      'This article is public. Saved changes appear in the journal immediately.',
+    unsavedHint: 'You have changes waiting to be saved.',
+    savedTitle: 'Article Saved',
+    savedDescription: 'Your changes are safely saved.',
+    publishedTitle: 'Article Published',
+    publishedDescription:
+      'Your article is now available in the public journal.',
+    unpublishedTitle: 'Article Returned To Draft',
+    unpublishedDescription:
+      'Readers can no longer open this article. You can publish it again when it is ready.',
+    deletedTitle: 'Article Deleted',
+    deletedDescription: 'The article has been removed from the journal.',
+    mutationErrorTitle: 'Your Changes Need Another Moment',
+    mutationErrorDescription:
+      'We could not save that change. Your writing is still here. Please try again.',
+    validationTitle: 'A Few Details Need Your Attention',
+    // @sentence-case: Complete editor guidance or validation message.
+    invalidTitle: 'Enter a title between 3 and 140 characters.',
+    // @sentence-case: Complete editor guidance or validation message.
+    invalidSlug:
+      'Use 3–100 lowercase letters, numbers, and hyphens, with no hyphen at either end.',
+    invalidDescription: 'Write an introduction between 20 and 350 characters.',
+    // @sentence-case: Complete editor guidance or validation message.
+    invalidAuthor: 'Enter an author name between 2 and 100 characters.',
+    invalidBody: 'Write at least 40 characters, up to 50,000 characters.',
+    // @sentence-case: Complete editor guidance or validation message.
+    invalidCategory: 'Choose a topic for the article.',
+    // @sentence-case: Complete editor guidance or validation message.
+    invalidCover: 'Choose one of the cover illustrations.',
+    // @sentence-case: Complete editor guidance or validation message.
+    invalidInput: 'Review the article details and try again.',
+    // @sentence-case: Complete editor guidance or validation message.
+    duplicateSlug:
+      'An article already uses that address. Choose a different article address.',
+    // @sentence-case: Complete editor guidance or validation message.
+    permissionError: 'Only administrators can manage journal articles.',
+    // @sentence-case: Complete editor guidance or validation message.
+    conflictError:
+      'This article changed since you opened it. Copy your writing, reload the article, and review the latest version before saving.',
+    // @sentence-case: Complete editor guidance or validation message.
+    missingArticle: 'This article could not be found.',
+    publishConfirmTitle: 'Ready To Share This Article?',
+    publishConfirmDescription: (title: string) =>
+      `“${title}” will be available to everyone in the public journal.`,
+    unpublishConfirmTitle: 'Return This Article To Draft?',
+    unpublishConfirmDescription: (title: string) =>
+      `“${title}” will be removed from the public journal. Its writing will remain available here.`,
+    deleteConfirmTitle: 'Delete This Article?',
+    deleteConfirmDescription: (title: string) =>
+      `“${title}” and its writing will be permanently removed. This cannot be undone.`,
+    discardTitle: 'Leave Your Writing Behind?',
+    discardDescription:
+      'You have changes that have not been saved. Leave this page to discard them, or stay to keep writing.',
+    discard: 'Discard Changes',
+    keepWriting: 'Keep Writing',
+    statusLabel: 'Status',
+    allStatuses: 'All Statuses',
+    adminSearchPlaceholder: 'Find a title, topic, or author…',
+    tableCaption: 'Journal Articles',
+    titleColumn: 'Article',
+    statusColumn: 'Status',
+    topicColumn: 'Topic',
+    updatedColumn: 'Last Edited',
+    editAction: 'Edit Article',
+    adminEmptyTitle: 'Your First Story Starts Here',
+    adminEmptyDescription:
+      'Create an article, take your time with a draft, and share it when you are ready.',
+    adminNoResultsTitle: 'No Articles Found',
+    adminNoResultsDescription:
+      'Try another search, topic, or publication status.',
+    adminLoading: 'Loading Your Articles',
+    adminErrorTitle: 'Articles Are Unavailable',
+    adminErrorDescription:
+      'We could not open your article library. Please try again.',
+    draftPreviewLabel: 'Private Draft Preview',
+    unsavedPreviewTitle: 'Your Article Title',
+    defaultAuthor: 'Editorial Team',
+  },
+  builder: {
+    title: 'Article Builder',
+    description:
+      'Build the story one block at a time. Drag the handle or use the arrows to change the reading order.',
+    addBlock: 'Add A Block',
+    cancelUpload: 'Cancel Upload',
+    paletteTitle: 'Choose A Block',
+    paletteDescription: 'Choose what comes next in your story.',
+    closePalette: 'Close Block Choices',
+    emptyTitle: 'Make Room For Your Story',
+    emptyDescription:
+      'Start with a heading, a few words, or an image. Add and arrange more blocks as you go.',
+    contentLabel: 'Article Blocks',
+    blockLabel: (position: number, type: string) => `${position}. ${type}`,
+    moveLabel: (type: string) => `Move ${type}`,
+    moveUpLabel: (type: string) => `Move ${type} Up`,
+    moveDownLabel: (type: string) => `Move ${type} Down`,
+    removeLabel: (type: string) => `Remove ${type}`,
+    removeTitle: 'Remove Block',
+    removeDescription:
+      'This removes the block from your draft. The saved article stays unchanged until you save.',
+    remove: 'Remove Block',
+    keep: 'Keep Block',
+    headingLabel: 'Heading',
+    textLabel: 'Text',
+    attributionLabel: 'Attribution',
+    captionLabel: 'Caption',
+    urlLabel: 'HTTPS URL',
+    linkLabel: 'Link Text',
+    itemsLabel: 'List Items',
+    itemsHint: 'Write one item per line.',
+    imageLabel: 'Image',
+    imageUrlLabel: 'Image URL',
+    imageAltLabel: 'Image Description',
+    imageAltHint:
+      'Describe what someone should know about the image. This is read aloud by screen readers.',
+    imageNumberLabel: (position: number) => `Image ${position}`,
+    upload: 'Upload Image',
+    replaceUpload: 'Replace Image',
+    uploadingTitle: 'Uploading Image',
+    uploadHint:
+      'PNG, JPEG, GIF, or WebP, up to 5 MB. Article images are public; choose images you have permission to share.',
+    uploadErrorTitle: 'Image Could Not Be Uploaded',
+    uploadErrorDescription:
+      'Your writing is safe. Choose the image again or enter an HTTPS image URL.',
+    // @sentence-case: Validation feedback.
+    uploadTypeError: 'Choose a PNG, JPEG, GIF, or WebP image.',
+    // @sentence-case: Validation feedback.
+    uploadSizeError: 'Choose an image smaller than 5 MB.',
+    // @sentence-case: Validation feedback.
+    uploadCapacityError:
+      'Demo image storage is full. Reset the demo to clear uploaded images, then try again.',
+    // @sentence-case: Validation feedback.
+    uploadMissingError: 'Choose an image to upload.',
+    // @sentence-case: Validation feedback.
+    uploadInvalidError:
+      'This file could not be read as an image. Choose a valid PNG, JPEG, GIF, or WebP file.',
+    // @sentence-case: Validation feedback.
+    uploadAltRequired: 'Add an image description before saving.',
+    // @sentence-case: Validation feedback.
+    invalidUrl:
+      'Enter a complete HTTPS URL without a username, password, spaces, or a private network address.',
+    // @sentence-case: Validation feedback.
+    invalidImageUrl:
+      'Upload an image or enter a permanent public HTTPS image URL without query parameters or private document paths.',
+    // @sentence-case: Validation feedback.
+    invalidContent: 'Add at least one complete content block before saving.',
+    // @sentence-case: Validation feedback.
+    invalidBlock: 'Complete the required fields in this block before saving.',
+    repairTitle: 'Review Saved Article',
+    repairDescription:
+      'This article contains older values that need attention before saving or publishing. Your original writing is retained. Review the title, introduction, and highlighted blocks; shorten or split text to meet the current limits.',
+    // @sentence-case: Bounded saved-content validation.
+    invalidStoredContent: 'This saved block exceeds the supported data limits.',
+    // @sentence-case: Prevent loss of unknown saved fields.
+    unsupportedStoredFields:
+      'This block includes older fields that cannot be saved by the current editor. Review its saved data, add a replacement block, then explicitly remove the original when its writing is preserved.',
+    savedBlockDataLabel: 'View Saved Block Data',
+    savedBlockUnavailableDescription:
+      'This block needs repair before it can use the current layout. Its original data is shown below.',
+    savedBlockAdditionalDescription:
+      'This block also includes earlier data. Its complete saved values are shown below.',
+    replaceSavedBlockDescription:
+      'Copy the writing you need into a new block. Remove this block only after you have preserved its content. Saving will not discard these older fields automatically.',
+    // @sentence-case: Validation feedback.
+    invalidHeading: 'Add a heading of up to 200 characters.',
+    // @sentence-case: Validation feedback.
+    invalidText: 'Add text of up to 20,000 characters.',
+    // @sentence-case: Short text-block validation.
+    invalidShortText: 'Add text of up to 4,000 characters.',
+    // @sentence-case: Optional caption validation.
+    invalidCaption: 'Keep the caption within 1,000 characters.',
+    // @sentence-case: Optional quote attribution validation.
+    invalidAttribution: 'Keep the attribution within 200 characters.',
+    // @sentence-case: Validation for converted legacy writing.
+    invalidLegacyText: 'Keep converted Markdown text within 50,000 characters.',
+    // @sentence-case: Validation feedback.
+    invalidItems:
+      'Add between 1 and 30 list items, with no more than 1,000 characters each.',
+    // @sentence-case: Validation feedback.
+    invalidImage: 'Choose an image and add its description.',
+    // @sentence-case: Validation feedback.
+    tooManyBlocks: 'An article can contain up to 100 blocks.',
+    // @sentence-case: Validation feedback.
+    invalidGallery:
+      'Add every image and its description before saving the gallery.',
+    // @sentence-case: Validation feedback.
+    duplicateBlocks:
+      'Every block must have its own ID. Add the block again and retry.',
+    // @sentence-case: Validation feedback.
+    invalidContentSize:
+      'The article is too large. Shorten the text or use fewer blocks.',
+    legacyTitle: 'Existing Markdown Story',
+    legacyDescription:
+      'This article includes an earlier Markdown story. Its exact writing stays available here alongside any saved blocks. Convert it explicitly before saving to keep all of its content.',
+    legacyBodyLabel: 'Earlier Markdown Story',
+    // @sentence-case: Explicit lossless conversion requirement.
+    legacyConversionRequired:
+      'Convert this story into a Markdown block before saving or publishing. Conversion appends the complete original text without trimming it; current block and article limits still apply. Shorten or split any highlighted text before saving.',
+    convert: 'Convert To Blocks',
+    legacyFormatHint:
+      'This converted text keeps its original Markdown formatting.',
+    dividerHint: 'A quiet break between parts of your story.',
+    embedHint:
+      'YouTube, Vimeo, and Spotify players load when the reader chooses. Other pages open through their original link.',
+    openEmbed: 'Open Embedded Link',
+    loadEmbed: 'Load Embedded Media',
+    unloadEmbed: 'Close Embedded Media',
+    embedConnectionHint: (provider: string) =>
+      `Loading this player connects to ${provider}. You can also open the original link.`,
+    // @preserve-case: Provider brand names.
+    embedProviders: {
+      youtube: 'YouTube',
+      vimeo: 'Vimeo',
+      spotify: 'Spotify',
+    },
+    types: {
+      header: 'Heading',
+      section: 'Text Section',
+      footer: 'Closing Note',
+      quote: 'Quote',
+      bullet: 'Bullet List',
+      divider: 'Divider',
+      embed: 'Embed URL',
+      image: 'Image',
+      gallery2: 'Two Images',
+      gallery3: 'Three Images',
+      gallery4: 'Four Images',
+      callout: 'Callout',
+      link: 'Link',
+    },
+    typeDescriptions: {
+      header: 'Introduce a new part of the story.',
+      section: 'Write a paragraph or a longer section.',
+      footer: 'Leave readers with a final thought.',
+      quote: 'Give a thought space to stand out.',
+      bullet: 'Make a short, easy-to-read list.',
+      divider: 'Add a pause between sections.',
+      embed: 'Share a video, podcast, or another page.',
+      image: 'Upload a picture or use an image URL.',
+      gallery2: 'Place two pictures together.',
+      gallery3: 'Arrange three pictures in a row.',
+      gallery4: 'Create a balanced four-picture gallery.',
+      callout: 'Highlight a useful note.',
+      link: 'Guide readers to another resource.',
+    },
+  },
+} as const;
+
+export const portalMediaStrings = {
+  uploadImage: 'Upload Image',
+  replaceImage: 'Replace Image',
+  removeImage: 'Remove Image',
+  cancelImageUpload: 'Cancel Upload',
+  imagePreviewAlt: 'Preview of the selected image',
+  imageUploadHint:
+    'Upload a PNG, JPEG, WebP, or GIF up to 5 MB, or enter a public HTTPS image URL. Uploaded images are public.',
+  // @sentence-case: Image validation and upload errors.
+  imageUrlError: 'Use a permanent public HTTPS image URL or upload an image.',
+  // @sentence-case: Image validation and upload errors.
+  imageTypeError: 'Choose a PNG, JPEG, WebP, or GIF image.',
+  // @sentence-case: Image validation and upload errors.
+  imageSizeError:
+    'Choose an image larger than zero bytes and no larger than 5 MB.',
+  // @sentence-case: Image validation and upload errors.
+  imageMissingError: 'Choose an image to upload.',
+  // @sentence-case: Image validation and upload errors.
+  imageInvalidError:
+    'The file contents do not match the selected image format.',
+  // @sentence-case: Demo image storage limit.
+  imageCapacityError:
+    'This demo has reached its image limit. Reset the demo data to upload more images.',
+  // @sentence-case: Image validation and upload errors.
+  imageUploadError:
+    'The image could not be uploaded. Your current image is unchanged. Try again.',
+
+  // @sentence-case: Supporting prose.
+  empty: 'No images have been saved for this product.',
+  // @sentence-case: Supporting prose.
+  previewUnavailable:
+    'This image could not be retrieved. Try loading it again.',
+} as const;
+
+export const portalActionStrings = {
+  cancel: 'Cancel',
+  close: 'Close',
+  clearSearch: 'Clear Search',
+  clearFilters: 'Clear Filters',
+  saveChanges: 'Save Changes',
+  edit: 'Edit',
+  delete: 'Delete',
+};
+
+export const portalAccountToolsStrings = {
+  common: {
+    accountEyebrow: 'Your Account',
+    operationsEyebrow: 'Platform Operations',
+    cancelAction: portalActionStrings.cancel,
+    closeAction: portalActionStrings.close,
+    clearAction: portalActionStrings.clearSearch,
+    clearFiltersAction: portalActionStrings.clearFilters,
+    refreshAction: 'Refresh',
+    saveAction: portalActionStrings.saveChanges,
+    editAction: portalActionStrings.edit,
+    deleteAction: portalActionStrings.delete,
+    actionsColumn: 'Actions',
+    createdColumn: 'Created',
+    updatedColumn: 'Last Updated',
+    statusColumn: 'Status',
+    recordsLabel: 'Records',
+    loadingTitle: 'Loading Records',
+    loadingHint: 'Your records will appear here shortly.',
+    noResultsTitle: 'No Matching Records',
+    noResultsHint: 'Try a different filter or clear your search.',
+    paginationLabel: 'Record Pages',
+    rangeLabel: (from: number, to: number) => `Records ${from}–${to}`,
+    notRecorded: 'Not Recorded',
+    systemUser: 'System',
+    activeStatus: 'Active',
+    deletedStatus: 'Deleted',
+    statusLabel: 'Status',
+  },
+  account: {
+    title: 'Account',
+    description: 'Review your sign-in identity and manage account access.',
+    identityTitle: 'Your Identity',
+    identityHint:
+      'Profile changes are available from your profile. Your sign-in email is managed separately.',
+    operationsTitle: 'Operational Tools',
+    operationsHint:
+      'Authorized platform operators can inspect notification delivery history.',
+    devicesTitle: 'Devices And Access',
+    devicesHint:
+      'Manage the devices that receive your notifications and find account support.',
+    profileAction: 'Edit Profile',
+    devicesAction: 'Manage Devices',
+    helpAction: 'Help And Legal Information',
+    emailLabel: 'Sign-In Email',
+    nameLabel: 'Name',
+    formatName: (firstName: string, lastName: string) =>
+      `${firstName} ${lastName}`,
+    deleteCardTitle: 'Before You Go',
+    deleteCardHint:
+      'Please review what happens to your account before continuing. You will have a chance to confirm your choice.',
+    deleteTitle: 'Delete Account',
+    deleteHint:
+      'Deleting your account removes access to Portal and disables your workspace access. This action does not permanently erase stored records or uploaded files. You cannot restore access from this app.',
+    deleteAction: 'Delete My Account',
+    confirmationTitle: 'Delete Your Account?',
+    confirmationDescription: (email: string) =>
+      `You are deleting the account for ${email}. You will be signed out, and this account will no longer be able to access Portal. Stored records and uploaded files are not permanently erased by this action.`,
+    confirmationEmailLabel: 'Type Your Sign-In Email To Confirm',
+    confirmationPlaceholder: 'Enter the email shown above',
+    confirmationHint:
+      'Enter the email exactly as it appears above. Keep this dialog open if you need to retry.',
+    confirmationAcknowledgement: 'I Understand The Consequence',
+    confirmationAcknowledgementDescription:
+      'I understand that this account will lose access and I cannot restore it from this app.',
+    confirmationRequiredDescription:
+      'Enter your sign-in email and select the confirmation before deleting your account.',
+    completedTitle: 'Account Deleted',
+    completedDescription: 'Your account no longer has access to Portal.',
+    demoHint:
+      'In demo mode this removes only the sample account from this running demo. Resetting demo data restores seeded accounts.',
+  },
+  devices: {
+    title: 'Registered Devices',
+    description:
+      'Review the devices registered to receive your notifications. Removing a registration stops future push delivery through that registration; it does not sign the device out.',
+    searchLabel: 'Search Devices',
+    searchPlaceholder: 'Search by device type',
+    typeLabel: 'Device Type',
+    allTypes: 'All Device Types',
+    emptyTitle: 'No Registered Devices',
+    emptyHint:
+      'Devices appear after you enable push notifications on a supported device.',
+    removeAction: 'Remove Device',
+    removedTitle: 'Device Removed',
+    removeTitle: 'Remove This Device?',
+    removeDescription: (type: string, date: string, id: string) =>
+      `Remove the ${type} registration ${id}, created ${date}? It will stop receiving push notifications through this registration. The device will remain signed in.`,
+    registrationColumn: 'Registration',
+    registeredColumn: 'Registered',
+    types: { iOS: 'iOS', Android: 'Android', Web: 'Web' },
+  },
+  deliveries: {
+    title: 'Notification Delivery History',
+    description:
+      'Inspect platform delivery statuses and numbered provider attempts. Accepted means the provider accepted delivery; it does not confirm that a person read the notification.',
+    accessHint:
+      'Delivery history is limited to authorized platform operators. The live service also verifies the configured operator allowlist.',
+    statusLabel: 'Delivery Status',
+    allStatuses: 'All Statuses',
+    notificationLabel: 'Notification ID',
+    notificationPlaceholder: 'Filter by a notification UUID',
+    applyAction: 'Apply Filters',
+    afterLabel: 'Created On Or After',
+    beforeLabel: 'Created On Or Before',
+    channelColumn: 'Channel',
+    attemptsColumn: 'Attempts',
+    notificationColumn: 'Notification',
+    nextAttemptLabel: 'Next Attempt',
+    acceptedLabel: 'Provider Accepted',
+    errorLabel: 'Reported Error',
+    skipReasonLabel: 'Skip Reason',
+    emptyTitle: 'No Delivery Records',
+    emptyHint:
+      'Delivery records appear when an external notification is scheduled.',
+    inspectAction: 'View Attempts',
+    attemptsTitle: 'Delivery Attempts',
+    attemptsDescription:
+      'Review the recorded outcome of each provider attempt. This view cannot send or retry notifications.',
+    attemptLabel: (number: number) => `Attempt ${number}`,
+    noAttemptsTitle: 'No Attempts Yet',
+    noAttemptsHint: 'This delivery has no recorded provider attempts.',
+    startedLabel: 'Started',
+    finishedLabel: 'Finished',
+    retryableLabel: 'Retryable',
+    yesStatus: 'Yes',
+    noStatus: 'No',
+    channels: { PUSH: 'Push', EMAIL: 'Email' },
+    statuses: {
+      PENDING: 'Pending',
+      PROCESSING: 'Processing',
+      ACCEPTED: 'Accepted',
+      SKIPPED: 'Skipped',
+      FAILED: 'Failed',
+      UNKNOWN: 'Unknown',
+    },
+  },
+  // @title-case: Help-screen titles, tabs, and labels; prose is scoped by its own keys.
+  help: {
+    title: 'Help And Legal Information',
+    description:
+      'Find answers and read the current terms and privacy information supplied by Portal.',
+    faqTab: 'Frequently Asked Questions',
+    termsTab: 'Terms Of Service',
+    privacyTab: 'Privacy Policy',
+    sectionLabel: 'Help Section',
+    emptyTitle: 'No Information Available',
+    emptyHint:
+      'This information has not been provided yet. Try refreshing this page later.',
+    illustrativeTitle: 'Illustrative Demo Content',
+    illustrativeDescription:
+      'These examples explain the demo only. They are not the production terms, privacy policy, or a statement of data-retention commitments.',
+  },
+  validation: {
+    // @sentence-case: Complete validation messages.
+    confirmationEmail: 'Enter your sign-in email to confirm this action.',
+    // @sentence-case: Complete validation messages.
+    emailMismatch: 'The email does not match your signed-in account.',
+    // @sentence-case: Complete validation messages.
+    context: 'Enter an AI context of 1 to 500 characters.',
+    // @sentence-case: Complete validation messages.
+    userId: 'Enter a valid user UUID or leave this field blank.',
+    // @sentence-case: Complete validation messages.
+    tokenCount:
+      'Enter a whole-number token count from 0 to 2,147,483,647, or leave it blank.',
+    // @sentence-case: Complete validation messages.
+    metadata: 'Enter a valid JSON object or leave this field blank.',
+    // @sentence-case: Complete validation messages.
+    error: 'Keep the recorded error within 5,000 characters.',
+    // @sentence-case: Complete validation messages.
+    notificationId: 'Enter a valid notification UUID or clear this filter.',
+    // @sentence-case: Complete validation messages.
+    dateRange: 'Choose an end date on or after the start date.',
+  },
+  demo: {
+    // @sentence-case: Illustrative operational record.
+    skippedReason:
+      'Push delivery was skipped because notifications were disabled in this illustrative example.',
+    // @sentence-case: Illustrative operational record.
+    failedError: 'The provider did not accept this illustrative example.',
+    faqTitle: 'Using The Demo',
+    // @title-case: FAQ questions are displayed as headings.
+    faqQuestion: 'Does The Demo Send Notifications Or Run AI Requests?',
+    // @sentence-case: Illustrative FAQ answer.
+    faqAnswer:
+      'No. The demo uses local sample records. It does not contact a notification provider or run an AI request.',
+    legalTitle: 'About This Legal Information Example',
+    legalDescription:
+      'This screen demonstrates how legal information supplied by the API is displayed. This sample is not a production legal agreement or privacy policy.',
+  },
+};
+
+export const portalNotificationInboxStrings = {
+  archiveItemLabel: (title: string) => `Archive ${title}`,
+  readItemLabel: (title: string, read: boolean) =>
+    read ? `Mark ${title} Unread` : `Mark ${title} Read`,
+  inboxSetupLabel: (unread?: number) =>
+    unread === undefined
+      ? 'Notifications, Browser Setup Needs A Decision'
+      : `Notifications, ${unread} Unread, Browser Setup Needs A Decision`,
+  title: 'Notifications',
+  description:
+    'Updates and conversations from your Portal workspace, gathered in one place.',
+  views: { all: 'All', unread: 'Unread', read: 'Read' },
+  viewLabel: 'Notification View',
+  unreadViewLabel: (count: number) =>
+    `Unread (${count.toLocaleString('en-US')})`,
+  resultsLabel: 'Notification Updates',
+  manageAction: 'Manage Inbox',
+  bulkTitle: 'Update Multiple Notifications',
+  loadingSummaryHint: 'Checking your inbox…',
+  inboxTotalHint: (count: number) =>
+    `${count.toLocaleString('en-US')} update${count === 1 ? '' : 's'} in your inbox`,
+  matchingTotalHint: (count: number) =>
+    `${count.toLocaleString('en-US')} update${count === 1 ? ' matches' : 's match'} your search and category`,
+  eyebrow: 'Your Workspace',
+  settingsAction: 'Notification Settings',
+  refreshAction: 'Refresh',
+  inboxAction: 'View Inbox',
+  preferencesTitle: 'Notification Settings',
+  preferencesDescription:
+    'Choose which updates reach you and how Portal schedules them.',
+  categories: {
+    ACTIVITY: 'Activity',
+    MENTION: 'Mentions',
+    TAG: 'Tags',
+    PRODUCT_UPDATE: 'Product Updates',
+  },
+  categoryDescriptions: {
+    ACTIVITY: 'Updates about activity in your workspace.',
+    MENTION: 'Updates when someone mentions you.',
+    TAG: 'Updates about tags and topics connected to you.',
+    PRODUCT_UPDATE: 'News about Portal features and improvements.',
+  },
+  channels: { IN_APP: 'In App', PUSH: 'Push', EMAIL: 'Email' },
+  readStatuses: { unread: 'Unread', read: 'Read' },
+  searchLabel: 'Search Notifications',
+  searchPlaceholder: 'Search titles and messages',
+  clearSearchAction: portalActionStrings.clearSearch,
+  clearFiltersAction: portalActionStrings.clearFilters,
+  categoryLabel: 'Category',
+  allCategories: 'All Categories',
+  readLabel: 'Read Status',
+  allReadStatuses: 'All Notifications',
+  sortLabel: 'Order',
+  newestOption: 'Newest First',
+  oldestOption: 'Oldest First',
+  markReadAction: 'Mark Read',
+  markUnreadAction: 'Mark Unread',
+  markAllReadAction: 'Mark All As Read',
+  markAllUnreadAction: 'Mark All Unread',
+  markMatchingReadAction: 'Mark Matching Read',
+  markMatchingUnreadAction: 'Mark Matching Unread',
+  archiveAction: 'Archive',
+  archiveAllAction: 'Archive All',
+  archiveMatchingAction: 'Archive Matching',
+  archiveTitle: 'Archive Notification',
+  archiveAllTitle: 'Archive All Notifications',
+  archiveMatchingTitle: 'Archive Matching Notifications',
+  archiveDescription: (title: string) =>
+    `Archive “${title}”? It will leave your inbox. Restoring archived notifications is not available.`,
+  archiveAllDescription:
+    'Archive every notification currently in your inbox, across all pages? Restoring archived notifications is not available.',
+  archiveMatchingDescription:
+    'Archive every notification matching the current search, category, and read status, across all pages? Restoring archived notifications is not available.',
+  cancelAction: portalActionStrings.cancel,
+  openAction: 'Open Update',
+  readChangedTitle: 'Read Status Updated',
+  archivedTitle: 'Notifications Archived',
+  mutationDescription: (count: number) =>
+    `${count.toLocaleString('en-US')} notification${count === 1 ? '' : 's'} changed.`,
+  // @sentence-case: Persistent scope guidance.
+  scopeAllHint: 'Bulk actions apply to your whole inbox across all pages.',
+  scopeFilteredHint:
+    'Bulk actions apply to all matching notifications across all pages.',
+  unreadCount: (count: number) => `${count.toLocaleString('en-US')} Unread`,
+  totalCount: (count: number) => `${count.toLocaleString('en-US')} Total`,
+  inboxLinkLabel: (count: number) =>
+    `Notifications, ${count.toLocaleString('en-US')} Unread`,
+  inboxUnknownLabel: 'Notifications, Unread Count Unavailable',
+  countLoadingLabel: 'Notifications, Loading Unread Count',
+  countLimit: '99+',
+  countUnavailable: 'Unread Count Unavailable',
+  loadingTitle: 'Loading Notifications',
+  emptyTitle: 'You Are All Caught Up',
+  emptyHint:
+    'New workspace updates will appear here when there is something to share.',
+  noResultsTitle: 'No Matching Notifications',
+  noResultsHint: 'Try another search or clear your filters to see your inbox.',
+  paginationLabel: 'Notification Pages',
+  rangeLabel: (from: number, to: number) =>
+    `${from.toLocaleString('en-US')}–${to.toLocaleString('en-US')}`,
+  unknownDate: 'Date Unavailable',
+  deliveryTitle: 'Categories And Channels',
+  deliveryDescription:
+    'Choose a channel for each kind of update. Channel preferences apply to future notifications.',
+  browserTitle: 'Browser Notifications',
+  browserDescription:
+    'Push preferences choose what can be sent. This browser must also be enabled in Appearance to receive push notifications.',
+  browserAction: 'Manage Browser Notifications',
+  savePreferencesAction: 'Save Preferences',
+  savedPreferencesTitle: 'Preferences Saved',
+  discardAction: 'Discard Changes',
+  noPreferencesTitle: 'Preferences Unavailable',
+  noPreferencesHint:
+    'No notification preferences were returned. Refresh to try again.',
+  timezoneTitle: 'Scheduling Timezone',
+  timezoneDescription:
+    'Follow this browser’s timezone, or keep a deliberate timezone for scheduled updates. Dates in the workspace still display in your browser’s local time.',
+  browserTimezoneLabel: 'Use Browser Timezone',
+  timezoneLabel: 'Timezone',
+  saveTimezoneAction: 'Save Timezone',
+  savedTimezoneTitle: 'Timezone Saved',
+  // @sentence-case: Current scheduling and browser detection information.
+  effectiveTimezoneHint: (timezone: string) =>
+    `Scheduled updates use ${timezone}.`,
+  detectedTimezoneHint: (timezone: string) =>
+    `This browser reports ${timezone}.`,
+  overrideTimezoneHint:
+    'Your saved timezone stays in effect when your browser’s timezone changes.',
+  automaticTimezoneHint:
+    'The most recently detected browser timezone is used. UTC is used until a browser timezone is available.',
+  unsavedHint: 'You have unsaved changes.',
+  savedHint: 'Your saved preferences are active.',
+  // @sentence-case: Complete input validation messages.
+  validation: {
+    timezone: 'Choose a valid named timezone.',
+    preferences: 'Use each category and channel once.',
+    selection: 'Choose between 1 and 100 distinct notifications.',
+    filters: 'Choose at least one restrictive filter.',
+    unavailable:
+      'This notification is unavailable or no longer belongs to your visible inbox.',
+  },
+  demo: {
+    activityTitle: 'Your Workspace Is Ready',
+    activityBody: 'Review your saved requests and pick up where you left off.',
+    mentionTitle: 'A Conversation Worth Returning To',
+    mentionBody: 'Return to a conversation in your local demo workspace.',
+    tagTitle: 'A Useful Read',
+    tagBody: 'Explore a published article from the sample content library.',
+    updateTitle: 'More Ways To Work',
+    updateBody:
+      'Your Portal workspace brings publishing, notifications, preferences, and account tools together.',
+    archiveTitle: 'An Earlier Update',
+    archiveBody:
+      'This demo notification is archived and stays out of the visible inbox.',
+    scheduledTitle: 'A Future Update',
+    scheduledBody:
+      'This demo notification is scheduled and stays out of the visible inbox until it is published.',
+    expiredTitle: 'An Expired Update',
+    expiredBody:
+      'This demo notification has expired and stays out of the visible inbox.',
+  },
+} as const;
+
+export const portalHelpFaqSections = [
+  {
+    title: 'Getting Started',
+    sections: [
+      {
+        question: 'How Does The Demo Work?',
+        answer:
+          'Use a sample account to explore local records. New User starts empty, Populated User has sample activity, and Onboarding restarts the setup flow. Nothing is sent to external services.',
+      },
+      {
+        question: 'Can I Keep My Changes?',
+        answer:
+          'Demo edits remain in this server process until reset or restart. Use fictional information only. Production persistence belongs to your configured backend.',
+      },
+    ],
+  },
+  {
+    title: 'Your Workspace',
+    sections: [
+      {
+        question: 'How Do Notification Preferences Work?',
+        answer:
+          'Choose categories and delivery channels in Notification Settings. Push delivery also requires a separate opt-in for this browser.',
+      },
+      {
+        question: 'How Do I Return To A Previous View?',
+        answer:
+          'Committed tabs and filters create browser history entries. Use Back to return to the previous view, with its filters intact.',
+      },
+    ],
+  },
+];
+export const portalModuleStrings = {
+  back: 'Back',
+  notifications: 'Notifications',
+  publishing: 'Publishing',
+  account: 'Account',
+  help: 'Help',
+  demo: 'Developer Settings',
+  saved: 'Saved Content',
+  // @sentence-case: Generic module setup status.
+  disabledDescription: 'This module is disabled for this project.',
+};
+
+export const portalIntegrationStrings = {
+  onboardingRequiredDescription:
+    'Finish account setup before using your workspace.',
+  accountTitle: 'Account',
+  accountDescription:
+    'Manage your account, registered devices, and support preferences.',
+};
+
+export const portalEngagementStrings = {
+  title: 'Saved Items',
+  description:
+    'Keep useful articles close. Saved items belong to your account.',
+  like: 'Like Article',
+  unlike: 'Unlike Article',
+  save: 'Save Article',
+  unsave: 'Remove From Saved',
+  ratingLabel: 'Your Rating',
+  clearRating: 'Clear Rating',
+  clearRatingTitle: 'Clear Your Rating?',
+  clearRatingDescription:
+    'Your rating will be removed from this article. You can choose another rating afterward.',
+  keepRating: 'Keep Rating',
+  noRating: 'No Rating',
+  ratingOption: (value: number) => `${value} Stars`,
+  likeCount: (count: number) => `${count} Likes`,
+  signIn: 'Sign In To Like, Save, Or Rate',
+  signInHint:
+    'Sign in to keep likes, saved items, and ratings with your account.',
+  loading: 'Loading Account Actions',
+  actionsLabel: 'Article Account Actions',
+  retry: 'Try Again',
+  errorTitle: 'Account Actions Are Unavailable',
+  errorDescription:
+    'We could not complete that change. Your previous choice is still available. Try again.',
+  invalidInput: 'Choose a valid like, saved state, or rating from one to five.',
+  unavailableTitle: 'Item Is Unavailable',
+  unavailableDescription:
+    'This item is no longer publicly available. You can remove it from your saved items.',
+  remove: 'Remove Saved Item',
+  removeTitle: 'Remove Saved Item?',
+  removeDescription:
+    'This removes the item from your saved list. You can save it again while it is available.',
+  cancel: 'Keep Item',
+  removedTitle: 'Saved Item Removed',
+  emptyTitle: 'Nothing Saved Yet',
+  emptyDescription:
+    'Save an article from its public page to return to it here.',
+  noResultsTitle: 'No Saved Items Found',
+  noResultsDescription: 'Try a different search or clear your filters.',
+  browse: 'Browse Articles',
+  searchLabel: 'Search Saved Items',
+  searchPlaceholder: 'Find a saved article…',
+  clearSearch: 'Clear Search',
+  allTypes: 'All Types',
+  typeLabel: 'Type',
+  paginationLabel: 'Saved Item Pages',
+  previous: 'Previous Page',
+  next: 'Next Page',
+  range: (from: number, to: number, total: number) =>
+    `${from}–${to} of ${total} saved items`,
+} as const;
+
+export const portalEditStrings = {
+  nameTooLong: 'Use 80 characters or fewer for each name.',
+  invalidDate: 'Enter a valid date or clear the date field.',
 } as const;

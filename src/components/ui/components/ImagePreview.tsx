@@ -51,9 +51,9 @@ export function ImagePreview({
               : fallbackFocus?.current;
             target?.focus();
           }}
-          className="ui-sheet fixed inset-y-0 right-0 z-90 flex w-full max-w-6xl flex-col overflow-y-auto border-l border-secondary bg-primary shadow-(--dashboard-shell-shadow-lg) outline-none sm:w-[94vw] sm:rounded-l-3xl"
+          className="ui-sheet fixed inset-y-0 right-0 z-90 flex w-full max-w-6xl flex-col overflow-y-auto border-l-control border-secondary bg-primary shadow-(--shadow-overlay) outline-none sm:w-[94vw] sm:rounded-l-overlay"
         >
-          <div className="flex items-start gap-4 border-b border-secondary p-5 sm:p-6">
+          <div className="flex items-start gap-4 border-b-control border-secondary p-5 sm:p-6">
             <div className="min-w-0 flex-1">
               <Dialog.Title className="m-0 text-xl font-semibold text-primary wrap-anywhere">
                 {image?.title}
@@ -71,7 +71,7 @@ export function ImagePreview({
             </IconButton>
           </div>
           <div className="grid min-h-0 flex-1 content-start lg:grid-cols-[minmax(0,1fr)_22rem]">
-            <div className="relative m-3 grid min-h-64 place-items-center overflow-hidden rounded-2xl bg-secondary_subtle sm:m-6 sm:min-h-96 lg:min-h-[65dvh]">
+            <div className="relative m-3 grid min-h-64 place-items-center overflow-hidden rounded-card bg-secondary_subtle sm:m-6 sm:min-h-96 lg:min-h-[65dvh]">
               {image?.src && failedSrc !== image.src ? (
                 <Image
                   unoptimized
@@ -94,7 +94,7 @@ export function ImagePreview({
                 </div>
               )}
             </div>
-            <div className="grid min-w-0 content-start gap-6 p-5 lg:border-l lg:border-secondary lg:p-6">
+            <div className="grid min-w-0 content-start gap-6 p-5 lg:border-l-control lg:border-secondary lg:p-6">
               {image?.caption && (
                 <p className="m-0 text-sm text-tertiary wrap-anywhere">
                   {image.caption}
@@ -102,7 +102,9 @@ export function ImagePreview({
               )}
               {details}
               {actions && (
-                <div className="border-t border-secondary pt-5">{actions}</div>
+                <div className="border-t-control border-secondary pt-5">
+                  {actions}
+                </div>
               )}
             </div>
           </div>

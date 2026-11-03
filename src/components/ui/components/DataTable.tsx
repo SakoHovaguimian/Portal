@@ -19,7 +19,7 @@ function TableSortButton({
   return (
     <Button
       variant="ghost"
-      className="-mx-2 min-h-11 shrink-0 gap-2 px-2 py-1 text-xs font-medium whitespace-nowrap"
+      className="-mx-2 min-h-(--control-height-md) shrink-0 gap-2 px-2 py-1 text-xs font-medium whitespace-nowrap"
       aria-label={sort.label}
       onClick={sort.onSort}
     >
@@ -65,7 +65,7 @@ export function DataTable<T>({
           role="group"
           aria-label={strings.ui.dataTable.sortColumns}
           tabIndex={0}
-          className="flex min-w-0 flex-nowrap items-center gap-6 overflow-x-auto overscroll-x-contain border-b border-secondary px-4 py-3 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand md:hidden"
+          className="flex min-w-0 flex-nowrap items-center gap-6 overflow-x-auto overscroll-x-contain border-b-control border-secondary px-4 py-3 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand md:hidden"
         >
           {columns.map((column) =>
             column.sort ? (
@@ -84,7 +84,7 @@ export function DataTable<T>({
           className={cn(
             'm-0 grid list-none p-0 md:hidden',
             embedded
-              ? 'divide-y divide-secondary [&_.ui-section-card]:rounded-none [&_.ui-section-card]:border-0 [&_.ui-section-card]:shadow-none'
+              ? 'divide-y-control divide-secondary [&_.ui-section-card]:rounded-none [&_.ui-section-card]:border-0 [&_.ui-section-card]:shadow-none'
               : 'gap-3',
           )}
         >
@@ -113,7 +113,7 @@ export function DataTable<T>({
       <div
         className={cn(
           !embedded &&
-            'overflow-hidden rounded-xl border border-secondary bg-primary',
+            'overflow-hidden rounded-card border-control border-secondary bg-primary',
           renderMobileRow && 'hidden md:block',
         )}
       >
@@ -123,7 +123,7 @@ export function DataTable<T>({
           role="region"
           aria-label={caption}
         >
-          <table className="min-w-full divide-y divide-secondary">
+          <table className="min-w-full divide-y-control divide-secondary">
             <caption className="sr-only">{caption}</caption>
             <thead className="bg-secondary_subtle">
               <tr>
@@ -155,7 +155,7 @@ export function DataTable<T>({
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-secondary bg-primary">
+            <tbody className="divide-y-control divide-secondary bg-primary">
               {rows.map((row, index) => {
                 const href = getRowHref?.(row);
                 return (

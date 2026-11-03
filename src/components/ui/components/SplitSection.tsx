@@ -42,9 +42,11 @@ export function SplitSection({
           {action && <div className="mt-3 flex flex-wrap gap-2">{action}</div>}
         </div>
         {bare ? (
-          <div className={cn('grid min-w-0 gap-5', className)}>{children}</div>
+          <div className={cn('grid min-w-0 gap-(--space-field)', className)}>
+            {children}
+          </div>
         ) : (
-          <Card className={cn('grid min-w-0 gap-5', className)}>
+          <Card className={cn('grid min-w-0 gap-(--space-field)', className)}>
             {children}
           </Card>
         )}
@@ -63,7 +65,7 @@ export function SectionStack({
   return (
     <div
       className={cn(
-        'ui-section-stack grid min-w-0 gap-8 [&>*+*]:border-t [&>*+*]:border-secondary [&>*+*]:pt-8',
+        'ui-section-stack grid min-w-0 gap-(--space-section) [&>*+*]:border-t-control [&>*+*]:border-secondary [&>*+*]:pt-(--space-section)',
         className,
       )}
     >

@@ -1,7 +1,9 @@
 'use client';
 
 import { strings } from '@/strings';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
+import { FeatureRequestMutationInputSchema } from '@/models/featureRequest';
 import Link from 'next/link';
 import {
   Button,
@@ -21,11 +23,33 @@ export function FeatureRequestsScreen({ query = '' }: { query?: string }) {
   const { data, isPending, isError, refetch } = useFeatureRequests(query);
   const createMutation = useCreateFeatureRequest();
   const [message, setMessage] = useState('');
+  const [validation, setValidation] = useState<string | null>(null);
+  const dirtyRef = useRef(false);
+  const busyRef = useRef(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  useUnsavedFormGuard(dirtyRef, busyRef);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (createMutation.isPending || !message.trim()) return;
-    createMutation.mutate({ message }, { onSuccess: () => setMessage('') });
+    if (busyRef.current) return;
+    const parsed = FeatureRequestMutationInputSchema.safeParse({ message });
+    if (!parsed.success) {
+      setValidation(strings.errors.invalidInput);
+      inputRef.current?.focus();
+      return;
+    }
+    setValidation(null);
+    busyRef.current = true;
+    createMutation.mutate(parsed.data, {
+      onSuccess: () => {
+        dirtyRef.current = false;
+        busyRef.current = false;
+        setMessage('');
+      },
+      onSettled: () => {
+        busyRef.current = false;
+      },
+    });
   }
 
   return (
@@ -41,8 +65,21 @@ export function FeatureRequestsScreen({ query = '' }: { query?: string }) {
         <form noValidate onSubmit={handleSubmit} className="grid gap-3">
           <Field labelText={strings.ui.featureRequestsScreen.newFeatureRequest}>
             <Input
+              ref={inputRef}
               value={message}
-              onChange={(event) => setMessage(event.target.value)}
+              maxLength={1000}
+              disabled={createMutation.isPending}
+              aria-invalid={Boolean(validation)}
+              aria-describedby={
+                validation || createMutation.isError
+                  ? 'feature-create-error'
+                  : undefined
+              }
+              onChange={(event) => {
+                dirtyRef.current = event.target.value.length > 0;
+                setMessage(event.target.value);
+                setValidation(null);
+              }}
               placeholder={
                 strings.ui.featureRequestsScreen.describeTheWorkflowGapOrIdea
               }
@@ -51,15 +88,18 @@ export function FeatureRequestsScreen({ query = '' }: { query?: string }) {
           <Button
             type="submit"
             disabled={!message.trim() || createMutation.isPending}
+            loading={createMutation.isPending}
             className="w-full sm:w-auto"
           >
-            {createMutation.isPending
-              ? strings.common.saving
-              : strings.ui.featureRequestsScreen.createRequest}
+            {strings.ui.featureRequestsScreen.createRequest}
           </Button>
-          {createMutation.isError && (
-            <p role="alert" className="text-sm text-error-primary">
-              {createMutation.error.message}
+          {(validation || createMutation.isError) && (
+            <p
+              id="feature-create-error"
+              role="alert"
+              className="text-sm text-error-primary"
+            >
+              {validation ?? createMutation.error?.message}
             </p>
           )}
         </form>

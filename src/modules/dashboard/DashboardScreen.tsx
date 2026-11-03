@@ -246,7 +246,7 @@ function ComparisonBars() {
           {strings.ui.dashboardScreen.direct}
         </span>
         <span className="inline-flex items-center gap-2 text-primary">
-          <span className="h-2.5 w-2.5 rounded-full bg-(--color-chart-secondary)" />
+          <span className="h-2.5 w-2.5 rounded-full bg-chart-secondary" />
           <strong>{strings.ui.dashboardScreen.value24k}</strong>{' '}
           {strings.ui.dashboardScreen.indirect}
         </span>
@@ -265,7 +265,7 @@ function ComparisonBars() {
                 }}
               />
               <span
-                className="w-4 rounded-t-md bg-(--color-chart-secondary)"
+                className="w-4 rounded-t-md bg-chart-secondary"
                 style={{
                   height: `${(indirectRevenue[index] / maxValue) * 100}%`,
                 }}
@@ -316,7 +316,7 @@ function CountriesDonut() {
 
 function TopChannelsTable() {
   return (
-    <div className="overflow-hidden rounded-xl border border-secondary bg-primary">
+    <div className="overflow-hidden rounded-xl border-control border-secondary bg-primary">
       <div className="grid grid-cols-[1.5fr_repeat(4,minmax(0,1fr))] gap-3 border-b border-secondary bg-secondary_subtle px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-tertiary">
         <span>{strings.ui.dashboardScreen.source}</span>
         <span>{strings.ui.dashboardScreen.visitors}</span>
@@ -334,7 +334,7 @@ function TopChannelsTable() {
             <span>{channel.visitors}</span>
             <span className="text-success-primary">{channel.revenue}</span>
             <span>{channel.sales}</span>
-            <span className="text-(--color-chart-secondary)">
+            <span className="text-chart-secondary">
               {channel.conversion}
             </span>
           </div>
@@ -368,7 +368,7 @@ function SalesVsRefundsBars() {
             </div>
             <div className="flex h-20 items-start">
               <span
-                className="w-6 rounded-b-md bg-(--color-chart-refunds)"
+                className="w-6 rounded-b-md bg-chart-refunds"
                 style={{
                   height: `${(Math.abs(salesVsRefundsRefunds[index]) / maxValue) * 100}%`,
                 }}
@@ -397,7 +397,7 @@ function RefundReasonsCard() {
           {strings.ui.dashboardScreen.reasonForRefunds}
         </h3>
       </div>
-      <div className="rounded-xl border border-secondary bg-secondary_subtle p-4">
+      <div className="rounded-xl border-control border-secondary bg-secondary_subtle p-4">
         <div className="flex h-4 overflow-hidden rounded-full">
           {refundReasons.map((reason) => (
             <span
@@ -543,7 +543,7 @@ export function DashboardScreen() {
             {strings.ui.dashboardScreen.compact}
           </Button>
         </div>
-        <div className="rounded-xl border border-secondary bg-secondary_subtle p-4">
+        <div className="rounded-xl border-control border-secondary bg-secondary_subtle p-4">
           <p className="m-0 text-xs font-semibold uppercase tracking-[0.16em] text-tertiary">
             {strings.ui.dashboardScreen.selectedModel}
           </p>
@@ -557,101 +557,104 @@ export function DashboardScreen() {
         </div>
       </Card>
 
-      {demoMode && (
-        <>
-          <p className="text-sm text-tertiary">
-            {strings.ui.dashboardScreen.sampleAnalyticsDemoData}
-          </p>
-          <div className="grid gap-4 xl:grid-cols-2">
-            <DashboardPanel
-              eyebrow={strings.ui.dashboardScreen.sales}
-              title={strings.ui.dashboardScreen.directVsIndirect}
-              value={strings.ui.dashboardScreen.value17k3}
-            >
-              <ComparisonBars />
-            </DashboardPanel>
-            <DashboardPanel
-              eyebrow={strings.ui.dashboardScreen.orderValue}
-              title={strings.ui.dashboardScreen.avgOrderValue}
-              value={strings.ui.dashboardScreen.value72}
-              delta={strings.ui.dashboardScreen.value34}
-              legend={
-                <div className="flex items-center gap-4 text-xs font-medium text-tertiary">
-                  <span className="inline-flex items-center gap-2">
-                    <span className="h-2.5 w-2.5 rounded-full bg-brand-solid" />
-                    {strings.ui.dashboardScreen.current}
-                  </span>
-                  <span className="inline-flex items-center gap-2">
-                    <span className="h-2.5 w-2.5 rounded-full bg-(--color-chart-neutral)" />
-                    {strings.ui.dashboardScreen.previous}
-                  </span>
-                </div>
-              }
-            >
-              <LineChart
-                primary={avgOrderValueCurrent}
-                secondary={avgOrderValuePrevious}
-              />
-            </DashboardPanel>
-          </div>
+      {demoMode &&
+        overview.data?.models.some(
+          (item) => item.model === 'featureRequest' && item.totalCount > 0,
+        ) && (
+          <>
+            <p className="text-sm text-tertiary">
+              {strings.ui.dashboardScreen.sampleAnalyticsDemoData}
+            </p>
+            <div className="grid gap-4 xl:grid-cols-2">
+              <DashboardPanel
+                eyebrow={strings.ui.dashboardScreen.sales}
+                title={strings.ui.dashboardScreen.directVsIndirect}
+                value={strings.ui.dashboardScreen.value17k3}
+              >
+                <ComparisonBars />
+              </DashboardPanel>
+              <DashboardPanel
+                eyebrow={strings.ui.dashboardScreen.orderValue}
+                title={strings.ui.dashboardScreen.avgOrderValue}
+                value={strings.ui.dashboardScreen.value72}
+                delta={strings.ui.dashboardScreen.value34}
+                legend={
+                  <div className="flex items-center gap-4 text-xs font-medium text-tertiary">
+                    <span className="inline-flex items-center gap-2">
+                      <span className="h-2.5 w-2.5 rounded-full bg-brand-solid" />
+                      {strings.ui.dashboardScreen.current}
+                    </span>
+                    <span className="inline-flex items-center gap-2">
+                      <span className="h-2.5 w-2.5 rounded-full bg-chart-neutral" />
+                      {strings.ui.dashboardScreen.previous}
+                    </span>
+                  </div>
+                }
+              >
+                <LineChart
+                  primary={avgOrderValueCurrent}
+                  secondary={avgOrderValuePrevious}
+                />
+              </DashboardPanel>
+            </div>
 
-          <div className="grid gap-4 xl:grid-cols-[360px_minmax(0,1fr)]">
-            <DashboardPanel
-              eyebrow={strings.ui.dashboardScreen.audience}
-              title={strings.ui.dashboardScreen.topCountries}
-            >
-              <CountriesDonut />
-            </DashboardPanel>
-            <DashboardPanel
-              eyebrow={strings.ui.dashboardScreen.acquisition}
-              title={strings.ui.dashboardScreen.topChannels}
-            >
-              <TopChannelsTable />
-            </DashboardPanel>
-          </div>
+            <div className="grid gap-4 xl:grid-cols-[360px_minmax(0,1fr)]">
+              <DashboardPanel
+                eyebrow={strings.ui.dashboardScreen.audience}
+                title={strings.ui.dashboardScreen.topCountries}
+              >
+                <CountriesDonut />
+              </DashboardPanel>
+              <DashboardPanel
+                eyebrow={strings.ui.dashboardScreen.acquisition}
+                title={strings.ui.dashboardScreen.topChannels}
+              >
+                <TopChannelsTable />
+              </DashboardPanel>
+            </div>
 
-          <div className="grid gap-4 xl:grid-cols-2">
-            <DashboardPanel
-              eyebrow={strings.ui.dashboardScreen.stores}
-              title={strings.ui.dashboardScreen.salesOverTime}
-              value={strings.ui.dashboardScreen.value1482}
-              delta={strings.ui.dashboardScreen.value22}
-              legend={
-                <div className="flex items-center gap-4 text-xs font-medium text-tertiary">
-                  <span className="inline-flex items-center gap-2">
-                    <span className="h-2.5 w-2.5 rounded-full bg-brand-solid" />
-                    {strings.ui.dashboardScreen.current}
-                  </span>
-                  <span className="inline-flex items-center gap-2">
-                    <span className="h-2.5 w-2.5 rounded-full bg-(--color-chart-neutral)" />
-                    {strings.ui.dashboardScreen.previous}
-                  </span>
-                  <span className="inline-flex items-center gap-2">
-                    <span className="h-2.5 w-2.5 rounded-full bg-(--color-chart-forecast)" />
-                    {strings.ui.dashboardScreen.forecast}
-                  </span>
-                </div>
-              }
-            >
-              <LineChart
-                primary={salesOverTimeCurrent}
-                secondary={salesOverTimePrevious}
-                tertiary={salesOverTimeForecast}
-              />
-            </DashboardPanel>
-            <DashboardPanel
-              eyebrow={strings.ui.dashboardScreen.finance}
-              title={strings.ui.dashboardScreen.salesVsRefunds}
-              value={strings.ui.dashboardScreen.value6796}
-              delta={strings.ui.dashboardScreen.value342}
-            >
-              <SalesVsRefundsBars />
-            </DashboardPanel>
-          </div>
+            <div className="grid gap-4 xl:grid-cols-2">
+              <DashboardPanel
+                eyebrow={strings.ui.dashboardScreen.stores}
+                title={strings.ui.dashboardScreen.salesOverTime}
+                value={strings.ui.dashboardScreen.value1482}
+                delta={strings.ui.dashboardScreen.value22}
+                legend={
+                  <div className="flex items-center gap-4 text-xs font-medium text-tertiary">
+                    <span className="inline-flex items-center gap-2">
+                      <span className="h-2.5 w-2.5 rounded-full bg-brand-solid" />
+                      {strings.ui.dashboardScreen.current}
+                    </span>
+                    <span className="inline-flex items-center gap-2">
+                      <span className="h-2.5 w-2.5 rounded-full bg-chart-neutral" />
+                      {strings.ui.dashboardScreen.previous}
+                    </span>
+                    <span className="inline-flex items-center gap-2">
+                      <span className="h-2.5 w-2.5 rounded-full bg-chart-forecast" />
+                      {strings.ui.dashboardScreen.forecast}
+                    </span>
+                  </div>
+                }
+              >
+                <LineChart
+                  primary={salesOverTimeCurrent}
+                  secondary={salesOverTimePrevious}
+                  tertiary={salesOverTimeForecast}
+                />
+              </DashboardPanel>
+              <DashboardPanel
+                eyebrow={strings.ui.dashboardScreen.finance}
+                title={strings.ui.dashboardScreen.salesVsRefunds}
+                value={strings.ui.dashboardScreen.value6796}
+                delta={strings.ui.dashboardScreen.value342}
+              >
+                <SalesVsRefundsBars />
+              </DashboardPanel>
+            </div>
 
-          <RefundReasonsCard />
-        </>
-      )}
+            <RefundReasonsCard />
+          </>
+        )}
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
         <Card className="grid gap-4">
@@ -690,7 +693,7 @@ export function DashboardScreen() {
             {models.data?.map((entry) => (
               <div
                 key={entry.key}
-                className="rounded-xl border border-secondary bg-secondary_subtle p-4"
+                className="rounded-xl border-control border-secondary bg-secondary_subtle p-4"
               >
                 <div className="flex items-center justify-between gap-3">
                   <Link

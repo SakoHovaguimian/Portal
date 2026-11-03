@@ -33,7 +33,9 @@ export function SectionCardView({
     <>
       <IconTile
         className={
-          accent ? 'border border-secondary bg-primary shadow-xs' : undefined
+          accent
+            ? 'border-control border-secondary bg-primary shadow-(--shadow-control)'
+            : undefined
         }
       >
         {icon}
@@ -66,7 +68,7 @@ export function SectionCardView({
       variant="ghost"
       asChild={asChild}
       className={cn(
-        'ui-section-card relative w-full justify-start overflow-hidden rounded-xl border border-secondary bg-primary p-4 text-left shadow-xs hover:border-brand/40 hover:bg-brand-primary',
+        'ui-section-card relative w-full justify-start overflow-hidden rounded-card border-control border-secondary bg-primary p-4 text-left shadow-(--shadow-card) hover:border-brand/40 hover:bg-brand-primary',
         accent && 'ui-section-accent min-h-28 border-brand/20',
         className,
       )}

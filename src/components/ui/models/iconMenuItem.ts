@@ -4,4 +4,9 @@ export type IconMenuItem<T extends string> = {
   id: T;
   label: string;
   icon: IconName;
+  href?: string;
+  variant?: 'default' | 'destructive';
+  intent?: 'danger';
+  disabled?: boolean;
+  selected?: boolean;
 };

@@ -16,7 +16,7 @@ export function Chip({
     <span
       data-selected={selected || undefined}
       className={cn(
-        'ui-chip inline-flex items-center gap-2 rounded-lg border border-secondary bg-secondary_subtle px-3 py-1.5 text-sm text-secondary',
+        'ui-chip inline-flex items-center gap-2 rounded-chip border-control border-secondary bg-secondary_subtle px-3 py-1.5 text-sm text-secondary',
         className,
       )}
     >

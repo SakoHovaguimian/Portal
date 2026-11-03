@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getEffectiveRuntime } from '@/services/demo/demoRuntime';
+import { resolveDemoSession } from '@/services/demo/resolveDemoSession';
 import {
   decodeSession,
   sessionCookieName,
 } from '@/services/session/sessionCodec';
 export async function proxy(request: NextRequest) {
   const token = request.cookies.get(sessionCookieName)?.value;
-  const session = token ? await decodeSession(token) : null;
+  const runtime = await getEffectiveRuntime(request.cookies);
+  const decoded = token ? await decodeSession(token, runtime.demoMode) : null;
+  const session = decoded?.demo ? resolveDemoSession(decoded) : decoded;
   const authRoute = ['/login', '/signup'].includes(request.nextUrl.pathname);
   if (!session && !authRoute) {
     const url = new URL('/login', request.url);
@@ -31,5 +35,10 @@ export const config = {
     '/profile/:path*',
     '/experience/:path*',
     '/chat/:path*',
+    '/notifications/:path*',
+    '/saved/:path*',
+    '/onboarding/:path*',
+    '/help/:path*',
+    '/admin/:path*',
   ],
 };

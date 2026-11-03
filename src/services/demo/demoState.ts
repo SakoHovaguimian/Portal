@@ -1,6 +1,11 @@
 import 'server-only';
 import { randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
-import { users, featureRequests } from './demoFixtures';
+import { featureRequests } from './demoFixtures';
+import { createDemoUsers } from './demoPresets';
+import {
+  registerDemoReset,
+  registerDemoAccountReset,
+} from './demoResetRegistry';
 import type { DemoState } from './models/demoState';
 import { strings } from '@/strings';
 export function passwordRecord(password: string) {
@@ -21,8 +26,10 @@ const globalDemo = globalThis as typeof globalThis & {
 };
 export function getDemoState(): DemoState {
   if (!globalDemo.portalDemoState) {
+    const users = createDemoUsers();
     globalDemo.portalDemoState = {
-      users: structuredClone(users),
+      generation: crypto.randomUUID(),
+      users,
       featureRequests: structuredClone(featureRequests),
       credentials: new Map(
         users.map((user) => [
@@ -44,3 +51,17 @@ export function getDemoState(): DemoState {
   }
   return globalDemo.portalDemoState;
 }
+
+export function resetDemoState() {
+  globalDemo.portalDemoState = undefined;
+  getDemoState();
+}
+registerDemoReset('core', resetDemoState);
+
+registerDemoAccountReset('core', (userId) => {
+  const state = getDemoState();
+  state.featureRequests = state.featureRequests.filter(
+    (item) => item.user_id !== userId,
+  );
+  state.messages = state.messages.filter((item) => item.userId !== userId);
+});

@@ -1,5 +1,22 @@
 # Migration verification
 
+## Cupertino theme and value controls — November 2, 2026
+
+- Added the selectable macOS / iOS (`cupertino`) light/dark preset and eight shared controls: Slider, RangeSlider, ProgressBar, ProgressRing, NumberStepper, Meter, ActivityIndicator, and Skeleton. Existing switches and segmented selections consume the optional theme control roles. No default preference was changed.
+- `npm run check` passed: zero-warning ESLint, route-aware TypeScript, Next.js editor diagnostics, centralized strings, semantic colors, shared-control ownership, and Tailwind class checks.
+- `DEMO_MODE=true npm run build` passed, generating all 31 static pages and compiling all application routes. `git diff --check` passed. No tests were written or Xcode builds run.
+- Browser verification used the existing local demo server at port 3001 and a demo account. Checked Apple light/dark rendering, 390×844 narrow layout without document overflow, single/range/vertical sliders, arrow/Home/End interaction, invalid input association and error clearing, numeric clamp from 99 to 12, disabled bound/read-only buttons, local progress interruption/retry/completion, indeterminate ARIA values, and saved reduced motion (computed animations were `none`).
+- Verified Blueprint's square track/thumb geometry and Portal's original 10px thumb corners, theme persistence after reload, and the shared specimens on Appearance. Restored the browser's original Arcade/light/system-motion preferences and cleared the temporary viewport override. The preview made no live backend, analytics, messaging, or notification calls. Desktop screenshot: `/tmp/portal-cupertino-controls.png`.
+- Official `designmd lint DESIGN.md` returned zero errors and three existing orphaned-token warnings. The supplemental strict premium audit returned 39 heuristic flags; 37 refer to existing patterns and two flag NumberStepper's context-wired decrement/increment buttons. Their React Aria slot actions, numeric bounds and disabled behavior were verified in the browser. The audit does not understand these context-owned actions, shared Select wrappers, or shared textarea styling; it is not a clean compliance result. Full JSON evidence: `/tmp/portal-cupertino-audit.json`.
+
+| Design rule                                      | Evidence                                                                                                                                                                                                       | Reconciliation                                                                                                                      |
+| ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Preset objects own appearance                    | New optional control roles compile through existing `--portal-*` registrations                                                                                                                                 | Matched; no theme-ID branches in consumers                                                                                          |
+| Six selectable identities                        | Seven registered identities after this addition                                                                                                                                                                | Updated theme inventory and canonical ownership documentation                                                                       |
+| Existing Portal prose mirrors its preset exactly | The pre-existing DESIGN frontmatter lists background `#f7fafb` and text `#111827`; the current Portal object uses `#f3f7f7` and `#17252b`, with other baseline differences in selection opacity/sidebar radius | Recorded existing drift; preserved the current Portal implementation and prior baseline documentation while adding a separate theme |
+
+These are local component/demo checks. They do not establish complete equivalence with native Apple widgets, a cross-device assistive-technology certification, or live integration correctness. See [value controls](VALUE_CONTROLS.md) for APIs and ownership.
+
 Verified locally on October 4, 2026 with Node 22, Next.js 16.2.10, React 19.2.4, and `DEMO_MODE=true`. No test files were written and no Xcode builds were run.
 
 ## Static and production checks
@@ -14,17 +31,17 @@ The string check is a guard against inline display copy, including default messa
 
 ## Manual workflows
 
-| Area | Observed result |
-| --- | --- |
-| Demo login | Seed credentials sign in; the public response contains user information and expiry without Firebase tokens. |
-| Demo signup | A new account can sign up, edit its own profile, and sign out. |
-| Profile | Saving through the browser uses `PUT /users/:id`, refreshes the public session, and displays the shared success toast. A different account receives 403 when attempting the same user's update. |
-| Feature requests | Browser creation persists across reload. Editing and deletion of the verification record succeed. A different account cannot read that record. |
-| Chat and alerts | A sent demo message survives reload. Simulated alerts use the shared, dismissible toast. Empty messages receive 400. |
-| Session refresh | An expired demo access token refreshes server-side, reissues the encrypted cookie, and returns no private tokens in JSON. |
-| Request boundaries | An unauthenticated backend request receives 401. A mutation with a foreign Origin receives 403. |
-| Integration isolation | Demo settings explain disabled analytics and simulated notifications. The demo Messaging worker has no live configuration or code. |
-| Responsive layout | Profile and Appearance were inspected at 390px; chat at 1280px. The checked screens had no horizontal document overflow. Temporary viewport overrides were removed. |
+| Area                  | Observed result                                                                                                                                                                                 |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Demo login            | Seed credentials sign in; the public response contains user information and expiry without Firebase tokens.                                                                                     |
+| Demo signup           | A new account can sign up, edit its own profile, and sign out.                                                                                                                                  |
+| Profile               | Saving through the browser uses `PUT /users/:id`, refreshes the public session, and displays the shared success toast. A different account receives 403 when attempting the same user's update. |
+| Feature requests      | Browser creation persists across reload. Editing and deletion of the verification record succeed. A different account cannot read that record.                                                  |
+| Chat and alerts       | A sent demo message survives reload. Simulated alerts use the shared, dismissible toast. Empty messages receive 400.                                                                            |
+| Session refresh       | An expired demo access token refreshes server-side, reissues the encrypted cookie, and returns no private tokens in JSON.                                                                       |
+| Request boundaries    | An unauthenticated backend request receives 401. A mutation with a foreign Origin receives 403.                                                                                                 |
+| Integration isolation | Demo settings explain disabled analytics and simulated notifications. The demo Messaging worker has no live configuration or code.                                                              |
+| Responsive layout     | Profile and Appearance were inspected at 390px; chat at 1280px. The checked screens had no horizontal document overflow. Temporary viewport overrides were removed.                             |
 
 Temporary feature-request verification data was removed. Existing demo content was preserved. The demo server was not restarted to clear the user's active session or chat state.
 
@@ -42,16 +59,16 @@ Temporary feature-request verification data was removed. Existing demo content w
 - All 22 pasted Tailwind IntelliSense canonical-class diagnostics in Select and MultiSelect were addressed. Production browser inspection confirms the canonical classes generate selected backgrounds/text, keyboard focus outlines, trigger-width popups, themed borders, and overlay shadows.
 - `npm ls react-aria react-aria-components` confirms React Aria Components 1.21.1 shares the single React Aria 3.52.1 dependency. The direct dependency is pinned exactly; upgrades must retain a shared PortalProvider context.
 
-| Area | Observed demo result |
-| --- | --- |
-| Component route | Demo sign-in reaches the protected component library. One page h1 and one component scroll legend; the duplicate section dropdown is removed. |
-| Stepper | Horizontal stages share a row; vertical stages share a column. Selecting a stage synchronizes both specimens' complete/current states. Labels fit at 390px and 1280px with no horizontal document overflow. |
-| Theme states | Blue selections use the same surface blend across tiles, chips, and listbox options: 8% in light mode and 14% in dark mode. Section-card hover uses the shared accent/surface token. Success, warning, and error retain their semantic colors. |
-| Motion | Saved Reduced motion survives reload and removes indicator/button transitions. Four-choice segmented controls use the authored Select at compact widths; two choices retain their capsule. |
-| Mobile navigation | At 390×844 the menu fills the viewport, focuses its close action, and restores the opener after Escape. |
-| Select and MultiSelect | Selecting two MultiSelect options gives both the themed fill; keyboard movement shows a visible brand outline. Clearing selections returns the placeholder. Popup shadows and borders render after the canonical-class cleanup. |
-| Modal popup | At 390×844 the Select popup stays inside the dialog and its focus scope, fits the trigger and viewport, and closes on the first Escape while the dialog remains open. The next Escape closes the dialog and restores Open Dialog focus. |
-| Directory preview | An unmatched local search shows the empty state; clearing the search restores rows. |
+| Area                   | Observed demo result                                                                                                                                                                                                                           |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Component route        | Demo sign-in reaches the protected component library. One page h1 and one component scroll legend; the duplicate section dropdown is removed.                                                                                                  |
+| Stepper                | Horizontal stages share a row; vertical stages share a column. Selecting a stage synchronizes both specimens' complete/current states. Labels fit at 390px and 1280px with no horizontal document overflow.                                    |
+| Theme states           | Blue selections use the same surface blend across tiles, chips, and listbox options: 8% in light mode and 14% in dark mode. Section-card hover uses the shared accent/surface token. Success, warning, and error retain their semantic colors. |
+| Motion                 | Saved Reduced motion survives reload and removes indicator/button transitions. Four-choice segmented controls use the authored Select at compact widths; two choices retain their capsule.                                                     |
+| Mobile navigation      | At 390×844 the menu fills the viewport, focuses its close action, and restores the opener after Escape.                                                                                                                                        |
+| Select and MultiSelect | Selecting two MultiSelect options gives both the themed fill; keyboard movement shows a visible brand outline. Clearing selections returns the placeholder. Popup shadows and borders render after the canonical-class cleanup.                |
+| Modal popup            | At 390×844 the Select popup stays inside the dialog and its focus scope, fits the trigger and viewport, and closes on the first Escape while the dialog remains open. The next Escape closes the dialog and restores Open Dialog focus.        |
+| Directory preview      | An unmatched local search shows the empty state; clearing the search restores rows.                                                                                                                                                            |
 
 Verification used local demo data. Temporary selections were cleared, preview appearance was restored, and viewport overrides were reset. No live backend mutations, analytics events, notification permission prompts, or assistant-generation integrations were used.
 

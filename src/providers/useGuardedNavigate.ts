@@ -3,6 +3,7 @@
 import { useCallback } from 'react';
 import type { Route } from 'next';
 import { useRouter } from 'next/navigation';
+import { internalNavigationHref } from './navigationHistory';
 import { useNavigationGuard } from './NavigationGuardProvider';
 
 // Client navigation that first asks the active form's leave guard.
@@ -12,7 +13,9 @@ export function useGuardedNavigate() {
   const { confirmNavigation } = useNavigationGuard();
   return useCallback(
     async (href: string) => {
-      if (await confirmNavigation()) router.push(href as Route);
+      const destination = internalNavigationHref(href);
+      if (destination && (await confirmNavigation()))
+        router.push(destination as Route);
     },
     [confirmNavigation, router],
   );

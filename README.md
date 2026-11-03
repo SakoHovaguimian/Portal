@@ -1,6 +1,6 @@
 # Portal
 
-A single npm application built with Next.js **16.2.10**, React **19.2.4**, strict TypeScript, Tailwind CSS v4, and TanStack Query. Domain modules call an API client through an authenticated Next.js backend proxy. Shared React Aria/Radix UI primitives and Portal’s light/dark accent themes live in the same application.
+A single npm application built with Next.js **16.2.10**, React **19.2.4**, strict TypeScript, Tailwind CSS v4, and TanStack Query. Domain modules call an API client through an authenticated Next.js backend proxy. Shared React Aria/Radix UI primitives and Portal’s loadable light/dark theme objects live in the same application.
 
 ## Start with the demo
 
@@ -12,13 +12,24 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Open http://localhost:3001. The sample environment sets `DEMO_MODE=true`. Sign in with `sako@example.com` and `password123`, or create a demo account. Demo mutations are stored in server memory across navigation and reloads; restarting the server restores fixtures.
+Open http://localhost:3001. The sample environment sets `DEMO_MODE=true`. Choose New User, Populated User, Onboarding, Admin, or SuperAdmin on the sign-in screen, or create an account. All sample accounts use `password123`; the original `sako@example.com` login remains available. New User has completed setup and no private activity; Onboarding restarts only its own setup and activity. Demo mutations remain in server memory across navigation and reloads.
 
-Demo mode includes users, profile updates, feature requests, dashboard counts, a shared chat, and simulated alerts. It makes no Firebase, backend, Socket.IO, Messaging, or Amplitude calls. Optional analytics and browser push controls explain their demo state.
+Demo mode includes users, profile updates, feature requests, dashboard counts, shared chat, resumable onboarding, publishing, uploads, saved content, a notification inbox, and account tools. `/dev-settings` controls populated/loading/empty/error responses, finite latency, account switching, and a full fixture reset. It makes no Firebase, backend, Socket.IO, Messaging, or Amplitude calls. Browser notification opt-in is simulated per account.
+
+## Reusable Modules
+
+Choose project capabilities in [portalModules](src/config/portalModules.ts); disabled modules are removed from navigation and rejected at the API boundary. [Portal navigation](src/config/portalNavigation.tsx) composes destinations from those capabilities and the trusted role. The core remains one npm application.
+
+- `/admin/blog` provides revision-checked drafts, typed content blocks, previews, publication, and public `/blog` readers. See [publishing](docs/BLOG.md).
+- `/notifications` provides unread counts, search, bulk actions, channel preferences, and scheduling timezone; `/saved` keeps account-owned bookmarks across registered content types.
+- `/settings/account`, `/settings/devices`, and `/help` provide account, device, FAQ, and illustrative demo legal screens. Delivery diagnostics require the platform role and independent backend authorization.
+- `/onboarding` resumes saved profile/preferences steps. Configure its descriptors in `src/modules/onboarding/onboardingConfiguration.ts`; opt into its live API with `PORTAL_ONBOARDING_ENABLED=true`.
+
+Committed tabs, filters, and paging create real browser history entries. The app's Back action returns to a tracked internal entry or the owning fallback. Unsaved forms use the shared guard, including same-document browser Back. Developer Settings and Component Library share one adjacent utility group in the sidebar.
 
 ## Component foundation
 
-Open `/dev-settings/components` after signing in. Portal includes the LeafLaunch shared component foundation, mobile navigation and record layouts, animated segmented controls, horizontal/vertical steppers, persistent panels, Markdown editing, media previews, and shared light/dark/accent/motion settings. Previews stay local. Read [UI system](docs/UI_SYSTEM.md) before extending a screen.
+Open `/dev-settings/components` after signing in. Portal includes the LeafLaunch shared component foundation and editable HEX color picker, date-only calendars, disclosures, ratings/reactions/bookmarks, card carousels, mobile navigation and record layouts, animated segmented controls, steppers, persistent panels, Markdown editing, and media previews. Six complete themes drive shared colors, corners, borders, shadows, typography, spacing, and motion throughout. See [loadable themes](docs/THEMING.md). Previews stay local. Read [UI system](docs/UI_SYSTEM.md) before extending a screen.
 
 ## Live mode
 

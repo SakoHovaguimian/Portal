@@ -1,0 +1,19 @@
+'use client';
+import { portalPublishingStrings } from '@/strings';
+const copy = portalPublishingStrings.article;
+
+import { useBlogArticle } from './hooks';
+import { Page, QueryBoundary } from '@/components/ui';
+import { BlogEditor } from './components/BlogEditor';
+
+export function BlogEditorScreen({ articleId }: { articleId?: string }) {
+  const article = useBlogArticle(articleId);
+  if (!articleId) return <BlogEditor />;
+  return (
+    <Page>
+      <QueryBoundary query={article} loadingMessage={copy.adminLoading}>
+        {(data) => <BlogEditor key={data.id} initialArticle={data} />}
+      </QueryBoundary>
+    </Page>
+  );
+}

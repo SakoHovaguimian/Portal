@@ -20,7 +20,7 @@ export function RecordThumbnail({
   const [failed, setFailed] = useState<string>();
   return (
     <span
-      className="relative grid size-16 shrink-0 place-items-center overflow-hidden rounded-lg border border-secondary bg-secondary_subtle text-tertiary"
+      className="relative grid size-16 shrink-0 place-items-center overflow-hidden rounded-control border-control border-secondary bg-secondary_subtle text-tertiary"
       aria-busy={loading}
     >
       {src && failed !== src ? (

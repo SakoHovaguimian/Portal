@@ -15,6 +15,7 @@ import { useRuntimeConfig } from '@/providers/RuntimeProvider';
 import { useServiceContainer, useSessionState } from '@/providers/AppProviders';
 import { usePresentationService } from '@/presentation/PresentationProvider';
 import { WebNotificationService } from '@/services/notifications/webNotificationService';
+import { DemoNotificationService } from '@/services/notifications/demoNotificationService';
 import type { NotificationStatus } from '@/services/notifications/models/notificationStatus';
 import { RealtimeEventSchema } from './models/realtimeEvent';
 import { RealtimeTicketSchema } from './models/realtimeTicket';
@@ -43,13 +44,15 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
   const stopSocket = useRef<(() => void) | null>(null);
   const notifications = useMemo(
     () =>
-      !config.demoMode && config.messaging && session
-        ? new WebNotificationService(
-            container.apiClient,
-            config.messaging,
-            session.user.id,
-          )
-        : null,
+      config.demoMode && session
+        ? new DemoNotificationService(session.user.id)
+        : config.messaging && session
+          ? new WebNotificationService(
+              container.apiClient,
+              config.messaging,
+              session.user.id,
+            )
+          : null,
     [config.demoMode, config.messaging, container, session],
   );
   const receive = useCallback(
@@ -60,14 +63,17 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
       seen.current.add(event.event_id);
       if (seen.current.size > 200)
         seen.current.delete(seen.current.values().next().value!);
-      if (event.event_type === 'notification')
+      if (event.event_type === 'notification') {
+        void queryClient.invalidateQueries({
+          queryKey: ['notification-inbox'],
+        });
         void presentation.showToast({
           title: event.data.title,
           description: event.data.body,
           intent: 'info',
           position: 'top-right',
         });
-      else void queryClient.invalidateQueries({ queryKey: ['chat'] });
+      } else void queryClient.invalidateQueries({ queryKey: ['chat'] });
     },
     [presentation, queryClient],
   );
@@ -159,12 +165,12 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
     disableNotifications: async () => {
       stopNotifications.current?.();
       await notifications?.disable();
-      setNotificationStatus('available');
+      setNotificationStatus(config.demoMode ? 'demo' : 'available');
     },
     prepareForLogout: async () => {
       stopSocket.current?.();
       stopNotifications.current?.();
-      await notifications?.disable();
+      await notifications?.prepareForLogout();
     },
     simulateAlert: () => {
       if (config.demoMode)

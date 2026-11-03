@@ -40,7 +40,7 @@ export function UserDetailScreen({ userId }: { userId: string }) {
           {data.firstName} {data.lastName}
         </h1>
       </div>
-      <div className="grid gap-3 rounded-xl border border-secondary bg-secondary_subtle p-4 text-sm text-secondary">
+      <div className="grid gap-3 rounded-xl border-control border-secondary bg-secondary_subtle p-4 text-sm text-secondary">
         <p className="m-0">
           <span className="font-semibold text-primary">
             {strings.ui.userDetailScreen.email}

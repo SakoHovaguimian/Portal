@@ -27,7 +27,7 @@ export function IconTile({
       aria-hidden="true"
       className={cn(
         'inline-flex shrink-0 items-center justify-center',
-        size === 'md' ? 'size-11 rounded-xl' : 'size-9 rounded-lg',
+        size === 'md' ? 'size-11 rounded-card' : 'size-9 rounded-control',
         tones[intent],
         className,
       )}

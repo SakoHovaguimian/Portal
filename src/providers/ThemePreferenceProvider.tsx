@@ -3,6 +3,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from 'react';
@@ -10,21 +11,17 @@ import {
   AppearancePreferenceSchema,
   defaultAppearancePreference,
   type AppearancePreference,
+  type ThemeId,
 } from '@/models/appearance';
 import type { ThemePreferenceService } from '@/modules/settings/services/themePreferenceService';
+import { applyTheme } from '@/themes/applyTheme';
 import { strings } from '@/strings';
 
 type ThemePreferenceContext = AppearancePreference & {
-  setPreference: (value: AppearancePreference) => Promise<void>;
+  setPreference: (value: Partial<AppearancePreference>) => Promise<void>;
+  setThemeId: (themeId: ThemeId) => Promise<void>;
 };
 const ThemeContext = createContext<ThemePreferenceContext | null>(null);
-
-function applyTheme(value: AppearancePreference) {
-  const root = document.documentElement;
-  root.classList.toggle('dark-mode', value.mode === 'dark');
-  root.dataset.theme = value.mode;
-  root.dataset.accent = value.accent;
-}
 
 export function ThemePreferenceProvider({
   children,
@@ -36,14 +33,19 @@ export function ThemePreferenceProvider({
   const [preference, setPreferenceState] = useState(
     defaultAppearancePreference,
   );
+  const currentPreference = useRef(preference);
   useEffect(() => {
     let active = true;
-    const restore = () =>
+    let revision = 0;
+    const restore = () => {
+      const restoringRevision = ++revision;
       void service.getPreference().then((value) => {
-        if (!active) return;
+        if (!active || restoringRevision !== revision) return;
+        currentPreference.current = value;
         setPreferenceState(value);
         applyTheme(value);
       });
+    };
     restore();
     const onStorage = (event: StorageEvent) => {
       if (event.key === 'semantic-web-theme' || event.key === null) restore();
@@ -55,19 +57,23 @@ export function ThemePreferenceProvider({
     };
   }, [service]);
 
-  const theme = useMemo(
-    () => ({
+  const theme = useMemo(() => {
+    const setPreference = async (value: Partial<AppearancePreference>) => {
+      const next = AppearancePreferenceSchema.parse({
+        ...currentPreference.current,
+        ...value,
+      });
+      const saved = await service.savePreference(next);
+      currentPreference.current = saved;
+      setPreferenceState(saved);
+      applyTheme(saved);
+    };
+    return {
       ...preference,
-      setPreference: async (value: AppearancePreference) => {
-        const saved = await service.savePreference(
-          AppearancePreferenceSchema.parse(value),
-        );
-        setPreferenceState(saved);
-        applyTheme(saved);
-      },
-    }),
-    [preference, service],
-  );
+      setPreference,
+      setThemeId: (themeId: ThemeId) => setPreference({ themeId }),
+    };
+  }, [preference, service]);
 
   return (
     <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>

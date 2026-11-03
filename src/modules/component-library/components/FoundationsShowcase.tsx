@@ -10,11 +10,18 @@ const colors = [
   { label: copy.colorLabels.border, token: '--color-border-secondary' },
   { label: copy.colorLabels.text, token: '--color-text-primary' },
   { label: copy.colorLabels.muted, token: '--color-text-tertiary' },
-  { label: copy.colorLabels.success, token: '--color-success-600' },
-  { label: copy.colorLabels.warning, token: '--color-warning-500' },
-  { label: copy.colorLabels.error, token: '--color-error-500' },
+  { label: copy.colorLabels.success, token: '--color-success' },
+  { label: copy.colorLabels.warning, token: '--color-warning' },
+  { label: copy.colorLabels.error, token: '--color-error' },
 ];
-const corners = [0, 6, 10, 14, 20, 28];
+const corners = [
+  '--radius-none',
+  '--radius-sm',
+  '--radius-control',
+  '--radius-card',
+  '--radius-overlay',
+  '--dashboard-sidebar-radius',
+];
 const icons: IconName[] = ['home', 'box', 'tag', 'user', 'settings', 'search'];
 
 export function FoundationsShowcase() {
@@ -32,7 +39,7 @@ export function FoundationsShowcase() {
             <div key={token} className="grid justify-items-start gap-2">
               <span
                 aria-hidden="true"
-                className="size-10 rounded-full border border-secondary shadow-xs"
+                className="size-10 rounded-full border-control border-secondary shadow-xs"
                 style={{ backgroundColor: `var(${token})` }}
               />
               <span className="text-xs text-secondary">{label}</span>
@@ -51,14 +58,11 @@ export function FoundationsShowcase() {
               <div key={radius} className="grid justify-items-center gap-1">
                 <span
                   aria-hidden="true"
-                  className="size-9 border border-secondary bg-secondary_subtle"
-                  style={{ borderRadius: radius }}
+                  className="size-9 border-control border-secondary bg-secondary_subtle"
+                  style={{ borderRadius: `var(${radius})` }}
                 />
                 <span className="text-xs text-secondary">
                   {copy.radiusLabels[index]}
-                </span>
-                <span className="text-xs text-tertiary">
-                  {copy.pixels(radius)}
                 </span>
               </div>
             ))}
@@ -69,14 +73,14 @@ export function FoundationsShowcase() {
             {copy.spacing}
           </h4>
           <div className="flex min-h-16 flex-wrap items-end gap-3">
-            {[4, 8, 16, 24, 32, 48].map((space) => (
+            {[1, 2, 4, 6, 8, 12].map((space) => (
               <div key={space} className="grid justify-items-center gap-1">
                 <span
                   aria-hidden="true"
                   className="block rounded-sm bg-brand-secondary"
                   style={{
-                    width: Math.max(space, 8),
-                    height: Math.max(space, 8),
+                    width: `calc(var(--spacing) * ${Math.max(space, 2)})`,
+                    height: `calc(var(--spacing) * ${Math.max(space, 2)})`,
                   }}
                 />
                 <span className="text-xs text-tertiary">{space}</span>
@@ -90,7 +94,7 @@ export function FoundationsShowcase() {
         {icons.map((icon) => (
           <span
             key={icon}
-            className="rounded-md border border-secondary p-1.5 text-secondary"
+            className="rounded-md border-control border-secondary p-1.5 text-secondary"
           >
             <UiIcon name={icon} />
           </span>

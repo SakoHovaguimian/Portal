@@ -36,13 +36,13 @@ export function DataPanel({
         {busy ? busyLabel : ''}
       </span>
       {toolbar && (
-        <div className="min-w-0 border-b border-secondary p-4 sm:px-6">
+        <div className="min-w-0 border-b-control border-secondary p-4 sm:px-6">
           {toolbar}
         </div>
       )}
       <div className="min-w-0">{children}</div>
       {footer && (
-        <div className="min-w-0 border-t border-secondary px-4 py-3 sm:px-6">
+        <div className="min-w-0 border-t-control border-secondary px-4 py-3 sm:px-6">
           {footer}
         </div>
       )}

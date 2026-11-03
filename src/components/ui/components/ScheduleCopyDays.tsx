@@ -46,7 +46,7 @@ export function ScheduleCopyDays({
         <fieldset
           id={id}
           disabled={disabled}
-          className="grid min-w-0 gap-3 border-t border-secondary pt-3"
+          className="grid min-w-0 gap-3 border-t-control border-secondary pt-3"
         >
           <legend className="text-sm font-semibold text-primary">
             {copy.copyFromDay(days[source])}

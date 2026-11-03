@@ -32,7 +32,7 @@ export function FloatingAssistantDialog({
         <Dialog.Overlay className="ui-backdrop fixed inset-0 z-80 bg-(--dashboard-shell-overlay) backdrop-blur-sm" />
         <Dialog.Content
           data-side="right"
-          className="ui-sheet fixed inset-x-0 bottom-0 z-90 flex max-h-[92dvh] flex-col overflow-hidden rounded-t-2xl border border-secondary bg-primary shadow-(--dashboard-shell-shadow-lg) outline-none sm:inset-x-auto sm:inset-y-0 sm:inset-e-0 sm:w-[min(92vw,40rem)] sm:max-h-dvh sm:rounded-none sm:rounded-s-2xl"
+          className="ui-sheet fixed inset-x-0 bottom-0 z-90 flex max-h-[92dvh] flex-col overflow-hidden rounded-t-overlay border-control border-secondary bg-primary shadow-(--shadow-overlay) outline-none sm:inset-x-auto sm:inset-y-0 sm:inset-e-0 sm:w-[min(92vw,40rem)] sm:max-h-dvh sm:rounded-none sm:rounded-s-overlay"
           onEscapeKeyDown={(event) => {
             if (busy) event.preventDefault();
           }}
@@ -44,7 +44,7 @@ export function FloatingAssistantDialog({
             onReturnFocus();
           }}
         >
-          <div className="flex shrink-0 items-start gap-4 border-b border-secondary p-5 sm:p-6">
+          <div className="flex shrink-0 items-start gap-4 border-b-control border-secondary p-5 sm:p-6">
             <UiIcon
               name="sparkles"
               className="mt-1 size-6 text-brand-secondary"

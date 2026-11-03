@@ -30,7 +30,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        'ui-badge inline-flex w-fit items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset',
+        'ui-badge inline-flex w-fit items-center gap-1.5 rounded-chip px-2.5 py-1 text-xs font-medium ring-(length:--border-width-control) ring-inset',
         tones[intent],
         className,
       )}
@@ -44,7 +44,7 @@ export function Badge({
       )}
       <span
         key={typeof children === 'string' ? children : undefined}
-        className="ui-token-value"
+        className="ui-token-value inline-flex items-center gap-[inherit]"
       >
         {children}
       </span>

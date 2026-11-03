@@ -20,7 +20,7 @@ export function DirectoryPagination({
 }) {
   const single = page.offset === 0 && !page.hasMore;
   return (
-    <div className="flex min-h-11 flex-wrap items-center justify-between gap-3">
+    <div className="flex min-h-(--control-height-md) flex-wrap items-center justify-between gap-3">
       <p
         className="m-0 text-sm text-tertiary tabular-nums"
         role="status"

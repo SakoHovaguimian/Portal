@@ -6,11 +6,12 @@ export interface MultiSelectProps<Value extends string> {
   onValueChange: (value: Value[]) => void;
   label: string;
   placeholder: string;
-  selectionLabel: (count: number) => string;
+  selectionLabel: (count: number, labels: readonly string[]) => string;
   clearLabel: string;
   className?: string;
   disabled?: boolean;
   selectAllLabel?: string;
+  maxSelections?: number;
   id?: string;
   ref?: Ref<HTMLButtonElement>;
   'aria-labelledby'?: string;

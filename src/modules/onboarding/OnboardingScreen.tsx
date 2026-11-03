@@ -1,0 +1,290 @@
+'use client';
+import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import {
+  Button,
+  Card,
+  DescriptionList,
+  Field,
+  FormActions,
+  InlineLoading,
+  Input,
+  Message,
+  Page,
+  PageHeader,
+  QueryBoundary,
+  Stepper,
+  Switch,
+  TimezoneSelect,
+} from '@/components/ui';
+import { portalOnboardingStrings as copy } from '@/strings';
+import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
+import { resolveOnboardingRedirect } from '@/modules/auth/sessionClient';
+import { useSessionState } from '@/providers/AppProviders';
+import { useOnboarding, useSaveOnboarding } from './hooks';
+import { onboardingSteps } from './onboardingConfiguration';
+import type { OnboardingProgress } from './models/onboardingProgress';
+import type { OnboardingStep } from './models/onboardingStep';
+import { OnboardingProfileSchema } from './models/onboardingProfile';
+import { OnboardingPreferencesSchema } from './models/onboardingPreferences';
+export function OnboardingScreen({ redirectTo }: { redirectTo?: string }) {
+  const query = useOnboarding();
+  return (
+    <Page>
+      <PageHeader title={copy.title} description={copy.description} />
+      <QueryBoundary query={query} loadingFallback={<InlineLoading />}>
+        {(progress) => (
+          <OnboardingForm
+            key={progress.completedAt ?? 'incomplete'}
+            progress={progress}
+            redirectTo={redirectTo}
+          />
+        )}
+      </QueryBoundary>
+    </Page>
+  );
+}
+function OnboardingForm({
+  progress,
+  redirectTo,
+}: {
+  progress: OnboardingProgress;
+  redirectTo?: string;
+}) {
+  const router = useRouter();
+  const mutation = useSaveOnboarding();
+  const { session, setSession } = useSessionState();
+  const [step, setStep] = useState<OnboardingStep>(progress.currentStep);
+  const [profile, setProfile] = useState(progress.profile);
+  const [preferences, setPreferences] = useState(progress.preferences);
+  const [validation, setValidation] = useState<string | null>(null);
+  const dirty =
+    JSON.stringify(profile) !== JSON.stringify(progress.profile) ||
+    JSON.stringify(preferences) !== JSON.stringify(progress.preferences);
+  const dirtyRef = useRef(false);
+  const busyRef = useRef(false);
+  const formRef = useRef<HTMLFormElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    dirtyRef.current = dirty;
+    busyRef.current = mutation.isPending;
+  }, [dirty, mutation.isPending]);
+  useUnsavedFormGuard(dirtyRef, busyRef);
+  const index = onboardingSteps.findIndex((item) => item.key === step);
+  async function save() {
+    if (mutation.isPending) return;
+    setValidation(null);
+    const parsed =
+      step === 'profile'
+        ? OnboardingProfileSchema.safeParse(profile)
+        : OnboardingPreferencesSchema.safeParse(preferences);
+    if (step !== 'review' && !parsed.success) {
+      setValidation(parsed.error.issues[0]?.message ?? copy.invalidName);
+      const field = parsed.error.issues[0]?.path[0];
+      formRef.current
+        ?.querySelector<HTMLElement>(
+          step === 'profile' ? `input[name="${String(field)}"]` : 'button',
+        )
+        ?.focus();
+      return;
+    }
+    try {
+      const next = await mutation.mutateAsync(
+        step === 'profile'
+          ? { step, input: profile }
+          : step === 'preferences'
+            ? { step, input: preferences }
+            : { step: 'review', complete: true },
+      );
+      setProfile(next.profile);
+      setPreferences(next.preferences);
+      dirtyRef.current = false;
+      busyRef.current = false;
+      if (step === 'profile' && session)
+        setSession({ ...session, user: { ...session.user, ...next.profile } });
+      if (next.completedAt) {
+        router.replace(resolveOnboardingRedirect(redirectTo));
+        router.refresh();
+        return;
+      }
+      setStep(next.currentStep);
+      headingRef.current?.focus();
+    } catch {
+      /* Preserve profile and preferences after an unsuccessful request. */
+    }
+  }
+  function select(target: OnboardingStep) {
+    if (dirty || mutation.isPending) return;
+    setStep(target);
+    setValidation(null);
+  }
+  if (progress.completedAt)
+    return (
+      <Message
+        title={copy.completedTitle}
+        description={copy.completedDescription}
+        intent="success"
+        action={
+          <Button
+            onClick={() => router.push(resolveOnboardingRedirect(redirectTo))}
+          >
+            {copy.continue}
+          </Button>
+        }
+      />
+    );
+  return (
+    <div className="grid max-w-4xl gap-6">
+      <Stepper
+        label={copy.stepperLabel}
+        orientation="responsive"
+        disabled={mutation.isPending}
+        steps={onboardingSteps.map((item, itemIndex) => ({
+          key: item.key,
+          label: item.title,
+          description: item.description,
+          state:
+            item.key === step
+              ? 'current'
+              : progress.completedSteps.includes(item.key)
+                ? 'complete'
+                : 'upcoming',
+          stateLabel:
+            item.key === step
+              ? copy.current
+              : progress.completedSteps.includes(item.key)
+                ? copy.complete
+                : copy.upcoming,
+          disabled:
+            dirty ||
+            itemIndex >
+              onboardingSteps.findIndex(
+                (value) => value.key === progress.currentStep,
+              ),
+        }))}
+        onSelect={select}
+      />
+      <Card>
+        <form
+          ref={formRef}
+          noValidate
+          className="grid gap-5"
+          onSubmit={(event) => {
+            event.preventDefault();
+            void save();
+          }}
+        >
+          <h2
+            ref={headingRef}
+            tabIndex={-1}
+            className="m-0 text-lg font-semibold text-primary"
+          >
+            {onboardingSteps[index].title}
+          </h2>
+          {step === 'profile' && (
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field labelText={copy.firstName}>
+                <Input
+                  name="firstName"
+                  autoComplete="given-name"
+                  value={profile.firstName}
+                  disabled={mutation.isPending}
+                  aria-invalid={Boolean(validation)}
+                  aria-describedby={validation ? 'onboarding-error' : undefined}
+                  onChange={(event) =>
+                    setProfile({ ...profile, firstName: event.target.value })
+                  }
+                />
+              </Field>
+              <Field labelText={copy.lastName}>
+                <Input
+                  name="lastName"
+                  autoComplete="family-name"
+                  value={profile.lastName}
+                  disabled={mutation.isPending}
+                  aria-invalid={Boolean(validation)}
+                  aria-describedby={validation ? 'onboarding-error' : undefined}
+                  onChange={(event) =>
+                    setProfile({ ...profile, lastName: event.target.value })
+                  }
+                />
+              </Field>
+            </div>
+          )}
+          {step === 'preferences' && (
+            <>
+              <Field labelText={copy.timezone}>
+                <TimezoneSelect
+                  value={preferences.timezone}
+                  disabled={mutation.isPending}
+                  aria-invalid={Boolean(validation)}
+                  aria-describedby={validation ? 'onboarding-error' : undefined}
+                  onValueChange={(timezone) =>
+                    setPreferences({ ...preferences, timezone })
+                  }
+                />
+              </Field>
+              <Switch
+                label={copy.digest}
+                description={copy.digestDescription}
+                checked={preferences.emailDigest}
+                disabled={mutation.isPending}
+                onChange={(event) =>
+                  setPreferences({
+                    ...preferences,
+                    emailDigest: event.target.checked,
+                  })
+                }
+              />
+            </>
+          )}
+          {step === 'review' && (
+            <>
+              <p className="m-0 text-sm text-secondary">
+                {copy.reviewDescription}
+              </p>
+              <DescriptionList
+                items={[
+                  { label: copy.firstName, value: progress.profile.firstName },
+                  { label: copy.lastName, value: progress.profile.lastName },
+                  {
+                    label: copy.timezone,
+                    value: progress.preferences.timezone,
+                  },
+                  {
+                    label: copy.digest,
+                    value: progress.preferences.emailDigest
+                      ? copy.yes
+                      : copy.no,
+                  },
+                ]}
+              />
+            </>
+          )}
+          {(validation || mutation.isError) && (
+            <Message
+              id="onboarding-error"
+              title={copy.errorTitle}
+              description={validation ?? mutation.error?.message}
+              intent="danger"
+            />
+          )}
+          <FormActions sticky={false} variant="inline">
+            {index > 0 && (
+              <Button
+                variant="secondary"
+                disabled={mutation.isPending || dirty}
+                onClick={() => select(onboardingSteps[index - 1].key)}
+              >
+                {copy.back}
+              </Button>
+            )}
+            <Button type="submit" loading={mutation.isPending}>
+              {step === 'review' ? copy.finish : copy.continue}
+            </Button>
+          </FormActions>
+        </form>
+      </Card>
+    </div>
+  );
+}

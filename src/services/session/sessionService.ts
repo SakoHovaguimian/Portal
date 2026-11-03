@@ -7,6 +7,9 @@ import type { FirebaseAuthServiceInterface } from '@/services/auth/firebaseAuthS
 import type { FirebaseAuthSession } from '@/services/auth/models/firebaseAuthSession';
 import { AuthError } from '@/errors/domainErrors';
 import { strings } from '@/strings';
+import { environment } from '@/config/environment';
+import { getDemoState } from '@/services/demo/demoState';
+import { resolveDemoSession } from '@/services/demo/resolveDemoSession';
 import {
   decodeSession,
   encodeSession,
@@ -15,10 +18,14 @@ import {
 } from './sessionCodec';
 export class SessionService {
   private readonly refreshes = new Map<string, Promise<FirebaseAuthSession>>();
-  constructor(private readonly auth: FirebaseAuthServiceInterface) {}
+  constructor(
+    private readonly auth: FirebaseAuthServiceInterface,
+    private readonly demoMode = environment.demoMode,
+  ) {}
   async read(): Promise<ServerSession | null> {
     const token = (await cookies()).get(sessionCookieName)?.value;
-    return token ? decodeSession(token) : null;
+    const session = token ? await decodeSession(token, this.demoMode) : null;
+    return session?.demo ? resolveDemoSession(session) : session;
   }
   async publicSession(): Promise<AppSession | null> {
     const session = await this.read();
@@ -31,7 +38,14 @@ export class SessionService {
     };
   }
   async create(session: ServerSession) {
-    const token = await encodeSession(session);
+    const token = await encodeSession(
+      session.demo
+        ? {
+            ...session,
+            demoGeneration: session.demoGeneration ?? getDemoState().generation,
+          }
+        : session,
+    );
     if (Buffer.byteLength(token) > 3800)
       throw new AuthError(strings.auth.sessionTooLarge, 500);
     (await cookies()).set(sessionCookieName, token, {

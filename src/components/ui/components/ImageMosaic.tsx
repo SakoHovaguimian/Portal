@@ -32,7 +32,7 @@ function MosaicTile({
     >
       <button
         type="button"
-        className="ui-image-mosaic-tile group relative block w-full cursor-pointer overflow-hidden rounded-2xl border border-secondary bg-secondary_subtle outline-none transition duration-200 hover:border-brand hover:shadow-(--dashboard-shell-shadow-lg) focus-visible:ring-4 focus-visible:ring-brand active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 motion-reduce:transition-none"
+        className="ui-image-mosaic-tile group relative block w-full cursor-pointer overflow-hidden rounded-card border-control border-secondary bg-secondary_subtle outline-none transition duration-(--motion-duration-base) hover:border-brand hover:shadow-(--shadow-overlay) focus-visible:ring-4 focus-visible:ring-brand active:scale-(--motion-button-press-scale) disabled:cursor-not-allowed disabled:opacity-60 motion-reduce:transition-none"
         disabled={disabled}
         aria-label={strings.mediaEditor.preview(item.title)}
         onClick={onPreview}
@@ -45,7 +45,7 @@ function MosaicTile({
             alt={item.alt}
             sizes="(max-width: 768px) 66vw, 40vw"
             onError={() => setFailedSrc(item.src)}
-            className="object-cover transition-transform duration-300 motion-safe:group-hover:scale-[1.04] motion-safe:group-focus-visible:scale-[1.04]"
+            className="object-cover transition-transform duration-(--motion-duration-enter) motion-safe:group-hover:scale-(--motion-hover-scale) motion-safe:group-focus-visible:scale-(--motion-hover-scale)"
           />
         ) : (
           <span className="grid h-full place-content-center text-tertiary">

@@ -7,7 +7,7 @@ import { usePresentationService } from '@/presentation/PresentationProvider';
 import { strings } from '@/strings';
 
 export function ThemeToggle() {
-  const { mode, accent, setPreference } = useThemePreference();
+  const { mode, setPreference } = useThemePreference();
   const presentation = usePresentationService();
   const [pending, setPending] = useState(false);
   const dark = mode === 'dark';
@@ -16,7 +16,7 @@ export function ThemeToggle() {
     if (pending) return;
     setPending(true);
     try {
-      await setPreference({ mode: dark ? 'light' : 'dark', accent });
+      await setPreference({ mode: dark ? 'light' : 'dark' });
     } catch {
       await presentation.showToast({
         title: strings.ui.shellActions.themeSaveFailed,

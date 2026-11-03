@@ -1,0 +1,109 @@
+.rating {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.choices {
+  display: inline-flex;
+  gap: calc(var(--spacing) * 1);
+}
+
+.choice {
+  position: relative;
+  display: grid;
+  width: var(--control-height-lg);
+  height: max(var(--control-height-lg), 2.75rem);
+  cursor: pointer;
+}
+
+.input {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.surface {
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-control);
+  transition:
+    background-color var(--motion-duration-fast) var(--motion-ease-out),
+    scale var(--motion-duration-base) var(--motion-ease-spring);
+}
+
+.star {
+  width: 2.25rem;
+  height: 2.25rem;
+  fill: none;
+  stroke: var(--color-rating-inactive);
+  stroke-width: 1.5;
+  transition:
+    fill var(--motion-duration-fast) var(--motion-ease-out),
+    stroke var(--motion-duration-fast) var(--motion-ease-out);
+}
+
+.choice[data-filled] .star {
+  fill: var(--color-rating-active);
+  stroke: var(--color-rating-active);
+}
+
+.choice[data-selected] .star {
+  animation: select-star var(--motion-duration-enter) var(--motion-ease-spring);
+}
+
+.input:focus-visible + .surface {
+  outline: var(--control-focus-outline-width) solid var(--color-border-brand);
+  outline-offset: 2px;
+  background: var(--color-rating-surface);
+}
+
+.choice:has(.input:disabled),
+.input:disabled {
+  cursor: not-allowed;
+}
+
+.rating:disabled .choices {
+  opacity: 0.72;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .choice:hover:not(:has(.input:disabled)) .surface {
+    background: var(--color-rating-surface);
+    scale: var(--motion-hover-scale);
+  }
+}
+
+@keyframes select-star {
+  0% {
+    scale: var(--motion-enter-scale);
+  }
+  60% {
+    scale: var(--motion-hover-scale);
+  }
+  100% {
+    scale: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .surface,
+  .star {
+    animation: none;
+    transition: none;
+    scale: 1;
+  }
+}
+
+:global(html[data-motion='reduced']) .surface,
+:global(html[data-motion='reduced']) .star {
+  animation: none;
+  transition: none;
+  scale: 1;
+}

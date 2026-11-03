@@ -16,7 +16,10 @@ export function DescriptionList({
   if (layout === 'rows')
     return (
       <dl
-        className={cn('m-0 grid min-w-0 divide-y divide-secondary', className)}
+        className={cn(
+          'm-0 grid min-w-0 divide-y-control divide-secondary',
+          className,
+        )}
       >
         {items.map(({ label, value }) => (
           <div

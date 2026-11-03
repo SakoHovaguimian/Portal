@@ -58,7 +58,6 @@ const technicalProperties = new Set([
   'device_type',
   'event_type',
   'data-theme',
-  'data-accent',
   'autoComplete',
   'color',
   'direction',
@@ -70,6 +69,9 @@ const technicalProperties = new Set([
   'user_id',
   'email',
   'phone_number',
+  'bodyFamily',
+  'displayFamily',
+  'monoFamily',
 ]);
 function propertyName(node) {
   const parent = node.parent;
@@ -88,6 +90,12 @@ function propertyName(node) {
 }
 function technicalContext(node) {
   for (let parent = node.parent; parent; parent = parent.parent) {
+    if (ts.isPropertyAssignment(parent)) {
+      const name = parent.name.getText().replace(/^['"]|['"]$/g, '');
+      // CSS custom properties and structured shadow definitions are code.
+      // Direct display properties are checked before entering this context.
+      if (name.startsWith('--') || name === 'shadow') return true;
+    }
     if (
       ts.isImportDeclaration(parent) ||
       ts.isExportDeclaration(parent) ||
@@ -148,7 +156,7 @@ export function displayLiteral(node) {
     return false;
   // Paths, identifiers, CSS, SVG, worker/program text, and protocol values are not translatable copy.
   if (
-    /^(?:@|\.|\/|#|https?:|var\(|rgba?\(|hsl|translate|scale|rotate|url\()/.test(
+    /^(?:@|\.|\/|#|https?:|var\(|color-mix\(|rgba?\(|hsl|translate|scale|rotate|url\()/.test(
       value,
     ) ||
     /[{};=]/.test(value)

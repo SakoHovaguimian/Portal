@@ -1,16 +1,15 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import { Field, Select, SegmentedTabs } from '@/components/ui';
-import {
-  AccentThemeSchema,
-  ThemeModeSchema,
-  type AccentTheme,
-  type ThemeMode,
-} from '@/models/appearance';
+import { useId, useRef, useState } from 'react';
+import { Badge, Field, Radio, Select, SegmentedTabs } from '@/components/ui';
+import { ThemeModeSchema, type ThemeMode } from '@/models/appearance';
 import { useThemePreference } from '@/providers/ThemePreferenceProvider';
 import { useMotionPreference } from '@/providers/MotionPreferenceProvider';
-import { labels, strings } from '@/strings';
+import { strings } from '@/strings';
+import { themeCatalog } from '@/themes';
+import { ThemePreview } from './ThemePreview';
+import { ThemeLivePreview } from './ThemeLivePreview';
+import styles from './ThemeStudio.module.css';
 
 const copy = strings.designSystem;
 const motionValues = { system: 'system', reduced: 'reduced' } as const;
@@ -25,6 +24,7 @@ const modes: Array<{ value: ThemeMode; label: string }> = [
 export function ThemeControls() {
   const theme = useThemePreference();
   const motion = useMotionPreference();
+  const groupId = useId();
   const [pending, setPending] = useState(false);
   const pendingRef = useRef(false);
   const [error, setError] = useState('');
@@ -43,11 +43,56 @@ export function ThemeControls() {
     }
   }
   return (
-    <div className="grid min-w-0 gap-4">
+    <div className={`${styles.studio} grid min-w-0 gap-6`} aria-busy={pending}>
       <div
-        className="grid min-w-0 items-end gap-5 sm:grid-cols-2 xl:grid-cols-3"
-        aria-busy={pending}
+        role="radiogroup"
+        aria-label={copy.themeStudio.themeGroup}
+        className={styles.choices}
       >
+        {themeCatalog.map(({ id }) => {
+          const themeCopy = copy.themeStudio.themes[id];
+          return (
+            <Radio
+              key={id}
+              name={groupId}
+              value={id}
+              checked={theme.themeId === id}
+              aria-disabled={pending || undefined}
+              className={styles.choice}
+              onChange={() => void save(() => theme.setThemeId(id))}
+              label={
+                <span className={styles.choiceLabel}>
+                  <ThemePreview themeId={id} mode={theme.mode} />
+                  <span className={styles.choiceDetails}>
+                    <span className={styles.choiceName}>{themeCopy.name}</span>
+                    <span className={styles.choiceDescription}>
+                      {themeCopy.description}
+                    </span>
+                  </span>
+                </span>
+              }
+            />
+          );
+        })}
+      </div>
+      <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
+        <div className="grid gap-1">
+          <h3 className="m-0 text-base font-semibold text-primary">
+            {copy.themeStudio.preferencesTitle}
+          </h3>
+          <p className="m-0 text-sm text-secondary">
+            {copy.themeStudio.preferencesHint}
+          </p>
+        </div>
+        <span role="status" aria-live="polite" aria-atomic="true">
+          <Badge intent="brand" dot>
+            {copy.themeStudio.selectedTheme(
+              copy.themeStudio.themes[theme.themeId].name,
+            )}
+          </Badge>
+        </span>
+      </div>
+      <div className="grid min-w-0 items-end gap-5 sm:grid-cols-2">
         <div className="grid min-w-0 gap-1.5">
           <span className="text-sm font-medium text-secondary">
             {copy.mode}
@@ -59,38 +104,14 @@ export function ThemeControls() {
             disabled={pending}
             onValueChange={(mode) =>
               void save(() =>
-                theme.setPreference({ mode, accent: theme.accent }),
+                theme.setPreference({
+                  mode,
+                  themeId: theme.themeId,
+                }),
               )
             }
           />
         </div>
-        <Field labelText={copy.accent}>
-          <Select
-            value={theme.accent}
-            disabled={pending}
-            leadingIcon={
-              <span
-                aria-hidden="true"
-                data-accent={theme.accent}
-                className="accent-preview size-5 rounded-full bg-(--color-brand-600)"
-              />
-            }
-            onValueChange={(value) =>
-              void save(() =>
-                theme.setPreference({
-                  mode: theme.mode,
-                  accent: value as AccentTheme,
-                }),
-              )
-            }
-          >
-            {AccentThemeSchema.options.map((accent) => (
-              <option key={accent} value={accent}>
-                {labels.accents[accent]}
-              </option>
-            ))}
-          </Select>
-        </Field>
         <Field labelText={copy.motion}>
           <Select
             value={motion.preference}
@@ -114,6 +135,7 @@ export function ThemeControls() {
           {error}
         </p>
       )}
+      <ThemeLivePreview />
     </div>
   );
 }

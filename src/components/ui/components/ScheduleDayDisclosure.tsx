@@ -35,7 +35,7 @@ export function ScheduleDayDisclosure({
   return (
     <div
       className={cn(
-        'min-w-0 first:[&>button]:rounded-t-xl last:[&>button]:rounded-b-xl',
+        'min-w-0 first:[&>button]:rounded-t-card last:[&>button]:rounded-b-card',
         expanded && 'bg-secondary_subtle',
       )}
     >
@@ -49,7 +49,7 @@ export function ScheduleDayDisclosure({
         aria-describedby={`${id}-summary`}
         onClick={onToggle}
         className={cn(
-          'grid w-full grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-1 rounded-none px-4 py-3 text-left font-normal focus-visible:-outline-offset-2 active:scale-[0.99]',
+          'grid w-full grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-1 rounded-none px-4 py-3 text-left font-normal focus-visible:-outline-offset-2 active:scale-(--motion-button-press-scale)',
           wideTitle
             ? 'sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_auto]'
             : 'sm:grid-cols-[8rem_minmax(0,1fr)_auto]',
@@ -81,7 +81,7 @@ export function ScheduleDayDisclosure({
           <UiIcon
             name="chevronDown"
             className={cn(
-              'size-4 shrink-0 transition-transform duration-200 motion-reduce:transition-none',
+              'size-4 shrink-0 transition-transform duration-(--motion-duration-base) motion-reduce:transition-none',
               expanded && 'rotate-180',
             )}
           />

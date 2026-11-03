@@ -14,7 +14,7 @@ export function IconButton({
       variant="secondary"
       aria-label={label}
       title={label}
-      className={cn('size-11 shrink-0 p-0', className)}
+      className={cn('size-(--control-height-md) shrink-0 p-0', className)}
       {...props}
     />
   );

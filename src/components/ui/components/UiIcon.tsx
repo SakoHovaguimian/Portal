@@ -3,6 +3,17 @@ import type { IconName } from '../models/iconName';
 import { cn } from '../lib/cn';
 
 const paths: Record<IconName, string> = {
+  image: 'M3 3h18v18H3V3Zm0 14 6-6 4 4 3-3 5 5M15 7h.01',
+  upload: 'M12 16V3m-5 5 5-5 5 5M3 15v6h18v-6',
+  bell: 'M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4',
+  calendar: 'M4 5h16v16H4V5Zm3-3v6m10-6v6M4 10h16',
+  star: 'm12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z',
+  heart:
+    'M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z',
+  bookmark: 'M5 3h14v18l-7-4-7 4V3Z',
+  moreVertical: 'M12 5h.01M12 12h.01M12 19h.01',
+  copy: 'M9 9h12v12H9V9ZM5 15H3V3h12v2',
+
   gift: 'M3 8h18v4H3V8Zm2 4v9h14v-9M12 8v13M12 8H7.5A2.5 2.5 0 1 1 10 5.5L12 8Zm0 0h4.5A2.5 2.5 0 1 0 14 5.5L12 8Z',
   pin: 'M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0ZM9 10a3 3 0 1 0 6 0 3 3 0 0 0-6 0Z',
   wifi: 'M3 8a14 14 0 0 1 18 0M6 12a9 9 0 0 1 12 0M9 16a4.5 4.5 0 0 1 6 0M12 20h.01',
@@ -40,6 +51,9 @@ const paths: Record<IconName, string> = {
   search: 'M3 10a7 7 0 1 0 14 0 7 7 0 0 0-14 0Zm12 5 6 6',
   filter: 'M3 4h18l-7 8v8l-4-2v-6L3 4Z',
   plus: 'M12 5v14M5 12h14',
+  minus: 'M5 12h14',
+  sun: 'M9 12a3 3 0 1 0 6 0 3 3 0 0 0-6 0ZM12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5',
+  moon: 'M20.5 14a8.5 8.5 0 0 1-10.5-10.5A8.5 8.5 0 1 0 20.5 14Z',
   close: 'm6 6 12 12M18 6 6 18',
   menu: 'M4 6h16M4 12h16M4 18h16',
   check: 'm5 12 4 4L19 6',

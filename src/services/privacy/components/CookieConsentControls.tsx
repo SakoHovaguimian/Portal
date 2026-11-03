@@ -33,7 +33,7 @@ export function CookieConsentControls({
       className={
         settings
           ? 'grid gap-3'
-          : 'fixed bottom-4 left-4 right-4 z-50 mx-auto grid max-w-xl gap-3 rounded-xl border border-secondary bg-primary p-5 shadow-lg'
+          : 'fixed bottom-4 left-4 right-4 z-50 mx-auto grid max-w-xl gap-3 rounded-xl border-control border-secondary bg-primary p-5 shadow-lg'
       }
     >
       <h2 className="font-semibold text-primary">{strings.privacy.title}</h2>

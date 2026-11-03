@@ -1,0 +1,45 @@
+.ui-horizontal-carousel {
+  display: grid;
+  min-width: 0;
+  gap: calc(var(--spacing) * 3);
+}
+.ui-horizontal-carousel__track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - 5rem) / 3);
+  align-items: stretch;
+  gap: calc(var(--spacing) * 4);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: calc(var(--spacing) * 1);
+  padding: calc(var(--spacing) * 1) calc(var(--spacing) * 1)
+    calc(var(--spacing) * 4);
+  border-radius: var(--radius-card);
+}
+.ui-horizontal-carousel__track > * {
+  min-width: 0;
+  scroll-snap-align: start;
+}
+.ui-horizontal-carousel__track:focus-visible {
+  outline: var(--control-focus-outline-width) solid var(--color-border-brand);
+  outline-offset: 3px;
+}
+@media (max-width: 1100px) {
+  .ui-horizontal-carousel__track {
+    grid-auto-columns: calc((100% - 4rem) / 2);
+  }
+}
+@media (max-width: 599px) {
+  .ui-horizontal-carousel__track {
+    grid-auto-columns: 90%;
+  }
+}
+
+.ui-horizontal-carousel[data-variant='feature'] .ui-horizontal-carousel__track {
+  grid-auto-columns: 92%;
+}
+
+.ui-horizontal-carousel__track:has(> :only-child) {
+  grid-auto-columns: 100%;
+}

@@ -54,7 +54,7 @@ export function LocationScheduleItem({
           },
         ]}
       />
-      <dl className="m-0 flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-1 border-t border-secondary pt-4 text-xs text-secondary">
+      <dl className="m-0 flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-1 border-t-control border-secondary pt-4 text-xs text-secondary">
         <dt>{copy.timezone}</dt>
         <dd className="m-0 min-w-0 wrap-anywhere">{timezone}</dd>
       </dl>

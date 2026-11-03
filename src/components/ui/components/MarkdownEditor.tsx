@@ -115,7 +115,7 @@ export function MarkdownEditor({
           role="region"
           aria-label={copy.preview}
           tabIndex={0}
-          className="min-h-96 min-w-0 rounded-lg border border-secondary bg-primary p-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          className="min-h-96 min-w-0 rounded-control border-control border-secondary bg-primary p-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
         >
           {value.trim() ? (
             <MarkdownContent value={value} />
@@ -133,10 +133,10 @@ export function MarkdownEditor({
         </p>
       )}
       <details className="text-sm text-secondary">
-        <summary className="min-h-11 cursor-pointer py-2 font-medium hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand">
+        <summary className="min-h-(--control-height-md) cursor-pointer py-2 font-medium hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand">
           {copy.guide}
         </summary>
-        <div className="mt-2 grid min-w-0 gap-3 rounded-lg border border-secondary bg-secondary_subtle p-4 sm:grid-cols-2">
+        <div className="mt-2 grid min-w-0 gap-3 rounded-control border-control border-secondary bg-secondary_subtle p-4 sm:grid-cols-2">
           {copy.syntax.map((item) => (
             <div key={item.label} className="grid min-w-0 gap-1">
               <span className="font-medium">{item.label}</span>

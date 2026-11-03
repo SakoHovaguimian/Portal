@@ -15,11 +15,11 @@ export function IosPushNotification({
   return (
     <div
       role="status"
-      className="group relative flex items-start gap-3 rounded-3xl border border-(--ios-push-border) bg-(--ios-push-background) p-4 text-(--ios-push-text) shadow-(--ios-push-shadow) backdrop-blur-2xl font-ios-push"
+      className="group relative flex items-start gap-3 rounded-card border-control border-(--ios-push-border) bg-(--ios-push-background) p-4 text-(--ios-push-text) shadow-(--ios-push-shadow) backdrop-blur-2xl font-ios-push"
     >
       <div
         aria-hidden="true"
-        className="mt-1 flex size-10 shrink-0 items-center justify-center rounded-[0.6rem] bg-(--ios-push-icon-background) text-(--ios-push-icon-foreground)"
+        className="mt-1 flex size-10 shrink-0 items-center justify-center rounded-control bg-(--ios-push-icon-background) text-(--ios-push-icon-foreground)"
       >
         <UiIcon name="leaf" className="size-6" />
       </div>

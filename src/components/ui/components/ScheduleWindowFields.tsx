@@ -36,7 +36,7 @@ export function ScheduleWindowFields({
       aria-label={label}
       className={cn(
         'grid min-w-0 gap-3',
-        !compact && 'border-t border-secondary pt-3',
+        !compact && 'border-t-control border-secondary pt-3',
       )}
     >
       {!compact && (

@@ -22,7 +22,7 @@ export function DraftChatMessage({
         />
       )}
       <div
-        className={`grid min-w-0 max-w-full gap-1 rounded-2xl border p-4 ${user ? 'border-brand/30 bg-brand-primary' : 'border-secondary bg-secondary_subtle'}`}
+        className={`grid min-w-0 max-w-full gap-1 rounded-card border-control p-4 ${user ? 'border-brand/30 bg-brand-primary' : 'border-secondary bg-secondary_subtle'}`}
       >
         <p className="m-0 text-xs font-semibold text-brand-secondary">
           {user

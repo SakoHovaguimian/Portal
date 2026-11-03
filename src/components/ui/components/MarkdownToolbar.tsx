@@ -56,7 +56,7 @@ export function MarkdownToolbar({
     <div
       role="group"
       aria-label={copy.toolbar}
-      className="flex w-fit max-w-full min-w-0 flex-wrap items-center gap-1 rounded-lg border border-secondary bg-secondary_subtle p-2"
+      className="flex w-fit max-w-full min-w-0 flex-wrap items-center gap-1 rounded-control border-control border-secondary bg-secondary_subtle p-2"
     >
       {groups.map((group, index) => (
         <IconMenu
@@ -72,7 +72,7 @@ export function MarkdownToolbar({
           onAction={apply}
         />
       ))}
-      <div className="flex gap-1 border-s border-secondary ps-2">
+      <div className="flex gap-1 border-s-control border-secondary ps-2">
         <IconButton
           label={copy.undo}
           variant="ghost"

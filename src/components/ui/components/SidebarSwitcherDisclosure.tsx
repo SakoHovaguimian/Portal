@@ -30,7 +30,7 @@ export function SidebarSwitcherDisclosure({
   };
   return (
     <div
-      className="rounded-xl border border-brand/20 bg-brand-primary p-1"
+      className="rounded-card border-control border-brand/20 bg-brand-primary p-1"
       onKeyDown={(event) => {
         if (event.key === 'Escape' && open) {
           event.stopPropagation();
@@ -47,7 +47,7 @@ export function SidebarSwitcherDisclosure({
         aria-expanded={open && !disabled}
         aria-controls={contentId}
         onClick={() => setOpen((value) => !value)}
-        className="h-auto min-h-16 w-full min-w-0 justify-start gap-3 rounded-lg p-3 text-left whitespace-normal hover:bg-secondary_subtle focus-visible:-outline-offset-2"
+        className="h-auto min-h-16 w-full min-w-0 justify-start gap-3 rounded-control p-3 text-left whitespace-normal hover:bg-secondary_subtle focus-visible:-outline-offset-2"
       >
         {leading}
         <span className="grid min-w-0 flex-1 gap-1">

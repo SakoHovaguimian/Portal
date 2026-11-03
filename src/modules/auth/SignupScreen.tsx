@@ -1,13 +1,13 @@
 'use client';
 
-import { strings } from '@/strings';
+import { strings, portalDemoStrings } from '@/strings';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Field, Input, PasswordInput } from '@/components/ui';
 import { useRuntimeConfig } from '@/providers/RuntimeProvider';
 import { AuthCardShell } from './AuthCardShell';
 import { LockIcon, MailIcon, UserIcon } from './authIcons';
-import { createSession, resolveAuthRedirect } from './sessionClient';
+import { createSession, resolveSessionRedirect } from './sessionClient';
 
 export function SignupScreen({ redirectTo }: { redirectTo?: string }) {
   const router = useRouter();
@@ -27,7 +27,7 @@ export function SignupScreen({ redirectTo }: { redirectTo?: string }) {
     setError(null);
 
     try {
-      await createSession({
+      const result = await createSession({
         action: 'signup',
         firstName,
         lastName,
@@ -35,7 +35,9 @@ export function SignupScreen({ redirectTo }: { redirectTo?: string }) {
         password,
       });
 
-      router.push(resolveAuthRedirect(redirectTo));
+      router.push(
+        resolveSessionRedirect(redirectTo, result.onboardingRequired),
+      );
       router.refresh();
     } catch (caughtError) {
       form.querySelector('input')?.focus();
@@ -61,11 +63,7 @@ export function SignupScreen({ redirectTo }: { redirectTo?: string }) {
           : '/login'
       }
       footerAction={strings.ui.signupScreen.backToLogin}
-      mockHint={
-        demoMode
-          ? strings.ui.signupScreen.demoAccountsAndChangesLastUntilTheDemoServer
-          : undefined
-      }
+      mockHint={demoMode ? portalDemoStrings.signupHint : undefined}
     >
       <form noValidate onSubmit={handleSubmit} className="grid gap-4">
         <div className="grid gap-4 sm:grid-cols-2">
@@ -127,7 +125,7 @@ export function SignupScreen({ redirectTo }: { redirectTo?: string }) {
           <p
             id="SignupScreen-error"
             role="alert"
-            className="auth-reveal rounded-2xl border border-error-secondary bg-error-secondary/10 px-4 py-3 text-sm text-error-primary"
+            className="auth-reveal rounded-2xl border-control border-error-secondary bg-error-secondary/10 px-4 py-3 text-sm text-error-primary"
           >
             {error}
           </p>
@@ -137,11 +135,10 @@ export function SignupScreen({ redirectTo }: { redirectTo?: string }) {
           aria-invalid={Boolean(error)}
           aria-describedby={error ? 'SignupScreen-error' : undefined}
           disabled={pending}
+          loading={pending}
           className="auth-panel-hover w-full"
         >
-          {pending
-            ? strings.ui.signupScreen.creatingAccount
-            : strings.ui.signupScreen.createAccount}
+          {strings.ui.signupScreen.createAccount}
         </Button>
       </form>
     </AuthCardShell>

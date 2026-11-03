@@ -45,7 +45,7 @@ function Specimen({
         <h3 className="m-0 text-sm font-semibold text-primary">{title}</h3>
         <p className="m-0 text-sm text-secondary">{description}</p>
       </div>
-      <div className="min-w-0 rounded-xl border border-dashed border-secondary bg-secondary_subtle p-4 sm:p-6">
+      <div className="min-w-0 rounded-xl border-control border-dashed border-secondary bg-secondary_subtle p-4 sm:p-6">
         {children}
       </div>
     </div>

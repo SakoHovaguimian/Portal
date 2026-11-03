@@ -28,10 +28,10 @@ const accentClasses: Record<SheetTone, string> = {
 };
 
 const sideClasses: Record<SheetSide, string> = {
-  left: 'left-0 top-0 h-dvh rounded-none rounded-r-2xl',
-  right: 'right-0 top-0 h-dvh rounded-none rounded-l-2xl',
+  left: 'left-0 top-0 h-dvh rounded-none rounded-r-overlay',
+  right: 'right-0 top-0 h-dvh rounded-none rounded-l-overlay',
   bottom:
-    'bottom-0 left-1/2 w-[min(96vw,72rem)] -translate-x-1/2 rounded-t-2xl rounded-b-none',
+    'bottom-0 left-1/2 w-[min(96vw,72rem)] -translate-x-1/2 rounded-t-overlay rounded-b-none',
 };
 
 const sizeClasses: Record<SheetSide, Record<SheetSize, string>> = {
@@ -83,7 +83,7 @@ export function SheetPanel({
   details,
   content,
   motionEnabled = true,
-  motionDurationMs = 260,
+  motionDurationMs,
 }: SheetPanelProps) {
   const returnFocusRef = useRef<HTMLElement | null>(null);
   return (
@@ -93,6 +93,7 @@ export function SheetPanel({
     >
       <Dialog.Portal>
         <Dialog.Overlay
+          data-ui-presentation-layer="true"
           data-motion={motionEnabled ? undefined : 'off'}
           className={cn(
             'ui-backdrop fixed inset-0 z-80 bg-(--dashboard-shell-overlay) backdrop-blur-sm',
@@ -100,12 +101,16 @@ export function SheetPanel({
           style={
             motionEnabled
               ? ({
-                  '--ui-overlay-duration': `${motionDurationMs}ms`,
+                  '--ui-overlay-duration':
+                    motionDurationMs === undefined
+                      ? 'var(--motion-duration-enter)'
+                      : `${motionDurationMs}ms`,
                 } as CSSProperties)
               : undefined
           }
         />
         <Dialog.Content
+          data-ui-presentation-layer="true"
           data-side={side}
           data-motion={motionEnabled ? undefined : 'off'}
           {...(!description ? { 'aria-describedby': undefined } : {})}
@@ -122,7 +127,7 @@ export function SheetPanel({
             }
           }}
           className={cn(
-            'ui-sheet fixed z-90 flex max-h-dvh overflow-y-auto border bg-primary shadow-(--dashboard-shell-shadow-lg) outline-none',
+            'ui-sheet fixed z-90 flex max-h-dvh overflow-y-auto border-control bg-primary shadow-(--shadow-overlay) outline-none',
             toneClasses[tone],
             sideClasses[side],
             sizeClasses[side][size],
@@ -130,7 +135,10 @@ export function SheetPanel({
           style={
             motionEnabled
               ? ({
-                  '--ui-overlay-duration': `${motionDurationMs}ms`,
+                  '--ui-overlay-duration':
+                    motionDurationMs === undefined
+                      ? 'var(--motion-duration-enter)'
+                      : `${motionDurationMs}ms`,
                 } as CSSProperties)
               : undefined
           }
@@ -139,7 +147,7 @@ export function SheetPanel({
             <div className="flex items-start gap-4">
               <div
                 className={cn(
-                  'inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold tracking-[0.16em]',
+                  'inline-flex items-center gap-2 rounded-chip px-3 py-1 text-xs font-semibold tracking-[0.16em]',
                   accentClasses[tone],
                 )}
               >
@@ -159,7 +167,7 @@ export function SheetPanel({
             </div>
 
             {details ? (
-              <div className="rounded-xl border border-secondary bg-secondary_subtle p-4 text-sm text-secondary">
+              <div className="rounded-card border-control border-secondary bg-secondary_subtle p-4 text-sm text-secondary">
                 {details}
               </div>
             ) : null}
@@ -168,7 +176,7 @@ export function SheetPanel({
               <div className="min-h-0 flex-1 overflow-auto">{content}</div>
             ) : null}
 
-            <div className="mt-auto flex flex-wrap justify-end gap-3 border-t border-secondary pt-5">
+            <div className="mt-auto flex flex-wrap justify-end gap-3 border-t-control border-secondary pt-5">
               <Button variant="secondary" onClick={onCancel}>
                 {cancelLabel}
               </Button>

@@ -1,6 +1,2 @@
-export type ThemeTokens = {
-  color: Record<string, string>;
-  space: Record<string, string>;
-  radius: Record<string, string>;
-  shadow: Record<string, string>;
-};
+/** The complete semantic theme contract, shared with loadable theme modules. */
+export type { ThemeDefinition as ThemeTokens } from '@/themes/models/themeDefinition';

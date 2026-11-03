@@ -9,7 +9,7 @@ import {
 } from '@/services/api/domainMappers';
 export class UserService {
   constructor(private readonly api: ApiClientInterface) {}
-  async listUsers(query: UsersQuery) {
+  async listUsers(query: UsersQuery, signal?: AbortSignal) {
     const params = new URLSearchParams({
       query: query.query || '',
       limit: String(query.limit),
@@ -17,12 +17,16 @@ export class UserService {
     });
     const page = await this.api.request<PaginatedResult<UserTransport>>(
       `/users?${params}`,
+      { signal },
     );
     return { ...page, data: page.data.map(mapUserTransportToDomain) };
   }
-  async getUserById(id: string) {
+  async getUserById(id: string, signal?: AbortSignal) {
     return mapUserTransportToDomain(
-      await this.api.request<UserTransport>(`/users/${encodeURIComponent(id)}`),
+      await this.api.request<UserTransport>(
+        `/users/${encodeURIComponent(id)}`,
+        { signal },
+      ),
     );
   }
   async updateCurrentUser(id: string, input: UserMutationInput) {

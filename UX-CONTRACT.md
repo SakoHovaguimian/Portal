@@ -2,7 +2,7 @@
 
 ## Product context
 
-English-language workspace for operators managing people, requests, and conversations. Dates display in the browser’s timezone using en-US formatting; date of birth is a date-only field serialized at UTC midnight. Accessibility target: WCAG 2.2 AA. Native profile date control intentionally accepts OS popup geometry and locale.
+English-language workspace for operators managing people, requests, and conversations. Dates display in the browser’s timezone using en-US formatting; date of birth is a date-only field serialized at UTC midnight. Accessibility target: WCAG 2.2 AA. Native profile date control intentionally accepts OS popup geometry and locale. DatePicker is available when the application owns a date-only calendar; its locale and optional owned labels are caller-configurable.
 
 ## Business-context sources
 
@@ -15,19 +15,20 @@ English-language workspace for operators managing people, requests, and conversa
 
 ## Visual contract
 
-[DESIGN.md](DESIGN.md) records visual intent. Existing CSS is canonical. Shared UI primitives, semantic token mapping, and presentation provider must be reused. Light/dark, accent, and motion settings survive navigation and reload; browser tabs synchronize preference changes. Selection fill and hover opacity follow the active theme and accent.
+[DESIGN.md](DESIGN.md) records visual intent. Typed ThemeDefinition objects and their shared CSS adapter are canonical. Shared UI primitives, semantic token mapping, and presentation provider must be reused. Theme identity, light/dark mode, and motion settings survive navigation and reload; browser tabs synchronize preference changes. Selecting a theme loads its complete palette while preserving light/dark mode. Obsolete saved accent overrides are ignored. Selection fill and hover opacity follow the active theme. See [loadable themes](docs/THEMING.md).
 
 ## Canonical UI Map
 
-| Capability     | Canonical owner                                       | Source of truth        | Allowed variants                                                    | Verification                                  |
-| -------------- | ----------------------------------------------------- | ---------------------- | ------------------------------------------------------------------- | --------------------------------------------- |
-| Select/Listbox | Select/MultiSelect in src/components/ui               | DESIGN + this contract | authored popup, country/timezone options, compact segmented choices | keyboard, popup width/collision, modal Escape |
-| Stepper        | src/components/ui/components/Stepper.tsx              | UI system              | horizontal (default), vertical, responsive                          | narrow/desktop, disabled, aria-current        |
-| Date           | Field/Input in src/components/ui/components/Input.tsx | This contract          | native date-of-birth                                                | keyboard/browser                              |
-| Form           | Field/Input and module Zod schemas                    | This contract          | create/edit/read-only                                               | browser success/failure                       |
-| Scrollbar      | src/app/globals.css                                   | DESIGN.md              | document/table/chat                                                 | computed style and narrow viewport            |
-| Toast          | src/presentation/PresentationProvider.tsx             | This contract          | success/info/warning/error                                          | live region and demo alert                    |
-| CRUD           | Domain services and shared query hooks                | Backend contract       | create/edit/delete                                                  | manual full flow                              |
+| Capability          | Canonical owner                                                                         | Source of truth                          | Allowed variants                                                    | Verification                                                 |
+| ------------------- | --------------------------------------------------------------------------------------- | ---------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------ |
+| Select/Listbox      | Select/MultiSelect in src/components/ui                                                 | DESIGN + this contract                   | authored popup, country/timezone options, compact segmented choices | keyboard, popup width/collision, modal Escape                |
+| Stepper             | src/components/ui/components/Stepper.tsx                                                | UI system                                | horizontal (default), vertical, responsive                          | narrow/desktop, disabled, aria-current                       |
+| Values And Progress | Slider/RangeSlider, NumberStepper, ProgressBar/ProgressRing, Meter in src/components/ui | [Value controls](docs/VALUE_CONTROLS.md) | single/range, icons, vertical, reverse fill, measured/indeterminate | keyboard, limits, disabled/read-only/invalid, reduced motion |
+| Date                | DatePicker and Field/Input in src/components/ui                                         | This contract                            | authored date-only; native date-of-birth                            | keyboard/browser                                             |
+| Form                | Field/Input and module Zod schemas                                                      | This contract                            | create/edit/read-only                                               | browser success/failure                                      |
+| Scrollbar           | src/app/globals.css                                                                     | DESIGN.md                                | document/table/chat                                                 | computed style and narrow viewport                           |
+| Toast               | src/presentation/PresentationProvider.tsx                                               | This contract                            | success/info/warning/error                                          | live region and demo alert                                   |
+| CRUD                | Domain services and shared query hooks                                                  | Backend contract                         | create/edit/delete                                                  | manual full flow                                             |
 
 ## Workflow outcomes
 
@@ -46,7 +47,7 @@ Tables preserve horizontal access on narrow screens. Mobile navigation opens a f
 
 ## Forms, overlays, and feedback
 
-Use noValidate and schema-based messages. Associate labels with their input, surface errors in an alert, and prevent duplicate submissions. Passwords are masked and use password-manager autocomplete. Native date input is permitted for profile date of birth. Shared date/time/datetime-local schedule fields intentionally accept OS popup geometry and language. Authored Select/MultiSelect use matching trigger/popup borders, corners, width, bounded scrolling, typeahead, and keyboard selection. Textareas do not resize outside their layout.
+Use noValidate and schema-based messages. Associate labels with their input, surface errors in an alert, and prevent duplicate submissions. Passwords are masked and use password-manager autocomplete. Native date input is permitted for profile date of birth. Shared date/time/datetime-local schedule fields intentionally accept OS popup geometry and language. Authored Select/MultiSelect use matching trigger/popup borders, corners, width, bounded scrolling, typeahead, and keyboard selection. Textareas auto-grow within their layout and may opt into a fixed footprint. ColorInput keeps incomplete HEX drafts local and exposes copy success/failure. MultiSelect can enforce a maximum selection count without preventing deselection.
 
 Destructive actions use the shared modal, focus the safe action first, and restore focus on cancellation. Long content scrolls inside the viewport. Shared toasts supplement inline errors; critical errors must not exist only in a transient toast.
 
@@ -54,9 +55,15 @@ Destructive actions use the shared modal, focus the safe action first, and resto
 
 Segmented choices use native radio semantics; more than two choices become the shared Select below 600px. SegmentedPanels preserves mounted drafts and marks inactive content hidden/inert. Stepper progression and eligibility remain caller-owned; changing orientation never changes state. Reordering offers pointer handles plus keyboard and up/down alternatives. Saved reduced motion and device preferences suppress movement in CSS and JavaScript.
 
-Shared selection fills use 8% accent in light mode and 14% in dark mode; hover uses 5%/8%. Focus remains separately visible. Every palette uses the selected accent as its tint source. Busy buttons preserve layout and accessible names.
+The Portal baseline selection fills use 7% action color in light mode and 12% in dark mode; hover uses 5%/8%. Other presets own their state opacity through the same roles. Focus remains separately visible. Every palette uses its theme-owned action color as its tint source. Busy buttons preserve layout and accessible names.
 
-The shell uses the shared navigation guard. Forms opt into dirty/busy refs through useUnsavedFormGuard and pass guarded navigation to relevant links. The component library and optional assistants do not send backend writes or microphone permission requests automatically.
+The shell uses the shared navigation guard. Forms register dirty/busy refs through useUnsavedFormGuard. Clean links preserve Next Link and modifier clicks; dirty in-app links and same-document Back/Forward require the shared discard dialog. A canceled traversal returns to the original existing entry; an accepted traversal replays it. History tracking preserves Next state and never inserts sentinel entries or blocks a deliberate cross-document exit. Actual document unloads use the browser lifecycle guard.
+
+Committed navigable tabs, filters, sort, and pages create URL history entries; Back/Forward restores them. Use `useUrlState` or `useDirectoryState` with controlled screen state. Replacements are reserved for normalization and explicitly transient state. Application Back actions use `useGuardedBack(owningRoute)` and fall back to that route on direct entry instead of relying on history length.
+
+Accordion keeps focus on its trigger and supports one or several expanded panels. Ratings use radio semantics; save/reaction controls expose pressed/busy state and remain caller-owned. Native carousels are focusable, visibly scrollable, and touch-operable. Reordering restores keyboard focus to the moved handle. Refresh failures may preserve mounted content through QueryBoundary's optional retainDataOnError; authentication/ownership/not-found failures replace stale content. The component library and optional assistants do not send backend writes or microphone permission requests automatically.
+
+Sliders retain standard arrow/Home/End/Page key behavior and 44px targets. Range thumbs cannot cross; each has its own accessible name and form value. End-origin fill changes paint only. NumberStepper accepts exact text input, clamps on commit, supports arrow keys and button presses, and disables increment/decrement at bounds. Native inputs receive invalid state and associated help/error text. Progress indicators distinguish measured and unknown work; meters describe measurements. Loading skeletons are decorative inside a labeled busy region. The owning workflow supplies cancellation/retry and never relies on color alone to explain a failure. All motion honors saved and device preferences.
 
 ## Verification policy
 

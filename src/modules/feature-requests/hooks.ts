@@ -12,12 +12,15 @@ export function useFeatureRequests(query = '') {
   const container = useServiceContainer();
   return useQuery({
     queryKey: queryKeys.featureRequests.list(query).queryKey,
-    queryFn: () =>
-      container.featureRequestService.listFeatureRequests({
-        query,
-        limit: 25,
-        offset: 0,
-      }),
+    queryFn: ({ signal }) =>
+      container.featureRequestService.listFeatureRequests(
+        {
+          query,
+          limit: 25,
+          offset: 0,
+        },
+        signal,
+      ),
     staleTime: staleTimes.featureRequests,
   });
 }
@@ -26,8 +29,11 @@ export function useFeatureRequest(featureRequestId: string) {
   const container = useServiceContainer();
   return useQuery({
     queryKey: queryKeys.featureRequests.detail(featureRequestId).queryKey,
-    queryFn: () =>
-      container.featureRequestService.getFeatureRequestById(featureRequestId),
+    queryFn: ({ signal }) =>
+      container.featureRequestService.getFeatureRequestById(
+        featureRequestId,
+        signal,
+      ),
     staleTime: staleTimes.featureRequests,
   });
 }
@@ -58,7 +64,11 @@ export function useUpdateFeatureRequest(featureRequestId: string) {
         featureRequestId,
         input,
       ),
-    onSuccess: () => {
+    onSuccess: (request) => {
+      queryClient.setQueryData(
+        queryKeys.featureRequests.detail(featureRequestId).queryKey,
+        request,
+      );
       void queryClient.invalidateQueries({
         queryKey: queryKeys.featureRequests.detail(featureRequestId).queryKey,
       });

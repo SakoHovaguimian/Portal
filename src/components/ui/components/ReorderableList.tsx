@@ -5,9 +5,11 @@ import { useReorderDrag } from '../useReorderDrag';
 import { ListGroup } from './ListRow';
 import { IconButton } from './IconButton';
 import { UiIcon } from './UiIcon';
+import { cn } from '../lib/cn';
 import { useListMotion } from '../lib/useListMotion';
 
 interface ReorderableListProps<T extends { id: string }> {
+  variant?: 'list' | 'cards';
   items: T[];
   disabled: boolean;
   label: string;
@@ -26,6 +28,7 @@ interface ReorderableListProps<T extends { id: string }> {
 // Pointer handles support mouse, pen, and touch; arrows provide a keyboard alternative.
 export function ReorderableList<T extends { id: string }>({
   items,
+  variant = 'list',
   disabled,
   label,
   handleLabel,
@@ -40,15 +43,40 @@ export function ReorderableList<T extends { id: string }>({
     skipMotion.current = true;
     onMove(id, targetId);
   });
+  function moveAndFocus(id: string, targetId: string, trigger: HTMLElement) {
+    const row = trigger.closest<HTMLElement>('[data-motion-key]');
+    onMove(id, targetId);
+    // Moving a keyed row can blur its active control in Safari. Keep keyboard
+    // focus on its handle, including when an arrow becomes disabled at an edge.
+    requestAnimationFrame(() => {
+      if (!row?.isConnected) return;
+      const handle = row.querySelector<HTMLElement>('[data-reorder-handle]');
+      if (handle && !handle.hasAttribute('disabled'))
+        handle.focus({ preventScroll: true });
+    });
+  }
   return (
-    <ListGroup ordered label={label} listRef={listRef}>
+    <ListGroup
+      ordered
+      label={label}
+      listRef={listRef}
+      className={
+        variant === 'cards'
+          ? 'gap-4 divide-y-0 overflow-visible rounded-none border-0 bg-transparent'
+          : undefined
+      }
+    >
       {items.map((item, index) => (
         <li
           key={item.id}
           data-motion-key={item.id}
           data-reordering={Boolean(reorder.drag) || undefined}
           data-dragging={reorder.drag?.id === item.id || undefined}
-          className="ui-reorder-row relative"
+          className={cn(
+            'ui-reorder-row relative',
+            variant === 'cards' &&
+              'rounded-card border-control border-secondary bg-primary',
+          )}
           style={{ translate: `0 ${reorder.offset(item.id)}px` }}
         >
           {renderItem(
@@ -59,7 +87,13 @@ export function ReorderableList<T extends { id: string }>({
                 variant="ghost"
                 label={upLabel(item)}
                 disabled={disabled || index === 0}
-                onClick={() => onMove(item.id, items[index - 1].id)}
+                onClick={(event) =>
+                  moveAndFocus(
+                    item.id,
+                    items[index - 1].id,
+                    event.currentTarget,
+                  )
+                }
               >
                 <UiIcon name="arrowUp" />
               </IconButton>
@@ -67,7 +101,13 @@ export function ReorderableList<T extends { id: string }>({
                 variant="ghost"
                 label={downLabel(item)}
                 disabled={disabled || index === items.length - 1}
-                onClick={() => onMove(item.id, items[index + 1].id)}
+                onClick={(event) =>
+                  moveAndFocus(
+                    item.id,
+                    items[index + 1].id,
+                    event.currentTarget,
+                  )
+                }
               >
                 <UiIcon name="arrowUp" className="rotate-180" />
               </IconButton>
@@ -75,6 +115,7 @@ export function ReorderableList<T extends { id: string }>({
             <IconButton
               variant="ghost"
               label={handleLabel(item)}
+              data-reorder-handle
               disabled={disabled || items.length < 2}
               className="touch-none cursor-grab active:cursor-grabbing"
               onPointerDown={(event) => {
@@ -97,7 +138,8 @@ export function ReorderableList<T extends { id: string }>({
                   return;
                 event.preventDefault();
                 const next = items[index + (event.key === 'ArrowUp' ? -1 : 1)];
-                if (!disabled && next) onMove(item.id, next.id);
+                if (!disabled && next)
+                  moveAndFocus(item.id, next.id, event.currentTarget);
               }}
             >
               <UiIcon name="grip" />

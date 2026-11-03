@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const themeFile = path.join('src', 'app', 'theme.css');
+const themeDirectory = path.join('src', 'themes');
 const themeTokens = new Set(
   [...fs.readFileSync(themeFile, 'utf8').matchAll(/(--[\w-]+)\s*:/g)].map(
     (match) => match[1],
@@ -24,18 +25,23 @@ function sourceFiles(directory) {
 }
 
 function colorViolations(file) {
+  const isThemeSource = file.startsWith(`${themeDirectory}${path.sep}`);
   return fs
     .readFileSync(file, 'utf8')
     .split('\n')
     .flatMap((line, index) => {
       const failures = [];
-      if (literalColor.test(line) || fixedPaletteUtility.test(line)) {
+      // Typed themes own palettes; components still consume semantic roles.
+      if (
+        !isThemeSource &&
+        (literalColor.test(line) || fixedPaletteUtility.test(line))
+      ) {
         failures.push(
-          `${file}:${index + 1}: Use a semantic color token from src/app/theme.css.`,
+          `${file}:${index + 1}: Use a semantic color token from the theme adapter.`,
         );
       }
       for (const match of line.matchAll(
-        /var\((--(?:color-|landing-|dashboard-shell-)[\w-]+)/g,
+        /var\((--(?:color-|landing-|dashboard-shell-)[\w-]+)(?=[,)\s])/g,
       )) {
         if (!themeTokens.has(match[1])) {
           failures.push(

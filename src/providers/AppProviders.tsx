@@ -13,6 +13,9 @@ import { ThemePreferenceProvider } from './ThemePreferenceProvider';
 import { MotionPreferenceProvider } from './MotionPreferenceProvider';
 import { NavigationGuardProvider } from './NavigationGuardProvider';
 import { FloatingAssistantProvider } from '@/components/ui/components/FloatingAssistantProvider';
+import { OnboardingGate } from '@/modules/onboarding/OnboardingGate';
+import { NotificationTimezoneSync } from '@/modules/notification-inbox/components/NotificationTimezoneSync';
+import { portalModules } from '@/config/portalModules';
 export { useThemePreference } from './ThemePreferenceProvider';
 const ContainerContext = createContext<ClientServiceContainer | null>(null);
 const SessionContext = createContext<{
@@ -40,7 +43,14 @@ export function AppProviders({
                   <FloatingAssistantProvider>
                     <RealtimeProvider>
                       <SessionKeepAlive />
-                      {children}
+                      {portalModules.notifications && (
+                        <NotificationTimezoneSync />
+                      )}
+                      {portalModules.onboarding ? (
+                        <OnboardingGate>{children}</OnboardingGate>
+                      ) : (
+                        children
+                      )}
                     </RealtimeProvider>
                   </FloatingAssistantProvider>
                 </NavigationGuardProvider>

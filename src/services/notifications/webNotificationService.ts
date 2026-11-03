@@ -60,10 +60,15 @@ export class WebNotificationService {
     await this.register();
     return onMessage(this.messaging(), listener);
   }
-  async disable(): Promise<void> {
+  async prepareForLogout(): Promise<void> {
+    await this.disable({ forgetPreference: false });
+  }
+  async disable({
+    forgetPreference = true,
+  }: { forgetPreference?: boolean } = {}): Promise<void> {
     const token =
       this.token || localStorage.getItem(`${this.preferenceKey}:token`);
-    localStorage.removeItem(this.preferenceKey);
+    if (forgetPreference) localStorage.removeItem(this.preferenceKey);
     if (!token || !(await this.supported())) return;
     // Revoke the FCM token even if the API is temporarily unavailable.
     try {

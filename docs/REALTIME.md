@@ -17,7 +17,7 @@ The client listens to `portal.event`. Events must pass `RealtimeEventSchema` bef
 }
 ```
 
-Supported chat types: `chat.message_created`, `chat.message_updated`, `chat.message_deleted`. Alert type: `notification`, with `data: { title, body }`. Alerts use the shared toast provider. A bounded event-ID set deduplicates foreground Socket.IO/FCM delivery. Unmount/logout disconnects sockets and foreground listeners. Transport reconnects retry with delay; server handshake rejection also obtains a fresh ticket.
+Supported chat types: `chat.message_created`, `chat.message_updated`, `chat.message_deleted`. Alert type: `notification`, with `data: { title, body }`. Alerts use the shared toast provider and invalidate inbox records/counts. A bounded event-ID set deduplicates foreground Socket.IO/FCM delivery. Unmount/logout disconnects sockets and foreground listeners. Transport reconnects retry with delay; server handshake rejection also obtains a fresh ticket.
 
 This generic Portal contract is intentionally smaller than JobLens project chat. Implement its backend publication/authorization or adapt the event schema and handler to your domain together.
 
@@ -25,7 +25,7 @@ This generic Portal contract is intentionally smaller than JobLens project chat.
 
 Set all Firebase web configuration values and the public VAPID key from `.env.example`. These are public application identifiers, not Admin credentials. HTTPS is required outside localhost. Notifications are requested only by the user's Enable notifications action in Appearance settings. No mount or login flow opens a permission prompt.
 
-The service worker at `/firebase-messaging-sw.js` receives public config from the server. The browser obtains an FCM token and registers it with `/devices/`; restoration happens only for a saved per-user opt-in. Disabling unregisters the token and calls Firebase `deleteToken`. Logout attempts cleanup before deleting the session so registration removal remains authenticated, and still signs out if a notification service fails. The backend should prune stale device registrations after invalid-token delivery responses.
+The service worker at `/firebase-messaging-sw.js` receives public config from the server. The browser obtains an FCM token and registers it with `/devices/`; restoration happens only for a saved per-user opt-in. Disabling unregisters the token, forgets opt-in, and calls Firebase `deleteToken`. Logout attempts registration/token cleanup while preserving the per-user choice; a service failure never prevents session clearing. The backend should prune stale device registrations after invalid-token delivery responses. Demo notification preferences use a separate per-user key and simulated enable/disable states without native permission prompts or Firebase initialization.
 
 For unified deduplication, send data-only FCM messages with `data.portal_event` containing a JSON-encoded `notification` event from above. Foreground messages share the Socket.IO validation/dedup path. Background delivery displays the title/body with `event_id` as the notification tag; clicks open the same-origin `/chat` screen. Do not send tokens, private credentials, HTML, or arbitrary external destinations in notification payloads.
 

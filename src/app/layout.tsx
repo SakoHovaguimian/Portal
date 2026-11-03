@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { getRuntimeConfig } from '@/config/environment';
+import { getEffectiveRuntime } from '@/services/demo/demoRuntime';
 import { RuntimeProvider } from '@/providers/RuntimeProvider';
 import { AnalyticsProvider } from '@/services/analytics/components/AnalyticsProvider';
 import { CookieConsentControls } from '@/services/privacy/components/CookieConsentControls';
@@ -10,35 +10,89 @@ export const metadata: Metadata = {
   description: strings.app.description,
 };
 import type { ReactNode } from 'react';
-import { IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google';
+import {
+  Bricolage_Grotesque,
+  Fraunces,
+  Geist_Mono,
+  IBM_Plex_Mono,
+  IBM_Plex_Sans,
+  Plus_Jakarta_Sans,
+  Sora,
+} from 'next/font/google';
 import { ThemeScript } from '@/components/ui';
 
-const bodyFont = IBM_Plex_Sans({ subsets: ['latin'], variable: '--font-body' });
+const bodyFont = IBM_Plex_Sans({
+  subsets: ['latin'],
+  variable: '--font-portal-body',
+});
 const headingFont = IBM_Plex_Sans({
   subsets: ['latin'],
-  variable: '--font-display',
+  variable: '--font-portal-display',
   weight: ['500', '600', '700'],
 });
 const monoFont = IBM_Plex_Mono({
   subsets: ['latin'],
   weight: ['400', '500'],
-  variable: '--font-mono',
+  variable: '--font-portal-mono',
 });
+// Theme-specific families download only when a selected preset renders them.
+const jakartaFont = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-portal-jakarta',
+  preload: false,
+});
+const frauncesFont = Fraunces({
+  subsets: ['latin'],
+  variable: '--font-portal-fraunces',
+  axes: ['opsz'],
+  preload: false,
+});
+const geistMonoFont = Geist_Mono({
+  subsets: ['latin'],
+  variable: '--font-portal-geist-mono',
+  preload: false,
+});
+const bricolageFont = Bricolage_Grotesque({
+  subsets: ['latin'],
+  variable: '--font-portal-bricolage',
+  preload: false,
+});
+const soraFont = Sora({
+  subsets: ['latin'],
+  variable: '--font-portal-sora',
+  preload: false,
+});
+const fontVariables = [
+  bodyFont,
+  headingFont,
+  monoFont,
+  jakartaFont,
+  frauncesFont,
+  geistMonoFont,
+  bricolageFont,
+  soraFont,
+]
+  .map((font) => font.variable)
+  .join(' ');
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const runtime = await getEffectiveRuntime();
   return (
     <html
+      className={fontVariables}
       lang="en"
       data-scroll-behavior="smooth"
       data-theme="light"
-      data-accent="aqua"
+      data-theme-id="portal"
       suppressHydrationWarning
     >
-      <body
-        className={`${bodyFont.variable} ${headingFont.variable} ${monoFont.variable} bg-primary text-primary antialiased`}
-      >
+      <body className="bg-primary text-primary antialiased">
         <ThemeScript />
-        <RuntimeProvider config={getRuntimeConfig()}>
+        <RuntimeProvider config={runtime}>
           <AnalyticsProvider />
           {children}
           <CookieConsentControls />

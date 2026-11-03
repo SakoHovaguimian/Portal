@@ -47,13 +47,16 @@ export function ToastStack({
                 className={cn(
                   'ui-toast pointer-events-auto',
                   toast.appearance !== 'ios-push' &&
-                    'rounded-lg bg-primary shadow-(--dashboard-shell-shadow-lg)',
+                    'rounded-overlay bg-primary shadow-(--shadow-overlay)',
                 )}
                 style={
                   toast.motionEnabled === false
                     ? undefined
                     : ({
-                        '--ui-overlay-duration': `${toast.motionDurationMs ?? 220}ms`,
+                        '--ui-overlay-duration':
+                          toast.motionDurationMs === undefined
+                            ? 'var(--motion-duration-enter)'
+                            : `${toast.motionDurationMs}ms`,
                       } as CSSProperties)
                 }
               >

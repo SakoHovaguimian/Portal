@@ -64,7 +64,7 @@
     translate: -0.2rem 0;
   }
   .ui-selection-tile:hover:not(:has(:disabled)) .ui-tile-icon {
-    scale: 1.06;
+    scale: var(--motion-hover-scale);
   }
 }
 .ui-button-primary[data-preview-state='hover']::before {
@@ -84,15 +84,12 @@
     scale var(--motion-duration-base) var(--motion-ease-spring),
     opacity var(--motion-duration-fast) var(--motion-ease-out);
 }
-.ui-section-card {
-  --motion-button-press-scale: 0.99;
-}
 .ui-selection-tile:active:not(:has(:disabled)) {
-  scale: 0.99;
+  scale: var(--motion-button-press-scale);
 }
 .ui-choice-label:active:not(:has(:disabled)) .ui-choice-frame,
 .ui-switch-label:active:not(:has(:disabled)) .ui-switch-frame {
-  scale: 0.93;
+  scale: var(--motion-button-press-scale);
 }
 .ui-switch-thumb {
   transition:
@@ -101,20 +98,27 @@
     opacity var(--motion-duration-fast) var(--motion-ease-out);
 }
 .ui-switch-label:active:not(:has(:disabled)) .ui-switch-thumb {
-  scale: 1.08 0.94;
+  scale: calc(2 - var(--motion-button-press-scale))
+    var(--motion-button-press-scale);
 }
 
+.ui-choice {
+  transition-property:
+    background-color, border-color, border-width, color, box-shadow, opacity,
+    scale;
+}
 .ui-checkbox-mark,
 .ui-checkbox-mixed {
   opacity: 0;
-  scale: 0.6;
+  scale: 0.4;
   transition:
     opacity var(--motion-duration-fast) var(--motion-ease-out),
     scale var(--motion-duration-base) var(--motion-ease-spring);
 }
+/* The check path is about 20 units long; the dash draws it from its first stroke. */
 .ui-checkbox-mark path {
-  stroke-dasharray: 30;
-  stroke-dashoffset: 30;
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
   transition: stroke-dashoffset var(--motion-duration-base)
     var(--motion-ease-out);
 }
@@ -125,13 +129,14 @@
 }
 .ui-checkbox:checked + .ui-checkbox-mark path {
   stroke-dashoffset: 0;
+  transition-delay: calc(var(--motion-duration-press) * 0.5);
 }
 .ui-checkbox:indeterminate + .ui-checkbox-mark {
   opacity: 0;
 }
 .ui-radio-dot {
   opacity: 0;
-  transform: scale(0.6);
+  transform: scale(0.2);
   transform-origin: center;
   transition:
     opacity var(--motion-duration-fast) var(--motion-ease-out),
@@ -141,13 +146,56 @@
   opacity: 1;
   transform: scale(1);
 }
-.ui-choice:disabled
-  ~ :is(.ui-checkbox-mark, .ui-checkbox-mixed, .ui-radio-dot) {
-  opacity: 0.4;
+
+/* Selecting pops the frame and releases a halo. Amplitude follows the theme's scale roles,
+   so flat themes keep a still frame. Labels opt in after the first change. */
+@keyframes ui-choice-pop {
+  0% {
+    scale: 1;
+  }
+  30% {
+    scale: calc(1 - (1 - var(--motion-button-press-scale)) * 5);
+  }
+  65% {
+    scale: calc(1 + (var(--motion-hover-scale) - 1) * 4);
+  }
+  100% {
+    scale: 1;
+  }
 }
-.ui-choice:disabled:not(:checked):not(:indeterminate)
-  ~ :is(.ui-checkbox-mark, .ui-checkbox-mixed, .ui-radio-dot) {
+@keyframes ui-choice-halo {
+  from {
+    opacity: 0.45;
+    scale: 1;
+  }
+  to {
+    opacity: 0;
+    scale: 2.2;
+  }
+}
+.ui-choice-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: var(--ui-choice-radius);
+  background: var(--color-accent);
   opacity: 0;
+  pointer-events: none;
+}
+.ui-choice-label[data-interacted]
+  .ui-choice-frame:has(
+    > :is(.ui-checkbox:checked, .ui-checkbox:indeterminate, .ui-radio:checked)
+  ) {
+  animation: ui-choice-pop calc(var(--motion-duration-base) * 1.75)
+    var(--motion-ease-out);
+}
+.ui-choice-label[data-interacted]
+  .ui-choice-frame:has(
+    > :is(.ui-checkbox:checked, .ui-checkbox:indeterminate, .ui-radio:checked)
+  )::after {
+  animation: ui-choice-halo calc(var(--motion-duration-enter) * 2)
+    var(--motion-ease-out);
 }
 
 .ui-segmented-indicator {
@@ -169,14 +217,14 @@
     transform var(--motion-duration-base) var(--motion-ease-spring);
 }
 .ui-segment:active {
-  transform: scale(0.96);
+  transform: scale(var(--motion-button-press-scale));
 }
 
 .ui-select-trigger {
   transition-duration: var(--motion-duration-fast);
 }
 .ui-select-trigger:is(:active, [data-pressed]):not(:disabled) {
-  scale: 0.995;
+  scale: var(--motion-button-press-scale);
 }
 .ui-select-chevron {
   transition: rotate var(--motion-duration-base) var(--motion-ease-out);
@@ -191,7 +239,7 @@
   animation: ui-value-enter var(--motion-duration-fast) var(--motion-ease-out);
 }
 .ui-select-option:active:not([data-disabled]) {
-  scale: 0.99;
+  scale: var(--motion-button-press-scale);
 }
 .ui-option-check {
   transition:
@@ -228,7 +276,7 @@
   animation: ui-value-enter var(--motion-duration-fast) var(--motion-ease-out);
 }
 .ui-drop-zone[data-dragging='true'] {
-  scale: 1.01;
+  scale: var(--motion-hover-scale);
 }
 .ui-backdrop[data-state='open'] {
   animation: ui-fade-in var(--ui-overlay-duration, var(--motion-duration-enter))
@@ -309,7 +357,8 @@
   width: 35%;
   border-radius: 9999px;
   background: var(--color-bg-brand-solid);
-  animation: ui-progress-slide 1.2s var(--motion-ease-out) infinite;
+  animation: ui-progress-slide calc(var(--motion-duration-base) * 6)
+    var(--motion-ease-out) infinite;
 }
 @keyframes ui-progress-slide {
   from {
@@ -411,7 +460,7 @@
   from {
     opacity: 0;
     translate: 0 var(--ui-popover-offset, 0.375rem);
-    scale: 0.98;
+    scale: var(--motion-enter-scale);
   }
   to {
     opacity: 1;
@@ -428,13 +477,13 @@
   to {
     opacity: 0;
     translate: 0 var(--ui-popover-offset, 0.375rem);
-    scale: 0.98;
+    scale: var(--motion-enter-scale);
   }
 }
 @keyframes ui-dialog-enter {
   from {
     opacity: 0;
-    scale: 0.97;
+    scale: var(--motion-enter-scale);
   }
   to {
     opacity: 1;
@@ -448,7 +497,7 @@
   }
   to {
     opacity: 0;
-    scale: 0.98;
+    scale: var(--motion-enter-scale);
   }
 }
 @keyframes ui-sheet-enter {
@@ -473,7 +522,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :where([class*='ui-'], [class*='ui-'] *) {
+  :where([class*='ui-'], [class*='ui-'] *),
+  .ui-choice-frame::after {
     animation: none !important;
     transition: none !important;
   }
@@ -505,7 +555,8 @@
   }
   .ui-checkbox-mark,
   .ui-checkbox-mixed,
-  .ui-radio-dot {
+  .ui-radio-dot,
+  .ui-choice-frame::after {
     display: none;
   }
 }
@@ -538,8 +589,8 @@
 .ui-reorder-row[data-dragging='true'] {
   z-index: 1;
   background: var(--color-bg-primary);
-  box-shadow: var(--dashboard-shell-shadow-lg);
-  outline: 2px solid var(--color-border-brand);
+  box-shadow: var(--shadow-overlay);
+  outline: var(--control-focus-outline-width) solid var(--color-border-brand);
   outline-offset: -2px;
   transition: none;
 }
@@ -550,7 +601,8 @@
 }
 
 html[data-motion='reduced'] {
-  :where([class*='ui-'], [class*='ui-'] *) {
+  :where([class*='ui-'], [class*='ui-'] *),
+  .ui-choice-frame::after {
     animation: none !important;
     transition: none !important;
   }

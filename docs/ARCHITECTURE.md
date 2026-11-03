@@ -1,6 +1,6 @@
 # Architecture
 
-Portal is one npm application. There are no workspace packages, generated API SDK, controller adapters, or repositories.
+Portal is one npm application. There are no workspace packages, generated API SDK, controller layers, or repositories. Module-owned server adapters translate only the explicit contracts that differ from the browser facade.
 
 ```text
 src/app                   route composition, layouts, auth handlers, backend proxy
@@ -26,7 +26,11 @@ The browser calls Firebase only for opt-in Messaging. It never receives access/r
 
 Root layout passes only a public runtime configuration to `RuntimeProvider`. Protected layouts read the encrypted cookie and pass a token-free `AppSession` to `AppProviders`. They never write cookies. Query loading occurs through the browser proxy, which can safely refresh cookies in a Route Handler. `proxy.ts` provides navigation gating; API routes independently verify sessions.
 
-`container.ts` wires live Firebase REST auth or demo auth plus `SessionService`. `/api/backend/*` chooses live forwarding or demo state using the same server-only `DEMO_MODE` value. No client build flag selects mock behavior.
+`getContainer()` caches separate live/demo services and selects them from the effective request runtime. The HTTP-only developer preference cookie can override `DEMO_MODE` only on an allowed development/demo server; production live ignores it. Auth, session decoding, root runtime configuration, public article reads, and proxying use that same decision. Mode changes clear the previous session. No client build flag selects mock behavior.
+
+`portalModules.ts` is the project capability manifest. The shell composes role-aware destinations; route/module boundaries and `moduleAvailability` independently reject disabled capabilities. `featureBackendProxy` composes server adapters with a refresh-aware, credential-owning forwarder. `demoModuleHandlers` composes equivalent demo operations; `DemoApiClient` applies request simulation once. New modules register global and per-account reset callbacks with `demoResetRegistry`. No live failure falls back to fixtures.
+
+Public publishing uses its server-only published reader and a small optional account-actions boundary. It never mounts the protected authentication/realtime shell or refreshes anonymous sessions. Staff public-image uploads and generic engagement are independent capabilities; engagement target resolvers may register more public content types without changing ownership rules. See [publishing](BLOG.md), [backend contracts](BACKEND_CONTRACT.md), and [demo mode](DEMO_MODE.md).
 
 ## State ownership
 
@@ -37,4 +41,4 @@ Root layout passes only a public runtime configuration to `RuntimeProvider`. Pro
 - Local storage: appearance and motion, consent choice, per-user push opt-in and FCM registration identifier. Never auth tokens.
 - Server process: demo records and demo credentials. Live data lives on the backend.
 
-The custom UI system in `src/components/ui` includes the reusable LeafLaunch foundation. Theme CSS is canonical; preference services are constructed in the client container, and shared providers own appearance/motion/navigation/assistant presentation. Components receive callbacks; server data stays in domain services and query hooks. See [UI system](UI_SYSTEM.md) and [migration decisions](MIGRATION.md).
+The custom UI system in `src/components/ui` includes the reusable LeafLaunch foundation. Typed theme objects in `src/themes` are canonical; a shared compiler feeds ThemeScript, the provider, semantic CSS registrations, and scoped previews. See [loadable themes](THEMING.md). Preference services are constructed in the client container, and shared providers own appearance/motion/navigation/assistant presentation. Components receive callbacks; server data stays in domain services and query hooks. See [UI system](UI_SYSTEM.md) and [migration decisions](MIGRATION.md).

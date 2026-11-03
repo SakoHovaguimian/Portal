@@ -43,7 +43,7 @@ export function Message({
     <div
       role={role ?? (intent === 'danger' ? 'alert' : 'status')}
       className={cn(
-        'ui-message flex min-w-0 items-start gap-3 rounded-lg border p-3',
+        'ui-message flex min-w-0 items-start gap-3 rounded-control border-control p-3',
         tones[intent],
         className,
       )}

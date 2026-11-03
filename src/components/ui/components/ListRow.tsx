@@ -21,7 +21,7 @@ export function ListGroup({
       ref={listRef as Ref<HTMLOListElement & HTMLUListElement>}
       aria-label={label}
       className={cn(
-        'ui-list-group m-0 grid min-w-0 list-none divide-y divide-secondary overflow-hidden rounded-xl border border-secondary bg-primary p-0',
+        'ui-list-group m-0 grid min-w-0 list-none divide-y-control divide-secondary overflow-hidden rounded-card border-control border-secondary bg-primary p-0',
         className,
       )}
     >

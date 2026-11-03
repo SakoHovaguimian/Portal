@@ -45,18 +45,6 @@ export function MobileNavigationMenu(props: AppSidebarProps) {
                 ?.focus({ preventScroll: true });
             }
           }}
-          onClickCapture={(event) => {
-            if (
-              event.button === 0 &&
-              !event.metaKey &&
-              !event.ctrlKey &&
-              !event.shiftKey &&
-              !event.altKey &&
-              event.target instanceof Element &&
-              event.target.closest('a[href]')
-            )
-              setOpen(false);
-          }}
         >
           <Dialog.Title className="sr-only">{copy.navigation}</Dialog.Title>
           <AppSidebarContent

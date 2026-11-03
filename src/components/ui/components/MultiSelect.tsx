@@ -24,24 +24,42 @@ export function MultiSelect<Value extends string>({
   className,
   disabled,
   selectAllLabel,
+  maxSelections,
   id,
   ref,
   'aria-labelledby': labelledBy,
   'aria-describedby': describedBy,
   'aria-invalid': invalid,
 }: MultiSelectProps<Value>) {
+  const limit =
+    maxSelections === undefined || !Number.isFinite(maxSelections)
+      ? undefined
+      : Math.max(0, Math.floor(maxSelections));
   return (
     <AriaSelect
       selectionMode="multiple"
-      value={value}
-      onChange={(keys) =>
-        onValueChange(
-          options
-            .filter((option) => keys.includes(option.value))
-            .map((option) => option.value),
-        )
+      disabledKeys={
+        limit !== undefined && value.length >= limit
+          ? options
+              .filter((option) => !value.includes(option.value))
+              .map((option) => option.value)
+          : []
       }
-      aria-label={label}
+      value={value}
+      onChange={(keys) => {
+        const next = options
+          .filter((option) => keys.includes(option.value))
+          .map((option) => option.value);
+        // Keep existing over-limit data removable while refusing new additions.
+        if (
+          limit !== undefined &&
+          next.length > limit &&
+          next.length >= value.length
+        )
+          return;
+        onValueChange(next);
+      }}
+      aria-label={labelledBy ? undefined : label}
       aria-labelledby={labelledBy}
       aria-describedby={describedBy}
       isInvalid={invalid === true || invalid === 'true'}
@@ -55,7 +73,7 @@ export function MultiSelect<Value extends string>({
         aria-labelledby={labelledBy}
         aria-describedby={describedBy}
         aria-invalid={invalid}
-        className="ui-select-trigger ui-input flex min-h-12 w-full min-w-0 cursor-pointer items-center gap-3 rounded-lg border border-control-border bg-primary px-4 py-2.5 text-left text-sm text-primary outline-none focus-visible:ring-4 focus-visible:ring-brand/12 disabled:cursor-not-allowed disabled:bg-disabled_subtle disabled:text-disabled"
+        className="ui-select-trigger ui-input shadow-(--shadow-control) flex min-h-(--control-height-lg) w-full min-w-0 cursor-pointer items-center gap-3 rounded-control border-control border-control-border bg-primary px-4 py-2.5 text-left text-sm text-primary outline-none focus-visible:ring-4 focus-visible:ring-brand/12 disabled:cursor-not-allowed disabled:bg-disabled_subtle disabled:text-disabled"
       >
         <SelectValue className="min-w-0 flex-1 wrap-anywhere">
           {() =>
@@ -63,7 +81,14 @@ export function MultiSelect<Value extends string>({
               ? placeholder
               : value.length === 1
                 ? options.find((option) => option.value === value[0])?.label
-                : selectionLabel(value.length)
+                : selectionLabel(
+                    value.length,
+                    value.map(
+                      (selected) =>
+                        options.find((option) => option.value === selected)
+                          ?.label ?? selected,
+                    ),
+                  )
           }
         </SelectValue>
         <UiIcon
@@ -73,7 +98,7 @@ export function MultiSelect<Value extends string>({
       </AriaButton>
       <Popover
         offset={6}
-        className="ui-popover ui-select-popover z-100 flex w-(--trigger-width) max-w-[calc(100vw-1.5rem)] flex-col overflow-hidden rounded-lg border border-brand bg-primary p-1 shadow-(--dashboard-shell-shadow-lg)"
+        className="ui-popover ui-select-popover z-100 flex w-(--trigger-width) max-w-[calc(100vw-1.5rem)] flex-col overflow-hidden rounded-overlay border-control border-brand bg-primary p-1 shadow-(--shadow-overlay)"
       >
         <ListBox
           items={options}
@@ -83,7 +108,7 @@ export function MultiSelect<Value extends string>({
             <ListBoxItem
               id={option.value}
               textValue={option.label}
-              className="ui-select-option flex min-h-11 cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-sm text-secondary outline-none data-focused:bg-secondary_subtle selected:bg-brand-primary selected:text-brand-secondary data-focus-visible:outline-2 data-focus-visible:-outline-offset-2 data-focus-visible:outline-brand"
+              className="ui-select-option flex min-h-(--control-height-md) cursor-pointer items-center gap-3 rounded-control px-3 py-2 text-sm text-secondary outline-none data-focused:bg-secondary_subtle selected:bg-brand-primary selected:text-brand-secondary data-focus-visible:outline-2 data-focus-visible:-outline-offset-2 data-focus-visible:outline-brand data-disabled:cursor-not-allowed data-disabled:text-disabled"
             >
               {({ isSelected }) => (
                 <>
@@ -102,12 +127,16 @@ export function MultiSelect<Value extends string>({
             </ListBoxItem>
           )}
         </ListBox>
-        <div className="mt-1 grid gap-1 border-t border-secondary p-1">
+        <div className="mt-1 grid gap-1 border-t-control border-secondary p-1">
           {selectAllLabel && (
             <Button
               variant="ghost"
               className="w-full"
-              disabled={!options.length || value.length === options.length}
+              disabled={
+                !options.length ||
+                value.length === options.length ||
+                (limit !== undefined && options.length > limit)
+              }
               onClick={() =>
                 onValueChange(options.map((option) => option.value))
               }

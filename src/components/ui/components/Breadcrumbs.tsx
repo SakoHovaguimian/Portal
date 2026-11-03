@@ -1,30 +1,9 @@
 'use client';
 
-import type { MouseEvent } from 'react';
 import { strings } from '@/strings';
 import type { BreadcrumbItem } from '../models/breadcrumbItem';
+import { NavigationLink } from './NavigationLink';
 import { UiIcon } from './UiIcon';
-
-// Plain primary clicks hand the destination to the caller's guarded router;
-// modified clicks keep native link behavior.
-function guardedClick(
-  event: MouseEvent<HTMLAnchorElement>,
-  href: string,
-  onNavigate?: (href: string) => void,
-) {
-  if (
-    !onNavigate ||
-    event.defaultPrevented ||
-    event.button !== 0 ||
-    event.metaKey ||
-    event.ctrlKey ||
-    event.shiftKey ||
-    event.altKey
-  )
-    return;
-  event.preventDefault();
-  onNavigate(href);
-}
 
 interface BreadcrumbsProps {
   items: BreadcrumbItem[];
@@ -49,15 +28,13 @@ export function Breadcrumbs({ items, onNavigate }: BreadcrumbsProps) {
                 />
               )}
               {item.href && !current ? (
-                <a
+                <NavigationLink
                   href={item.href}
-                  onClick={(event) =>
-                    guardedClick(event, item.href!, onNavigate)
-                  }
-                  className="ui-breadcrumb-link max-w-72 truncate rounded-md px-1 py-0.5 font-medium text-tertiary hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-brand"
+                  navigate={onNavigate}
+                  className="ui-breadcrumb-link max-w-72 truncate rounded-control px-1 py-0.5 font-medium text-tertiary hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-brand"
                 >
                   {item.label}
-                </a>
+                </NavigationLink>
               ) : (
                 <span
                   aria-current={current ? 'page' : undefined}

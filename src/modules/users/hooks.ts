@@ -10,12 +10,15 @@ export function useUsers(query = '') {
   const container = useServiceContainer();
   return useQuery({
     queryKey: queryKeys.users.list(query).queryKey,
-    queryFn: () =>
-      container.userService.listUsers({
-        query,
-        limit: 25,
-        offset: 0,
-      }),
+    queryFn: ({ signal }) =>
+      container.userService.listUsers(
+        {
+          query,
+          limit: 25,
+          offset: 0,
+        },
+        signal,
+      ),
     staleTime: staleTimes.users,
   });
 }
@@ -24,7 +27,8 @@ export function useUser(userId: string) {
   const container = useServiceContainer();
   return useQuery({
     queryKey: queryKeys.users.detail(userId).queryKey,
-    queryFn: () => container.userService.getUserById(userId),
+    queryFn: ({ signal }) => container.userService.getUserById(userId, signal),
+    enabled: Boolean(userId),
     staleTime: staleTimes.users,
   });
 }

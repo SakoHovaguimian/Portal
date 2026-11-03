@@ -1,5 +1,6 @@
 import 'server-only';
-import { container } from '@/container';
+import { getContainer } from '@/container';
+import { mapUserRoleTransport } from './mapUserRoleTransport';
 import { environment } from '@/config/environment';
 import { getDemoState } from '@/services/demo/demoState';
 import { mapUserTransportToDomain } from '@/services/api/domainMappers';
@@ -9,14 +10,21 @@ import type { SessionUser } from '@/models/sessionUser';
 import { AuthError } from '@/errors/domainErrors';
 export async function getProfileSession(
   auth: FirebaseAuthSession,
+  demoMode = environment.demoMode,
 ): Promise<SessionUser> {
-  const transport = environment.demoMode
+  const transport = demoMode
     ? getDemoState().users.find((user) => user.external_id === auth.externalId)
-    : await container.apiClient.request<UserTransport>(
-        '/users/profile',
-        auth.idToken,
-      );
-  if (!transport) throw new AuthError();
+    : await (
+        await getContainer()
+      ).apiClient.request<
+        UserTransport & { role?: unknown; disabled?: boolean }
+      >('/users/profile', auth.idToken);
+  if (
+    !transport ||
+    transport.deleted ||
+    ('disabled' in transport && transport.disabled)
+  )
+    throw new AuthError();
   const user = mapUserTransportToDomain(transport);
   return {
     id: user.id,
@@ -24,6 +32,8 @@ export async function getProfileSession(
     email: user.email,
     firstName: user.firstName,
     lastName: user.lastName,
-    role: 'user',
+    role: mapUserRoleTransport(
+      'role' in transport ? transport.role : undefined,
+    ),
   };
 }

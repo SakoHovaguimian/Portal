@@ -14,15 +14,21 @@
 }
 
 .ui-assistant-content {
-  padding-bottom: max(1.5rem, calc(env(safe-area-inset-bottom) + 1rem));
+  padding-bottom: max(
+    calc(var(--spacing) * 6),
+    calc(env(safe-area-inset-bottom) + calc(var(--spacing) * 4))
+  );
 }
 
 .ui-assistant-image-actions {
-  padding-bottom: max(1.25rem, calc(env(safe-area-inset-bottom) + 1rem));
+  padding-bottom: max(
+    calc(var(--spacing) * 5),
+    calc(env(safe-area-inset-bottom) + calc(var(--spacing) * 4))
+  );
 }
 
 body:has(.ui-floating-assistant) .ui-page {
-  padding-bottom: 5rem;
+  padding-bottom: calc(var(--spacing) * 20);
 }
 
 /* Keep the pinned desktop navigation outside the document's elastic scroll. */

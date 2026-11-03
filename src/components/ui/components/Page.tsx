@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { cn } from '../lib/cn';
 
-// Owns the page rhythm: PageHeader, then 32px to the first content block.
+// Owns the page rhythm through the active theme section spacing.
 export function Page({
   children,
   className,
@@ -15,7 +15,7 @@ export function Page({
     <div
       aria-busy={busy}
       className={cn(
-        'ui-page grid w-full min-w-0 content-start gap-8',
+        'ui-page grid w-full min-w-0 content-start gap-(--space-section)',
         className,
       )}
     >

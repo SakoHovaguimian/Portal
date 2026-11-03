@@ -68,7 +68,7 @@ export function Stepper<Key extends string>({
                   step.description ? `${id}-${index}-description` : undefined
                 }
                 onClick={() => onSelect(step.key)}
-                className="ui-step h-full min-h-11 w-full min-w-0 gap-3 rounded-lg text-left hover:bg-transparent disabled:cursor-not-allowed disabled:bg-transparent"
+                className="ui-step h-full min-h-(--control-height-md) w-full min-w-0 gap-3 rounded-control text-left hover:bg-transparent disabled:cursor-not-allowed disabled:bg-transparent"
               >
                 <span
                   aria-hidden="true"
@@ -83,9 +83,9 @@ export function Stepper<Key extends string>({
                       aria-hidden="true"
                       data-complete={step.state === 'complete'}
                       className={cn(
-                        'ui-step-marker grid shrink-0 place-items-center rounded-full border text-xs font-semibold',
+                        'ui-step-marker grid shrink-0 place-items-center rounded-full border-control text-xs font-semibold',
                         step.state === 'current'
-                          ? 'border-brand bg-brand-solid text-(--color-text-primary_on-brand)'
+                          ? 'border-brand bg-brand-solid text-text-primary_on-brand'
                           : step.state === 'complete'
                             ? 'border-brand bg-brand-primary text-brand-secondary'
                             : 'border-secondary bg-primary text-tertiary',

@@ -26,7 +26,7 @@ export function AuthCardShell({
   return (
     <Card className="auth-card-enter overflow-hidden p-0 shadow-(--dashboard-shell-shadow-lg)">
       <div className="border-b border-secondary bg-secondary_subtle px-6 py-6 sm:px-8">
-        <div className="auth-reveal mb-4 inline-flex rounded-full border border-brand/40 bg-brand-primary px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-brand-secondary">
+        <div className="auth-reveal mb-4 inline-flex rounded-full border-control border-brand/40 bg-brand-primary px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-brand-secondary">
           {badge}
         </div>
         <h1 className="auth-reveal auth-reveal-delay-1 font-display text-3xl font-semibold tracking-tight text-primary">
@@ -36,7 +36,7 @@ export function AuthCardShell({
           {description}
         </p>
         {mockHint ? (
-          <div className="auth-reveal auth-reveal-delay-3 mt-4 rounded-2xl border border-secondary bg-primary/90 px-4 py-3 text-sm text-secondary">
+          <div className="auth-reveal auth-reveal-delay-3 mt-4 rounded-2xl border-control border-secondary bg-primary/90 px-4 py-3 text-sm text-secondary">
             {mockHint}
           </div>
         ) : null}

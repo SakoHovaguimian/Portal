@@ -1,9 +1,10 @@
 'use client';
 import { strings } from '@/strings';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   Button,
   Card,
+  DatePicker,
   Field,
   Input,
   QueryBoundary,
@@ -13,15 +14,37 @@ import {
 } from '@/components/ui';
 import type { User } from '@/models';
 import { useSessionState } from '@/providers/AppProviders';
+import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
 import { usePresentationService } from '@/presentation/PresentationProvider';
+import {
+  ProfileDraftSchema,
+  type ProfileDraft,
+  type ProfileDraftErrors,
+} from './models/profileDraft';
 import { useUpdateCurrentUser, useUser } from './hooks';
+function profileDraftFromUser(user: User): ProfileDraft {
+  return {
+    firstName: user.firstName,
+    lastName: user.lastName,
+    phoneNumber: user.phoneNumber ?? '',
+    dateOfBirth: user.dateOfBirth?.slice(0, 10) ?? '',
+  };
+}
+function equalDraft(a: ProfileDraft, b: ProfileDraft) {
+  return (
+    a.firstName === b.firstName &&
+    a.lastName === b.lastName &&
+    a.phoneNumber === b.phoneNumber &&
+    a.dateOfBirth === b.dateOfBirth
+  );
+}
 export function ProfileScreen() {
   const { session } = useSessionState();
-  const query = useUser(session?.user.id || '');
+  const query = useUser(session?.user.id ?? '');
   return (
     <Page>
       <PageHeader title={strings.ui.profileScreen.yourProfile} />
-      <QueryBoundary query={query}>
+      <QueryBoundary query={query} retainDataOnError>
         {(user) => <ProfileForm key={user.id} user={user} />}
       </QueryBoundary>
     </Page>
@@ -30,54 +53,111 @@ export function ProfileScreen() {
 function ProfileForm({ user }: { user: User }) {
   const presentation = usePresentationService();
   const mutation = useUpdateCurrentUser(user.id);
-  const [firstName, setFirstName] = useState(user.firstName);
-  const [lastName, setLastName] = useState(user.lastName);
-  const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber || '');
-  const [dateOfBirth, setDateOfBirth] = useState(
-    user.dateOfBirth?.slice(0, 10) || '',
-  );
+  const [draft, setDraft] = useState<ProfileDraft | null>(null);
+  const [errors, setErrors] = useState<ProfileDraftErrors>({});
+  const baseline = useRef<ProfileDraft | null>(null);
+  const dirtyRef = useRef(false);
+  const busyRef = useRef(false);
+  const formRef = useRef<HTMLFormElement>(null);
+  useUnsavedFormGuard(dirtyRef, busyRef);
+  const current = draft ?? profileDraftFromUser(user);
+  const error =
+    Object.values(errors).find(Boolean) ??
+    (mutation.isError ? mutation.error.message : undefined);
+  function change<K extends keyof ProfileDraft>(
+    key: K,
+    value: ProfileDraft[K],
+  ) {
+    if (busyRef.current) return;
+    if (draft === null) baseline.current = profileDraftFromUser(user);
+    const next = { ...current, [key]: value };
+    dirtyRef.current = !equalDraft(
+      next,
+      baseline.current ?? profileDraftFromUser(user),
+    );
+    setDraft(dirtyRef.current ? next : null);
+    setErrors((previous) => ({ ...previous, [key]: undefined }));
+  }
+  function submit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (busyRef.current) return;
+    const parsed = ProfileDraftSchema.safeParse(current);
+    if (!parsed.success) {
+      const next: ProfileDraftErrors = {};
+      for (const issue of parsed.error.issues) {
+        const key = issue.path[0] as keyof ProfileDraft;
+        if (!next[key]) next[key] = issue.message;
+      }
+      setErrors(next);
+      const key = String(parsed.error.issues[0]?.path[0]);
+      formRef.current
+        ?.querySelector<HTMLElement>(
+          key === 'dateOfBirth'
+            ? '[data-field-name="dateOfBirth"] [role="spinbutton"]'
+            : `input[name="${key}"]`,
+        )
+        ?.focus();
+      return;
+    }
+    setErrors({});
+    busyRef.current = true;
+    mutation.mutate(
+      {
+        ...parsed.data,
+        email: user.email,
+        phoneNumber: parsed.data.phoneNumber || null,
+        dateOfBirth: parsed.data.dateOfBirth
+          ? `${parsed.data.dateOfBirth}T00:00:00.000Z`
+          : null,
+      },
+      {
+        onSuccess: () => {
+          dirtyRef.current = false;
+          busyRef.current = false;
+          baseline.current = null;
+          setDraft(null);
+          setErrors({});
+          void presentation.showToast({
+            title: strings.ui.profileScreen.profileUpdated,
+            intent: 'success',
+          });
+        },
+        onSettled: () => {
+          busyRef.current = false;
+        },
+      },
+    );
+  }
   return (
     <Card className="grid gap-5">
-      <form
-        noValidate
-        className="grid gap-4"
-        onSubmit={(event) => {
-          event.preventDefault();
-          if (mutation.isPending) return;
-          mutation.mutate(
-            {
-              firstName,
-              lastName,
-              email: user.email,
-              phoneNumber: phoneNumber || null,
-              dateOfBirth: dateOfBirth
-                ? new Date(`${dateOfBirth}T00:00:00.000Z`).toISOString()
-                : null,
-            },
-            {
-              onSuccess: () => {
-                void presentation.showToast({
-                  title: strings.ui.profileScreen.profileUpdated,
-                  intent: 'success',
-                });
-              },
-            },
-          );
-        }}
-      >
+      <form ref={formRef} noValidate className="grid gap-4" onSubmit={submit}>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field labelText={strings.ui.profileScreen.firstName}>
             <Input
-              value={firstName}
+              name="firstName"
+              value={current.firstName}
+              maxLength={80}
               autoComplete="given-name"
-              onChange={(event) => setFirstName(event.target.value)}
+              disabled={mutation.isPending}
+              aria-invalid={Boolean(errors.firstName)}
+              aria-describedby={
+                errors.firstName ? 'profile-edit-error' : undefined
+              }
+              onChange={(event) => change('firstName', event.target.value)}
             />
           </Field>
           <Field labelText={strings.ui.profileScreen.lastName}>
             <Input
-              value={lastName}
+              name="lastName"
+              value={current.lastName}
+              maxLength={80}
               autoComplete="family-name"
-              onChange={(event) => setLastName(event.target.value)}
+              disabled={mutation.isPending}
+              aria-invalid={Boolean(errors.lastName)}
+              aria-describedby={
+                errors.lastName ? 'profile-edit-error' : undefined
+              }
+              onChange={(event) => change('lastName', event.target.value)}
             />
           </Field>
         </div>
@@ -91,31 +171,41 @@ function ProfileForm({ user }: { user: User }) {
         </Field>
         <Field labelText={strings.ui.profileScreen.phoneNumber}>
           <Input
+            name="phoneNumber"
             type="tel"
-            value={phoneNumber}
+            value={current.phoneNumber}
             autoComplete="tel"
-            onChange={(event) => setPhoneNumber(event.target.value)}
+            disabled={mutation.isPending}
+            aria-invalid={Boolean(errors.phoneNumber)}
+            aria-describedby={
+              errors.phoneNumber ? 'profile-edit-error' : undefined
+            }
+            onChange={(event) => change('phoneNumber', event.target.value)}
           />
         </Field>
-        <Field labelText={strings.ui.profileScreen.dateOfBirth}>
-          <Input
-            type="date"
-            value={dateOfBirth}
-            onChange={(event) => setDateOfBirth(event.target.value)}
-          />
-        </Field>
-        {mutation.isError && (
-          <p role="alert" className="text-sm text-error-primary">
-            {mutation.error.message}
+        <DatePicker
+          label={strings.ui.profileScreen.dateOfBirth}
+          name="dateOfBirth"
+          value={current.dateOfBirth}
+          disabled={mutation.isPending}
+          invalid={Boolean(errors.dateOfBirth)}
+          describedBy={errors.dateOfBirth ? 'profile-edit-error' : undefined}
+          onValueChange={(value) => change('dateOfBirth', value)}
+        />
+        {error && (
+          <p
+            id="profile-edit-error"
+            role="alert"
+            className="text-sm text-error-primary"
+          >
+            {error}
           </p>
         )}
         <FormActions variant="plain">
           <Button
             loading={mutation.isPending}
             type="submit"
-            disabled={
-              !firstName.trim() || !lastName.trim() || mutation.isPending
-            }
+            disabled={mutation.isPending || draft === null}
           >
             {strings.ui.profileScreen.saveProfile}
           </Button>

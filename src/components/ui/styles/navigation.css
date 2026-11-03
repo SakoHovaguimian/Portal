@@ -2,7 +2,6 @@
   isolation: isolate;
   border-radius: var(--dashboard-sidebar-item-radius);
   background: var(--color-transparent);
-  --motion-button-press-scale: 0.99;
 }
 
 .ui-sidebar-link::before {
@@ -10,7 +9,7 @@
   position: absolute;
   inset: 0;
   z-index: 0;
-  border: var(--control-selected-border-width) solid
+  border: var(--control-selected-border-width) var(--border-style-control)
     var(--dashboard-sidebar-item-border);
   border-radius: inherit;
   background: var(--dashboard-sidebar-item-background);

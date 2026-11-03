@@ -5,6 +5,7 @@ import {
   Button,
   Page,
   PageHeader,
+  PageSection,
   SplitSection,
   UiIcon,
 } from '@/components/ui';
@@ -18,7 +19,7 @@ export function AppearanceScreen() {
     <Page>
       <PageHeader
         title={strings.ui.appearanceScreen.appearance}
-        description={strings.designSystem.themeHint}
+        description={strings.designSystem.themeStudio.description}
         action={
           <Button asChild variant="secondary">
             <Link href="/dev-settings/components">
@@ -28,13 +29,13 @@ export function AppearanceScreen() {
           </Button>
         }
       />
-      <SplitSection
+      <PageSection
         id="theme"
-        title={strings.designSystem.theme}
+        title={strings.designSystem.themeStudio.title}
         description={strings.designSystem.themeHint}
       >
         <ThemeControls />
-      </SplitSection>
+      </PageSection>
       <SplitSection
         id="notifications"
         title={strings.notifications.title}

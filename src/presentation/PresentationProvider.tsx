@@ -44,18 +44,15 @@ type OverlayQueueConfig =
 
 type PresentationMotionConfig = {
   enabled: boolean;
-  toastDurationMs: number;
-  alertDurationMs: number;
-  sheetDurationMs: number;
+  toastDurationMs?: number;
+  alertDurationMs?: number;
+  sheetDurationMs?: number;
 };
 
 type MotionTarget = 'toast' | 'alert' | 'sheet';
 
 const defaultMotion: PresentationMotionConfig = {
   enabled: true,
-  toastDurationMs: 220,
-  alertDurationMs: 240,
-  sheetDurationMs: 260,
 };
 
 type PresentationService = {
@@ -81,6 +78,7 @@ export function PresentationProvider({ children }: { children: ReactNode }) {
     null,
   );
   const resolvedOverlayId = useRef<string | null>(null);
+  const alertReturnFocusRef = useRef<HTMLElement | null>(null);
   const [motionConfig, setMotionConfig] =
     useState<PresentationMotionConfig>(defaultMotion);
   const queueRef = useRef<OverlayQueueItem[]>([]);
@@ -302,6 +300,8 @@ export function PresentationProvider({ children }: { children: ReactNode }) {
       {children}
       <ToastStack toasts={toasts} onDismiss={dismissToast} />
       <AlertModal
+        key={alert?.id}
+        restoreFocusRef={alertReturnFocusRef}
         open={activeOverlay?.kind === 'alert'}
         title={alert?.title ?? ''}
         description={alert?.description ?? ''}
