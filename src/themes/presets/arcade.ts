@@ -38,7 +38,7 @@ export const arcadeTheme = {
   },
   palette: {
     light: {
-      accent: '#c2127a',
+      accent: '#b0106c',
       accentBright: '#ff6eb4',
       onAccent: '#ffffff',
       success: '#11783a',

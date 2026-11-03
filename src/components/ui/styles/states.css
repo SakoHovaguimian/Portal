@@ -77,9 +77,15 @@
   background-color: color-mix(in srgb, var(--color-accent) 18%, transparent);
   color: var(--color-accent);
 }
+/* Hover strengthens the stroke rather than the fill, so the label keeps AA contrast. */
 @media (hover: hover) and (pointer: fine) {
   .ui-engagement-toggle[aria-pressed='true']:hover:not(:disabled) {
-    background-color: color-mix(in srgb, var(--color-accent) 24%, transparent);
+    --tw-ring-color: color-mix(
+      in srgb,
+      var(--color-accent) 60%,
+      var(--color-border-secondary)
+    );
+    background-color: color-mix(in srgb, var(--color-accent) 18%, transparent);
     color: var(--color-accent);
   }
 }
