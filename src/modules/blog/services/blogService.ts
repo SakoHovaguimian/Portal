@@ -1,14 +1,14 @@
-import { portalPublishingStrings } from '@/strings';
-import { uploadPublicImage } from '@/services/media/uploadPublicImage';
-import type { ApiClientInterface } from '@/services/api/apiClientInterface';
-import { validateInput } from '@/utils/validateInput';
 import { ApiError, NotFoundError } from '@/errors/domainErrors';
+import type { ApiClientInterface } from '@/services/api/apiClientInterface';
+import { uploadPublicImage } from '@/services/media/uploadPublicImage';
+import { portalPublishingStrings } from '@/strings';
+import { validateInput } from '@/utils/validateInput';
+
 import {
   BlogArticleSchema,
   BlogMutationInputSchema,
   type BlogMutationInput,
 } from '../models/blogArticle';
-import { BlogRevisionInputSchema } from '../models/blogRevisionInput';
 import { BlogOptionsSchema } from '../models/blogOptions';
 import { BlogPageSchema } from '../models/blogPage';
 import {
@@ -16,6 +16,7 @@ import {
   blogQueryParams,
   type BlogQuery,
 } from '../models/blogQuery';
+import { BlogRevisionInputSchema } from '../models/blogRevisionInput';
 
 const copy = portalPublishingStrings.article;
 

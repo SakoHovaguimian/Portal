@@ -1,16 +1,17 @@
-import { z } from 'zod';
-import type { ApiClientInterface } from '@/services/api/apiClientInterface';
+import { AppSessionSchema } from '@/models/appSession';
 import {
   DemoSettingsSchema,
   DemoSettingsInputSchema,
   type DemoSettingsInput,
 } from '@/models/demoSettings';
-import { AppSessionSchema } from '@/models/appSession';
 import { UserRoleSchema, type UserRole } from '@/models/userRole';
+import type { ApiClientInterface } from '@/services/api/apiClientInterface';
 import {
   DemoPresetSchema,
   type DemoPreset,
 } from '@/services/demo/models/demoPreset';
+
+import { DevSettingsUpdateResultSchema } from '../models/devSettingsUpdateResult';
 
 export class DevSettingsService {
 
@@ -30,7 +31,7 @@ export class DevSettingsService {
 
   async update(input: DemoSettingsInput) {
 
-    return z.object({ reload: z.boolean() }).parse(
+    return DevSettingsUpdateResultSchema.parse(
       await this.api.request('/', {
         method: 'PUT',
         body: DemoSettingsInputSchema.parse(input),

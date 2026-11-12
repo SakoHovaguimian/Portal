@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { LegalItemSchema } from './legalItem';
 
 export { LegalContextSchema } from './legalContext';

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+
 import type { Column } from './tableColumn';
 import type { TableSelection } from './tableSelection';
 

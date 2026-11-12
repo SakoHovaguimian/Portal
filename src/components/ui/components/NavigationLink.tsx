@@ -1,9 +1,10 @@
 'use client';
 
-import type { NavigationLinkProps } from '../models/navigationLinkProps';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import type { Route } from 'next';
+
+import type { NavigationLinkProps } from '../models/navigationLinkProps';
 import { useNavigationGuard } from '@/providers/NavigationGuardProvider';
 
 export function NavigationLink({

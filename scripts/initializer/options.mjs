@@ -1,5 +1,5 @@
-import { createModules, defaultConfiguration, moduleIds, navigationModules, profiles, themeIds, visibleNavigation } from './configuration.mjs';
 import { formatInitializerCopy } from './catalog.mjs';
+import { createModules, defaultConfiguration, moduleIds, navigationModules, profiles, themeIds, visibleNavigation } from './configuration.mjs';
 
 const booleanOptions = new Set(['help', 'yes', 'non-interactive', 'force', 'dry-run', 'preview']);
 const valueOptions = new Set(['profile', 'name', 'slug', 'description', 'theme', 'mode', 'modules', 'navigation', 'starter-data', 'environment', 'api-url', 'app-origin', 'firebase-api-key', 'logo', 'icon']);

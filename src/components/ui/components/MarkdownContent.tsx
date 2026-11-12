@@ -1,10 +1,12 @@
 'use client';
 
-import type { MarkdownContentProps } from '../models/markdownContentProps';
 import { useId } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+
+import type { MarkdownContentProps } from '../models/markdownContentProps';
 import { strings } from '@/strings';
+
 import styles from './MarkdownContent.module.css';
 
 // Share rendering between previews and saved legal readers. Never fetch embeds.

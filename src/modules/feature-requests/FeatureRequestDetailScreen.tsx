@@ -1,29 +1,31 @@
 'use client';
 
-import { strings } from '@/strings';
 import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { usePresentationService } from '@/presentation/PresentationProvider';
-import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
+
 import { Button, Card, Field, Input, QueryBoundary } from '@/components/ui';
 import { FeatureRequestMutationInputSchema } from '@/models/featureRequest';
-import type { FeatureRequestDetailScreenProps } from './models/featureRequestDetailScreenProps';
-import type { FeatureRequestFormProps } from './models/featureRequestFormProps';
+import { usePresentationService } from '@/presentation/PresentationProvider';
+import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
+import { strings } from '@/strings';
+
 import {
   useDeleteFeatureRequest,
   useFeatureRequest,
   useUpdateFeatureRequest,
 } from './hooks';
+import type { FeatureRequestDetailScreenProps } from './models/featureRequestDetailScreenProps';
+import type { FeatureRequestFormProps } from './models/featureRequestFormProps';
 
 export function FeatureRequestDetailScreen({
   featureRequestId,
 }: FeatureRequestDetailScreenProps) {
 
-  const query = useFeatureRequest(featureRequestId);
+  const featureRequestQuery = useFeatureRequest(featureRequestId);
 
   return (
     <QueryBoundary
-      query={query}
+      query={featureRequestQuery}
       retainDataOnError
       loadingFallback={
         <Card>
@@ -56,26 +58,30 @@ function FeatureRequestForm({ request }: FeatureRequestFormProps) {
   const busy =
     confirmingDelete || updateMutation.isPending || deleteMutation.isPending;
 
-  function change(value: string) {
+  function handleMessageChange(value: string) {
 
     if (busyRef.current) {
       return;
     }
+
     if (draft === null) {
       baseline.current = request.message;
     }
+
     dirtyRef.current = value !== baseline.current;
     setDraft(dirtyRef.current ? value : null);
     setValidation(null);
 
   }
 
-  function save(event: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 
     event.preventDefault();
+
     if (busyRef.current) {
       return;
     }
+
     const parsed = FeatureRequestMutationInputSchema.safeParse({ message });
     if (!parsed.success) {
 
@@ -84,6 +90,7 @@ function FeatureRequestForm({ request }: FeatureRequestFormProps) {
       return;
 
     }
+
     busyRef.current = true;
     setValidation(null);
     updateMutation.mutate(parsed.data, {
@@ -105,14 +112,16 @@ function FeatureRequestForm({ request }: FeatureRequestFormProps) {
 
   }
 
-  async function remove() {
+  async function handleDeleteRequest() {
 
     if (busyRef.current || confirmingRef.current) {
       return;
     }
+
     confirmingRef.current = true;
     busyRef.current = true;
     setConfirmingDelete(true);
+
     try {
 
       const confirmed = await presentation.showAlert({
@@ -124,9 +133,11 @@ function FeatureRequestForm({ request }: FeatureRequestFormProps) {
         cancelLabel: strings.ui.featureRequestDetailScreen.keepRequest,
         tone: 'danger',
       });
+
       if (!confirmed) {
         return;
       }
+
       await deleteMutation.mutateAsync();
       dirtyRef.current = false;
       busyRef.current = false;
@@ -168,7 +179,7 @@ function FeatureRequestForm({ request }: FeatureRequestFormProps) {
   function renderForm() {
 
     return (
-      <form noValidate onSubmit={save} className="grid gap-3">
+      <form noValidate onSubmit={handleSubmit} className="grid gap-3">
         <Field labelText={strings.ui.featureRequestDetailScreen.message}>
           <Input
             ref={inputRef}
@@ -177,7 +188,7 @@ function FeatureRequestForm({ request }: FeatureRequestFormProps) {
             disabled={busy}
             aria-invalid={Boolean(validation)}
             aria-describedby={error ? 'feature-detail-error' : undefined}
-            onChange={(event) => change(event.target.value)}
+            onChange={(event) => handleMessageChange(event.target.value)}
           />
         </Field>
         <div className="flex flex-wrap gap-3">
@@ -193,7 +204,7 @@ function FeatureRequestForm({ request }: FeatureRequestFormProps) {
             variant="destructive"
             disabled={busy}
             loading={deleteMutation.isPending}
-            onClick={() => void remove()}
+            onClick={() => void handleDeleteRequest()}
           >
             {strings.ui.featureRequestDetailScreen.deleteRequest}
           </Button>

@@ -1,13 +1,13 @@
 'use client';
 
-import type { AppSidebarContentProps } from '../models/appSidebarContentProps';
-import { strings } from '@/strings';
-import { NavigationLink } from '../components/NavigationLink';
+import { ProjectBrand } from '@/components/ProjectBrand';
 import { InitialsAvatar } from '../components/InitialsAvatar';
+import { NavigationLink } from '../components/NavigationLink';
 import { SidebarLinks } from '../components/SidebarLinks';
 import { cn } from '../lib/cn';
+import type { AppSidebarContentProps } from '../models/appSidebarContentProps';
 import { getDefaultProjectRoute } from '@/config/projectRoutes';
-import { ProjectBrand } from '@/components/ProjectBrand';
+import { strings } from '@/strings';
 
 export function AppSidebarContent({
   session,

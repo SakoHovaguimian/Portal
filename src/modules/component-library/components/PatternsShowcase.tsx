@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+
 import {
   Badge,
   Button,
@@ -19,10 +20,11 @@ import {
   UiIcon,
 } from '@/components/ui';
 import { strings } from '@/strings';
+
 import { ShowcaseSection } from './ShowcaseSection';
-import { stepKeys, type StepKey } from '../models/stepKey';
-import type { SpecimenProps } from '../models/specimenProps';
 import type { PatternListItem } from '../models/patternListItem';
+import type { SpecimenProps } from '../models/specimenProps';
+import { stepKeys, type StepKey } from '../models/stepKey';
 
 const copy = strings.componentLibrary;
 const rows = [
@@ -194,17 +196,17 @@ export function PatternsShowcase() {
       label: copy.sampleSteps[index],
       description: copy.sampleStepHints[index],
       state:
-                    index < current
-                      ? 'complete'
-                      : index === current
-                        ? 'current'
-                        : 'upcoming',
+        index < current
+          ? 'complete'
+          : index === current
+            ? 'current'
+            : 'upcoming',
       stateLabel:
-                    index < current
-                      ? strings.address.ready
-                      : index === current
-                        ? strings.address.current
-                        : strings.address.notSaved,
+        index < current
+          ? strings.address.ready
+          : index === current
+            ? strings.address.current
+            : strings.address.notSaved,
     }));
 
     const verticalSteps: StepperStep<StepKey>[] = stepKeys.map((key, index) => ({
@@ -212,17 +214,17 @@ export function PatternsShowcase() {
       label: copy.sampleSteps[index],
       description: copy.sampleStepHints[index],
       state:
-                    index < current
-                      ? 'complete'
-                      : index === current
-                        ? 'current'
-                        : 'upcoming',
+        index < current
+          ? 'complete'
+          : index === current
+            ? 'current'
+            : 'upcoming',
       stateLabel:
-                    index < current
-                      ? strings.address.ready
-                      : index === current
-                        ? strings.address.current
-                        : strings.address.notSaved,
+        index < current
+          ? strings.address.ready
+          : index === current
+            ? strings.address.current
+            : strings.address.notSaved,
     }));
 
     function renderStatusRow(item: PatternListItem) {

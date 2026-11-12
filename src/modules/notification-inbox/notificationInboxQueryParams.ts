@@ -11,15 +11,19 @@ export function notificationInboxQueryParams(
   query: Partial<NotificationInboxQuery>,
 ) {
 
-  const params = new URLSearchParams();
+  const parameters = new URLSearchParams();
   Object.entries(query).forEach(([key, value]) => {
 
-    if (value !== undefined && value !== '') { params.set(key, String(value)); }
+    if (value !== undefined && value !== '') { parameters.set(key, String(value)); }
 
   });
-  return params;
+  return parameters;
 
 }
+
+// **************************************
+// MARK: - GET NOTIFICATION INBOX FILTERS
+// **************************************
 
 export function notificationInboxFilters(
   query: NotificationInboxQuery,

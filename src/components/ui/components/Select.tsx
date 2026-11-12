@@ -8,9 +8,11 @@ import {
   Select as AriaSelect,
   SelectValue,
 } from 'react-aria-components';
+
 import { cn } from '../lib/cn';
 import { selectOptions } from '../lib/selectOptions';
 import type { SelectProps } from '../models/selectProps';
+
 import { UiIcon } from './UiIcon';
 
 export function Select({

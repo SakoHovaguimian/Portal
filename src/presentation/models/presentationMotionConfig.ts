@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { PresentationMotionEasingSchema } from './presentationMotionEasing';
 
 export const PresentationMotionConfigSchema = z.object({

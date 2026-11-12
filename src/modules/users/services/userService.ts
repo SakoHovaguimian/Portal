@@ -1,12 +1,12 @@
-import { validateInput } from '@/utils/validateInput';
-import type { ApiClientInterface } from '@/services/api/apiClientInterface';
-import { UserMutationInputSchema, type UserMutationInput } from '@/models/user';
 import type { UsersQuery, PaginatedResult } from '@/models/query';
-import type { UserTransport } from '@/services/api/models';
+import { UserMutationInputSchema, type UserMutationInput } from '@/models/user';
+import type { ApiClientInterface } from '@/services/api/apiClientInterface';
 import {
   mapUserMutationToTransport,
   mapUserTransportToDomain,
 } from '@/services/api/domainMappers';
+import type { UserTransport } from '@/services/api/models';
+import { validateInput } from '@/utils/validateInput';
 
 export class UserService {
 
@@ -37,11 +37,11 @@ export class UserService {
   // MARK: - GET USER BY ID
   // **************************************
 
-  async getUserById(id: string, signal?: AbortSignal) {
+  async getUserById(userId: string, signal?: AbortSignal) {
 
     return mapUserTransportToDomain(
       await this.api.request<UserTransport>(
-        `/users/${encodeURIComponent(id)}`,
+        `/users/${encodeURIComponent(userId)}`,
         { signal },
       ),
     );
@@ -52,11 +52,11 @@ export class UserService {
   // MARK: - UPDATE CURRENT USER
   // **************************************
 
-  async updateCurrentUser(id: string, input: UserMutationInput) {
+  async updateCurrentUser(userId: string, input: UserMutationInput) {
 
     return mapUserTransportToDomain(
       await this.api.request<UserTransport>(
-        `/users/${encodeURIComponent(id)}`,
+        `/users/${encodeURIComponent(userId)}`,
         {
           method: 'PUT',
           body: mapUserMutationToTransport(

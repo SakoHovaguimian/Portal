@@ -1,7 +1,7 @@
 import 'server-only';
+import { portalModules } from '@/config/portalModules';
 import type { RuntimeConfig } from '@/models/runtimeConfig';
 import { strings } from '@/strings';
-import { portalModules } from '@/config/portalModules';
 
 function required(name: string): string {
 

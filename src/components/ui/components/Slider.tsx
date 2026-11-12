@@ -1,6 +1,7 @@
 'use client';
 
 import type { SliderProps } from '../models/sliderProps';
+
 import { SliderControl } from './SliderControl';
 
 export function Slider({

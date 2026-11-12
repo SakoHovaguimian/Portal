@@ -1,14 +1,16 @@
 'use client';
 
-import type { SheetTone } from '../models/sheetTone';
-import type { SheetSide } from '../models/sheetSide';
-import type { SheetSize } from '../models/sheetSize';
-import type { SheetPanelProps } from '../models/sheetPanelProps';
-import { labels, strings } from '@/strings';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useRef, type CSSProperties } from 'react';
-import { Button } from './Button';
+
 import { cn } from '../lib/cn';
+import type { SheetPanelProps } from '../models/sheetPanelProps';
+import type { SheetSide } from '../models/sheetSide';
+import type { SheetSize } from '../models/sheetSize';
+import type { SheetTone } from '../models/sheetTone';
+import { labels, strings } from '@/strings';
+
+import { Button } from './Button';
 
 export type { SheetTone } from '../models/sheetTone';
 

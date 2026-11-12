@@ -1,10 +1,12 @@
 'use client';
 
-import type { ImagePreviewProps } from '../models/imagePreviewProps';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
+
+import type { ImagePreviewProps } from '../models/imagePreviewProps';
 import { strings } from '@/strings';
+
 import { IconButton } from './IconButton';
 import { UiIcon } from './UiIcon';
 

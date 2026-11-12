@@ -1,4 +1,5 @@
 import type { RefObject } from 'react';
+
 import type { ScheduleWindow } from './scheduleWindow';
 
 export interface ScheduleWindowFieldsProps {

@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
-import { ChatScreen } from '@/modules/chat/ChatScreen';
+
 import { strings } from '@/strings';
+
+import { ChatScreen } from '@/modules/chat/ChatScreen';
 
 export const metadata: Metadata = { title: strings.chat.title };
 

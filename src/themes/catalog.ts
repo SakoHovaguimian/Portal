@@ -1,12 +1,13 @@
 import type { ThemeId } from '@/models/themeId';
+
 import type { ThemeDefinition } from './models/themeDefinition';
-import { portalTheme } from './presets/portal';
-import { studioTheme } from './presets/studio';
+import { arcadeTheme } from './presets/arcade';
 import { atelierTheme } from './presets/atelier';
 import { blueprintTheme } from './presets/blueprint';
-import { arcadeTheme } from './presets/arcade';
-import { duskTheme } from './presets/dusk';
 import { cupertinoTheme } from './presets/cupertino';
+import { duskTheme } from './presets/dusk';
+import { portalTheme } from './presets/portal';
+import { studioTheme } from './presets/studio';
 
 export const themesById = {
   portal: portalTheme,

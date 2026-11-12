@@ -1,14 +1,16 @@
 'use client';
 import { useState, useSyncExternalStore } from 'react';
-import type { CookieConsentControlsProps } from '../models/cookieConsentControlsProps';
+
 import { Button } from '@/components/ui';
-import { strings } from '@/strings';
 import { useRuntimeConfig } from '@/providers/RuntimeProvider';
+import { strings } from '@/strings';
+
 import {
   getConsent,
   saveConsent,
   subscribeConsent,
 } from '../cookieConsentStore';
+import type { CookieConsentControlsProps } from '../models/cookieConsentControlsProps';
 
 export function CookieConsentControls({
   settings = false,

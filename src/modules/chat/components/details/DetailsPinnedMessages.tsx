@@ -1,5 +1,6 @@
 import { UiIcon } from '@/components/ui';
 import { portalChatStrings as copy } from '@/strings';
+
 import type { ConversationMessage } from '../../models/conversationMessage';
 import type { DetailsPinnedMessagesProps } from '../../models/detailsPinnedMessagesProps';
 

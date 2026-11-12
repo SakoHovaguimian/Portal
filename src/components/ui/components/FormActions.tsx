@@ -1,6 +1,6 @@
+import { cn } from '../lib/cn';
 import type { FormActionsProps } from '../models/formActionsProps';
 import { strings } from '@/strings';
-import { cn } from '../lib/cn';
 
 export function FormActions({
   children,

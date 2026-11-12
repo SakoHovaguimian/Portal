@@ -1,9 +1,11 @@
 'use client';
 
-import type { RuntimeProviderProps } from './models/runtimeProviderProps';
 import { createContext, useContext } from 'react';
+
 import type { RuntimeConfig } from '@/models/runtimeConfig';
 import { strings } from '@/strings';
+
+import type { RuntimeProviderProps } from './models/runtimeProviderProps';
 
 const RuntimeContext = createContext<RuntimeConfig | null>(null);
 export function RuntimeProvider({

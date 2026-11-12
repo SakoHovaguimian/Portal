@@ -1,6 +1,7 @@
 'use client';
 
 import type { AppSidebarProps } from '../models/appSidebarProps';
+
 import { AppSidebarContent } from './AppSidebarContent';
 
 export type { AppSidebarItem } from '../models/sidebarItem';

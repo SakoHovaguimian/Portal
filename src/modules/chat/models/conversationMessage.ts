@@ -1,7 +1,7 @@
 import { z } from 'zod';
+
+import { ChatAttachmentSchema } from './chatAttachment';
 import { ChatReactionSchema } from './chatReaction';
-import { portalChatStrings as copy } from '@/strings';
-import { ChatAttachmentSchema, ChatAttachmentInputSchema } from './chatAttachment';
 
 export const ConversationMessageSchema = z.object({
   id: z.string().uuid(),
@@ -19,15 +19,8 @@ export const ConversationMessageSchema = z.object({
   reactions: z.array(ChatReactionSchema),
 });
 
-export const ConversationMessageInputSchema = z.object({
-  body: z.string().trim().max(4000, copy.validation.message),
-  replyToId: z.string().uuid().nullable().default(null),
-  attachments: z.array(ChatAttachmentInputSchema).max(4, copy.validation.attachment).default([]),
-  clientId: z.string().uuid(),
-}).strict().refine((value) => value.body.length > 0 || value.attachments.length > 0, { message: copy.validation.message });
-
-export const ConversationMessageUpdateSchema = z.object({ body: z.string().trim().min(1, copy.validation.message).max(4000, copy.validation.message) }).strict();
-
 export type ConversationMessage = z.infer<typeof ConversationMessageSchema>;
 
-export type ConversationMessageInput = z.infer<typeof ConversationMessageInputSchema>;
+export { ConversationMessageInputSchema, type ConversationMessageInput } from './conversationMessageInput';
+
+export { ConversationMessageUpdateSchema } from './conversationMessageUpdate';

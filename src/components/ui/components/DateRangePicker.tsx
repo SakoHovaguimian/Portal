@@ -21,12 +21,14 @@ import {
   Text,
   FieldError,
 } from 'react-aria-components';
-import { portalUiStrings } from '@/strings';
-import type { DateRangePickerProps } from '../models/dateRangePickerProps';
+
 import { calendarDate } from '../lib/calendarDate';
 import { cn } from '../lib/cn';
-import { UiIcon } from './UiIcon';
+import type { DateRangePickerProps } from '../models/dateRangePickerProps';
+import { portalUiStrings } from '@/strings';
+
 import styles from './DatePicker.module.css';
+import { UiIcon } from './UiIcon';
 
 export function DateRangePicker({
   label,

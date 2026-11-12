@@ -1,14 +1,16 @@
 'use client';
 
-import { strings, portalDemoStrings } from '@/strings';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+
 import { Button, Field, Input, PasswordInput } from '@/components/ui';
 import { useRuntimeConfig } from '@/providers/RuntimeProvider';
+import { strings, portalDemoStrings } from '@/strings';
+
 import { AuthCardShell } from './AuthCardShell';
 import { LockIcon, MailIcon, UserIcon } from './authIcons';
-import { createSession, resolveSessionRedirect } from './sessionClient';
 import type { AuthRedirectProps } from './models/authRedirectProps';
+import { createSession, resolveSessionRedirect } from './sessionClient';
 
 export function SignupScreen({ redirectTo }: AuthRedirectProps) {
 

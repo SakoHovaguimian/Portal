@@ -1,8 +1,9 @@
 'use client';
+
 import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { createQueryClient } from '@/lib/client/queryClient';
+
 import {
   Button,
   InlineLoading,
@@ -11,14 +12,16 @@ import {
   BookmarkButton,
   StarRating,
 } from '@/components/ui';
-import { portalEngagementStrings as copy } from '@/strings';
-import { usePublicEngagement } from '../usePublicEngagement';
-import type { BlogEngagementControlsProps } from '../models/blogEngagementControlsProps';
-import { PresentationMotionPreferenceService } from '@/services/presentation-motion/presentationMotionPreferenceService';
+import { createQueryClient } from '@/lib/client/queryClient';
 import {
   PresentationProvider,
   usePresentationService,
 } from '@/presentation/PresentationProvider';
+import { PresentationMotionPreferenceService } from '@/services/presentation-motion/presentationMotionPreferenceService';
+import { portalEngagementStrings as copy } from '@/strings';
+
+import type { BlogEngagementControlsProps } from '../models/blogEngagementControlsProps';
+import { usePublicEngagement } from '../usePublicEngagement';
 
 function BlogEngagementContent({
   articleId,

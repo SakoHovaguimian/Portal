@@ -1,8 +1,9 @@
-import type { ChildrenProps } from '@/models/childrenProps';
 import { redirect } from 'next/navigation';
-import { AppProviders } from '@/providers/AppProviders';
+
 import { ProtectedShell } from '@/components/ProtectedShell';
 import { getServerSession } from '@/lib/server/getServerSession';
+import type { ChildrenProps } from '@/models/childrenProps';
+import { AppProviders } from '@/providers/AppProviders';
 
 export default async function ProtectedLayout({
   children,

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+
 import {
   Accordion,
   BookmarkButton,
@@ -17,8 +18,9 @@ import {
   SegmentedPanels,
   StarRating,
 } from '@/components/ui';
-import { portalUiStrings } from '@/strings';
 import { useUrlState } from '@/providers/useUrlState';
+import { portalUiStrings } from '@/strings';
+
 import { ShowcaseSection } from './ShowcaseSection';
 
 const copy = portalUiStrings.library;

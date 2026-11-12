@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
+
 import {
   Badge,
   Button,
@@ -18,6 +19,7 @@ import {
   UiIcon,
 } from '@/components/ui';
 import { strings } from '@/strings';
+
 import { ShowcaseSection } from './ShowcaseSection';
 import type { ShowcaseDirectoryQuery } from '../models/showcaseDirectoryQuery';
 
@@ -73,11 +75,11 @@ export function CollectionShowcase() {
 
           setItems((current) => {
 
-            const next = [...current];
-            const from = next.findIndex((item) => item.id === id);
-            const to = next.findIndex((item) => item.id === targetId);
-            next.splice(to, 0, ...next.splice(from, 1));
-            return next;
+            const reorderedItems = [...current];
+            const from = reorderedItems.findIndex((item) => item.id === id);
+            const to = reorderedItems.findIndex((item) => item.id === targetId);
+            reorderedItems.splice(to, 0, ...reorderedItems.splice(from, 1));
+            return reorderedItems;
 
           });
 

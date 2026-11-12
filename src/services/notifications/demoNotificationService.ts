@@ -1,5 +1,6 @@
 'use client';
 import type { MessagePayload } from 'firebase/messaging';
+
 import type { NotificationStatus } from './models/notificationStatus';
 
 export class DemoNotificationService {

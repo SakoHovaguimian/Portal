@@ -1,12 +1,14 @@
 import 'server-only';
+
+import { projectConfiguration } from '@/config/projectConfiguration';
 import { populatedDemoUsers as seedAccounts } from '@/services/demo/demoPresets';
 import { portalAccountToolsStrings as copy } from '@/strings';
+
+import type { DemoAccountDevice } from './models/demoAccountDevice';
 import type { DemoAccountToolsState } from './models/demoAccountToolsState';
+import { AccountDeviceTypeSchema } from '../models/accountDeviceType';
 import type { NotificationDelivery } from '../models/notificationDelivery';
 import type { NotificationDeliveryAttempt } from '../models/notificationDeliveryAttempt';
-import type { DemoAccountDevice } from './models/demoAccountDevice';
-import { AccountDeviceTypeSchema } from '../models/accountDeviceType';
-import { projectConfiguration } from '@/config/projectConfiguration';
 
 const globalAccountTools = globalThis as typeof globalThis & {
   portalAccountToolsState?: DemoAccountToolsState;

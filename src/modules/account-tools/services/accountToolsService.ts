@@ -1,5 +1,7 @@
 import type { ApiClientInterface } from '@/services/api/apiClientInterface';
 import { validateInput } from '@/utils/validateInput';
+
+import { accountToolsQueryParams } from '../accountToolsQueryParams';
 import {
   AccountDeletionSchema,
   type AccountDeletion,
@@ -14,21 +16,21 @@ import {
   AccountToolsPagingSchema,
   type AccountToolsPaging,
 } from '../models/accountToolsPaging';
+import { FrequentlyAskedQuestionsSchema } from '../models/frequentlyAskedQuestions';
+import { LegalContextSchema, type LegalContext } from '../models/legalContext';
+import {
+  LegalInformationSchema,
+} from '../models/legalInformation';
 import { NotificationDeliverySchema } from '../models/notificationDelivery';
 import { NotificationDeliveryAttemptSchema } from '../models/notificationDeliveryAttempt';
 import {
   NotificationDeliveryQuerySchema,
   type NotificationDeliveryQuery,
 } from '../models/notificationDeliveryQuery';
-import {
-  LegalInformationSchema,
-} from '../models/legalInformation';
-import { LegalContextSchema, type LegalContext } from '../models/legalContext';
-import { FrequentlyAskedQuestionsSchema } from '../models/frequentlyAskedQuestions';
-import { accountToolsQueryParams } from '../accountToolsQueryParams';
 
-const base = '/portal/account-tools';
-const admin = '/admin/account-tools';
+const accountToolsBasePath = '/portal/account-tools';
+const adminAccountToolsBasePath = '/admin/account-tools';
+
 export class AccountToolsService {
 
   constructor(private readonly api: ApiClientInterface) {}
@@ -39,7 +41,7 @@ export class AccountToolsService {
 
   async deleteAccount(input: AccountDeletion) {
 
-    await this.api.request(`${base}/account`, {
+    await this.api.request(`${accountToolsBasePath}/account`, {
       method: 'DELETE',
       body: validateInput(AccountDeletionSchema, input),
     });
@@ -54,7 +56,7 @@ export class AccountToolsService {
 
     return accountToolsPageSchema(AccountDeviceSchema).parse(
       await this.api.request(
-        `${base}/devices?${accountToolsQueryParams(validateInput(AccountDeviceQuerySchema, query))}`,
+        `${accountToolsBasePath}/devices?${accountToolsQueryParams(validateInput(AccountDeviceQuerySchema, query))}`,
         { signal },
       ),
     );
@@ -67,7 +69,7 @@ export class AccountToolsService {
 
   async removeDevice(id: string) {
 
-    await this.api.request(`${base}/devices/${encodeURIComponent(id)}`, {
+    await this.api.request(`${accountToolsBasePath}/devices/${encodeURIComponent(id)}`, {
       method: 'DELETE',
     });
 
@@ -81,7 +83,7 @@ export class AccountToolsService {
 
     return accountToolsPageSchema(NotificationDeliverySchema).parse(
       await this.api.request(
-        `${admin}/deliveries?${accountToolsQueryParams(validateInput(NotificationDeliveryQuerySchema, query))}`,
+        `${adminAccountToolsBasePath}/deliveries?${accountToolsQueryParams(validateInput(NotificationDeliveryQuerySchema, query))}`,
         { signal },
       ),
     );
@@ -100,7 +102,7 @@ export class AccountToolsService {
 
     return accountToolsPageSchema(NotificationDeliveryAttemptSchema).parse(
       await this.api.request(
-        `${admin}/deliveries/${encodeURIComponent(id)}/attempts?${accountToolsQueryParams(validateInput(AccountToolsPagingSchema, paging))}`,
+        `${adminAccountToolsBasePath}/deliveries/${encodeURIComponent(id)}/attempts?${accountToolsQueryParams(validateInput(AccountToolsPagingSchema, paging))}`,
         { signal },
       ),
     );
@@ -115,7 +117,7 @@ export class AccountToolsService {
 
     return LegalInformationSchema.parse(
       await this.api.request(
-        `${base}/legal?${accountToolsQueryParams({ context: LegalContextSchema.parse(context) })}`,
+        `${accountToolsBasePath}/legal?${accountToolsQueryParams({ context: LegalContextSchema.parse(context) })}`,
         { signal },
       ),
     );
@@ -129,7 +131,7 @@ export class AccountToolsService {
   async faq(signal?: AbortSignal) {
 
     return FrequentlyAskedQuestionsSchema.parse(
-      await this.api.request(`${base}/faq`, { signal }),
+      await this.api.request(`${accountToolsBasePath}/faq`, { signal }),
     );
 
   }

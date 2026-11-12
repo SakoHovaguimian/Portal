@@ -1,5 +1,6 @@
-import type { OnboardingStepDescriptor } from './models/onboardingStepDescriptor';
 import { portalOnboardingStrings as copy } from '@/strings';
+
+import type { OnboardingStepDescriptor } from './models/onboardingStepDescriptor';
 
 export const onboardingSteps: OnboardingStepDescriptor[] = [
   { key: 'profile', ...copy.steps.profile },

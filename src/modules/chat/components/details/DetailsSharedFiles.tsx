@@ -1,6 +1,8 @@
 import Image from 'next/image';
+
 import { Button, UiIcon } from '@/components/ui';
 import { portalChatStrings as copy } from '@/strings';
+
 import type { ChatAttachment } from '../../models/chatAttachment';
 import type { DetailsSharedFilesProps } from '../../models/detailsSharedFilesProps';
 

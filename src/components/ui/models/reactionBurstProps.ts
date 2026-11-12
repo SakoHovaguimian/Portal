@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+
 import type { ReactionBurstFrames } from './reactionBurstFrames';
 
 export interface ReactionBurstProps {

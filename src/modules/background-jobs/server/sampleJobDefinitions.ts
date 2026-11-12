@@ -1,21 +1,24 @@
 import 'server-only';
-import { SampleJobInputSchema, type SampleJobInput } from '../models/sampleJobInput';
+
+import { portalJobStrings as copy } from '@/strings';
+
 import type { BackgroundJobExecutionContext } from '../models/backgroundJobExecutionContext';
 import type { BackgroundJobResult } from '../models/backgroundJobResult';
+import { SampleJobInputSchema, type SampleJobInput } from '../models/sampleJobInput';
+import type { SampleJobRecord } from '../models/sampleJobRecord';
 import { getBackgroundJobDefinition, registerBackgroundJobDefinition } from './jobDefinitionRegistry';
 import { JobExecutionError } from './jobExecutionError';
-import { portalJobStrings as copy } from '@/strings';
 
 // **************************************
 // MARK: - RUN SAMPLE BACKGROUND JOB
 // **************************************
 
-async function runSample(type: string, input: SampleJobInput, context: BackgroundJobExecutionContext): Promise<BackgroundJobResult> {
+async function runSampleBackgroundJob(type: string, input: SampleJobInput, context: BackgroundJobExecutionContext): Promise<BackgroundJobResult> {
 
   context.reportProgress({ stage: 'preparing', completed: 0, total: 20 });
   await context.wait(1200);
   let checksum = 0;
-  const records: { recordId: number; value: number }[] = [];
+  const records: SampleJobRecord[] = [];
   for (let index = 1; index <= 20; index += 1) {
 
     await context.wait(450);
@@ -53,7 +56,7 @@ export function registerSampleJobDefinitions() {
       inputSchema: SampleJobInputSchema,
       retrySafe: true,
       maxAttempts: 3,
-      run: (input, context) => runSample(type, input, context),
+      run: (input, context) => runSampleBackgroundJob(type, input, context),
     });
 
   }

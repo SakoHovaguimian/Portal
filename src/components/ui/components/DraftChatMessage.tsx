@@ -2,6 +2,7 @@
 
 import type { DraftChatMessageProps } from '../models/draftChatMessageProps';
 import { strings } from '@/strings';
+
 import { UiIcon } from './UiIcon';
 
 export function DraftChatMessage({

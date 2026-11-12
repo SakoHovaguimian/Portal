@@ -1,6 +1,6 @@
+import type { DemoAccountDevice } from './demoAccountDevice';
 import type { NotificationDelivery } from '../../models/notificationDelivery';
 import type { NotificationDeliveryAttempt } from '../../models/notificationDeliveryAttempt';
-import type { DemoAccountDevice } from './demoAccountDevice';
 
 export interface DemoAccountToolsState {
   devices: DemoAccountDevice[];

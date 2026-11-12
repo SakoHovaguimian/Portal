@@ -1,13 +1,14 @@
 import 'server-only';
-import type { ServerSession } from '@/services/session/models/serverSession';
-import type { BackendForward } from './models/backendForward';
 import { portalModules } from '@/config/portalModules';
-import { handlePublishingRequest } from '@/modules/blog/server/handlePublishingRequest';
 import { handlePublicImageRequest } from '@/services/media/server/handlePublicImageRequest';
-import { handleLiveNotificationInboxRequest } from '@/modules/notification-inbox/server/handleLiveNotificationInboxRequest';
+import type { ServerSession } from '@/services/session/models/serverSession';
+
 import { handleLiveAccountToolsRequest } from '@/modules/account-tools/server/handleLiveAccountToolsRequest';
-import { handleLiveChatRequest } from '@/modules/chat/server/handleLiveChatRequest';
 import { handleLiveBackgroundJobRequest } from '@/modules/background-jobs/server/handleLiveBackgroundJobRequest';
+import { handlePublishingRequest } from '@/modules/blog/server/handlePublishingRequest';
+import { handleLiveChatRequest } from '@/modules/chat/server/handleLiveChatRequest';
+import { handleLiveNotificationInboxRequest } from '@/modules/notification-inbox/server/handleLiveNotificationInboxRequest';
+import type { BackendForward } from './models/backendForward';
 
 // **************************************
 // MARK: - PROXY OPTIONAL FEATURE REQUEST

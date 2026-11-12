@@ -1,6 +1,8 @@
-import type { IdRouteProps } from '@/models/idRouteProps';
 import type { Metadata } from 'next';
+
+import type { IdRouteProps } from '@/models/idRouteProps';
 import { strings } from '@/strings';
+
 import { UserDetailScreen } from '@/modules/users/UserDetailScreen';
 
 export const metadata: Metadata = { title: strings.ui.userDetailScreen.userDetail };

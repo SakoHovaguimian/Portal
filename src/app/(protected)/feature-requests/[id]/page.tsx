@@ -1,6 +1,8 @@
-import type { IdRouteProps } from '@/models/idRouteProps';
 import type { Metadata } from 'next';
+
+import type { IdRouteProps } from '@/models/idRouteProps';
 import { strings } from '@/strings';
+
 import { FeatureRequestDetailScreen } from '@/modules/feature-requests/FeatureRequestDetailScreen';
 
 export const metadata: Metadata = {

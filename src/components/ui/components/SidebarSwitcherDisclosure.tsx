@@ -1,10 +1,12 @@
 'use client';
 
-import type { SidebarSwitcherDisclosureProps } from '../models/sidebarSwitcherDisclosureProps';
 import { useId, useRef, useState } from 'react';
+
+import { cn } from '../lib/cn';
+import type { SidebarSwitcherDisclosureProps } from '../models/sidebarSwitcherDisclosureProps';
+
 import { Button } from './Button';
 import { UiIcon } from './UiIcon';
-import { cn } from '../lib/cn';
 
 export function SidebarSwitcherDisclosure({
   title,

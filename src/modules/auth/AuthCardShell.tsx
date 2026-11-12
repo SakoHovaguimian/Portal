@@ -1,8 +1,10 @@
 import Link from 'next/link';
-import { buttonClassName, Card } from '@/components/ui';
-import type { AuthCardShellProps } from './models/authCardShellProps';
+
 import { ProjectBrand } from '@/components/ProjectBrand';
+import { buttonClassName, Card } from '@/components/ui';
 import { projectConfiguration } from '@/config/projectConfiguration';
+
+import type { AuthCardShellProps } from './models/authCardShellProps';
 
 export function AuthCardShell({
   badge,

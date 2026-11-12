@@ -1,8 +1,10 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+
 import { Button, Combobox, type ComboboxOption } from '@/components/ui';
 import { componentExpansionStrings as copy } from '@/strings';
+
 import { ShowcaseSection } from './ShowcaseSection';
 
 const options: ComboboxOption[] = copy.examples.people.map((label, index) => ({

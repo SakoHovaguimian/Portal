@@ -1,8 +1,10 @@
 'use client';
+
 import { useQuery } from '@tanstack/react-query';
+
 import { useServiceContainer, useSessionState } from '@/providers/AppProviders';
-import { useRealtime } from '@/services/realtime/RealtimeProvider';
 import { useRuntimeConfig } from '@/providers/RuntimeProvider';
+import { useRealtime } from '@/services/realtime/RealtimeProvider';
 
 export function useChatWorkspace() {
 

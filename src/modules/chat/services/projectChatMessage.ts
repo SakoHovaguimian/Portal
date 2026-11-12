@@ -1,5 +1,5 @@
-import type { ConversationMessage } from '../models/conversationMessage';
 import type { ChatMessageAction } from '../models/chatMessageAction';
+import type { ConversationMessage } from '../models/conversationMessage';
 
 // **************************************
 // MARK: - PROJECT OPTIMISTIC MESSAGE ACTION

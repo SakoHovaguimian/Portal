@@ -1,5 +1,5 @@
-import { strings } from '@/strings';
 import { DomainError, UnknownAppError } from '@/errors/domainErrors';
+import { strings } from '@/strings';
 
 export function normalizeDomainError(error: unknown): DomainError {
 

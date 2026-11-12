@@ -6,8 +6,9 @@ import {
   QueryBoundary,
 } from '@/components/ui';
 import { portalAccountToolsStrings as copy } from '@/strings';
-import { useFrequentlyAskedQuestions } from '../hooks';
+
 import { AccountToolsLoading } from './AccountToolsLoading';
+import { useFrequentlyAskedQuestions } from '../hooks';
 
 export function FrequentlyAskedQuestionsPanel() {
 

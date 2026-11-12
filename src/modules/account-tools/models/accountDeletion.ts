@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { portalAccountToolsStrings as copy } from '@/strings';
 
 export const AccountDeletionSchema = z

@@ -1,8 +1,9 @@
 'use client';
 
-import type { RadioProps } from '../models/radioProps';
 import { useId, useState } from 'react';
+
 import { cn } from '../lib/cn';
+import type { RadioProps } from '../models/radioProps';
 
 export function Radio({
   label,

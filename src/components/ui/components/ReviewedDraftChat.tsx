@@ -1,18 +1,20 @@
 'use client';
 
-import type { ReviewedDraftChatProps } from '../models/reviewedDraftChatProps';
 import { useEffect, useRef, useState } from 'react';
+
 import type { DraftAssistantMessage } from '../models/draftAssistantMessage';
-import { strings } from '@/strings';
+import type { ReviewedDraftChatProps } from '../models/reviewedDraftChatProps';
 import { useReviewedDraftAssistant } from '../useReviewedDraftAssistant';
-import { FloatingAssistantDialog } from './FloatingAssistantDialog';
+import { strings } from '@/strings';
+
+import { Button } from './Button';
 import { DraftChatMessage } from './DraftChatMessage';
 import { DraftChatReview } from './DraftChatReview';
-import { Button } from './Button';
 import { Field } from './Field';
-import { TextArea } from './TextArea';
+import { FloatingAssistantDialog } from './FloatingAssistantDialog';
 import { Message } from './Message';
 import { InlineLoading } from './QueryBoundary';
+import { TextArea } from './TextArea';
 
 export function ReviewedDraftChat({
   open,

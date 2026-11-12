@@ -1,6 +1,7 @@
 'use client';
 
 import type { TableSelectionCheckboxProps } from '../models/tableSelectionCheckboxProps';
+
 import { Checkbox } from './Checkbox';
 
 export function TableSelectionCheckbox({

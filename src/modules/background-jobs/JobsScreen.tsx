@@ -2,16 +2,18 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+
 import { ActivityIndicator, Button, DataPanel, DataTable, DirectoryFilters, DirectoryPagination, EmptyState, ErrorState, MobileRecordRow, Page, PageHeader, UiIcon } from '@/components/ui';
 import { useDirectoryState } from '@/queries/useDirectoryState';
 import { portalJobStrings as copy } from '@/strings';
-import { useBackgroundJobs } from './hooks';
-import { BackgroundJobStatusSchema } from './models/backgroundJobStatus';
-import type { BackgroundJob } from './models/backgroundJob';
+
 import { CreateJobDialog } from './components/CreateJobDialog';
-import { JobStatus } from './components/JobStatus';
 import { JobProgress } from './components/JobProgress';
+import { JobStatus } from './components/JobStatus';
 import { formatJobDate } from './formatJobDate';
+import { useBackgroundJobs } from './hooks';
+import type { BackgroundJob } from './models/backgroundJob';
+import { BackgroundJobStatusSchema } from './models/backgroundJobStatus';
 
 export function JobsScreen() {
 

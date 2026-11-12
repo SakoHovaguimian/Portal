@@ -13,20 +13,28 @@ export function blogContentText(content: StoredBlogContent[]): string {
       case 'header':
       case 'footer':
         return block.metaData.text;
+
       case 'section':
         return `${block.metaData.title ?? ''} ${block.metaData.body}`;
+
       case 'quote':
         return `${block.metaData.text} ${block.metaData.attribution ?? ''}`;
+
       case 'bullet':
         return block.metaData.items.join(' ');
+
       case 'callout':
         return `${block.metaData.title ?? ''} ${block.metaData.text}`;
+
       case 'link':
         return block.metaData.text;
+
       case 'embed':
         return `${block.metaData.title ?? ''} ${block.metaData.caption ?? ''}`;
+
       case 'image':
         return `${block.metaData.alt} ${block.metaData.caption ?? ''}`;
+
       case 'gallery2':
       case 'gallery3':
       case 'gallery4': {
@@ -41,6 +49,7 @@ export function blogContentText(content: StoredBlogContent[]): string {
         return galleryText;
 
       }
+
       case 'divider':
         return '';
 

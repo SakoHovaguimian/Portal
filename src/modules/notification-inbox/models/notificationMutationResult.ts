@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { NotificationCountsSchema } from './notificationCounts';
 
 export const NotificationMutationResultSchema = z.object({

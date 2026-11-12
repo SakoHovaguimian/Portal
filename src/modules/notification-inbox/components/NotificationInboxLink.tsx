@@ -1,9 +1,11 @@
 'use client';
+
 import { UiIcon } from '@/components/ui';
 import { NavigationLink } from '@/components/ui/components/NavigationLink';
 import { useNavigationGuard } from '@/providers/NavigationGuardProvider';
-import { portalNotificationInboxStrings as copy } from '@/strings';
 import { useRealtime } from '@/services/realtime/RealtimeProvider';
+import { portalNotificationInboxStrings as copy } from '@/strings';
+
 import { useNotificationCounts } from '../hooks';
 
 export function NotificationInboxLink() {

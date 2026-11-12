@@ -1,10 +1,12 @@
 'use client';
 
-import type { AccordionProps } from '../models/accordionProps';
 import { Button as AriaButton, Disclosure, DisclosureGroup, DisclosurePanel } from 'react-aria-components';
+
 import { cn } from '../lib/cn';
-import { UiIcon } from './UiIcon';
+import type { AccordionProps } from '../models/accordionProps';
+
 import styles from './Accordion.module.css';
+import { UiIcon } from './UiIcon';
 
 /** React Aria owns keyboard interaction, expanded state, labels, and panel lifecycle. */
 export function Accordion({

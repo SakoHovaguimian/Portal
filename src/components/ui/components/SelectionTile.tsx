@@ -1,5 +1,6 @@
-import type { SelectionTileProps } from '../models/selectionTileProps';
 import { cn } from '../lib/cn';
+import type { SelectionTileProps } from '../models/selectionTileProps';
+
 import { Checkbox } from './Checkbox';
 
 export function SelectionTile({

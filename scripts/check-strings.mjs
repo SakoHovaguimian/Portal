@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import ts from 'typescript';
+
 import { displayLiteral, sourceFile } from './string-literals.mjs';
 import { titleCaseViolations } from './title-case.mjs';
 

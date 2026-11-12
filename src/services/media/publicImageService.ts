@@ -1,4 +1,5 @@
 import type { ApiClientInterface } from '@/services/api/apiClientInterface';
+
 import { uploadPublicImage } from './uploadPublicImage';
 
 export class PublicImageService {

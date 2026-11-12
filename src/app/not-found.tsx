@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+
 import { Card, buttonClassName } from '@/components/ui';
-import { strings } from '@/strings';
 import { getDefaultProjectRoute } from '@/config/projectRoutes';
+import { strings } from '@/strings';
 
 export const metadata: Metadata = { title: strings.errors.notFound };
 

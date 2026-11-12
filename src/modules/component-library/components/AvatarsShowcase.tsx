@@ -3,6 +3,7 @@
 import { Avatar, AvatarGroup } from '@/components/ui';
 import type { AvatarProps } from '@/components/ui/models/avatarProps';
 import { componentExpansionStrings as copy } from '@/strings';
+
 import { ShowcaseSection } from './ShowcaseSection';
 
 const people = copy.examples.people.map((name, index) => ({

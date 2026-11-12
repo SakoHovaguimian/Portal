@@ -1,5 +1,8 @@
 'use client';
+
 import { useRef, useState, type FormEvent } from 'react';
+
+import { MutationError } from '@/components/MutationError';
 import {
   Button,
   Checkbox,
@@ -9,13 +12,13 @@ import {
   BookmarkButton,
 } from '@/components/ui';
 import { useCurrentTimezone } from '@/components/ui/lib/useCurrentTimezone';
-import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
 import { usePresentationService } from '@/presentation/PresentationProvider';
-import { MutationError } from '@/components/MutationError';
+import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
 import { portalNotificationInboxStrings as copy } from '@/strings';
-import type { NotificationTimezoneEditorProps } from '../models/notificationTimezoneEditorProps';
-import { NotificationTimezoneSchema } from '../models/notificationTimezone';
+
 import { useSaveNotificationTimezone } from '../hooks';
+import { NotificationTimezoneSchema } from '../models/notificationTimezone';
+import type { NotificationTimezoneEditorProps } from '../models/notificationTimezoneEditorProps';
 
 export function NotificationTimezoneEditor({
   initial,
@@ -52,7 +55,7 @@ export function NotificationTimezoneEditor({
     ? (browserTimezone ?? saved.effectiveTimezone)
     : timezone;
 
-  function change(nextAutomatic: boolean, nextTimezone: string) {
+  function handleTimezoneChange(nextAutomatic: boolean, nextTimezone: string) {
 
     dirty.current = (nextAutomatic ? null : nextTimezone) !== saved.timezone;
     setAutomatic(nextAutomatic);
@@ -62,7 +65,7 @@ export function NotificationTimezoneEditor({
 
   }
 
-  async function submit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
 
     event.preventDefault();
     if (busy.current || !isDirty) { return; }
@@ -94,7 +97,7 @@ export function NotificationTimezoneEditor({
 
   }
 
-  function discard() {
+  function handleDiscard() {
 
     setSaved(initial);
     setAutomatic(initial.timezone === null);
@@ -129,7 +132,7 @@ export function NotificationTimezoneEditor({
         <Checkbox
           label={copy.browserTimezoneLabel}
           checked={automatic}
-          onChange={(event) => change(event.target.checked, displayedTimezone)}
+          onChange={(event) => handleTimezoneChange(event.target.checked, displayedTimezone)}
           disabled={mutation.isPending}
         />
         <Field labelText={copy.timezoneLabel}>
@@ -137,7 +140,7 @@ export function NotificationTimezoneEditor({
             id="notification-timezone"
             value={displayedTimezone}
             disabled={automatic || mutation.isPending}
-            onValueChange={(value) => change(false, value)}
+            onValueChange={(value) => handleTimezoneChange(false, value)}
             aria-invalid={Boolean(validation)}
             aria-describedby={
               validation
@@ -178,7 +181,7 @@ export function NotificationTimezoneEditor({
       >
         <Button
           variant="destructive"
-          onClick={discard}
+          onClick={handleDiscard}
           disabled={!isDirty || mutation.isPending}
         >
           {copy.discardAction}
@@ -197,7 +200,7 @@ export function NotificationTimezoneEditor({
   }
 
   return (
-    <form noValidate onSubmit={submit} className="grid gap-5">
+    <form noValidate onSubmit={handleSubmit} className="grid gap-5">
       {renderTimezoneContext()}
       {renderTimezoneControls()}
       {renderTimezoneActions()}

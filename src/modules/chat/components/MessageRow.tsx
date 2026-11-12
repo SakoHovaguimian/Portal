@@ -1,11 +1,14 @@
 'use client';
-import type { MessageRowProps } from '../models/messageRowProps';
+
 import { useLayoutEffect, useRef } from 'react';
-import { motionDuration } from '@/components/ui/lib/motionPreferences';
+
 import { Button, InitialsAvatar, UiIcon } from '@/components/ui';
+import { motionDuration } from '@/components/ui/lib/motionPreferences';
 import { portalChatStrings as copy } from '@/strings';
+
 import { ChatReactionPicker } from './ChatReactionPicker';
 import { MessageAttachments } from './MessageAttachments';
+import type { MessageRowProps } from '../models/messageRowProps';
 
 export function MessageRow({ message, reply, own, read, userId, busy, failed, onReply, onEdit, onDelete, onPin, onReact }: MessageRowProps) {
 

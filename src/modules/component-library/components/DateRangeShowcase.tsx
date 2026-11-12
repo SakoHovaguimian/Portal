@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+
 import { DateRangePicker, type DateRangeValue } from '@/components/ui';
 import { componentExpansionStrings as copy } from '@/strings';
+
 import { ShowcaseSection } from './ShowcaseSection';
 
 const initial: DateRangeValue = { start: '2026-11-03', end: '2026-11-12' };

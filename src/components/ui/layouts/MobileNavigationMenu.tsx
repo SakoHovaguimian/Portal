@@ -2,10 +2,12 @@
 
 import * as Dialog from '@radix-ui/react-dialog';
 import { useEffect, useState } from 'react';
-import { strings } from '@/strings';
+
 import { IconButton } from '../components/IconButton';
 import { UiIcon } from '../components/UiIcon';
 import type { AppSidebarProps } from '../models/appSidebarProps';
+import { strings } from '@/strings';
+
 import { AppSidebarContent } from './AppSidebarContent';
 
 export function MobileNavigationMenu(props: AppSidebarProps) {

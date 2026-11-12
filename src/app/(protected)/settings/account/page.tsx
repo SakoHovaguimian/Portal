@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+
 import { Page, PageHeader } from '@/components/ui';
-import { AccountSettings } from '@/modules/account-tools/components/AccountSettings';
-import { portalIntegrationStrings as copy } from '@/strings';
 import { portalModules } from '@/config/portalModules';
+import { portalIntegrationStrings as copy } from '@/strings';
+
+import { AccountSettings } from '@/modules/account-tools/components/AccountSettings';
 
 export const metadata: Metadata = { title: copy.accountTitle };
 

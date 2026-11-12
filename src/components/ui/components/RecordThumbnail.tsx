@@ -1,9 +1,11 @@
 'use client';
 
-import type { RecordThumbnailProps } from '../models/recordThumbnailProps';
 import Image from 'next/image';
 import { useState } from 'react';
+
+import type { RecordThumbnailProps } from '../models/recordThumbnailProps';
 import { strings } from '@/strings';
+
 import { UiIcon } from './UiIcon';
 
 export function RecordThumbnail({

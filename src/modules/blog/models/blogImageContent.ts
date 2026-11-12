@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { BlogImageSchema, BlogReadableImageSchema } from './blogImage';
 
 export const BlogImageContentSchema = z

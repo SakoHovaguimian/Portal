@@ -1,6 +1,8 @@
 'use client';
 
 import { useRef } from 'react';
+
+import { MutationError } from '@/components/MutationError';
 import {
   Button,
   DataPanel,
@@ -15,14 +17,14 @@ import {
 } from '@/components/ui';
 import { usePresentationService } from '@/presentation/PresentationProvider';
 import { useDirectoryState } from '@/queries/useDirectoryState';
-import { MutationError } from '@/components/MutationError';
 import { portalAccountToolsStrings as copy } from '@/strings';
-import type { AccountDevice } from './models/accountDevice';
-import { AccountDeviceTypeSchema } from './models/accountDeviceType';
-import { useAccountDevices, useRemoveAccountDevice } from './hooks';
+
 import { AccountToolsLoading } from './components/AccountToolsLoading';
 import { AccountToolsPagination } from './components/AccountToolsPagination';
 import { formatAccountToolsDate } from './formatAccountToolsDate';
+import { useAccountDevices, useRemoveAccountDevice } from './hooks';
+import type { AccountDevice } from './models/accountDevice';
+import { AccountDeviceTypeSchema } from './models/accountDeviceType';
 
 export function DevicesScreen() {
 

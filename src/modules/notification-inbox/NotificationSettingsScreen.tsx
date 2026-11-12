@@ -1,4 +1,5 @@
 'use client';
+
 import {
   Button,
   buttonClassName,
@@ -13,9 +14,10 @@ import {
 import { NavigationLink } from '@/components/ui/components/NavigationLink';
 import { useNavigationGuard } from '@/providers/NavigationGuardProvider';
 import { portalNotificationInboxStrings as copy } from '@/strings';
-import { useNotificationPreferences, useNotificationSettings } from './hooks';
+
 import { NotificationPreferencesEditor } from './components/NotificationPreferencesEditor';
 import { NotificationTimezoneEditor } from './components/NotificationTimezoneEditor';
+import { useNotificationPreferences, useNotificationSettings } from './hooks';
 import type { NotificationPreference } from './models/notificationPreference';
 
 export function NotificationSettingsScreen() {

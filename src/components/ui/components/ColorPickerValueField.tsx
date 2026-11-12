@@ -1,9 +1,11 @@
 'use client';
 
-import type { ColorPickerValueFieldProps } from '../models/colorPickerValueFieldProps';
 import { useContext, useId, useState } from 'react';
 import { ColorPickerStateContext, parseColor } from 'react-aria-components';
+
+import type { ColorPickerValueFieldProps } from '../models/colorPickerValueFieldProps';
 import { portalUiStrings } from '@/strings';
+
 import { Button } from './Button';
 import { Input } from './Input';
 

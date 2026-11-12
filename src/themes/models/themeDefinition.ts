@@ -1,16 +1,17 @@
 import type { ThemeId } from '@/models/themeId';
 import type { ThemeMode } from '@/models/themeMode';
+
 import type { ThemeBackground } from './themeBackground';
+import type { ThemeBorder } from './themeBorder';
+import type { ThemeControls } from './themeControls';
 import type { ThemeForeground } from './themeForeground';
+import type { ThemeMotion } from './themeMotion';
 import type { ThemePalette } from './themePalette';
 import type { ThemeRadius } from './themeRadius';
-import type { ThemeShadow } from './themeShadow';
-import type { ThemeTypography } from './themeTypography';
-import type { ThemeSpacing } from './themeSpacing';
-import type { ThemeBorder } from './themeBorder';
-import type { ThemeMotion } from './themeMotion';
 import type { ThemeSelection } from './themeSelection';
-import type { ThemeControls } from './themeControls';
+import type { ThemeShadow } from './themeShadow';
+import type { ThemeSpacing } from './themeSpacing';
+import type { ThemeTypography } from './themeTypography';
 
 /** A complete, loadable design system. Components never select preset-specific styles. */
 export type ThemeDefinition = {

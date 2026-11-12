@@ -1,10 +1,11 @@
+import type { IconName } from '../models/iconName';
+import type { MarkdownAction } from '../models/markdownAction';
 import type { MarkdownToolbarProps } from '../models/markdownToolbarProps';
 import { strings } from '@/strings';
-import type { MarkdownAction } from '../models/markdownAction';
-import type { IconName } from '../models/iconName';
+
 import { IconButton } from './IconButton';
-import { UiIcon } from './UiIcon';
 import { IconMenu } from './IconMenu';
+import { UiIcon } from './UiIcon';
 
 const groups: MarkdownAction[][] = [
   ['heading1', 'heading2', 'heading3'],

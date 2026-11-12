@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react';
-import type { PresentationMotionOverride } from './presentationMotionOverride';
+
 import type { AlertTone, AlertAlignment } from '@/components/ui';
+
+import type { PresentationMotionOverride } from './presentationMotionOverride';
 
 export type AlertPresentation = {
   kind: 'alert';

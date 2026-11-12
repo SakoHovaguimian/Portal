@@ -1,6 +1,6 @@
-import type { BlogReadableContent } from '../models/blogReadableContent';
-import { isBlogImageUrl } from '../models/blogImageUrl';
 import { isPublicHttpsUrl } from '../models/blogContentUrl';
+import { isBlogImageUrl } from '../models/blogImageUrl';
+import type { BlogReadableContent } from '../models/blogReadableContent';
 
 export function canRenderBlogContent(block: BlogReadableContent): boolean {
 
@@ -9,8 +9,10 @@ export function canRenderBlogContent(block: BlogReadableContent): boolean {
     case 'link':
     case 'embed':
       return isPublicHttpsUrl(block.metaData.url);
+
     case 'image':
       return isBlogImageUrl(block.metaData.src);
+
     case 'gallery2':
     case 'gallery3':
     case 'gallery4': {
@@ -25,6 +27,7 @@ export function canRenderBlogContent(block: BlogReadableContent): boolean {
       return allImagesCanRender;
 
     }
+
     default:
       return true;
 

@@ -1,8 +1,9 @@
 'use client';
 
-import { strings } from '@/strings';
 import { timezoneChoices } from '../lib/timezoneChoices';
 import type { SelectProps } from '../models/selectProps';
+import { strings } from '@/strings';
+
 import { Select } from './Select';
 
 export function TimezoneSelect({

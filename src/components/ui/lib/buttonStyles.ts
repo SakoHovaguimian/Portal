@@ -1,5 +1,6 @@
-import { cn } from './cn';
 import type { ButtonVariant } from '../models/buttonVariant';
+
+import { cn } from './cn';
 
 const buttonVariants = {
   primary:

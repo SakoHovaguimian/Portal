@@ -1,6 +1,7 @@
 import { z } from 'zod';
-import { OnboardingProfileSchema } from './onboardingProfile';
+
 import { OnboardingPreferencesSchema } from './onboardingPreferences';
+import { OnboardingProfileSchema } from './onboardingProfile';
 
 export const OnboardingUpdateSchema = z.discriminatedUnion('step', [
   z

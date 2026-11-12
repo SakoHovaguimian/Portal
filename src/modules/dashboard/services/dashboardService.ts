@@ -1,16 +1,16 @@
-import type { ApiClientInterface } from '@/services/api/apiClientInterface';
-import type { DashboardRecordsQuery, PaginatedResult } from '@/models/query';
 import type { DashboardRecord } from '@/models/dashboard';
-import type {
-  DashboardOverviewTransport,
-  DashboardModelSummaryTransport,
-  DashboardModelMetaTransport,
-} from '@/services/api/models';
+import type { DashboardRecordsQuery, PaginatedResult } from '@/models/query';
+import type { ApiClientInterface } from '@/services/api/apiClientInterface';
 import {
   mapDashboardModelMetaTransportToDomain,
   mapDashboardModelSummaryTransportToDomain,
   mapDashboardOverviewTransportToDomain,
 } from '@/services/api/domainMappers';
+import type {
+  DashboardOverviewTransport,
+  DashboardModelSummaryTransport,
+  DashboardModelMetaTransport,
+} from '@/services/api/models';
 
 export class DashboardService {
 

@@ -1,7 +1,8 @@
-import type { RadioCardProps } from '../models/radioCardProps';
-import { Radio } from './Radio';
-import { IconTile } from './IconTile';
 import { cn } from '../lib/cn';
+import type { RadioCardProps } from '../models/radioCardProps';
+
+import { IconTile } from './IconTile';
+import { Radio } from './Radio';
 
 export function RadioCard({
   label,

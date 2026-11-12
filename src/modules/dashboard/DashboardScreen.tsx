@@ -1,11 +1,9 @@
 'use client';
 
-import { strings } from '@/strings';
-import { portalModules } from '@/config/portalModules';
 import { useMemo } from 'react';
 import Link from 'next/link';
-import { useRuntimeConfig } from '@/providers/RuntimeProvider';
 import { useSearchParams } from 'next/navigation';
+
 import {
   Button,
   Card,
@@ -14,15 +12,19 @@ import {
   ErrorState,
   PageHeader,
 } from '@/components/ui';
+import { portalModules } from '@/config/portalModules';
+import type { DashboardModelSummary } from '@/models/dashboardModelSummary';
+import type { DashboardOverviewItem } from '@/models/dashboardOverviewItem';
+import { useRuntimeConfig } from '@/providers/RuntimeProvider';
+import { useDashboardChromeStore } from '../../stores/dashboardChromeStore';
+import { strings } from '@/strings';
+
 import {
   useDashboardOverview,
   useDashboardModels,
   useDashboardRecords,
   useDashboardModelDetail,
 } from './hooks';
-import { useDashboardChromeStore } from '../../stores/dashboardChromeStore';
-import type { DashboardModelSummary } from '@/models/dashboardModelSummary';
-import type { DashboardOverviewItem } from '@/models/dashboardOverviewItem';
 import type { DashboardPanelProps } from './models/dashboardPanelProps';
 import type { LineChartProps } from './models/lineChartProps';
 

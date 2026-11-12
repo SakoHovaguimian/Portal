@@ -1,5 +1,7 @@
 import type { PropsWithChildren, ReactNode } from 'react';
+
 import type { AppSession } from '@/models/appSession';
+
 import type { AppSidebarItem } from './sidebarItem';
 
 export type AppShellProps = PropsWithChildren<{

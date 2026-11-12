@@ -1,8 +1,9 @@
 'use client';
 
+import { Card, EmptyState, ErrorState } from '@/components/ui';
 import type { User } from '@/models';
 import { strings } from '@/strings';
-import { Card, EmptyState, ErrorState } from '@/components/ui';
+
 import { useUser } from './hooks';
 import type { UserDetailScreenProps } from './models/userDetailScreenProps';
 

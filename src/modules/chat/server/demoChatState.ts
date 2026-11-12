@@ -1,23 +1,27 @@
 import 'server-only';
 import { randomUUID } from 'node:crypto';
+
 import { projectConfiguration } from '@/config/projectConfiguration';
-import { getDemoState } from '@/services/demo/demoState';
-import { users as fixtureUsers } from '@/services/demo/demoFixtures';
-import { portalChatStrings as copy } from '@/strings';
 import type { UserTransport } from '@/services/api/models/userTransport';
-import type { ChatMember } from '../models/chatMember';
+import { users as fixtureUsers } from '@/services/demo/demoFixtures';
+import { getDemoState } from '@/services/demo/demoState';
+import { portalChatStrings as copy } from '@/strings';
+
 import type { ChatConversation } from '../models/chatConversation';
+import type { ChatMember } from '../models/chatMember';
 import type { ConversationMessage } from '../models/conversationMessage';
 import type { DemoChatWorkspace } from './models/demoChatWorkspace';
 
 const owner = globalThis as typeof globalThis & {
-    portalChatWorkspace?: DemoChatWorkspace;
+  portalChatWorkspace?: DemoChatWorkspace;
 };
+
 // **************************************
 // MARK: - RESET DEMO CHAT STATE
 // **************************************
 
 export function resetDemoChatState() { delete owner.portalChatWorkspace; }
+
 // **************************************
 // MARK: - RESET DEMO CHAT ACCOUNT
 // **************************************
@@ -73,6 +77,7 @@ export function resetDemoChatAccount(userId: string) {
   state.people = state.people.filter((person) => person.id !== userId);
 
 }
+
 // **************************************
 // MARK: - GET DEMO CHAT WORKSPACE
 // **************************************

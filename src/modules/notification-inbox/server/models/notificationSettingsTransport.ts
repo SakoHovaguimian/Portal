@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { NotificationTimezoneSchema } from '../../models/notificationTimezone';
 
 export const NotificationSettingsTransportSchema = z.object({

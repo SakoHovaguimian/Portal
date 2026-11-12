@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
-import { BlogEditorScreen } from '@/modules/blog/BlogEditorScreen';
+
 import { portalPublishingStrings } from '@/strings';
+
+import { BlogEditorScreen } from '@/modules/blog/BlogEditorScreen';
 
 export const metadata: Metadata = {
   title: portalPublishingStrings.article.newTitle,

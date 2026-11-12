@@ -1,11 +1,13 @@
 'use client';
 
-import type { ScheduleDayDisclosureProps } from '../models/scheduleDayDisclosureProps';
 import { useId } from 'react';
+
+import { cn } from '../lib/cn';
+import type { ScheduleDayDisclosureProps } from '../models/scheduleDayDisclosureProps';
+import { strings } from '@/strings';
+
 import { Button } from './Button';
 import { UiIcon } from './UiIcon';
-import { cn } from '../lib/cn';
-import { strings } from '@/strings';
 
 // Keep weekly days and dated exceptions scannable while revealing their controls.
 export function ScheduleDayDisclosure({

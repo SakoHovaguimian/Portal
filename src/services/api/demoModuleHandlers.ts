@@ -1,27 +1,41 @@
 import 'server-only';
+
+// Application and shared services
 import { portalModules } from '@/config/portalModules';
-import type { DemoRequestHandler } from '@/services/demo/models/demoRequestHandler';
 import {
   registerDemoReset,
   registerDemoAccountReset,
 } from '@/services/demo/demoResetRegistry';
-import { handlePublishingRequest } from '@/modules/blog/server/handlePublishingRequest';
-import { resetDemoBlogState } from '@/modules/blog/server/demoBlogState';
-import { handlePublicImageRequest } from '@/services/media/server/handlePublicImageRequest';
+import type { DemoRequestHandler } from '@/services/demo/models/demoRequestHandler';
 import { resetDemoPublicImages } from '@/services/media/server/demoPublicImages';
-import { handleNotificationInboxRequest } from '@/modules/notification-inbox/demo/handleNotificationInboxRequest';
-import { resetDemoNotificationInboxState } from '@/modules/notification-inbox/demo/notificationInboxState';
-import { handleDemoAccountToolsRequest } from '@/modules/account-tools/demo/handleDemoAccountToolsRequest';
+import { handlePublicImageRequest } from '@/services/media/server/handlePublicImageRequest';
+
+// Account tools
 import { resetDemoAccountToolsState } from '@/modules/account-tools/demo/accountToolsState';
+import { handleDemoAccountToolsRequest } from '@/modules/account-tools/demo/handleDemoAccountToolsRequest';
+
+// Background jobs
+import { resetDemoBackgroundJobs } from '@/modules/background-jobs/server/demoJobQueue';
+import { handleDemoBackgroundJobRequest } from '@/modules/background-jobs/server/handleDemoBackgroundJobRequest';
+
+// Blog
+import { resetDemoBlogState } from '@/modules/blog/server/demoBlogState';
+import { handlePublishingRequest } from '@/modules/blog/server/handlePublishingRequest';
+
+// Chat
+import { resetDemoChatState, resetDemoChatAccount } from '@/modules/chat/server/demoChatState';
+import { handleDemoChatRequest } from '@/modules/chat/server/handleDemoChatRequest';
+
+// Engagement
 import { handleDemoEngagementRequest } from '@/modules/engagement/server/demoEngagementApi';
 import {
   resetDemoEngagementState,
   resetUserDemoEngagement,
 } from '@/modules/engagement/server/demoEngagementState';
-import { handleDemoChatRequest } from '@/modules/chat/server/handleDemoChatRequest';
-import { resetDemoChatState, resetDemoChatAccount } from '@/modules/chat/server/demoChatState';
-import { handleDemoBackgroundJobRequest } from '@/modules/background-jobs/server/handleDemoBackgroundJobRequest';
-import { resetDemoBackgroundJobs } from '@/modules/background-jobs/server/demoJobQueue';
+
+// Notification inbox
+import { handleNotificationInboxRequest } from '@/modules/notification-inbox/demo/handleNotificationInboxRequest';
+import { resetDemoNotificationInboxState } from '@/modules/notification-inbox/demo/notificationInboxState';
 
 // **************************************
 // MARK: - COMPOSE DEMO MODULE HANDLERS

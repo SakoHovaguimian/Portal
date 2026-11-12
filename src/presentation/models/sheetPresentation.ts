@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react';
-import type { PresentationMotionOverride } from './presentationMotionOverride';
+
 import type { SheetTone, SheetSide, SheetSize } from '@/components/ui';
+
+import type { PresentationMotionOverride } from './presentationMotionOverride';
 
 export type SheetPresentation = {
   kind: 'sheet';

@@ -1,11 +1,13 @@
 import 'server-only';
 import { cookies } from 'next/headers';
+
 import { environment, getRuntimeConfig } from '@/config/environment';
+import { DemoContextSchema } from '@/models/demoContext';
 import {
   DemoSettingsInputSchema,
   type DemoSettingsInput,
 } from '@/models/demoSettings';
-import { DemoContextSchema } from '@/models/demoContext';
+
 import type { DemoCookieReader } from './models/demoCookieReader';
 
 export const demoSettingsCookieName = 'portal_demo_preferences';

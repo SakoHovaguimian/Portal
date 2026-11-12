@@ -3,6 +3,7 @@
 import { Button, DataPanel, EmptyState, UiIcon } from '@/components/ui';
 import { usePresentationService } from '@/presentation/PresentationProvider';
 import { strings } from '@/strings';
+
 import { ShowcaseSection } from './ShowcaseSection';
 
 export function EmptyStatesShowcase() {

@@ -2,9 +2,10 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
-import { componentExpansionStrings as copy } from '@/strings';
+
 import { cn } from '../lib/cn';
 import type { AvatarProps } from '../models/avatarProps';
+import { componentExpansionStrings as copy } from '@/strings';
 
 const sizes = {
   sm: 'size-8 text-xs',

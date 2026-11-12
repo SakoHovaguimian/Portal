@@ -1,10 +1,8 @@
 import { z } from 'zod';
 
-export const ChatReactionEmojiSchema = z.enum([
-  '👍',
-  '🎉',
-  '❤️',
-]);
+import { ChatReactionEmojiSchema } from './chatReactionEmoji';
+
+export { ChatReactionEmojiSchema, type ChatReactionEmoji } from './chatReactionEmoji';
 
 export const ChatReactionSchema = z.object({
   emoji: ChatReactionEmojiSchema,
@@ -12,7 +10,5 @@ export const ChatReactionSchema = z.object({
 });
 
 export const ChatReactionInputSchema = ChatReactionSchema.pick({ emoji: true }).strict();
-
-export type ChatReactionEmoji = z.infer<typeof ChatReactionEmojiSchema>;
 
 export type ChatReaction = z.infer<typeof ChatReactionSchema>;

@@ -1,9 +1,10 @@
 'use client';
 
-import type { RatingSummaryProps } from '../models/ratingSummaryProps';
 import { cn } from '../lib/cn';
-import { UiIcon } from './UiIcon';
+import type { RatingSummaryProps } from '../models/ratingSummaryProps';
+
 import styles from './RatingSummary.module.css';
+import { UiIcon } from './UiIcon';
 
 export function RatingSummary({
   average,

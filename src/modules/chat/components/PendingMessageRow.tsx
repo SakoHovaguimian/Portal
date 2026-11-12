@@ -1,7 +1,9 @@
 'use client';
-import type { PendingMessageRowProps } from '../models/pendingMessageRowProps';
+
 import { Button, FileList, InitialsAvatar } from '@/components/ui';
 import { portalChatStrings as copy } from '@/strings';
+
+import type { PendingMessageRowProps } from '../models/pendingMessageRowProps';
 
 export function PendingMessageRow({ item, author, reply, onRetry }: PendingMessageRowProps) {
 

@@ -1,7 +1,41 @@
 # Migration verification
 
+## Portal Adopts Existing Obelisk Style — November 12, 2026
+
+Obelisk's existing `docs/prompts/LINTING_FORMATTING_SEMANTICS.md` was read as the style reference. Obelisk remained unchanged and its working tree was clean at final verification. Portal owns its local enforcement; no companion checkout, shared package, copied executable baseline, or cross-repository comparison is required.
+
+Five GPT-6.1 Sol agents with extra-high reasoning audited one exclusive three-module assignment each. Every maintained module file and relevant direct caller was reviewed. Final coverage includes 443 module files:
+
+| Assignment | Modules                                          | Files |
+| ---------- | ------------------------------------------------ | ----: |
+| Sol 1      | Account Tools, Auth, Background Jobs             |   107 |
+| Sol 2      | Blog, Chat, Component Library                    |   199 |
+| Sol 3      | Dashboard, Developer Settings, Engagement        |    33 |
+| Sol 4      | Experience, Feature Requests, Notification Inbox |    63 |
+| Sol 5      | Onboarding, Settings, Users                      |    41 |
+
+- Corrected package/shared/feature import grouping and resolved-path order, with contextual buckets in composition roots and large mixed sections. Package order, side-effect barriers, import bindings/type modifiers, registrations, and construction order were preserved. Portal's ESLint now permits the group boundaries required by Obelisk's existing guide.
+- Reviewed compact/expanded block and class padding, constructor layout, exact MARKs, method-bearing interfaces, named callback/closure results, model boundaries, naming, and file hygiene. Existing Portal indentation, punctuation, and wrapping remain its established file family, as Obelisk's guide requires.
+- Split independent model/schema/enum declarations into 28 module model files, including shared live/demo pin and legal-query validators and endpoint transport envelopes. Added one unchanged Firebase error-response model under its existing service owner. Schema values, defaults, strictness, response fields, inferred contracts, and parse/await placement were preserved.
+- Clarified internal names and split compressed statements. Hook-free section helpers in the chat workspace, thread, composer, and article fields preserve rendered elements, keys, classes, handlers, hook owners, and state lifetimes. All authored copy and theme values remain unchanged.
+- Shared infrastructure and tooling import sections were checked separately. No repository/controller layer, dependencies, tests, worktrees, commits, pushes, or index mutations were introduced by this task. A separately staged blog-model change was left staged.
+
+Verification completed under Node 22.21.1:
+
+- Every assignment passed focused ESLint with zero warnings, canonical formatting idempotence, and scoped whitespace checks. Final global `npm run format:code` passed twice with identical hashes across 1,087 maintained code files on the second pass (`fcdda86e329113519664cfd386fdf1811ea4779cdb1fe124c208fb050c036ec5`).
+- `npm run check` passed: ESLint, type generation/TypeScript, installed Next.js editor diagnostics, strings, colors, shared controls, and Tailwind checks. `DEMO_MODE=true npm run build` passed. Both staged and unstaged `git diff --check` passed.
+- JSX parity review compared all 289 changed TSX files against HEAD: rendered tag counts, literal attributes, and hook-call order were unchanged. Agent review also checked moved model declaration ASTs and closure/await semantics. The shared Firebase error envelope retains its original validators.
+- An owned production demo on port 4402 returned 200 for 19 route smoke reads spanning all modules. Public sessions contained user/expiry/setup fields only. Account FAQ/legal/device and notification reads returned 200; an extra strict legal-query key and an invalid notification read value returned 400. Anonymous API access returned 401 and a foreign-origin session mutation returned 403.
+- Browser verification covered demo preset sign-in, the empty conversation state, creating a synthetic conversation, sending and pinning a synthetic message, details/pinned-message rendering, safe-focus draft navigation with retained text, and dialog focus restoration. A simulated request error showed retry actions; normal-response recovery restored the existing conversation and message.
+- The article editor showed its validation errors and retained entered fields, generated the slug, added a heading block, and successfully saved a synthetic draft. Chat and editor were inspected at 1280px and 390px; both narrow views had a document width of 390px. The saved desktop screenshot is `portal-style-audit.jpg` in this chat's visualization directory.
+- Simulation was restored to normal. The browser tab and temporary viewport override were cleaned up; the owned production server was stopped and port 4402 closed. All mutations were confined to ephemeral local demo state.
+
+Limits: live Firebase/backend refresh, sockets, Messaging, analytics, and external media/provider delivery were not exercised. The supplemental frontend skill's strict text scanner stalled in HTML/regex parsing and was interrupted without a result; it is not recorded as passing. Project-owned checks and the module/manual gates above passed.
+
 ## Remote Sharing — November 12, 2026
 
+- Applied the same script cleanup as Obelisk: focused option parsing and server-startup/readiness helpers, descriptive names, standard MARKs, and separate Windows/POSIX cleanup methods. Portal's env-file loading, process-only public origin, centralized copy, default port, and cancellation behavior are preserved. Focused ESLint fixes passed twice with identical file hashes on the second pass; all sharing scripts passed `node --check`.
+- After the cleanup, `npm run check` and `DEMO_MODE=true npm run build` passed under Node 22.21.1. The real public demo share rendered the login page in a browser; HTTP demo login/dashboard checks returned 200, and a foreign-origin mutation returned 403. Help, invalid-port, missing-helper, and occupied-port checks behaved as before. Control + C exited 0, removed the owned tunnel/Next.js process tree, and closed port 4401. Formatting and ownership changes are limited to the sharing scripts; no tests were added.
 - Added `npm run share` with a temporary Cloudflare Quick Tunnel, configurable local port, process-only public origin, and exact Next.js development-origin allowance. Environment files and backend ownership are unchanged.
 - `npm run check` and `DEMO_MODE=true npm run build` passed under Node 22.21.1. Focused ESLint fixes were run twice; `git diff --check` passed. No tests were added.
 - A real Quick Tunnel served the demo login and dashboard in the browser. Demo account sign-in and subsequent authenticated proxy reads/mutations returned 200. Control + C returned exit 0, removed the owned tunnel/Next process tree, and closed the local port. Invalid-port, missing-helper, and occupied-port paths failed without reusing another server.

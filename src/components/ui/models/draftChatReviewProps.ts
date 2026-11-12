@@ -1,4 +1,5 @@
 import type { useReviewedDraftAssistant } from '../useReviewedDraftAssistant';
+
 import type { ReviewedDraftAssistantField } from './reviewedDraftAssistant';
 
 export type DraftChatReviewProps = Pick<

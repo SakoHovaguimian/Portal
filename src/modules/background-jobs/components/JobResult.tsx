@@ -1,5 +1,6 @@
 import { Card, DescriptionList, UiIcon } from '@/components/ui';
 import { portalJobStrings as copy } from '@/strings';
+
 import type { BackgroundJobProps } from '../models/backgroundJobProps';
 
 export function JobResult({ job }: BackgroundJobProps) {

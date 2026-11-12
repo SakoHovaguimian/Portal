@@ -1,6 +1,8 @@
 'use client';
+
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+
 import {
   Button,
   Card,
@@ -18,17 +20,18 @@ import {
   Switch,
   TimezoneSelect,
 } from '@/components/ui';
-import { portalOnboardingStrings as copy } from '@/strings';
-import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
-import { resolveOnboardingRedirect } from '@/modules/auth/sessionClient';
 import { useSessionState } from '@/providers/AppProviders';
+import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
+import { portalOnboardingStrings as copy } from '@/strings';
+
+import { resolveOnboardingRedirect } from '@/modules/auth/sessionClient';
 import { useOnboarding, useSaveOnboarding } from './hooks';
-import { onboardingSteps } from './onboardingConfiguration';
 import type { OnboardingFormProps } from './models/onboardingFormProps';
+import { OnboardingPreferencesSchema } from './models/onboardingPreferences';
+import { OnboardingProfileSchema } from './models/onboardingProfile';
 import type { OnboardingScreenProps } from './models/onboardingScreenProps';
 import type { OnboardingStep } from './models/onboardingStep';
-import { OnboardingProfileSchema } from './models/onboardingProfile';
-import { OnboardingPreferencesSchema } from './models/onboardingPreferences';
+import { onboardingSteps } from './onboardingConfiguration';
 
 export function OnboardingScreen({ redirectTo }: OnboardingScreenProps) {
 
@@ -69,12 +72,14 @@ function OnboardingForm({
   const busyRef = useRef(false);
   const formRef = useRef<HTMLFormElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
+
   useEffect(() => {
 
     dirtyRef.current = dirty;
     busyRef.current = mutation.isPending;
 
   }, [dirty, mutation.isPending]);
+
   useUnsavedFormGuard(dirtyRef, busyRef);
   const selectedStepIndex = onboardingSteps.findIndex(
     (item) => item.key === step,
@@ -105,34 +110,34 @@ function OnboardingForm({
     }
     try {
 
-      const next = await mutation.mutateAsync(
+      const savedProgress = await mutation.mutateAsync(
         step === 'profile'
           ? { step, input: profile }
           : step === 'preferences'
             ? { step, input: preferences }
             : { step: 'review', complete: true },
       );
-      setProfile(next.profile);
-      setPreferences(next.preferences);
+      setProfile(savedProgress.profile);
+      setPreferences(savedProgress.preferences);
       dirtyRef.current = false;
       busyRef.current = false;
       if (step === 'profile' && session) {
 
         const updatedSession = {
           ...session,
-          user: { ...session.user, ...next.profile },
+          user: { ...session.user, ...savedProgress.profile },
         };
         setSession(updatedSession);
 
       }
-      if (next.completedAt) {
+      if (savedProgress.completedAt) {
 
         router.replace(resolveOnboardingRedirect(redirectTo));
         router.refresh();
         return;
 
       }
-      setStep(next.currentStep);
+      setStep(savedProgress.currentStep);
       headingRef.current?.focus();
 
     } catch {

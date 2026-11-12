@@ -1,13 +1,7 @@
 import { z } from 'zod';
+
 import type { ApiClientInterface } from '@/services/api/apiClientInterface';
-import { NotificationPageSchema } from '../models/notificationPage';
-import { NotificationCountsSchema } from '../models/notificationCounts';
-import { NotificationMutationResultSchema } from '../models/notificationMutationResult';
-import {
-  NotificationInboxQuerySchema,
-  type NotificationInboxQuery,
-  type NotificationInboxFilters,
-} from '../models/notificationInboxQuery';
+
 import {
   NotificationArchiveInputSchema,
   type NotificationArchiveInput,
@@ -16,6 +10,14 @@ import {
   NotificationBulkReadInputSchema,
   type NotificationBulkReadInput,
 } from '../models/notificationBulkReadInput';
+import { NotificationCountsSchema } from '../models/notificationCounts';
+import {
+  NotificationInboxQuerySchema,
+  type NotificationInboxQuery,
+  type NotificationInboxFilters,
+} from '../models/notificationInboxQuery';
+import { NotificationMutationResultSchema } from '../models/notificationMutationResult';
+import { NotificationPageSchema } from '../models/notificationPage';
 import {
   NotificationPreferenceSchema,
   NotificationPreferencesInputSchema,
@@ -28,7 +30,8 @@ import {
 import { NotificationUserSettingsSchema } from '../models/notificationUserSettings';
 import { notificationInboxQueryParams } from '../notificationInboxQueryParams';
 
-const root = '/portal/notification-inbox';
+const notificationInboxPath = '/portal/notification-inbox';
+
 export class NotificationInboxService {
 
   constructor(private readonly api: ApiClientInterface) {}
@@ -41,7 +44,7 @@ export class NotificationInboxService {
 
     return NotificationPageSchema.parse(
       await this.api.request(
-        `${root}?${notificationInboxQueryParams(NotificationInboxQuerySchema.parse(query))}`,
+        `${notificationInboxPath}?${notificationInboxQueryParams(NotificationInboxQuerySchema.parse(query))}`,
         { signal },
       ),
     );
@@ -59,7 +62,7 @@ export class NotificationInboxService {
 
     return NotificationCountsSchema.parse(
       await this.api.request(
-        `${root}/counts?${notificationInboxQueryParams(filters)}`,
+        `${notificationInboxPath}/counts?${notificationInboxQueryParams(filters)}`,
         { signal },
       ),
     );
@@ -70,11 +73,11 @@ export class NotificationInboxService {
   // MARK: - SET NOTIFICATION READ STATE
   // **************************************
 
-  async setRead(id: string, read: boolean) {
+  async setRead(notificationId: string, read: boolean) {
 
     return NotificationMutationResultSchema.parse(
       await this.api.request(
-        `${root}/${encodeURIComponent(z.string().uuid().parse(id))}/read`,
+        `${notificationInboxPath}/${encodeURIComponent(z.string().uuid().parse(notificationId))}/read`,
         { method: 'PUT', body: { read } },
       ),
     );
@@ -88,7 +91,7 @@ export class NotificationInboxService {
   async setBulkRead(input: NotificationBulkReadInput) {
 
     return NotificationMutationResultSchema.parse(
-      await this.api.request(`${root}/read`, {
+      await this.api.request(`${notificationInboxPath}/read`, {
         method: 'PUT',
         body: NotificationBulkReadInputSchema.parse(input),
       }),
@@ -100,11 +103,11 @@ export class NotificationInboxService {
   // MARK: - ARCHIVE NOTIFICATION
   // **************************************
 
-  async archive(id: string) {
+  async archive(notificationId: string) {
 
     return NotificationMutationResultSchema.parse(
       await this.api.request(
-        `${root}/${encodeURIComponent(z.string().uuid().parse(id))}`,
+        `${notificationInboxPath}/${encodeURIComponent(z.string().uuid().parse(notificationId))}`,
         { method: 'DELETE' },
       ),
     );
@@ -118,7 +121,7 @@ export class NotificationInboxService {
   async archiveBulk(input: NotificationArchiveInput) {
 
     return NotificationMutationResultSchema.parse(
-      await this.api.request(root, {
+      await this.api.request(notificationInboxPath, {
         method: 'DELETE',
         body: NotificationArchiveInputSchema.parse(input),
       }),
@@ -134,7 +137,9 @@ export class NotificationInboxService {
 
     return z
       .array(NotificationPreferenceSchema)
-      .parse(await this.api.request(`${root}/preferences`, { signal }));
+      .parse(
+        await this.api.request(`${notificationInboxPath}/preferences`, { signal }),
+      );
 
   }
 
@@ -145,7 +150,7 @@ export class NotificationInboxService {
   async savePreferences(input: NotificationPreferencesInput) {
 
     return z.array(NotificationPreferenceSchema).parse(
-      await this.api.request(`${root}/preferences`, {
+      await this.api.request(`${notificationInboxPath}/preferences`, {
         method: 'PUT',
         body: NotificationPreferencesInputSchema.parse(input),
       }),
@@ -160,7 +165,7 @@ export class NotificationInboxService {
   async settings(signal?: AbortSignal) {
 
     return NotificationUserSettingsSchema.parse(
-      await this.api.request(`${root}/settings`, { signal }),
+      await this.api.request(`${notificationInboxPath}/settings`, { signal }),
     );
 
   }
@@ -172,7 +177,7 @@ export class NotificationInboxService {
   async setTimezone(timezone: string | null) {
 
     return NotificationUserSettingsSchema.parse(
-      await this.api.request(`${root}/settings/timezone`, {
+      await this.api.request(`${notificationInboxPath}/settings/timezone`, {
         method: 'PUT',
         body: NotificationTimezoneInputSchema.parse({ timezone }),
       }),
@@ -187,7 +192,7 @@ export class NotificationInboxService {
   async syncDetectedTimezone(lastTimezone: string) {
 
     return NotificationUserSettingsSchema.parse(
-      await this.api.request(`${root}/settings/last-timezone`, {
+      await this.api.request(`${notificationInboxPath}/settings/last-timezone`, {
         method: 'PUT',
         body: NotificationDetectedTimezoneInputSchema.parse({ lastTimezone }),
       }),

@@ -1,8 +1,10 @@
 'use client';
 
-import type { CheckboxProps } from '../models/checkboxProps';
 import { useState } from 'react';
+
 import { cn } from '../lib/cn';
+import type { CheckboxProps } from '../models/checkboxProps';
+
 import { UiIcon } from './UiIcon';
 
 export function Checkbox({

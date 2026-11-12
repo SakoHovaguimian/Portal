@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+
 import {
   Button,
   Page,
@@ -12,8 +13,9 @@ import {
 import { NotificationControls } from '@/services/notifications/components/NotificationControls';
 import { CookieConsentControls } from '@/services/privacy/components/CookieConsentControls';
 import { strings, portalOverlayMotionStrings } from '@/strings';
-import { ThemeControls } from './components/ThemeControls';
+
 import { OverlayMotionControls } from './components/OverlayMotionControls';
+import { ThemeControls } from './components/ThemeControls';
 
 export function AppearanceScreen() {
 

@@ -1,6 +1,6 @@
-import type { UiIconProps } from '../models/uiIconProps';
-import type { IconName } from '../models/iconName';
 import { cn } from '../lib/cn';
+import type { IconName } from '../models/iconName';
+import type { UiIconProps } from '../models/uiIconProps';
 
 const paths: Record<IconName, string> = {
   smile: 'M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0ZM8 9h.01M16 9h.01M8 14a4 4 0 0 0 8 0',

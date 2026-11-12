@@ -1,16 +1,18 @@
-import type { SlugRouteProps } from '@/models/slugRouteProps';
-import { portalModules } from '@/config/portalModules';
 import { cache } from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+
 import { Button, UiIcon } from '@/components/ui';
+import { portalModules } from '@/config/portalModules';
+import type { SlugRouteProps } from '@/models/slugRouteProps';
 import { portalPublishingStrings } from '@/strings';
+
+import styles from '@/modules/blog/Blog.module.css';
+import { BlogArticleCard } from '@/modules/blog/components/BlogArticleCard';
+import { BlogArticleReader } from '@/modules/blog/components/BlogArticleReader';
 import { publicBlogService } from '@/modules/blog/services/publicBlogService';
 import { BlogEngagementControls } from '@/modules/engagement/components/BlogEngagementControls';
-import { BlogArticleReader } from '@/modules/blog/components/BlogArticleReader';
-import { BlogArticleCard } from '@/modules/blog/components/BlogArticleCard';
-import styles from '@/modules/blog/Blog.module.css';
 
 const copy = portalPublishingStrings.article;
 

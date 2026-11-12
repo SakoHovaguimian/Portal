@@ -1,21 +1,22 @@
 import type { ApiClientInterface } from '@/services/api/apiClientInterface';
 import { validateInput } from '@/utils/validateInput';
-import {
-  EngagementKeySchema,
-  type EngagementKey,
-} from '../models/engagementTarget';
-import {
-  EngagementSummarySchema,
-} from '../models/engagementRecord';
+
 import {
   EngagementInputSchema,
   type EngagementInput,
 } from '../models/engagementInput';
 import {
+  EngagementKeySchema,
+  type EngagementKey,
+} from '../models/engagementKey';
+import {
+  EngagementSummarySchema,
+} from '../models/engagementSummary';
+import { SavedPageSchema } from '../models/savedPage';
+import {
   SavedQuerySchema,
   type SavedQuery,
 } from '../models/savedQuery';
-import { SavedPageSchema } from '../models/savedPage';
 
 export class EngagementService {
 
@@ -25,10 +26,10 @@ export class EngagementService {
   // MARK: - BUILD ENGAGEMENT PATH
   // **************************************
 
-  private path(key: EngagementKey) {
+  private buildEngagementPath(key: EngagementKey) {
 
-    const value = validateInput(EngagementKeySchema, key);
-    return `/engagement/${encodeURIComponent(value.type)}/${encodeURIComponent(value.id)}`;
+    const validatedKey = validateInput(EngagementKeySchema, key);
+    return `/engagement/${encodeURIComponent(validatedKey.type)}/${encodeURIComponent(validatedKey.id)}`;
 
   }
 
@@ -39,7 +40,7 @@ export class EngagementService {
   async get(key: EngagementKey, signal?: AbortSignal) {
 
     return EngagementSummarySchema.parse(
-      await this.api.request(this.path(key), { signal }),
+      await this.api.request(this.buildEngagementPath(key), { signal }),
     );
 
   }
@@ -51,7 +52,7 @@ export class EngagementService {
   async update(key: EngagementKey, input: EngagementInput) {
 
     return EngagementSummarySchema.parse(
-      await this.api.request(this.path(key), {
+      await this.api.request(this.buildEngagementPath(key), {
         method: 'PUT',
         body: validateInput(EngagementInputSchema, input),
       }),
@@ -65,11 +66,11 @@ export class EngagementService {
 
   async saved(query: SavedQuery, signal?: AbortSignal) {
 
-    const value = validateInput(SavedQuerySchema, query);
+    const validatedQuery = validateInput(SavedQuerySchema, query);
     const params = new URLSearchParams({
-      query: value.query,
-      limit: String(value.limit),
-      offset: String(value.offset),
+      query: validatedQuery.query,
+      limit: String(validatedQuery.limit),
+      offset: String(validatedQuery.offset),
     });
     return SavedPageSchema.parse(
       await this.api.request(`/engagement/saved?${params}`, { signal }),

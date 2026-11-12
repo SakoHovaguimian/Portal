@@ -1,9 +1,10 @@
-import type { AppShellProps } from '../models/appShellProps';
-import { strings } from '@/strings';
-import { AppSidebar, type AppSidebarItem } from './AppSidebar';
-import { MobileNavigationMenu } from './MobileNavigationMenu';
 import { UiIcon } from '../components/UiIcon';
 import { cn } from '../lib/cn';
+import type { AppShellProps } from '../models/appShellProps';
+import { strings } from '@/strings';
+
+import { AppSidebar, type AppSidebarItem } from './AppSidebar';
+import { MobileNavigationMenu } from './MobileNavigationMenu';
 
 const navigation: AppSidebarItem[] = [
   {

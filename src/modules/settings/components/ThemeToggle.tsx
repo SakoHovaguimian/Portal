@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+
 import { Button } from '@/components/ui';
-import { useThemePreference } from '@/providers/ThemePreferenceProvider';
 import { usePresentationService } from '@/presentation/PresentationProvider';
+import { useThemePreference } from '@/providers/ThemePreferenceProvider';
 import { strings } from '@/strings';
 
 export function ThemeToggle() {

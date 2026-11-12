@@ -1,28 +1,30 @@
 import 'server-only';
 import { z } from 'zod';
+
 import {
   AuthError,
   NotFoundError,
   OwnershipError,
   ValidationError,
 } from '@/errors/domainErrors';
-import type { ServerSession } from '@/services/session/models/serverSession';
 import type { DemoContext } from '@/models/demoContext';
-import { getDemoState } from '@/services/demo/demoState';
 import { resetDemoAccountState } from '@/services/demo/demoResetRegistry';
+import { getDemoState } from '@/services/demo/demoState';
+import type { ServerSession } from '@/services/session/models/serverSession';
 import {
   portalAccountToolsStrings as copy,
   portalHelpFaqSections,
 } from '@/strings';
+
+import { getDemoAccountToolsState } from './accountToolsState';
 import { AccountDeletionSchema } from '../models/accountDeletion';
 import { AccountDeviceQuerySchema } from '../models/accountDeviceQuery';
 import {
   AccountToolsPagingSchema,
   type AccountToolsPaging,
 } from '../models/accountToolsPaging';
+import { LegalInformationQuerySchema } from '../models/legalInformationQuery';
 import { NotificationDeliveryQuerySchema } from '../models/notificationDeliveryQuery';
-import { LegalContextSchema } from '../models/legalContext';
-import { getDemoAccountToolsState } from './accountToolsState';
 
 // **************************************
 // MARK: - CREATE ACCOUNT TOOLS RESPONSE
@@ -162,7 +164,7 @@ export async function handleDemoAccountToolsRequest(
     }
     if (resource === 'legal' && !id && !action && method === 'GET') {
 
-      z.object({ context: LegalContextSchema }).strict().parse(rawQuery);
+      LegalInformationQuerySchema.parse(rawQuery);
       return json({
         illustrative: true,
         items:

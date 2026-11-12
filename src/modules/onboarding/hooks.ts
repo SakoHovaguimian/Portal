@@ -1,5 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
 import { useServiceContainer, useSessionState } from '@/providers/AppProviders';
+
 import type { OnboardingUpdate } from './models/onboardingUpdate';
 
 export const onboardingQueryKey = ['onboarding'] as const;

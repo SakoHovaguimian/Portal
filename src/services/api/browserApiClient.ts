@@ -1,10 +1,11 @@
 import { strings } from '@/strings';
+
 import type {
   ApiClientInterface,
   ApiRequestOptions,
 } from './apiClientInterface';
-import { parseApiResponse } from './response';
 import type { BrowserApiClientOptions } from './models/browserApiClientOptions';
+import { parseApiResponse } from './response';
 
 export class BrowserApiClient implements ApiClientInterface {
 

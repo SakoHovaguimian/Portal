@@ -1,4 +1,3 @@
-import { portalPublishingStrings } from '@/strings';
 import {
   Button,
   Field,
@@ -8,8 +7,10 @@ import {
   Select,
   UiIcon,
 } from '@/components/ui';
-import { BlogCoverPresetSchema } from '../models/blogCoverPreset';
+import { portalPublishingStrings } from '@/strings';
+
 import type { BlogCoverFieldProps } from '../models/blogCoverFieldProps';
+import { BlogCoverPresetSchema } from '../models/blogCoverPreset';
 import { blogImageMimeTypes } from '../models/blogMedia';
 import { useBlogImageUpload } from '../useBlogImageUpload';
 

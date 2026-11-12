@@ -1,15 +1,17 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
+
 import { defaultAppearancePreference } from '@/models/appearancePreference';
 import { ThemeIdSchema } from '@/models/themeId';
-import { getTheme } from '@/themes';
 import { presentationMotionStorageKey, presentationMotionChangeEvent, type PresentationMotionPreferenceService } from '@/services/presentation-motion/presentationMotionPreferenceService';
-import { PresentationMotionConfigSchema, defaultPresentationMotionConfig, type PresentationMotionConfig } from './models/presentationMotionConfig';
-import type { ResolvedPresentationMotionConfig } from './models/resolvedPresentationMotionConfig';
-import type { ResolvedPresentationMotion } from './models/resolvedPresentationMotion';
+import { getTheme } from '@/themes';
+
 import type { MotionTarget } from './models/motionTarget';
+import { PresentationMotionConfigSchema, defaultPresentationMotionConfig, type PresentationMotionConfig } from './models/presentationMotionConfig';
 import type { PresentationMotionOverride } from './models/presentationMotionOverride';
+import type { ResolvedPresentationMotion } from './models/resolvedPresentationMotion';
+import type { ResolvedPresentationMotionConfig } from './models/resolvedPresentationMotionConfig';
 
 export function usePresentationMotion(preferenceService: PresentationMotionPreferenceService) {
 

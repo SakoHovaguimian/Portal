@@ -1,23 +1,29 @@
 'use client';
 
-import type { AppProvidersProps } from './models/appProvidersProps';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import type { SessionContextValue } from './models/sessionContextValue';
 import { createContext, useContext, useState } from 'react';
+
+// Shared application dependencies
 import { ClientServiceContainer } from '@/clientContainer';
+import { FloatingAssistantProvider } from '@/components/ui/components/FloatingAssistantProvider';
+import { portalModules } from '@/config/portalModules';
 import { createQueryClient } from '@/lib/client/queryClient';
 import { PresentationProvider } from '@/presentation/PresentationProvider';
 import { RealtimeProvider } from '@/services/realtime/RealtimeProvider';
 import { SessionKeepAlive } from '@/services/session/components/SessionKeepAlive';
 import { strings } from '@/strings';
-import { ThemePreferenceProvider } from './ThemePreferenceProvider';
+
+// Feature providers
+import { NotificationTimezoneSync } from '@/modules/notification-inbox/components/NotificationTimezoneSync';
+import { OnboardingGate } from '@/modules/onboarding/OnboardingGate';
+
+// Local providers and contracts
+import type { AppProvidersProps } from './models/appProvidersProps';
+import type { SessionContextValue } from './models/sessionContextValue';
 import { MotionPreferenceProvider } from './MotionPreferenceProvider';
 import { NavigationGuardProvider } from './NavigationGuardProvider';
-import { FloatingAssistantProvider } from '@/components/ui/components/FloatingAssistantProvider';
-import { OnboardingGate } from '@/modules/onboarding/OnboardingGate';
-import { NotificationTimezoneSync } from '@/modules/notification-inbox/components/NotificationTimezoneSync';
-import { portalModules } from '@/config/portalModules';
+import { ThemePreferenceProvider } from './ThemePreferenceProvider';
 
 export { useThemePreference } from './ThemePreferenceProvider';
 const ContainerContext = createContext<ClientServiceContainer | null>(null);

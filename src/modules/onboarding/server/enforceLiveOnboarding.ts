@@ -1,9 +1,11 @@
 import 'server-only';
+
 import { ApiError, AuthError, DomainError } from '@/errors/domainErrors';
 import type { BackendForward } from '@/services/api/models/backendForward';
-import type { ServerSession } from '@/services/session/models/serverSession';
 import { getEffectiveRuntime } from '@/services/demo/demoRuntime';
+import type { ServerSession } from '@/services/session/models/serverSession';
 import { portalOnboardingStrings as copy, strings } from '@/strings';
+
 import { OnboardingProgressSchema } from '../models/onboardingProgress';
 
 // **************************************
@@ -40,6 +42,7 @@ export async function enforceLiveOnboarding(
     !runtime.onboardingEnabled ||
     isOnboardingRecoveryApiPath(path, session.user.id)
   ) { return; }
+
   const response = await forward(
     new Request(request.url, {
       method: 'GET',
@@ -54,6 +57,7 @@ export async function enforceLiveOnboarding(
   if (!response.ok) {
     throw new ApiError(strings.errors.unavailable, 503);
   }
+
   const responseBody = await response.json().catch(() => null);
   const parsed = OnboardingProgressSchema.safeParse(responseBody);
   if (!parsed.success) {

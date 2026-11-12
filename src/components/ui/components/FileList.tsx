@@ -1,13 +1,15 @@
 'use client';
 
-import type { FilePreviewProps } from '../models/filePreviewProps';
 import { useEffect, useState } from 'react';
-import { componentExpansionStrings as copy } from '@/strings';
+
 import type { FileListProps } from '../models/fileListProps';
+import type { FilePreviewProps } from '../models/filePreviewProps';
+import { componentExpansionStrings as copy } from '@/strings';
+
 import { Button } from './Button';
+import { ProgressBar } from './ProgressBar';
 import { RecordThumbnail } from './RecordThumbnail';
 import { UiIcon } from './UiIcon';
-import { ProgressBar } from './ProgressBar';
 
 function FilePreview({ item }: FilePreviewProps) {
 

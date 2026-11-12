@@ -1,6 +1,5 @@
 'use client';
 
-import { calendarDate } from '../lib/calendarDate';
 import { useEffect, useRef } from 'react';
 import { I18nProvider } from 'react-aria';
 import {
@@ -20,12 +19,15 @@ import {
   Label,
   Popover,
 } from 'react-aria-components';
-import { portalUiStrings } from '@/strings';
+
+import { calendarDate } from '../lib/calendarDate';
 import { cn } from '../lib/cn';
 import { motionDuration } from '../lib/motionPreferences';
 import type { DatePickerProps } from '../models/datePickerProps';
-import { UiIcon } from './UiIcon';
+import { portalUiStrings } from '@/strings';
+
 import styles from './DatePicker.module.css';
+import { UiIcon } from './UiIcon';
 
 /** A date-only field with an app-owned, accent-colored calendar. */
 export function DatePicker({

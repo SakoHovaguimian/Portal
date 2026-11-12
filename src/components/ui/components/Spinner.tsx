@@ -1,5 +1,5 @@
-import type { SpinnerProps } from '../models/spinnerProps';
 import { cn } from '../lib/cn';
+import type { SpinnerProps } from '../models/spinnerProps';
 
 export function Spinner({ className }: SpinnerProps) {
 

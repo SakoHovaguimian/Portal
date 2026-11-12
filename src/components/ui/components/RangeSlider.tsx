@@ -1,6 +1,7 @@
 'use client';
 
 import type { RangeSliderProps } from '../models/rangeSliderProps';
+
 import { SliderControl } from './SliderControl';
 
 export function RangeSlider({

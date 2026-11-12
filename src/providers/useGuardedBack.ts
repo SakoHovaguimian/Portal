@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback } from 'react';
+
 import { useNavigationGuard } from './NavigationGuardProvider';
 
 /** Use an owning list/dashboard route as the direct-entry fallback. */

@@ -1,4 +1,5 @@
 import type { ComponentProps, ReactNode } from 'react';
+
 import type { Button } from '../components/Button';
 
 export type SectionCardViewProps = Omit<ComponentProps<typeof Button>, 'title'> & {

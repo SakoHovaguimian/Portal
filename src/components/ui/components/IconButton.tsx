@@ -1,6 +1,7 @@
-import type { IconButtonProps } from '../models/iconButtonProps';
-import { Button } from './Button';
 import { cn } from '../lib/cn';
+import type { IconButtonProps } from '../models/iconButtonProps';
+
+import { Button } from './Button';
 
 export function IconButton({
   label,

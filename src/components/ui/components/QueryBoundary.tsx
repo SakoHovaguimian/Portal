@@ -1,15 +1,17 @@
 'use client';
 
-import type { LoadingMessageProps } from '../models/loadingMessageProps';
-import type { QueryErrorStateProps } from '../models/queryErrorStateProps';
-import type { QueryBoundaryProps } from '../models/queryBoundaryProps';
-import { portalUiStrings, strings } from '@/strings';
-import { DomainError } from '@/errors/domainErrors';
 import type { ReactNode } from 'react';
-import { Card } from './Card';
+
+import type { LoadingMessageProps } from '../models/loadingMessageProps';
+import type { QueryBoundaryProps } from '../models/queryBoundaryProps';
+import type { QueryErrorStateProps } from '../models/queryErrorStateProps';
+import { DomainError } from '@/errors/domainErrors';
+import { portalUiStrings, strings } from '@/strings';
+
 import { Button } from './Button';
-import { Spinner } from './Spinner';
+import { Card } from './Card';
 import { Message } from './Message';
+import { Spinner } from './Spinner';
 
 /**
  * Loading skeleton that matches the Card layout

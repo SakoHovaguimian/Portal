@@ -1,5 +1,6 @@
 import type { ThemeId } from '@/models/themeId';
 import type { ThemeMode } from '@/models/themeMode';
+
 import { getTheme } from './catalog';
 import { compileTheme, themeVariablesToStyle } from './compileTheme';
 

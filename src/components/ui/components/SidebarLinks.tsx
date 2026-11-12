@@ -1,8 +1,9 @@
 'use client';
 
-import type { SidebarLinksProps } from '../models/sidebarLinksProps';
-import { NavigationLink } from './NavigationLink';
 import { cn } from '../lib/cn';
+import type { SidebarLinksProps } from '../models/sidebarLinksProps';
+
+import { NavigationLink } from './NavigationLink';
 
 export function SidebarLinks({ items, onNavigate }: SidebarLinksProps) {
 

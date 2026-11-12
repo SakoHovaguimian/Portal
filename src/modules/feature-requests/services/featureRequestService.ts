@@ -1,12 +1,12 @@
-import { validateInput } from '@/utils/validateInput';
-import type { ApiClientInterface } from '@/services/api/apiClientInterface';
 import {
   FeatureRequestMutationInputSchema,
   type FeatureRequestMutationInput,
 } from '@/models/featureRequest';
 import type { FeatureRequestQuery, PaginatedResult } from '@/models/query';
-import type { FeatureRequestTransport } from '@/services/api/models';
+import type { ApiClientInterface } from '@/services/api/apiClientInterface';
 import { mapFeatureRequestTransportToDomain } from '@/services/api/domainMappers';
+import type { FeatureRequestTransport } from '@/services/api/models';
+import { validateInput } from '@/utils/validateInput';
 
 export class FeatureRequestService {
 
@@ -18,17 +18,19 @@ export class FeatureRequestService {
 
   async listFeatureRequests(query: FeatureRequestQuery, signal?: AbortSignal) {
 
-    const params = new URLSearchParams({
+    const parameters = new URLSearchParams({
       query: query.query || '',
       limit: String(query.limit),
       offset: String(query.offset),
     });
-    const page = await this.api.request<
+    const featureRequestsPage = await this.api.request<
       PaginatedResult<FeatureRequestTransport>
-    >(`/feature-requests?${params}`, { signal });
-    const featureRequests = page.data.map(mapFeatureRequestTransportToDomain);
+    >(`/feature-requests?${parameters}`, { signal });
+    const featureRequests = featureRequestsPage.data.map(
+      mapFeatureRequestTransportToDomain,
+    );
 
-    return { ...page, data: featureRequests };
+    return { ...featureRequestsPage, data: featureRequests };
 
   }
 
@@ -36,11 +38,11 @@ export class FeatureRequestService {
   // MARK: - GET FEATURE REQUEST BY ID
   // **************************************
 
-  async getFeatureRequestById(id: string, signal?: AbortSignal) {
+  async getFeatureRequestById(featureRequestId: string, signal?: AbortSignal) {
 
     return mapFeatureRequestTransportToDomain(
       await this.api.request<FeatureRequestTransport>(
-        `/feature-requests/${encodeURIComponent(id)}`,
+        `/feature-requests/${encodeURIComponent(featureRequestId)}`,
         { signal },
       ),
     );
@@ -66,11 +68,14 @@ export class FeatureRequestService {
   // MARK: - UPDATE FEATURE REQUEST
   // **************************************
 
-  async updateFeatureRequest(id: string, input: FeatureRequestMutationInput) {
+  async updateFeatureRequest(
+    featureRequestId: string,
+    input: FeatureRequestMutationInput,
+  ) {
 
     return mapFeatureRequestTransportToDomain(
       await this.api.request<FeatureRequestTransport>(
-        `/feature-requests/${encodeURIComponent(id)}`,
+        `/feature-requests/${encodeURIComponent(featureRequestId)}`,
         {
           method: 'PATCH',
           body: validateInput(FeatureRequestMutationInputSchema, input),
@@ -84,10 +89,10 @@ export class FeatureRequestService {
   // MARK: - DELETE FEATURE REQUEST
   // **************************************
 
-  async deleteFeatureRequest(id: string) {
+  async deleteFeatureRequest(featureRequestId: string) {
 
     await this.api.request<void>(
-      `/feature-requests/${encodeURIComponent(id)}`,
+      `/feature-requests/${encodeURIComponent(featureRequestId)}`,
       { method: 'DELETE' },
     );
 

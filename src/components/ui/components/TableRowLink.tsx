@@ -1,6 +1,8 @@
-import type { TableRowLinkProps } from '../models/tableRowLinkProps';
 import type { Route } from 'next';
 import Link from 'next/link';
+
+import type { TableRowLinkProps } from '../models/tableRowLinkProps';
+
 import styles from './DataTable.module.css';
 
 // The visible record link owns keyboard focus and its accessible name. This

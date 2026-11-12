@@ -1,7 +1,10 @@
 'use client';
+
 import { useEffect, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+
 import { useServiceContainer } from '@/providers/AppProviders';
+
 import type { ChatDraft } from './models/chatDraft';
 import { ConversationMessageSchema } from './models/conversationMessage';
 import type { PendingChatMessage } from './models/pendingChatMessage';
@@ -19,7 +22,8 @@ export function useChatOutbox(userId: string) {
     const requests = active.current;
     const cleanup = () => {
 
-      for (const controller of requests.values()) { controller.abort(); } requests.clear();
+      for (const controller of requests.values()) { controller.abort(); }
+      requests.clear();
 
     };
 
@@ -38,7 +42,7 @@ export function useChatOutbox(userId: string) {
       setItems((current) => {
 
         let changed = false;
-        const next = current.map((item) => {
+        const updatedItems = current.map((item) => {
 
           if (item.authorId !== userId || item.status === 'sent') { return item; }
           const message = parsed.data.find((candidate) => candidate.authorId === userId && candidate.clientId === item.draft.clientId);
@@ -47,7 +51,7 @@ export function useChatOutbox(userId: string) {
           return { ...item, status: 'sent' as const, draft: { ...item.draft, files: [] }, message };
 
         });
-        return changed ? next : current;
+        return changed ? updatedItems : current;
 
       });
 
@@ -73,7 +77,7 @@ export function useChatOutbox(userId: string) {
     setItems((current) => {
 
       const existing = current.find((item) => item.authorId === userId && item.draft.clientId === clientId);
-      const next = existing ? current.map((item) => item === existing ? {
+      const updatedItems = existing ? current.map((item) => item === existing ? {
         ...item,
         status: 'sending' as const,
       } : item) : [...current, {
@@ -85,7 +89,7 @@ export function useChatOutbox(userId: string) {
         message: null,
       }];
 
-      return next;
+      return updatedItems;
 
     });
     void (async () => {
@@ -102,7 +106,7 @@ export function useChatOutbox(userId: string) {
         }, controller.signal);
         setItems((current) => {
 
-          const next = current.map((item) => item.authorId === userId && item.draft.clientId === clientId ? {
+          const updatedItems = current.map((item) => item.authorId === userId && item.draft.clientId === clientId ? {
             ...item,
             draft: {
               ...item.draft,
@@ -112,7 +116,7 @@ export function useChatOutbox(userId: string) {
             message,
           } : item);
 
-          return next;
+          return updatedItems;
 
         });
         void queryClient.invalidateQueries({ queryKey: ['chat'] });
@@ -121,12 +125,12 @@ export function useChatOutbox(userId: string) {
 
         setItems((current) => {
 
-          const next = current.map((item) => item.authorId === userId && item.draft.clientId === clientId && item.status !== 'sent' ? {
+          const updatedItems = current.map((item) => item.authorId === userId && item.draft.clientId === clientId && item.status !== 'sent' ? {
             ...item,
             status: 'failed' as const,
           } : item);
 
-          return next;
+          return updatedItems;
 
         });
 

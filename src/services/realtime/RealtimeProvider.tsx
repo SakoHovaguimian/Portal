@@ -9,18 +9,20 @@ import {
   useState,
 } from 'react';
 import { io } from 'socket.io-client';
-import type { ChildrenProps } from '@/models/childrenProps';
 import { useQueryClient } from '@tanstack/react-query';
-import { useRuntimeConfig } from '@/providers/RuntimeProvider';
-import { useServiceContainer, useSessionState } from '@/providers/AppProviders';
+
+import type { ChildrenProps } from '@/models/childrenProps';
 import { usePresentationService } from '@/presentation/PresentationProvider';
-import { WebNotificationService } from '@/services/notifications/webNotificationService';
+import { useServiceContainer, useSessionState } from '@/providers/AppProviders';
+import { useRuntimeConfig } from '@/providers/RuntimeProvider';
 import { DemoNotificationService } from '@/services/notifications/demoNotificationService';
 import type { NotificationStatus } from '@/services/notifications/models/notificationStatus';
+import { WebNotificationService } from '@/services/notifications/webNotificationService';
+import { strings } from '@/strings';
+
+import type { RealtimeContextValue } from './models/realtimeContext';
 import { RealtimeEventSchema } from './models/realtimeEvent';
 import { RealtimeTicketSchema } from './models/realtimeTicket';
-import type { RealtimeContextValue } from './models/realtimeContext';
-import { strings } from '@/strings';
 
 const RealtimeContext = createContext<RealtimeContextValue | null>(null);
 export function RealtimeProvider({ children }: ChildrenProps) {

@@ -1,10 +1,11 @@
-import type { MessageProps } from '../models/messageProps';
-import { strings } from '@/strings';
-import type { UiIntent } from '../models/uiIntent';
+import { cn } from '../lib/cn';
 import type { IconName } from '../models/iconName';
+import type { MessageProps } from '../models/messageProps';
+import type { UiIntent } from '../models/uiIntent';
+import { strings } from '@/strings';
+
 import { IconButton } from './IconButton';
 import { UiIcon } from './UiIcon';
-import { cn } from '../lib/cn';
 
 const tones: Record<UiIntent, string> = {
   neutral: 'border-secondary bg-secondary_subtle text-secondary',

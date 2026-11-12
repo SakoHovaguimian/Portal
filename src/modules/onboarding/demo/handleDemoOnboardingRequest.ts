@@ -1,7 +1,9 @@
 import 'server-only';
-import type { DemoRequestHandler } from '@/services/demo/models/demoRequestHandler';
+
 import { OwnershipError, ValidationError } from '@/errors/domainErrors';
+import type { DemoRequestHandler } from '@/services/demo/models/demoRequestHandler';
 import { portalOnboardingStrings as copy } from '@/strings';
+
 import { OnboardingUpdateSchema } from '../models/onboardingUpdate';
 import { getDemoOnboardingProgress } from './onboardingState';
 
@@ -18,9 +20,11 @@ export const handleDemoOnboardingRequest: DemoRequestHandler = async ({
 }) => {
 
   if (parts[0] !== 'onboarding' || parts.length !== 1) { return null; }
+
   const progress = getDemoOnboardingProgress(current);
   if (request.method === 'GET') { return json(progress); }
   if (request.method !== 'PATCH') { return null; }
+
   const update = OnboardingUpdateSchema.parse(await input());
   if (update.step === 'profile') {
 
@@ -61,6 +65,7 @@ export const handleDemoOnboardingRequest: DemoRequestHandler = async ({
     progress.currentStep = 'review';
 
   }
+
   progress.updatedAt = new Date().toISOString();
   return json(progress);
 

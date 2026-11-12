@@ -1,5 +1,6 @@
-import type { BackendRouteContext } from '@/models/backendRouteContext';
 import { NextRequest } from 'next/server';
+
+import { portalModules } from '@/config/portalModules';
 import { getContainer } from '@/container';
 import {
   AuthError,
@@ -7,13 +8,14 @@ import {
   OwnershipError,
   ValidationError,
 } from '@/errors/domainErrors';
-import { strings, portalIntegrationStrings } from '@/strings';
-import { errorResponse, trustedMutation } from '@/services/api/routeSafety';
-import { requireModuleAvailability } from '@/services/api/moduleAvailability';
+import type { BackendRouteContext } from '@/models/backendRouteContext';
 import { featureBackendProxy } from '@/services/api/featureBackendProxy';
-import { portalModules } from '@/config/portalModules';
-import { getDemoOnboardingProgress } from '@/modules/onboarding/demo/onboardingState';
+import { requireModuleAvailability } from '@/services/api/moduleAvailability';
+import { errorResponse, trustedMutation } from '@/services/api/routeSafety';
 import { getDemoState } from '@/services/demo/demoState';
+import { strings, portalIntegrationStrings } from '@/strings';
+
+import { getDemoOnboardingProgress } from '@/modules/onboarding/demo/onboardingState';
 import {
   enforceLiveOnboarding,
   isOnboardingRecoveryApiPath,

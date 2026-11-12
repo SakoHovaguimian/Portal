@@ -1,13 +1,14 @@
 'use client';
 
 import type { ReviewedDraftAssistantProps } from '../models/reviewedDraftAssistantProps';
-import { strings } from '@/strings';
 import { useReviewedDraftAssistant } from '../useReviewedDraftAssistant';
+import { strings } from '@/strings';
+
 import { Button } from './Button';
 import { Checkbox } from './Checkbox';
 import { Field } from './Field';
-import { Message } from './Message';
 import { FloatingAssistant } from './FloatingAssistant';
+import { Message } from './Message';
 import { TextArea } from './TextArea';
 
 export function ReviewedDraftAssistant({

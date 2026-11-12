@@ -1,6 +1,8 @@
 'use client';
+
 import { useEffect, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+
 import {
   Button,
   Field,
@@ -16,15 +18,16 @@ import {
   SplitSection,
   Switch,
 } from '@/components/ui';
-import type { DemoSettings } from '@/models/demoSettings';
 import { DemoContextSchema } from '@/models/demoContext';
+import type { DemoSettings } from '@/models/demoSettings';
+import { usePresentationService } from '@/presentation/PresentationProvider';
+import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
 import {
   DemoPresetSchema,
   type DemoPreset,
 } from '@/services/demo/models/demoPreset';
 import { portalDemoStrings as copy } from '@/strings';
-import { usePresentationService } from '@/presentation/PresentationProvider';
-import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
+
 import { useDevSettings, useDevSettingsCommand } from './hooks';
 import type { DevSettingsCommand } from './models/devSettingsCommand';
 import type { DevSettingsFormProps } from './models/devSettingsFormProps';
@@ -81,7 +84,7 @@ function DevSettingsForm({ settings }: DevSettingsFormProps) {
   }, [dirty, mutation.isPending]);
   useUnsavedFormGuard(dirtyRef, busyRef);
 
-  async function run(command: DevSettingsCommand) {
+  async function runSettingsCommand(command: DevSettingsCommand) {
 
     if (mutation.isPending) { return; }
     if (command.kind === 'preset' || command.kind === 'reset') {
@@ -277,7 +280,7 @@ function DevSettingsForm({ settings }: DevSettingsFormProps) {
           event.preventDefault();
           if (validLatency) {
 
-            void run({
+            void runSettingsCommand({
               kind: 'update',
               input: { demoMode, scenario, latencyMs: Number(latencyMs) },
             });
@@ -343,7 +346,7 @@ function DevSettingsForm({ settings }: DevSettingsFormProps) {
             variant="secondary"
             disabled={!settings.demoMode || mutation.isPending}
             loading={mutation.isPending && mutation.variables?.kind === 'preset'}
-            onClick={() => void run({ kind: 'preset', preset })}
+            onClick={() => void runSettingsCommand({ kind: 'preset', preset })}
           >
             {copy.switchAction}
           </Button>
@@ -366,7 +369,7 @@ function DevSettingsForm({ settings }: DevSettingsFormProps) {
             variant="destructive"
             disabled={!settings.demoMode || mutation.isPending}
             loading={mutation.isPending && mutation.variables?.kind === 'reset'}
-            onClick={() => void run({ kind: 'reset' })}
+            onClick={() => void runSettingsCommand({ kind: 'reset' })}
           >
             {copy.resetAction}
           </Button>

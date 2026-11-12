@@ -1,5 +1,6 @@
 import { Badge } from '@/components/ui';
 import { portalAccountToolsStrings as copy } from '@/strings';
+
 import type { DeliveryStatusBadgeProps } from '../models/deliveryStatusBadgeProps';
 
 export function DeliveryStatusBadge({

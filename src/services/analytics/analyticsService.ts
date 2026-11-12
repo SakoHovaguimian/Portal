@@ -1,5 +1,6 @@
 'use client';
 import type { Types } from '@amplitude/analytics-browser';
+
 import { getConsent } from '@/services/privacy/cookieConsentStore';
 
 class AnalyticsService {

@@ -1,8 +1,9 @@
 'use client';
 
-import type { UrlStateOptions } from './models/urlStateOptions';
 import { useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
+
+import type { UrlStateOptions } from './models/urlStateOptions';
 import { useNavigationGuard } from './NavigationGuardProvider';
 
 /** Shareable client-owned tab/filter state that restores through Back/Forward. */

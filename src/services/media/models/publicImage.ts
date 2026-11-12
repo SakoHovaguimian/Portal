@@ -1,5 +1,7 @@
 import { z } from 'zod';
+
 import { portalMediaStrings as mediaCopy } from '@/strings';
+
 import { isPublicImageReference } from '@/services/media/models/publicImageUrl';
 
 export const publicImageMimeTypes = [

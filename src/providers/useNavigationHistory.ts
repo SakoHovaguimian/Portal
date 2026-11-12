@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import type { Route } from 'next';
+
 import type { NavigationGuard } from './models/navigationGuard';
 import type { NavigationHistoryEntry } from './models/navigationHistoryEntry';
 import type { PendingNavigationTraversal } from './models/pendingNavigationTraversal';

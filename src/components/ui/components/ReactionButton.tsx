@@ -1,9 +1,11 @@
 'use client';
 
 import { useLayoutEffect, useRef } from 'react';
+
 import { cn } from '../lib/cn';
 import { motionDuration } from '../lib/motionPreferences';
 import type { ReactionButtonProps } from '../models/reactionButtonProps';
+
 import { Button } from './Button';
 import { ReactionBurst, type ReactionBurstFrames } from './ReactionBurst';
 import { UiIcon } from './UiIcon';

@@ -1,15 +1,17 @@
 'use client';
-import type { ConversationListProps } from '../models/conversationListProps';
+
 import { Button, InitialsAvatar, Input, UiIcon } from '@/components/ui';
 import { portalChatStrings as copy } from '@/strings';
+
 import type { ChatConversation } from '../models/chatConversation';
+import type { ConversationListProps } from '../models/conversationListProps';
 
 export function ConversationList({ conversations, selectedId, search, archived, onSearch, onArchived, onSelect, onCreate }: ConversationListProps) {
 
   const matching = conversations.filter((conversation) => {
 
-    const operationResult = conversation.archived === archived && `${conversation.name} ${conversation.members.map((member) => member.name).join(' ')}`.toLocaleLowerCase('en-US').includes(search.toLocaleLowerCase('en-US'));
-    return operationResult;
+    const matchesConversation = conversation.archived === archived && `${conversation.name} ${conversation.members.map((member) => member.name).join(' ')}`.toLocaleLowerCase('en-US').includes(search.toLocaleLowerCase('en-US'));
+    return matchesConversation;
 
   });
 

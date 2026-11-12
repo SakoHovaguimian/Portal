@@ -1,11 +1,13 @@
 'use client';
 
 import Image from 'next/image';
-import type { PublicImagePreviewProps } from '../models/publicImagePreviewProps';
 import { useState } from 'react';
-import { isPublicImageReference } from '../models/publicImageUrl';
+
 import { UiIcon } from '@/components/ui';
 import { portalMediaStrings as mediaCopy } from '@/strings';
+
+import type { PublicImagePreviewProps } from '../models/publicImagePreviewProps';
+import { isPublicImageReference } from '../models/publicImageUrl';
 
 export function PublicImagePreview({ src }: PublicImagePreviewProps) {
 

@@ -1,5 +1,5 @@
-import type { ConversationMessage } from './conversationMessage';
 import type { ChatMessageAction } from './chatMessageAction';
+import type { ConversationMessage } from './conversationMessage';
 
 export interface ChatMessageOperation {
   action: ChatMessageAction;

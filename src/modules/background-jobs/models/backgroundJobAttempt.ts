@@ -1,6 +1,7 @@
 import { z } from 'zod';
-import { BackgroundJobStatusSchema } from './backgroundJobStatus';
+
 import { BackgroundJobFailureSchema } from './backgroundJobFailure';
+import { BackgroundJobStatusSchema } from './backgroundJobStatus';
 
 export const BackgroundJobAttemptSchema = z.object({
   number: z.number().int().positive(),

@@ -1,19 +1,44 @@
+// Foundational services
 import { BrowserApiClient } from '@/services/api/browserApiClient';
-import { UserService } from '@/modules/users/services/userService';
-import { FeatureRequestService } from '@/modules/feature-requests/services/featureRequestService';
-import { DashboardService } from '@/modules/dashboard/services/dashboardService';
-import { ThemePreferenceService } from '@/modules/settings/services/themePreferenceService';
-import { MotionPreferenceService } from '@/modules/settings/services/motionPreferenceService';
-import { ChatService } from '@/modules/chat/services/chatService';
-import { BlogService } from '@/modules/blog/services/blogService';
 import { PublicImageService } from '@/services/media/publicImageService';
-import { NotificationInboxService } from '@/modules/notification-inbox/services/notificationInboxService';
-import { AccountToolsService } from '@/modules/account-tools/services/accountToolsService';
-import { OnboardingService } from '@/modules/onboarding/services/onboardingService';
-import { DevSettingsService } from '@/modules/dev-settings/services/devSettingsService';
-import { EngagementService } from '@/modules/engagement/services/engagementService';
-import { BackgroundJobService } from '@/modules/background-jobs/services/backgroundJobService';
 import { PresentationMotionPreferenceService } from '@/services/presentation-motion/presentationMotionPreferenceService';
+
+// Account tools
+import { AccountToolsService } from '@/modules/account-tools/services/accountToolsService';
+
+// Background jobs
+import { BackgroundJobService } from '@/modules/background-jobs/services/backgroundJobService';
+
+// Blog
+import { BlogService } from '@/modules/blog/services/blogService';
+
+// Chat
+import { ChatService } from '@/modules/chat/services/chatService';
+
+// Dashboard
+import { DashboardService } from '@/modules/dashboard/services/dashboardService';
+
+// Dev settings
+import { DevSettingsService } from '@/modules/dev-settings/services/devSettingsService';
+
+// Engagement
+import { EngagementService } from '@/modules/engagement/services/engagementService';
+
+// Feature requests
+import { FeatureRequestService } from '@/modules/feature-requests/services/featureRequestService';
+
+// Notification inbox
+import { NotificationInboxService } from '@/modules/notification-inbox/services/notificationInboxService';
+
+// Onboarding
+import { OnboardingService } from '@/modules/onboarding/services/onboardingService';
+
+// Settings
+import { MotionPreferenceService } from '@/modules/settings/services/motionPreferenceService';
+import { ThemePreferenceService } from '@/modules/settings/services/themePreferenceService';
+
+// Users
+import { UserService } from '@/modules/users/services/userService';
 
 export class ClientServiceContainer {
 

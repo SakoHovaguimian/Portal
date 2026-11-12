@@ -1,9 +1,11 @@
 'use client';
+
 import { IconMenu } from '@/components/ui';
+import type { IconMenuItem } from '@/components/ui/models/iconMenuItem';
 import { portalChatStrings as copy } from '@/strings';
+
 import type { ChatReactionEmoji } from '../models/chatReaction';
 import type { ChatReactionPickerProps } from '../models/chatReactionPickerProps';
-import type { IconMenuItem } from '@/components/ui/models/iconMenuItem';
 
 export function ChatReactionPicker({ disabled, onReact }: ChatReactionPickerProps) {
 

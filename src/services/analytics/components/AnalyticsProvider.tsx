@@ -1,11 +1,13 @@
 'use client';
 import { useEffect, useSyncExternalStore } from 'react';
 import { usePathname } from 'next/navigation';
+
 import { useRuntimeConfig } from '@/providers/RuntimeProvider';
 import {
   getConsent,
   subscribeConsent,
 } from '@/services/privacy/cookieConsentStore';
+
 import { analyticsService } from '../analyticsService';
 
 export function AnalyticsProvider() {

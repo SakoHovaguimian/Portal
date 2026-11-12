@@ -1,6 +1,7 @@
 import { z } from 'zod';
-import { FirebaseAuthSessionSchema } from '@/services/auth/models/firebaseAuthSession';
+
 import { SessionUserSchema } from '@/models/sessionUser';
+import { FirebaseAuthSessionSchema } from '@/services/auth/models/firebaseAuthSession';
 
 export const ServerSessionSchema = z.object({
   auth: FirebaseAuthSessionSchema,

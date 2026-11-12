@@ -1,8 +1,9 @@
 import 'server-only';
 import { portalDemoStrings as copy } from '@/strings';
+
+import { users } from './demoFixtures';
 import type { DemoPreset } from './models/demoPreset';
 import type { DemoUser } from './models/demoUser';
-import { users } from './demoFixtures';
 
 export const demoPresetIds: Record<DemoPreset, string> = {
   populated: users[0].id,

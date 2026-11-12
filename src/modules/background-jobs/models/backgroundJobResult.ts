@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { portalJobStrings as copy } from '@/strings';
 
 export const BackgroundJobResultSchema = z.object({

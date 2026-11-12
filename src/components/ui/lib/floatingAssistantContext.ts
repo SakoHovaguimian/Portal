@@ -1,8 +1,9 @@
 'use client';
 
 import { createContext, useContext } from 'react';
-import { strings } from '@/strings';
+
 import type { FloatingAssistantEntry } from '../models/floatingAssistantEntry';
+import { strings } from '@/strings';
 
 export const FloatingAssistantContext = createContext<{
   activeId: string | null;

@@ -1,9 +1,10 @@
 'use client';
 
-import type { ReactionBurstProps } from '../models/reactionBurstProps';
 import { useLayoutEffect, useRef } from 'react';
+
 import { cn } from '../lib/cn';
 import { motionDuration } from '../lib/motionPreferences';
+import type { ReactionBurstProps } from '../models/reactionBurstProps';
 
 const particles = Array.from({ length: 14 }, (_, index) => index);
 

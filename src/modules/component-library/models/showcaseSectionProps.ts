@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+
 import type { IconName } from '@/components/ui';
 
 export interface ShowcaseSectionProps {

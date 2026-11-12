@@ -1,10 +1,11 @@
 import type { DraftChatReviewProps } from '../models/draftChatReviewProps';
 import { strings } from '@/strings';
+
 import { Button } from './Button';
 import { Checkbox } from './Checkbox';
-import { TextArea } from './TextArea';
 import { Message } from './Message';
 import { Select } from './Select';
+import { TextArea } from './TextArea';
 
 export function DraftChatReview({
   resultRef,

@@ -1,7 +1,7 @@
 'use client';
 
-import type { RetryErrorProps } from '@/models/retryErrorProps';
 import { ErrorState } from '@/components/ui';
+import type { RetryErrorProps } from '@/models/retryErrorProps';
 import { portalPublishingStrings } from '@/strings';
 
 const copy = portalPublishingStrings.article;

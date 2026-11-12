@@ -1,15 +1,18 @@
 import { z } from 'zod';
+
 import { portalChatStrings as copy } from '@/strings';
 
-export const CHAT_ATTACHMENT_LIMIT = 5 * 1024 * 1024;
+import { ChatAttachmentMimeTypeSchema } from './chatAttachmentMimeType';
 
-export const CHAT_ATTACHMENT_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'application/pdf', 'text/plain', 'audio/mpeg', 'video/mp4', 'video/webm'] as const;
+export { CHAT_ATTACHMENT_TYPES } from './chatAttachmentMimeType';
+
+export const CHAT_ATTACHMENT_LIMIT = 5 * 1024 * 1024;
 
 export const ChatAttachmentSchema = z.object({
   id: z.string().uuid(),
   name: z.string(),
   size: z.number(),
-  mimeType: z.enum(CHAT_ATTACHMENT_TYPES),
+  mimeType: ChatAttachmentMimeTypeSchema,
 });
 
 export const ChatAttachmentInputSchema = ChatAttachmentSchema.omit({ id: true }).extend({

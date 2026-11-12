@@ -1,9 +1,11 @@
 import type { Route } from 'next';
-import type { ProjectConfiguration } from './models/projectConfiguration';
-import { projectConfiguration } from './projectConfiguration';
-import { portalModules } from './portalModules';
+
 import type { UserRole } from '@/models/userRole';
 import { canManageContent } from '@/services/auth/permissions';
+
+import type { ProjectConfiguration } from './models/projectConfiguration';
+import { portalModules } from './portalModules';
+import { projectConfiguration } from './projectConfiguration';
 
 export const projectNavigationRoutes = {
   dashboard: '/dashboard',

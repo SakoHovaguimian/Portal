@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { strings } from '@/strings';
 
 export const ChatMessageInputSchema = z.object({

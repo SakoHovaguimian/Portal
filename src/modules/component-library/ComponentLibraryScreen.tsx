@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
+
 import {
   Badge,
   Button,
@@ -11,14 +12,15 @@ import {
   Select,
   UiIcon,
 } from '@/components/ui';
-import { componentBrowserStrings as copy } from '@/strings';
 import { useUrlState } from '@/providers/useUrlState';
+import { componentBrowserStrings as copy } from '@/strings';
+
+import { ComponentCatalog } from './components/ComponentCatalog';
 import {
   componentCategories,
   componentIds,
   componentSpecimens,
 } from './componentSpecimens';
-import { ComponentCatalog } from './components/ComponentCatalog';
 import type { ComponentSpecimen } from './models/componentSpecimen';
 
 export function ComponentLibraryScreen() {

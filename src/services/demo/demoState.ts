@@ -1,15 +1,17 @@
 import 'server-only';
 import { randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
+
+import { projectConfiguration } from '@/config/projectConfiguration';
+import { strings } from '@/strings';
+
 import { featureRequests } from './demoFixtures';
 import { createDemoUsers } from './demoPresets';
 import {
   registerDemoReset,
   registerDemoAccountReset,
 } from './demoResetRegistry';
-import type { DemoState } from './models/demoState';
 import type { DemoPasswordRecord } from './models/demoPasswordRecord';
-import { strings } from '@/strings';
-import { projectConfiguration } from '@/config/projectConfiguration';
+import type { DemoState } from './models/demoState';
 
 // **************************************
 // MARK: - CREATE DEMO PASSWORD RECORD

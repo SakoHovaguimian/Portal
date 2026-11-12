@@ -1,7 +1,8 @@
 import type { CSSProperties, ReactNode } from 'react';
-import type { SheetTone } from './sheetTone';
+
 import type { SheetSide } from './sheetSide';
 import type { SheetSize } from './sheetSize';
+import type { SheetTone } from './sheetTone';
 
 export interface SheetPanelProps {
   open: boolean;

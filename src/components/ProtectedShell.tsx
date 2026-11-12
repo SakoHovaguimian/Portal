@@ -1,20 +1,22 @@
 'use client';
 
-import type { ProtectedShellProps } from './models/protectedShellProps';
 import { usePathname } from 'next/navigation';
-import { AppShell, Button, UiIcon } from '@/components/ui';
-import { useSessionState } from '@/providers/AppProviders';
-import { ThemeToggle } from '@/modules/settings/components/ThemeToggle';
-import { useGuardedNavigate } from '@/providers/useGuardedNavigate';
+
 import { ShellActions } from '@/components/ShellActions';
+import { AppShell, Button, UiIcon } from '@/components/ui';
+import { portalModules } from '@/config/portalModules';
+import { portalNavigation } from '@/config/portalNavigation';
+import { getDefaultProjectRoute } from '@/config/projectRoutes';
+import { useSessionState } from '@/providers/AppProviders';
 import { useRuntimeConfig } from '@/providers/RuntimeProvider';
 import { useGuardedBack } from '@/providers/useGuardedBack';
-import { portalNavigation } from '@/config/portalNavigation';
-import { portalModules } from '@/config/portalModules';
-import { NotificationInboxLink } from '@/modules/notification-inbox/components/NotificationInboxLink';
+import { useGuardedNavigate } from '@/providers/useGuardedNavigate';
 import { portalModuleStrings } from '@/strings';
-import { getDefaultProjectRoute } from '@/config/projectRoutes';
+
+import type { ProtectedShellProps } from './models/protectedShellProps';
 import { DemoSimulationNotice } from '@/modules/dev-settings/components/DemoSimulationNotice';
+import { NotificationInboxLink } from '@/modules/notification-inbox/components/NotificationInboxLink';
+import { ThemeToggle } from '@/modules/settings/components/ThemeToggle';
 
 export function ProtectedShell({
   children,

@@ -1,10 +1,12 @@
 'use client';
 
-import type { MarkdownEditorProps } from '../models/markdownEditorProps';
 import { useId, useState } from 'react';
-import { strings } from '@/strings';
-import { useMarkdownEditor } from '../lib/useMarkdownEditor';
+
 import { cn } from '../lib/cn';
+import { useMarkdownEditor } from '../lib/useMarkdownEditor';
+import type { MarkdownEditorProps } from '../models/markdownEditorProps';
+import { strings } from '@/strings';
+
 import { MarkdownContent } from './MarkdownContent';
 import { MarkdownToolbar } from './MarkdownToolbar';
 import { SegmentedTabs } from './Tabs';

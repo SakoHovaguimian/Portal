@@ -1,6 +1,7 @@
 import { Badge } from '@/components/ui';
 import type { UiIntent } from '@/components/ui';
 import { portalJobStrings as copy } from '@/strings';
+
 import type { BackgroundJobProps } from '../models/backgroundJobProps';
 import type { BackgroundJobStatus } from '../models/backgroundJobStatus';
 

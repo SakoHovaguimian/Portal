@@ -1,10 +1,8 @@
 'use client';
 
-import { strings } from '@/strings';
 import { useRef, useState } from 'react';
-import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
-import { FeatureRequestMutationInputSchema } from '@/models/featureRequest';
 import Link from 'next/link';
+
 import {
   Button,
   Card,
@@ -17,6 +15,10 @@ import {
   PageHeader,
   MobileRecordRow,
 } from '@/components/ui';
+import { FeatureRequestMutationInputSchema } from '@/models/featureRequest';
+import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
+import { strings } from '@/strings';
+
 import { useCreateFeatureRequest, useFeatureRequests } from './hooks';
 import type { FeatureRequestsScreenProps } from './models/featureRequestsScreenProps';
 
@@ -34,9 +36,11 @@ export function FeatureRequestsScreen({ query = '' }: FeatureRequestsScreenProps
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 
     event.preventDefault();
+
     if (busyRef.current) {
       return;
     }
+
     const parsed = FeatureRequestMutationInputSchema.safeParse({ message });
     if (!parsed.success) {
 
@@ -45,6 +49,7 @@ export function FeatureRequestsScreen({ query = '' }: FeatureRequestsScreenProps
       return;
 
     }
+
     setValidation(null);
     busyRef.current = true;
     createMutation.mutate(parsed.data, {

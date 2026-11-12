@@ -1,7 +1,8 @@
 'use client';
 import { useLayoutEffect, useRef } from 'react';
-import type { ContentTransitionProps } from '../models/contentTransitionProps';
+
 import { motionDuration } from '../lib/motionPreferences';
+import type { ContentTransitionProps } from '../models/contentTransitionProps';
 
 export function ContentTransition({
   children,

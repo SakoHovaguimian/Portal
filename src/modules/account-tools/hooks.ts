@@ -1,12 +1,14 @@
 'use client';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
 import { useServiceContainer } from '@/providers/AppProviders';
+
+import type { AccountDeletion } from './models/accountDeletion';
 import type { AccountDeviceQuery } from './models/accountDeviceQuery';
 import type { AccountToolsPaging } from './models/accountToolsPaging';
-import type { NotificationDeliveryQuery } from './models/notificationDeliveryQuery';
-import type { AccountDeletion } from './models/accountDeletion';
 import type { LegalContext } from './models/legalContext';
+import type { NotificationDeliveryQuery } from './models/notificationDeliveryQuery';
 import { accountToolsQueryKeys as keys } from './queryKeys';
 
 export function useAccountDevices(query: AccountDeviceQuery) {

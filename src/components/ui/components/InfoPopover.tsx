@@ -1,8 +1,9 @@
 'use client';
 
-import type { InfoPopoverProps } from '../models/infoPopoverProps';
 import { Button as AriaButton, Dialog, DialogTrigger, Popover } from 'react-aria-components';
+
 import { buttonClassName } from '../lib/buttonStyles';
+import type { InfoPopoverProps } from '../models/infoPopoverProps';
 
 export function InfoPopover({
   label,

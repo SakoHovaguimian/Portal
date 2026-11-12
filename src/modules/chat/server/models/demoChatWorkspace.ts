@@ -1,7 +1,7 @@
-import type { ChatPerson } from '../../models/chatPerson';
 import type { ChatConversation } from '../../models/chatConversation';
-import type { ConversationMessage } from '../../models/conversationMessage';
 import type { ChatMemberPreference } from '../../models/chatMemberPreference';
+import type { ChatPerson } from '../../models/chatPerson';
+import type { ConversationMessage } from '../../models/conversationMessage';
 import type { DemoChatFile } from './demoChatFile';
 
 export interface DemoChatWorkspace {

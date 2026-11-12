@@ -1,9 +1,11 @@
-import type { SectionCardViewProps } from '../models/sectionCardViewProps';
 import { cloneElement, isValidElement, type ReactNode } from 'react';
+
+import { cn } from '../lib/cn';
+import type { SectionCardViewProps } from '../models/sectionCardViewProps';
+
 import { Button } from './Button';
 import { IconTile } from './IconTile';
 import { UiIcon } from './UiIcon';
-import { cn } from '../lib/cn';
 
 // A single interactive surface. Use asChild with a link for navigation.
 export function SectionCardView({

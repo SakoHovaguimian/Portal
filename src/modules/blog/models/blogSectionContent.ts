@@ -1,5 +1,7 @@
-import { portalPublishingStrings } from '@/strings';
 import { z } from 'zod';
+
+import { portalPublishingStrings } from '@/strings';
+
 import { BlogContentTextFormatSchema } from './blogContentTextFormat';
 
 const copy = portalPublishingStrings.builder;

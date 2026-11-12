@@ -1,4 +1,5 @@
 import type { InitialsAvatarProps } from '../models/initialsAvatarProps';
+
 import { Avatar } from './Avatar';
 
 /** Compatibility wrapper for identity rows that already display the person's name. */

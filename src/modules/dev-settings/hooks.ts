@@ -1,5 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
+
 import { useServiceContainer } from '@/providers/AppProviders';
+
 import type { DevSettingsCommand } from './models/devSettingsCommand';
 
 export const devSettingsQueryKey = ['dev-settings'] as const;

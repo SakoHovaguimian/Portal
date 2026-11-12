@@ -1,8 +1,8 @@
 'use client';
 
-import { portalPublishingStrings } from '@/strings';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+
 import {
   Badge,
   Button,
@@ -18,12 +18,19 @@ import {
   UiIcon,
   BookmarkButton,
 } from '@/components/ui';
-import { BlogContentBuilder } from './builder/BlogContentBuilder';
+import { DomainError } from '@/errors/domainErrors';
 import { usePresentationService } from '@/presentation/PresentationProvider';
 import { useSessionState } from '@/providers/AppProviders';
-import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
 import { useGuardedNavigate } from '@/providers/useGuardedNavigate';
-import { DomainError } from '@/errors/domainErrors';
+import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
+import { portalPublishingStrings } from '@/strings';
+
+import styles from '../Blog.module.css';
+import adminStyles from '../BlogAdmin.module.css';
+import { BlogArticleFields } from './BlogArticleFields';
+import { BlogArticleReader } from './BlogArticleReader';
+import { BlogContentBuilder } from './builder/BlogContentBuilder';
+import { useBlogMutations } from '../hooks';
 import {
   BlogMutationInputSchema,
   type BlogArticle,
@@ -31,11 +38,6 @@ import {
 } from '../models/blogArticle';
 import type { BlogEditorProps } from '../models/blogEditorProps';
 import type { BlogFormErrors } from '../models/blogFormErrors';
-import { useBlogMutations } from '../hooks';
-import { BlogArticleFields } from './BlogArticleFields';
-import { BlogArticleReader } from './BlogArticleReader';
-import styles from '../Blog.module.css';
-import adminStyles from '../BlogAdmin.module.css';
 
 const copy = portalPublishingStrings.article;
 const builderCopy = portalPublishingStrings.builder;
@@ -111,10 +113,10 @@ export function BlogEditor({ initialArticle }: BlogEditorProps) {
   };
   const acceptArticle = (saved: BlogArticle) => {
 
-    const next = articleInput(saved);
+    const nextForm = articleInput(saved);
     setArticle(saved);
-    setForm(next);
-    setBaseline(JSON.stringify(next));
+    setForm(nextForm);
+    setBaseline(JSON.stringify(nextForm));
     dirtyRef.current = false;
     setErrors({});
     setFailure('');
@@ -136,11 +138,11 @@ export function BlogEditor({ initialArticle }: BlogEditorProps) {
       return result.data;
 
     }
-    const next: BlogFormErrors = {};
+    const fieldErrors: BlogFormErrors = {};
     for (const issue of result.error.issues) {
 
       const key = issue.path[0] as keyof BlogArticleDraft;
-      next[key] =
+      fieldErrors[key] =
         issue.code === 'unrecognized_keys'
           ? builderCopy.unsupportedStoredFields
           : issue.code === 'invalid_union'
@@ -148,7 +150,7 @@ export function BlogEditor({ initialArticle }: BlogEditorProps) {
             : issue.message;
 
     }
-    setErrors(next);
+    setErrors(fieldErrors);
     setFailure('');
     queueMicrotask(() => {
 
@@ -158,7 +160,7 @@ export function BlogEditor({ initialArticle }: BlogEditorProps) {
           ? form.content[first.path[1]]
           : undefined;
       const target = document.getElementById(
-        block ? `blog-block-${block.id}` : `blog-${Object.keys(next)[0]}`,
+        block ? `blog-block-${block.id}` : `blog-${Object.keys(fieldErrors)[0]}`,
       );
       (
         (target?.querySelector(

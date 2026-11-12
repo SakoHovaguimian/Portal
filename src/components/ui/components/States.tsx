@@ -1,8 +1,9 @@
 import type { EmptyStateProps } from '../models/emptyStateProps';
 import type { ErrorStateProps } from '../models/errorStateProps';
 import { strings } from '@/strings';
-import { Card } from './Card';
+
 import { Button } from './Button';
+import { Card } from './Card';
 import { IconTile } from './IconTile';
 import { UiIcon } from './UiIcon';
 

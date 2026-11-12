@@ -1,11 +1,13 @@
 'use client';
 
-import { portalPublishingStrings } from '@/strings';
 import { useId, useState } from 'react';
+
 import { Button } from '@/components/ui';
+import { portalPublishingStrings } from '@/strings';
+
+import styles from '../Blog.module.css';
 import { resolveBlogEmbed } from '../content/resolveBlogEmbed';
 import type { BlogEmbeddedMediaProps } from '../models/blogEmbeddedMediaProps';
-import styles from '../Blog.module.css';
 
 const copy = portalPublishingStrings.builder;
 

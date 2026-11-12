@@ -1,6 +1,7 @@
-import type { MutationErrorProps } from './models/mutationErrorProps';
-import { strings } from '@/strings';
 import { DomainError } from '@/errors/domainErrors';
+import { strings } from '@/strings';
+
+import type { MutationErrorProps } from './models/mutationErrorProps';
 
 export function MutationError({ error, id }: MutationErrorProps) {
 

@@ -1,11 +1,13 @@
 'use client';
 
-import type { FloatingAssistantProviderProps } from '../models/floatingAssistantProviderProps';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { strings } from '@/strings';
+
 import { FloatingAssistantContext } from '../lib/floatingAssistantContext';
 import type { FloatingAssistantEntry } from '../models/floatingAssistantEntry';
+import type { FloatingAssistantProviderProps } from '../models/floatingAssistantProviderProps';
 import { useFloatingAssistantOffset } from '../useFloatingAssistantOffset';
+import { strings } from '@/strings';
+
 import { Button } from './Button';
 import { FloatingAssistantDialog } from './FloatingAssistantDialog';
 import { UiIcon } from './UiIcon';

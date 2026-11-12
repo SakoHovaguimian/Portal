@@ -1,7 +1,8 @@
 import { createInterface } from 'node:readline/promises';
 import { stdin, stdout } from 'node:process';
-import { createModules, profiles, visibleNavigation } from './configuration.mjs';
+
 import { formatInitializerCopy } from './catalog.mjs';
+import { createModules, profiles, visibleNavigation } from './configuration.mjs';
 import { initializerError } from './options.mjs';
 
 export async function promptOptions(copy, identity) {

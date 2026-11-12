@@ -4,30 +4,31 @@ import {
   componentExpansionStrings as added,
   componentBrowserStrings as browser,
 } from '@/strings';
-import { ThemeControls } from '@/modules/settings/components/ThemeControls';
-import type { ComponentSpecimen } from './models/componentSpecimen';
-import { FoundationsShowcase } from './components/FoundationsShowcase';
-import { PatternsShowcase } from './components/PatternsShowcase';
-import { ButtonsShowcase } from './components/ButtonsShowcase';
-import { InputsShowcase } from './components/InputsShowcase';
-import { SelectionShowcase } from './components/SelectionShowcase';
-import { TilesShowcase } from './components/TilesShowcase';
-import { CardsShowcase } from './components/CardsShowcase';
-import { SectionsShowcase } from './components/SectionsShowcase';
-import { FeedbackShowcase } from './components/FeedbackShowcase';
-import { EmptyStatesShowcase } from './components/EmptyStatesShowcase';
-import { TableShowcase } from './components/TableShowcase';
-import { MotionShowcase } from './components/MotionShowcase';
-import { EditingShowcase } from './components/EditingShowcase';
-import { CollectionShowcase } from './components/CollectionShowcase';
-import { InteractionsShowcase } from './components/InteractionsShowcase';
-import { MediaShowcase } from './components/MediaShowcase';
-import { ValueControlsShowcase } from './components/ValueControlsShowcase';
+
 import { AvatarsShowcase } from './components/AvatarsShowcase';
-import { UploadsShowcase } from './components/UploadsShowcase';
+import { BulkSelectionShowcase } from './components/BulkSelectionShowcase';
+import { ButtonsShowcase } from './components/ButtonsShowcase';
+import { CardsShowcase } from './components/CardsShowcase';
+import { CollectionShowcase } from './components/CollectionShowcase';
 import { ComboboxShowcase } from './components/ComboboxShowcase';
 import { DateRangeShowcase } from './components/DateRangeShowcase';
-import { BulkSelectionShowcase } from './components/BulkSelectionShowcase';
+import { EditingShowcase } from './components/EditingShowcase';
+import { EmptyStatesShowcase } from './components/EmptyStatesShowcase';
+import { FeedbackShowcase } from './components/FeedbackShowcase';
+import { FoundationsShowcase } from './components/FoundationsShowcase';
+import { InputsShowcase } from './components/InputsShowcase';
+import { InteractionsShowcase } from './components/InteractionsShowcase';
+import { MediaShowcase } from './components/MediaShowcase';
+import { MotionShowcase } from './components/MotionShowcase';
+import { PatternsShowcase } from './components/PatternsShowcase';
+import { SectionsShowcase } from './components/SectionsShowcase';
+import { SelectionShowcase } from './components/SelectionShowcase';
+import { TableShowcase } from './components/TableShowcase';
+import { TilesShowcase } from './components/TilesShowcase';
+import { UploadsShowcase } from './components/UploadsShowcase';
+import { ValueControlsShowcase } from './components/ValueControlsShowcase';
+import type { ComponentSpecimen } from './models/componentSpecimen';
+import { ThemeControls } from '@/modules/settings/components/ThemeControls';
 
 const copy = strings.componentLibrary;
 export const componentCategories = [

@@ -1,13 +1,15 @@
 'use client';
 
-import type { AlertTone } from '../models/alertTone';
-import type { AlertAlignment } from '../models/alertAlignment';
-import type { AlertModalProps } from '../models/alertModalProps';
-import { labels, strings } from '@/strings';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useRef, type CSSProperties } from 'react';
-import { Button } from './Button';
+
 import { cn } from '../lib/cn';
+import type { AlertAlignment } from '../models/alertAlignment';
+import type { AlertModalProps } from '../models/alertModalProps';
+import type { AlertTone } from '../models/alertTone';
+import { labels, strings } from '@/strings';
+
+import { Button } from './Button';
 
 export type { AlertTone } from '../models/alertTone';
 

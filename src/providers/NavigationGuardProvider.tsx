@@ -7,14 +7,16 @@ import {
   useMemo,
   useRef,
 } from 'react';
-import { strings } from '@/strings';
+
 import type { ChildrenProps } from '@/models/childrenProps';
+import { strings } from '@/strings';
+
 import { confirmNavigationGuards } from './confirmNavigationGuards';
-import { useNavigationHistory } from './useNavigationHistory';
 import type {
   NavigationGuard,
   NavigationGuardService,
 } from './models/navigationGuard';
+import { useNavigationHistory } from './useNavigationHistory';
 
 const NavigationGuardContext = createContext<NavigationGuardService | null>(
   null,

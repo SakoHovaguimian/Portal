@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+
 import {
   Badge,
   BulkActionBar,
@@ -10,6 +11,7 @@ import {
 } from '@/components/ui';
 import { usePresentationService } from '@/presentation/PresentationProvider';
 import { componentExpansionStrings as copy } from '@/strings';
+
 import { ShowcaseSection } from './ShowcaseSection';
 
 const initialRows = copy.examples.people.map((name, index) => ({

@@ -1,5 +1,6 @@
 import { ProgressBar } from '@/components/ui';
 import { portalJobStrings as copy } from '@/strings';
+
 import type { BackgroundJobProps } from '../models/backgroundJobProps';
 
 export function JobProgress({ job }: BackgroundJobProps) {

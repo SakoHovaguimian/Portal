@@ -1,4 +1,5 @@
 import { Card, IconTile, UiIcon } from '@/components/ui';
+
 import type { ShowcaseSectionProps } from '../models/showcaseSectionProps';
 
 // A documentation section: heading outside, specimens on one canvas.

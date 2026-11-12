@@ -1,5 +1,5 @@
-import type { BlogBlockPreviewProps } from '../../models/blogBlockPreviewProps';
 import styles from '../../Blog.module.css';
+import type { BlogBlockPreviewProps } from '../../models/blogBlockPreviewProps';
 
 export function BlogBlockPreview({ type }: BlogBlockPreviewProps) {
 
@@ -19,9 +19,11 @@ export function BlogBlockPreview({ type }: BlogBlockPreviewProps) {
         </>
       );
       break;
+
     case 'section':
       content = lines;
       break;
+
     case 'footer':
       content = (
         <>
@@ -30,6 +32,7 @@ export function BlogBlockPreview({ type }: BlogBlockPreviewProps) {
         </>
       );
       break;
+
     case 'quote':
       content = (
         <>
@@ -41,6 +44,7 @@ export function BlogBlockPreview({ type }: BlogBlockPreviewProps) {
         </>
       );
       break;
+
     case 'bullet':
       content = (
         <>
@@ -53,9 +57,11 @@ export function BlogBlockPreview({ type }: BlogBlockPreviewProps) {
         </>
       );
       break;
+
     case 'divider':
       content = <path d="M9 27h46" />;
       break;
+
     case 'embed':
       content = (
         <>
@@ -64,6 +70,7 @@ export function BlogBlockPreview({ type }: BlogBlockPreviewProps) {
         </>
       );
       break;
+
     case 'image':
       content = (
         <>
@@ -73,6 +80,7 @@ export function BlogBlockPreview({ type }: BlogBlockPreviewProps) {
         </>
       );
       break;
+
     case 'gallery2':
     case 'gallery3':
     case 'gallery4': {
@@ -80,18 +88,18 @@ export function BlogBlockPreview({ type }: BlogBlockPreviewProps) {
       const count = Number(type.slice(-1));
       content = (
         <>
-          {Array.from({ length: count }, (_, i) => {
+          {Array.from({ length: count }, (_, imageIndex) => {
 
-            const cols = count === 4 ? 2 : count;
-            const w = (48 - (cols - 1) * 4) / cols;
-            const x = 8 + (i % cols) * (w + 4);
-            const h = count === 4 ? 15 : 34;
-            const y = 9 + Math.floor(i / cols) * (h + 4);
+            const columns = count === 4 ? 2 : count;
+            const imageWidth = (48 - (columns - 1) * 4) / columns;
+            const x = 8 + (imageIndex % columns) * (imageWidth + 4);
+            const imageHeight = count === 4 ? 15 : 34;
+            const y = 9 + Math.floor(imageIndex / columns) * (imageHeight + 4);
             return (
-              <g key={i}>
-                <rect x={x} y={y} width={w} height={h} rx="2" />
+              <g key={imageIndex}>
+                <rect x={x} y={y} width={imageWidth} height={imageHeight} rx="2" />
                 <path
-                  d={`M${x + 3} ${y + h - 4}l${w / 3} -${h / 3} ${w / 3} ${h / 3}`}
+                  d={`M${x + 3} ${y + imageHeight - 4}l${imageWidth / 3} -${imageHeight / 3} ${imageWidth / 3} ${imageHeight / 3}`}
                 />
               </g>
             );
@@ -102,6 +110,7 @@ export function BlogBlockPreview({ type }: BlogBlockPreviewProps) {
       break;
 
     }
+
     case 'callout':
       content = (
         <>
@@ -111,6 +120,7 @@ export function BlogBlockPreview({ type }: BlogBlockPreviewProps) {
         </>
       );
       break;
+
     case 'link':
       content = (
         <>

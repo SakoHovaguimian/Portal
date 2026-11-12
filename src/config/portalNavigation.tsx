@@ -1,10 +1,11 @@
 import { UiIcon, type AppSidebarItem } from '@/components/ui';
 import type { RuntimeConfig } from '@/models/runtimeConfig';
 import type { SessionUser } from '@/models/sessionUser';
-import { strings, portalModuleStrings, portalJobStrings } from '@/strings';
 import { canManageContent } from '@/services/auth/permissions';
-import { projectConfiguration } from './projectConfiguration';
+import { strings, portalModuleStrings, portalJobStrings } from '@/strings';
+
 import type { ProjectConfiguration } from './models/projectConfiguration';
+import { projectConfiguration } from './projectConfiguration';
 import { isProjectDestinationEnabled } from './projectRoutes';
 
 export function portalNavigation(

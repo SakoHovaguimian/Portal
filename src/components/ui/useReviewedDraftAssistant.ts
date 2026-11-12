@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+
+import { ApiError } from '@/errors/domainErrors';
 import { useBrowserSpeechRecognition } from '@/providers/useBrowserSpeechRecognition';
 import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
-import { ApiError } from '@/errors/domainErrors';
 import { strings } from '@/strings';
+
 import type {
   ReviewedDraftAssistantField,
   ReviewedDraftAssistantResult,

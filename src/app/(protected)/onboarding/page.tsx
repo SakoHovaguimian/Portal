@@ -1,9 +1,11 @@
-import type { RedirectRouteProps } from '@/models/redirectRouteProps';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { OnboardingScreen } from '@/modules/onboarding/OnboardingScreen';
+
+import type { RedirectRouteProps } from '@/models/redirectRouteProps';
 import { getEffectiveRuntime } from '@/services/demo/demoRuntime';
 import { portalOnboardingStrings } from '@/strings';
+
+import { OnboardingScreen } from '@/modules/onboarding/OnboardingScreen';
 
 export const metadata: Metadata = { title: portalOnboardingStrings.title };
 

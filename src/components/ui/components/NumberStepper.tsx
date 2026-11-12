@@ -10,9 +10,11 @@ import {
   Text,
   FieldError,
 } from 'react-aria-components';
-import { strings } from '@/strings';
+
 import { cn } from '../lib/cn';
 import type { NumberStepperProps } from '../models/numberStepperProps';
+import { strings } from '@/strings';
+
 import { UiIcon } from './UiIcon';
 import './ValueControls.css';
 

@@ -1,7 +1,5 @@
 'use client';
 
-import { portalPublishingStrings } from '@/strings';
-import { BlogContentImage } from '../BlogContentImage';
 import {
   Button,
   Field,
@@ -10,10 +8,13 @@ import {
   Message,
   UiIcon,
 } from '@/components/ui';
-import { isBlogImageUrl } from '../../models/blogImageUrl';
-import type { BlogImageFieldsProps } from '../../models/blogImageFieldsProps';
-import { blogImageMimeTypes } from '../../models/blogMedia';
+import { portalPublishingStrings } from '@/strings';
+
 import styles from '../../Blog.module.css';
+import { BlogContentImage } from '../BlogContentImage';
+import type { BlogImageFieldsProps } from '../../models/blogImageFieldsProps';
+import { isBlogImageUrl } from '../../models/blogImageUrl';
+import { blogImageMimeTypes } from '../../models/blogMedia';
 import { useBlogImageUpload } from '../../useBlogImageUpload';
 
 const copy = portalPublishingStrings.builder;

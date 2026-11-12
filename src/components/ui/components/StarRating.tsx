@@ -1,9 +1,11 @@
 'use client';
 
 import { useId, useState } from 'react';
+
 import type { StarRatingProps } from '../models/starRatingProps';
-import { UiIcon } from './UiIcon';
+
 import styles from './StarRating.module.css';
+import { UiIcon } from './UiIcon';
 
 export function StarRating({
   value,

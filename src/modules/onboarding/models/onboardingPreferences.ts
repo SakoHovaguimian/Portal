@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { portalOnboardingStrings as copy } from '@/strings';
 
 export const OnboardingPreferencesSchema = z

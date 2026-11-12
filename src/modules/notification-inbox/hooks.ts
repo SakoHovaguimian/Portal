@@ -1,13 +1,15 @@
 'use client';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
 import { useServiceContainer, useSessionState } from '@/providers/AppProviders';
+
+import type { NotificationArchiveInput } from './models/notificationArchiveInput';
+import type { NotificationBulkReadInput } from './models/notificationBulkReadInput';
 import type {
   NotificationInboxQuery,
   NotificationInboxFilters,
 } from './models/notificationInboxQuery';
-import type { NotificationBulkReadInput } from './models/notificationBulkReadInput';
-import type { NotificationArchiveInput } from './models/notificationArchiveInput';
 import type { NotificationPreferencesInput } from './models/notificationPreference';
 import type { NotificationReadMutationInput } from './models/notificationReadMutationInput';
 import { notificationInboxQueryKeys as keys } from './queryKeys';

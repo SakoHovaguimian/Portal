@@ -1,7 +1,9 @@
 import { z } from 'zod';
-import { ThemeModeSchema } from './themeMode';
-import { ThemeIdSchema } from './themeId';
+
 import { projectConfiguration } from '@/config/projectConfiguration';
+
+import { ThemeIdSchema } from './themeId';
+import { ThemeModeSchema } from './themeMode';
 
 export const AppearancePreferenceSchema = z.object({
   themeId: ThemeIdSchema.default(projectConfiguration.appearance.themeId),

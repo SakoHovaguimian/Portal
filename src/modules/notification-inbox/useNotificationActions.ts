@@ -1,7 +1,10 @@
 'use client';
+
 import { useRef } from 'react';
+
 import { usePresentationService } from '@/presentation/PresentationProvider';
 import { portalNotificationInboxStrings as copy } from '@/strings';
+
 import {
   useNotificationRead,
   useNotificationBulkRead,
@@ -22,7 +25,7 @@ export function useNotificationActions(filters: NotificationInboxFilters) {
   const busy = useRef(false);
   const filtered = Object.values(filters).some((value) => value !== undefined);
 
-  async function perform(
+  async function performNotificationMutation(
     operation: () => Promise<NotificationMutationResult>,
     archived = false,
     confirm?: () => Promise<boolean>,
@@ -56,7 +59,7 @@ export function useNotificationActions(filters: NotificationInboxFilters) {
 
     const operation = () =>
       read.mutateAsync({ id: item.id, read: !item.readAt });
-    void perform(operation);
+    void performNotificationMutation(operation);
 
   }
 
@@ -68,7 +71,7 @@ export function useNotificationActions(filters: NotificationInboxFilters) {
           ? { scope: 'FILTERED', filters, read: value }
           : { scope: 'ALL', read: value },
       );
-    void perform(operation);
+    void performNotificationMutation(operation);
 
   }
 
@@ -76,7 +79,7 @@ export function useNotificationActions(filters: NotificationInboxFilters) {
 
     const operation = () =>
       readBulk.mutateAsync({ scope: 'ALL', read: true });
-    void perform(operation);
+    void performNotificationMutation(operation);
 
   }
 
@@ -91,7 +94,7 @@ export function useNotificationActions(filters: NotificationInboxFilters) {
         confirmLabel: copy.archiveAction,
         cancelLabel: copy.cancelAction,
       });
-    void perform(operation, true, confirm);
+    void performNotificationMutation(operation, true, confirm);
 
   }
 
@@ -113,7 +116,7 @@ export function useNotificationActions(filters: NotificationInboxFilters) {
           : copy.archiveAllAction,
         cancelLabel: copy.cancelAction,
       });
-    void perform(operation, true, confirm);
+    void performNotificationMutation(operation, true, confirm);
 
   }
 

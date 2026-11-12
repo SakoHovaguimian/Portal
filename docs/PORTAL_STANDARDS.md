@@ -1,6 +1,6 @@
 # Portal Code Standards
 
-This is Portal's permanent formatting and React composition contract. Read it before changing maintained code. It carries the explicitly authorized Obelisk formatting and Grimoire composition standards; [architecture](ARCHITECTURE.md), [strings](STRINGS.md), [UI system](UI_SYSTEM.md), [DESIGN.md](../DESIGN.md), and [UX-CONTRACT.md](../UX-CONTRACT.md) continue to own runtime behavior and visual intent. Preserve existing behavior, appearance, contracts, and state ownership. Make the smallest complete change.
+This is Portal's permanent formatting and React composition contract. Obelisk's existing `docs/prompts/LINTING_FORMATTING_SEMANTICS.md` is the reference for the adopted code-style rules; Obelisk itself is read-only and must not be changed to match Portal. Read it before changing maintained code. It carries the explicitly authorized Obelisk formatting and Grimoire composition standards; [architecture](ARCHITECTURE.md), [strings](STRINGS.md), [UI system](UI_SYSTEM.md), [DESIGN.md](../DESIGN.md), and [UX-CONTRACT.md](../UX-CONTRACT.md) continue to own runtime behavior and visual intent. Preserve existing behavior, appearance, contracts, and state ownership. Make the smallest complete change.
 
 ## One Formatting Authority
 
@@ -31,9 +31,9 @@ Apply these rules to **every maintained source file**, including models, hooks, 
 - An expanded body has multiple statements, a nested control-flow block, or a multiline statement. Put exactly one blank line after its opening brace and before its closing brace. Apply this consistently to functions, methods, constructors, callbacks, branches, loops, and error-handling blocks. An empty body stays empty.
 - Pad class bodies containing multiple members. Separate initialization, methods, and helpers consistently.
 - Data objects, arrays, schema objects, and data-only interfaces are not executable blocks; do not give them boundary padding.
-- Use two-space indentation, single quotes, semicolons, and existing Portal trailing commas, except for the constructor exception below. Keep readable wrapping; do not introduce a new arbitrary line-length regime.
+- Follow Obelisk's file-local convention rule: preserve the target file's established indentation, quotes, semicolons, trailing commas, and readable wrapping. Portal's maintained source uses two spaces, single quotes, and semicolons; keep that existing family, with the constructor exception below. Keep readable wrapping; do not introduce a new arbitrary line-length regime.
 - Use one space after control-flow keywords, commas, and type/property colons, and around binary/assignment operators. Do not put spaces before call parentheses.
-- Keep one blank line between logical phases and declarations. Never add multiple consecutive blank lines. Keep imports together, with one blank line before the first declaration; preserve directives such as `'use client'` and side-effect imports.
+- Keep one blank line between logical phases and declarations. Never add multiple consecutive blank lines. Use the import grouping below, preserving directives such as `'use client'` and side-effect imports.
 
 Compact example:
 
@@ -64,6 +64,16 @@ const options = {
   offset: 0,
 };
 ```
+
+### Import Grouping
+
+Follow Obelisk's compact groups in order: packages (Node built-ins and third-party dependencies), shared application dependencies, then feature/local dependencies. Omit empty groups. Keep imports consecutive within a group and exactly one blank line between groups and before the first declaration or its documentation.
+
+Resolve responsibility rather than counting relative path segments. Imports from any feature module belong to the feature group; a foundational service's own contracts/models/helpers are local, while other foundational services are shared. Shared UI, presentation, configuration, utilities, models, and application wiring belong to the shared group.
+
+Keep package imports in their established order. Within shared/feature groups, order by resolved repository path; imports from one path remain adjacent without changing bindings, type modifiers, or wrapping. Side-effect imports are ordering barriers: keep them in place and group only the surrounding imports. Preserve required initialization order; document a necessary exception rather than sorting blindly. Do not reorder dynamic imports, re-exports, registrations, or construction.
+
+Use short contextual headings in large mixed import sections. Containers group application/foundational dependencies first, then one bucket per module; keep each module's dependencies together in their role order. Other large sections use buckets matching actual dependencies, such as shared models, shared services, related features, local models, and local services. Ordinary files keep the compact groups without unnecessary headings. Resolve paths alphabetically inside each bucket unless a documented contextual role order applies.
 
 ### Constructors And MARK Blocks
 

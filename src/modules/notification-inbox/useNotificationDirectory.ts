@@ -1,6 +1,9 @@
 'use client';
+
 import { useSearchParams } from 'next/navigation';
+
 import { useDirectoryState } from '@/queries/useDirectoryState';
+
 import { NotificationCategorySchema } from './models/notificationCategory';
 import type { NotificationInboxQuery } from './models/notificationInboxQuery';
 

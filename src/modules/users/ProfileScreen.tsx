@@ -1,7 +1,7 @@
 'use client';
 
-import { strings } from '@/strings';
 import { useRef, useState } from 'react';
+
 import {
   Button,
   Card,
@@ -14,16 +14,18 @@ import {
   QueryBoundary,
 } from '@/components/ui';
 import type { User } from '@/models';
+import { usePresentationService } from '@/presentation/PresentationProvider';
 import { useSessionState } from '@/providers/AppProviders';
 import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
-import { usePresentationService } from '@/presentation/PresentationProvider';
+import { strings } from '@/strings';
+
+import { useUpdateCurrentUser, useUser } from './hooks';
 import {
   ProfileDraftSchema,
   type ProfileDraft,
-  type ProfileDraftErrors,
 } from './models/profileDraft';
+import type { ProfileDraftErrors } from './models/profileDraftErrors';
 import type { ProfileFormProps } from './models/profileFormProps';
-import { useUpdateCurrentUser, useUser } from './hooks';
 
 function profileDraftFromUser(user: User): ProfileDraft {
 
@@ -36,13 +38,13 @@ function profileDraftFromUser(user: User): ProfileDraft {
 
 }
 
-function equalDraft(a: ProfileDraft, b: ProfileDraft) {
+function areProfileDraftsEqual(leftDraft: ProfileDraft, rightDraft: ProfileDraft) {
 
   return (
-    a.firstName === b.firstName &&
-    a.lastName === b.lastName &&
-    a.phoneNumber === b.phoneNumber &&
-    a.dateOfBirth === b.dateOfBirth
+    leftDraft.firstName === rightDraft.firstName &&
+    leftDraft.lastName === rightDraft.lastName &&
+    leftDraft.phoneNumber === rightDraft.phoneNumber &&
+    leftDraft.dateOfBirth === rightDraft.dateOfBirth
   );
 
 }
@@ -96,12 +98,12 @@ function ProfileForm({ user }: ProfileFormProps) {
     if (draft === null) {
       baseline.current = profileDraftFromUser(user);
     }
-    const next = { ...current, [key]: value };
-    dirtyRef.current = !equalDraft(
-      next,
+    const updatedDraft = { ...current, [key]: value };
+    dirtyRef.current = !areProfileDraftsEqual(
+      updatedDraft,
       baseline.current ?? profileDraftFromUser(user),
     );
-    setDraft(dirtyRef.current ? next : null);
+    setDraft(dirtyRef.current ? updatedDraft : null);
     setErrors((previous) => ({ ...previous, [key]: undefined }));
 
   }
@@ -115,16 +117,16 @@ function ProfileForm({ user }: ProfileFormProps) {
     const parsed = ProfileDraftSchema.safeParse(current);
     if (!parsed.success) {
 
-      const next: ProfileDraftErrors = {};
+      const validationErrors: ProfileDraftErrors = {};
       for (const issue of parsed.error.issues) {
 
         const key = issue.path[0] as keyof ProfileDraft;
-        if (!next[key]) {
-          next[key] = issue.message;
+        if (!validationErrors[key]) {
+          validationErrors[key] = issue.message;
         }
 
       }
-      setErrors(next);
+      setErrors(validationErrors);
       const key = String(parsed.error.issues[0]?.path[0]);
       formRef.current
         ?.querySelector<HTMLElement>(

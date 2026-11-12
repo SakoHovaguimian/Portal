@@ -1,4 +1,5 @@
 import type { ApiClientInterface } from '@/services/api/apiClientInterface';
+
 import { OnboardingProgressSchema } from '../models/onboardingProgress';
 import {
   OnboardingUpdateSchema,

@@ -1,13 +1,15 @@
-import { portalPublishingStrings } from '@/strings';
-import { blogCategoryLabel } from '../models/blogCategory';
 import Image from 'next/image';
 import Link from 'next/link';
+
 import { UiIcon } from '@/components/ui';
-import type { BlogArticleCardProps } from '../models/blogArticleCardProps';
-import { isBlogImageUrl } from '../models/blogImageUrl';
-import { blogCoverSource } from '../models/blogCover';
+import { portalPublishingStrings } from '@/strings';
+
 import styles from '../Blog.module.css';
 import { BlogDate } from './BlogDate';
+import type { BlogArticleCardProps } from '../models/blogArticleCardProps';
+import { blogCategoryLabel } from '../models/blogCategory';
+import { blogCoverSource } from '../models/blogCover';
+import { isBlogImageUrl } from '../models/blogImageUrl';
 
 const copy = portalPublishingStrings.article;
 

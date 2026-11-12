@@ -1,7 +1,9 @@
 import Image from 'next/image';
+
+import { cn } from '@/components/ui/lib/cn';
 import { projectConfiguration } from '@/config/projectConfiguration';
 import { strings } from '@/strings';
-import { cn } from '@/components/ui/lib/cn';
+
 import type { ProjectBrandProps } from './models/projectBrandProps';
 
 export function ProjectBrand({ className }: ProjectBrandProps) {

@@ -1,11 +1,14 @@
 'use client';
-import type { CreateConversationDialogProps } from '../models/createConversationDialogProps';
+
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+
 import { Button, Field, Input, Modal, MultiSelect, TextArea } from '@/components/ui';
 import { useServiceContainer } from '@/providers/AppProviders';
 import { portalChatStrings as copy } from '@/strings';
+
 import { ChatConversationInputSchema } from '../models/chatConversation';
+import type { CreateConversationDialogProps } from '../models/createConversationDialogProps';
 
 export function CreateConversationDialog({ people, onDismiss, onCreated }: CreateConversationDialogProps) {
 

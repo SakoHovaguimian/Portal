@@ -1,7 +1,7 @@
 'use client';
 
-import type { InputProps } from '../models/inputProps';
 import { cn } from '../lib/cn';
+import type { InputProps } from '../models/inputProps';
 
 export { Field } from './Field';
 

@@ -1,4 +1,5 @@
 import type { ReactNode, RefObject } from 'react';
+
 import type { ImageMosaicItem } from './imageMosaicItem';
 
 export interface ImagePreviewProps {

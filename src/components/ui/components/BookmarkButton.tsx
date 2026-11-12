@@ -1,8 +1,9 @@
 'use client';
 
-import { portalUiStrings } from '@/strings';
 import { cn } from '../lib/cn';
 import type { BookmarkButtonProps } from '../models/bookmarkButtonProps';
+import { portalUiStrings } from '@/strings';
+
 import { Button } from './Button';
 import { ReactionBurst, type ReactionBurstFrames } from './ReactionBurst';
 import { UiIcon } from './UiIcon';

@@ -2,15 +2,17 @@
 
 import { useId, useRef, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+
 import { Accordion, Avatar, Badge, Button, Field, Input, Modal, MultiSelect, PageSection, TextArea, UiIcon } from '@/components/ui';
 import { cn } from '@/components/ui/lib/cn';
 import { useServiceContainer } from '@/providers/AppProviders';
 import { portalChatStrings as copy } from '@/strings';
-import type { ConversationDetailsProps } from '../models/conversationDetailsProps';
-import type { ChatMember } from '../models/chatMember';
+
 import { DetailsMembers } from './details/DetailsMembers';
 import { DetailsPinnedMessages } from './details/DetailsPinnedMessages';
 import { DetailsSharedFiles } from './details/DetailsSharedFiles';
+import type { ChatMember } from '../models/chatMember';
+import type { ConversationDetailsProps } from '../models/conversationDetailsProps';
 
 export function ConversationDetails({ conversation, messages, people, userId, variant = 'sidebar', onChanged, onMessageSelect }: ConversationDetailsProps) {
 

@@ -1,8 +1,10 @@
-import type { SearchRouteProps } from '@/models/searchRouteProps';
 import type { Metadata } from 'next';
+
+import type { SearchRouteProps } from '@/models/searchRouteProps';
+import { portalPublishingStrings } from '@/strings';
+
 import { AdminBlogScreen } from '@/modules/blog/AdminBlogScreen';
 import { blogQueryFromSearch } from '@/modules/blog/models/blogQuery';
-import { portalPublishingStrings } from '@/strings';
 
 export const metadata: Metadata = {
   title: portalPublishingStrings.article.adminTitle,

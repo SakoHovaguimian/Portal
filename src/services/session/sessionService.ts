@@ -1,15 +1,17 @@
 import 'server-only';
 import { cookies } from 'next/headers';
 import { createHash } from 'node:crypto';
+
+import { environment } from '@/config/environment';
+import { AuthError } from '@/errors/domainErrors';
 import type { AppSession } from '@/models/auth';
-import type { ServerSession } from './models/serverSession';
 import type { FirebaseAuthServiceInterface } from '@/services/auth/firebaseAuthServiceInterface';
 import type { FirebaseAuthSession } from '@/services/auth/models/firebaseAuthSession';
-import { AuthError } from '@/errors/domainErrors';
-import { strings } from '@/strings';
-import { environment } from '@/config/environment';
 import { getDemoState } from '@/services/demo/demoState';
 import { resolveDemoSession } from '@/services/demo/resolveDemoSession';
+import { strings } from '@/strings';
+
+import type { ServerSession } from './models/serverSession';
 import {
   decodeSession,
   encodeSession,

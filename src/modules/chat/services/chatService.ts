@@ -1,14 +1,16 @@
-import type { ChatReactionEmoji } from '../models/chatReaction';
 import type { ApiClientInterface } from '@/services/api/apiClientInterface';
+
+import { ChatConversationSchema, ChatConversationInputSchema, ChatConversationUpdateSchema, type ChatConversationInput, type ChatConversationUpdate } from '../models/chatConversation';
 import { ChatMessageSchema } from '../models/chatMessage';
 import { ChatMessageInputSchema } from '../models/chatMessageInput';
-import { ChatConversationSchema, ChatConversationInputSchema, ChatConversationUpdateSchema, type ChatConversationInput, type ChatConversationUpdate } from '../models/chatConversation';
 import { ChatPersonSchema } from '../models/chatPerson';
+import type { ChatReactionEmoji } from '../models/chatReaction';
 import { ConversationMessageSchema, ConversationMessageInputSchema, ConversationMessageUpdateSchema, type ConversationMessageInput } from '../models/conversationMessage';
 
 export class ChatService {
 
   constructor(private readonly api: ApiClientInterface) { }
+
   // **************************************
   // MARK: - LIST CHAT MESSAGES
   // **************************************
@@ -16,6 +18,7 @@ export class ChatService {
   async listMessages(signal?: AbortSignal) {
     return ChatMessageSchema.array().parse(await this.api.request('/chat/messages', { signal }));
   }
+
   // **************************************
   // MARK: - SEND CHAT MESSAGE
   // **************************************
@@ -28,16 +31,19 @@ export class ChatService {
     }));
 
   }
+
   // **************************************
   // MARK: - LIST CONVERSATIONS
   // **************************************
 
   async listConversations(signal?: AbortSignal) { return ChatConversationSchema.array().parse(await this.api.request('/chat/conversations', { signal })); }
+
   // **************************************
   // MARK: - LIST CHAT PEOPLE
   // **************************************
 
   async listPeople(signal?: AbortSignal) { return ChatPersonSchema.array().parse(await this.api.request('/chat/people', { signal })); }
+
   // **************************************
   // MARK: - CREATE CONVERSATION
   // **************************************
@@ -50,6 +56,7 @@ export class ChatService {
     }));
 
   }
+
   // **************************************
   // MARK: - UPDATE CONVERSATION
   // **************************************
@@ -62,11 +69,13 @@ export class ChatService {
     }));
 
   }
+
   // **************************************
   // MARK: - LIST CONVERSATION MESSAGES
   // **************************************
 
   async listConversationMessages(id: string, signal?: AbortSignal) { return ConversationMessageSchema.array().parse(await this.api.request(`/chat/conversations/${encodeURIComponent(id)}/messages`, { signal })); }
+
   // **************************************
   // MARK: - SEND CONVERSATION MESSAGE
   // **************************************
@@ -80,6 +89,7 @@ export class ChatService {
     }));
 
   }
+
   // **************************************
   // MARK: - EDIT CONVERSATION MESSAGE
   // **************************************
@@ -92,6 +102,7 @@ export class ChatService {
     }));
 
   }
+
   // **************************************
   // MARK: - DELETE CONVERSATION MESSAGE
   // **************************************
@@ -104,6 +115,7 @@ export class ChatService {
     }));
 
   }
+
   // **************************************
   // MARK: - TOGGLE MESSAGE REACTION
   // **************************************
@@ -116,6 +128,7 @@ export class ChatService {
     }));
 
   }
+
   // **************************************
   // MARK: - SET MESSAGE PIN
   // **************************************
@@ -128,6 +141,7 @@ export class ChatService {
     }));
 
   }
+
   // **************************************
   // MARK: - MARK CONVERSATION READ
   // **************************************
@@ -140,6 +154,7 @@ export class ChatService {
     }));
 
   }
+
   // **************************************
   // MARK: - CHANGE CONVERSATION MEMBERSHIP
   // **************************************

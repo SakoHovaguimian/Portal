@@ -1,6 +1,6 @@
+import { cn } from '../lib/cn';
 import type { IconTileProps } from '../models/iconTileProps';
 import type { UiIntent } from '../models/uiIntent';
-import { cn } from '../lib/cn';
 
 const tones: Record<UiIntent | 'brand', string> = {
   brand: 'bg-brand-secondary text-brand-secondary',

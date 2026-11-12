@@ -1,34 +1,40 @@
 import 'server-only';
 import { z } from 'zod';
+
+// Shared Session And Demo Services
 import {
   AuthError,
   NotFoundError,
   ValidationError,
 } from '@/errors/domainErrors';
 import type { DemoContext } from '@/models/demoContext';
-import type { ServerSession } from '@/services/session/models/serverSession';
 import { getDemoState } from '@/services/demo/demoState';
+import type { ServerSession } from '@/services/session/models/serverSession';
 import { portalNotificationInboxStrings as copy } from '@/strings';
+
+// Inbox Models
+import { NotificationArchiveInputSchema } from '../models/notificationArchiveInput';
+import { NotificationBulkReadInputSchema } from '../models/notificationBulkReadInput';
 import { NotificationInboxItemSchema } from '../models/notificationInboxItem';
 import {
   NotificationInboxFiltersSchema,
   readNotificationInboxQuery,
   type NotificationInboxFilters,
 } from '../models/notificationInboxQuery';
-import { NotificationArchiveInputSchema } from '../models/notificationArchiveInput';
-import { NotificationBulkReadInputSchema } from '../models/notificationBulkReadInput';
-import { NotificationReadInputSchema } from '../models/notificationReadInput';
 import { NotificationPreferencesInputSchema } from '../models/notificationPreference';
+import { NotificationReadInputSchema } from '../models/notificationReadInput';
 import {
   NotificationDetectedTimezoneInputSchema,
   NotificationTimezoneInputSchema,
 } from '../models/notificationTimezone';
 import type { NotificationUserSettings } from '../models/notificationUserSettings';
+
+// Demo State
+import type { DemoInboxNotification } from './models/demoInboxNotification';
 import {
   defaultNotificationPreferences,
   getDemoNotificationInboxState,
 } from './notificationInboxState';
-import type { DemoInboxNotification } from './models/demoInboxNotification';
 
 export { resetDemoNotificationInboxState } from './notificationInboxState';
 
@@ -36,7 +42,7 @@ export { resetDemoNotificationInboxState } from './notificationInboxState';
 // MARK: - CREATE DEMO NO STORE JSON RESPONSE
 // **************************************
 
-const json = (body: unknown) =>
+const createNotificationResponse = (body: unknown) =>
   Response.json(body, { headers: { 'cache-control': 'no-store' } });
 
 // **************************************
@@ -57,14 +63,14 @@ export async function handleNotificationInboxRequest(
     .map(decodeURIComponent);
   if (area !== 'portal' || feature !== 'notification-inbox') { return null; }
   if (extra.length) { throw new NotFoundError(); }
-  const current = getDemoState().users.find(
+  const currentUser = getDemoState().users.find(
     (user) =>
       user.id === session.user.id &&
       user.external_id === session.auth.externalId &&
       !user.deleted &&
       !user.disabled,
   );
-  if (!session.demo || !current) { throw new AuthError(); }
+  if (!session.demo || !currentUser) { throw new AuthError(); }
 
   const state = getDemoNotificationInboxState();
   const now = new Date().toISOString();
@@ -73,7 +79,7 @@ export async function handleNotificationInboxRequest(
   // MARK: - PARSE DEMO NOTIFICATION REQUEST BODY
   // **************************************
 
-  const input = () => {
+  const readRequestInput = () => {
 
     const inputPromise = request.json().catch(() => {
       throw new ValidationError();
@@ -87,8 +93,8 @@ export async function handleNotificationInboxRequest(
   // MARK: - CHECK DEMO NOTIFICATION VISIBILITY
   // **************************************
 
-  const visible = (item: DemoInboxNotification) =>
-    item.userId === current.id &&
+  const isNotificationVisible = (item: DemoInboxNotification) =>
+    item.userId === currentUser.id &&
     !item.deleted &&
     item.status === 'PUBLISHED' &&
     item.inAppEnabled &&
@@ -98,11 +104,11 @@ export async function handleNotificationInboxRequest(
   // MARK: - FILTER DEMO NOTIFICATIONS
   // **************************************
 
-  const matching = (filters: NotificationInboxFilters = {}) => {
+  const getMatchingNotifications = (filters: NotificationInboxFilters = {}) => {
 
     const matchingItems = state.notifications.filter(
       (item) =>
-        visible(item) &&
+        isNotificationVisible(item) &&
         (filters.read === undefined || Boolean(item.readAt) === filters.read) &&
         (!filters.category || item.category === filters.category) &&
         (!filters.query ||
@@ -119,9 +125,9 @@ export async function handleNotificationInboxRequest(
   // MARK: - COUNT DEMO NOTIFICATIONS
   // **************************************
 
-  const counts = (filters: NotificationInboxFilters = {}) => {
+  const getNotificationCounts = (filters: NotificationInboxFilters = {}) => {
 
-    const items = context.scenario === 'empty' ? [] : matching(filters);
+    const items = context.scenario === 'empty' ? [] : getMatchingNotifications(filters);
     const readCount = items.filter((item) => item.readAt !== null).length;
     return {
       totalCount: items.length,
@@ -139,7 +145,7 @@ export async function handleNotificationInboxRequest(
 
     z.string().uuid().parse(id);
     const item = state.notifications.find(
-      (item) => item.id === id && visible(item),
+      (item) => item.id === id && isNotificationVisible(item),
     );
     if (!item) { throw new NotFoundError(copy.validation.unavailable); }
     return item;
@@ -150,9 +156,9 @@ export async function handleNotificationInboxRequest(
   // MARK: - GET DEMO NOTIFICATION SETTINGS
   // **************************************
 
-  const settings = (): NotificationUserSettings =>
-    state.settings.get(current.id) ?? {
-      userId: current.id,
+  const getNotificationSettings = (): NotificationUserSettings =>
+    state.settings.get(currentUser.id) ?? {
+      userId: currentUser.id,
       timezone: null,
       lastTimezone: null,
       lastTimezoneUpdatedAt: null,
@@ -163,19 +169,19 @@ export async function handleNotificationInboxRequest(
   // MARK: - UPDATE DEMO NOTIFICATION READ STATE
   // **************************************
 
-  const readItems = (items: DemoInboxNotification[], read: boolean) => {
+  const setNotificationReadState = (items: DemoInboxNotification[], read: boolean) => {
 
     const changed = items.filter((item) => Boolean(item.readAt) !== read);
     changed.forEach((item) => {
       item.readAt = read ? now : null;
     });
-    return json({ affectedCount: changed.length, counts: counts() });
+    return createNotificationResponse({ affectedCount: changed.length, counts: getNotificationCounts() });
 
   };
   if (resource === 'counts' && !action && request.method === 'GET') {
 
-    return json(
-      counts(
+    return createNotificationResponse(
+      getNotificationCounts(
         NotificationInboxFiltersSchema.omit({ read: true }).parse(
           Object.fromEntries(url.searchParams),
         ),
@@ -187,16 +193,16 @@ export async function handleNotificationInboxRequest(
 
     if (request.method === 'GET') {
 
-      return json(
-        state.preferences.get(current.id) ?? defaultNotificationPreferences(),
+      return createNotificationResponse(
+        state.preferences.get(currentUser.id) ?? defaultNotificationPreferences(),
       );
 
     }
     if (request.method === 'PUT') {
 
-      const value = NotificationPreferencesInputSchema.parse(await input());
+      const value = NotificationPreferencesInputSchema.parse(await readRequestInput());
       const preferences =
-        state.preferences.get(current.id) ?? defaultNotificationPreferences();
+        state.preferences.get(currentUser.id) ?? defaultNotificationPreferences();
       value.preferences.forEach((entry) => {
 
         const index = preferences.findIndex(
@@ -210,26 +216,26 @@ export async function handleNotificationInboxRequest(
         }
 
       });
-      state.preferences.set(current.id, preferences);
-      return json(preferences);
+      state.preferences.set(currentUser.id, preferences);
+      return createNotificationResponse(preferences);
 
     }
 
   }
   if (resource === 'settings') {
 
-    const value = { ...settings() };
-    if (!action && request.method === 'GET') { return json(value); }
+    const value = { ...getNotificationSettings() };
+    if (!action && request.method === 'GET') { return createNotificationResponse(value); }
     if (action === 'timezone' && request.method === 'PUT') {
 
       value.timezone = NotificationTimezoneInputSchema.parse(
-        await input(),
+        await readRequestInput(),
       ).timezone;
 
     } else if (action === 'last-timezone' && request.method === 'PUT') {
 
       const detected = NotificationDetectedTimezoneInputSchema.parse(
-        await input(),
+        await readRequestInput(),
       ).lastTimezone;
       if (value.lastTimezone !== detected) {
 
@@ -240,18 +246,18 @@ export async function handleNotificationInboxRequest(
 
     } else { throw new NotFoundError(); }
     value.effectiveTimezone = value.timezone ?? value.lastTimezone ?? 'UTC';
-    state.settings.set(current.id, value);
-    return json(value);
+    state.settings.set(currentUser.id, value);
+    return createNotificationResponse(value);
 
   }
   if (resource === 'read' && !action && request.method === 'PUT') {
 
-    const value = NotificationBulkReadInputSchema.parse(await input());
+    const value = NotificationBulkReadInputSchema.parse(await readRequestInput());
     const items =
       value.scope === 'SELECTED'
         ? value.ids.map(requireNotification)
-        : matching(value.scope === 'FILTERED' ? value.filters : {});
-    return readItems(items, value.read);
+        : getMatchingNotifications(value.scope === 'FILTERED' ? value.filters : {});
+    return setNotificationReadState(items, value.read);
 
   }
   if (!resource && request.method === 'GET') {
@@ -260,7 +266,7 @@ export async function handleNotificationInboxRequest(
     const items =
       context.scenario === 'empty'
         ? []
-        : matching(query).sort((left, right) => {
+        : getMatchingNotifications(query).sort((left, right) => {
 
           const order =
             (left.publishedAt ?? left.createdAt).localeCompare(
@@ -274,7 +280,7 @@ export async function handleNotificationInboxRequest(
     const notifications = pageItems.map((item) =>
       NotificationInboxItemSchema.parse(item),
     );
-    return json({
+    return createNotificationResponse({
       data: notifications,
       page: {
         limit: query.limit,
@@ -287,32 +293,32 @@ export async function handleNotificationInboxRequest(
   }
   if (!resource && request.method === 'DELETE') {
 
-    const value = NotificationArchiveInputSchema.parse(await input());
-    const items = matching(value.scope === 'FILTERED' ? value.filters : {});
+    const value = NotificationArchiveInputSchema.parse(await readRequestInput());
+    const items = getMatchingNotifications(value.scope === 'FILTERED' ? value.filters : {});
     items.forEach((item) => {
       item.deleted = true;
     });
-    return json({ affectedCount: items.length, counts: counts() });
+    return createNotificationResponse({ affectedCount: items.length, counts: getNotificationCounts() });
 
   }
   if (resource) {
 
     const item = requireNotification(resource);
     if (!action && request.method === 'GET') {
-      return json(NotificationInboxItemSchema.parse(item));
+      return createNotificationResponse(NotificationInboxItemSchema.parse(item));
     }
     if (action === 'read' && request.method === 'PUT') {
 
-      return readItems(
+      return setNotificationReadState(
         [item],
-        NotificationReadInputSchema.parse(await input()).read,
+        NotificationReadInputSchema.parse(await readRequestInput()).read,
       );
 
     }
     if (!action && request.method === 'DELETE') {
 
       item.deleted = true;
-      return json({ affectedCount: 1, counts: counts() });
+      return createNotificationResponse({ affectedCount: 1, counts: getNotificationCounts() });
 
     }
 

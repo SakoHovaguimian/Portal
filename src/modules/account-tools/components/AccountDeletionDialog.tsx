@@ -1,5 +1,7 @@
 import { useId, useRef, useState, type FormEvent } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+
+import { MutationError } from '@/components/MutationError';
 import {
   Button,
   ConfirmationChoice,
@@ -10,8 +12,8 @@ import {
 import { useSessionState } from '@/providers/AppProviders';
 import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
 import { useRealtime } from '@/services/realtime/RealtimeProvider';
-import { MutationError } from '@/components/MutationError';
 import { portalAccountToolsStrings as copy } from '@/strings';
+
 import { useDeleteAccount } from '../hooks';
 import type { AccountDeletionDialogProps } from '../models/accountDeletionDialogProps';
 

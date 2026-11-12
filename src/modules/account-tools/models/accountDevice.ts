@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { AccountDeviceTypeSchema } from './accountDeviceType';
 
 export { AccountDeviceTypeSchema } from './accountDeviceType';

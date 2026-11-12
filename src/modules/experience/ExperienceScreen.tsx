@@ -1,10 +1,11 @@
 'use client';
 
-import { strings } from '@/strings';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
+
 import { Button } from '@/components/ui';
 import { usePresentationService } from '@/presentation/PresentationProvider';
+import { strings } from '@/strings';
 
 const sections = [
   { id: 'hero', label: strings.ui.experienceScreen.overview },

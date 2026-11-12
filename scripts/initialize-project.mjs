@@ -1,11 +1,12 @@
 import { readFile, realpath } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
 import { markedBlock, readExport, formatInitializerCopy } from './initializer/catalog.mjs';
-import { buildSettings, initializerError, parseOptions } from './initializer/options.mjs';
-import { promptOptions } from './initializer/interactive.mjs';
-import { createPlan, environmentContent } from './initializer/plan.mjs';
 import { applyFiles } from './initializer/filesystem.mjs';
+import { promptOptions } from './initializer/interactive.mjs';
+import { buildSettings, initializerError, parseOptions } from './initializer/options.mjs';
+import { createPlan, environmentContent } from './initializer/plan.mjs';
 
 let copy;
 

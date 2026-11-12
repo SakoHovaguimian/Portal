@@ -1,8 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import type { User } from '@/models';
-import { strings } from '@/strings';
+
 import {
   DataPanel,
   DataTable,
@@ -14,6 +13,9 @@ import {
   Page,
   PageHeader,
 } from '@/components/ui';
+import type { User } from '@/models';
+import { strings } from '@/strings';
+
 import { useUsers } from './hooks';
 import type { UsersScreenProps } from './models/usersScreenProps';
 

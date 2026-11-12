@@ -1,4 +1,5 @@
 import type { ThemeMode } from '@/models/themeMode';
+
 import type { ThemeControlColors } from './themeControlColors';
 
 /** Optional component roles extend complete themes without changing existing presets. */

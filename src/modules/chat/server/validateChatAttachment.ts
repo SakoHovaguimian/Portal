@@ -1,7 +1,10 @@
 import 'server-only';
+
 import { ValidationError } from '@/errors/domainErrors';
 import { portalChatStrings as copy } from '@/strings';
+
 import type { ChatAttachmentInput } from '../models/chatAttachment';
+
 // **************************************
 // MARK: - VALIDATE CHAT ATTACHMENT CONTENT
 // **************************************

@@ -1,8 +1,9 @@
 import type { MetricCardProps } from '../models/metricCardProps';
+
+import { Badge } from './Badge';
 import { Card } from './Card';
 import { IconTile } from './IconTile';
 import { UiIcon } from './UiIcon';
-import { Badge } from './Badge';
 
 export function MetricCard({
   eyebrow,

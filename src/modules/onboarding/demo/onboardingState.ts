@@ -1,8 +1,10 @@
 import 'server-only';
-import type { DemoUser } from '@/services/demo/models/demoUser';
+
 import { demoPresetForUser } from '@/services/demo/demoPresets';
-import { getDemoState } from '@/services/demo/demoState';
 import { registerDemoReset } from '@/services/demo/demoResetRegistry';
+import { getDemoState } from '@/services/demo/demoState';
+import type { DemoUser } from '@/services/demo/models/demoUser';
+
 import type { OnboardingProgress } from '../models/onboardingProgress';
 
 const globalState = globalThis as typeof globalThis & {
@@ -13,13 +15,13 @@ const globalState = globalThis as typeof globalThis & {
 // MARK: - GET DEMO ONBOARDING STATE
 // **************************************
 
-const state = () => (globalState.portalOnboarding ??= new Map());
+const getOnboardingState = () => (globalState.portalOnboarding ??= new Map());
 
 // **************************************
 // MARK: - CREATE INITIAL DEMO ONBOARDING PROGRESS
 // **************************************
 
-function initial(user: DemoUser, incomplete: boolean): OnboardingProgress {
+function createInitialProgress(user: DemoUser, incomplete: boolean): OnboardingProgress {
 
   const now = new Date().toISOString();
   return {
@@ -39,10 +41,11 @@ function initial(user: DemoUser, incomplete: boolean): OnboardingProgress {
 
 export function getDemoOnboardingProgress(user: DemoUser) {
 
-  const existing = state().get(user.id);
-  if (existing) { return existing; }
-  const progress = initial(user, demoPresetForUser(user.id) === 'onboarding');
-  state().set(user.id, progress);
+  const existingProgress = getOnboardingState().get(user.id);
+  if (existingProgress) { return existingProgress; }
+
+  const progress = createInitialProgress(user, demoPresetForUser(user.id) === 'onboarding');
+  getOnboardingState().set(user.id, progress);
   return progress;
 
 }
@@ -53,8 +56,8 @@ export function getDemoOnboardingProgress(user: DemoUser) {
 
 export function createDemoOnboarding(user: DemoUser) {
 
-  const progress = initial(user, true);
-  state().set(user.id, progress);
+  const progress = createInitialProgress(user, true);
+  getOnboardingState().set(user.id, progress);
   return progress;
 
 }
@@ -75,6 +78,7 @@ export function restartDemoOnboarding(userId: string) {
 // **************************************
 
 export function resetDemoOnboardingState() {
-  state().clear();
+  getOnboardingState().clear();
 }
+
 registerDemoReset('onboarding', resetDemoOnboardingState);

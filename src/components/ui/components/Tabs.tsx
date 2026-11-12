@@ -1,8 +1,9 @@
 'use client';
 
-import { strings } from '@/strings';
 import { useCompactSectionNavigation } from '../lib/useCompactSectionNavigation';
 import type { SegmentedTabsProps } from '../models/segmentedTabsProps';
+import { strings } from '@/strings';
+
 import { SegmentedChoices } from './SegmentedChoices';
 import { Select } from './Select';
 import { UiIcon } from './UiIcon';

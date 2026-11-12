@@ -6,9 +6,10 @@ import {
   QueryBoundary,
 } from '@/components/ui';
 import { portalAccountToolsStrings as copy } from '@/strings';
+
+import { AccountToolsLoading } from './AccountToolsLoading';
 import { useLegalInformation } from '../hooks';
 import type { LegalInformationPanelProps } from '../models/legalInformationPanelProps';
-import { AccountToolsLoading } from './AccountToolsLoading';
 
 export function LegalInformationPanel({
   context,

@@ -1,4 +1,5 @@
 import ts from 'typescript';
+
 import { sourceFile } from './string-literals.mjs';
 
 // UI title case capitalizes every word, including articles and prepositions.

@@ -1,18 +1,21 @@
 'use client';
 
 import { useRef } from 'react';
-import { ActivityIndicator, Button, Card, DescriptionList, ErrorState, Page, PageHeader, UiIcon } from '@/components/ui';
+
 import { MutationError } from '@/components/MutationError';
-import { useGuardedBack } from '@/providers/useGuardedBack';
+import { ActivityIndicator, Button, Card, DescriptionList, ErrorState, Page, PageHeader, UiIcon } from '@/components/ui';
 import { usePresentationService } from '@/presentation/PresentationProvider';
+import { useGuardedBack } from '@/providers/useGuardedBack';
 import { portalJobStrings as copy } from '@/strings';
-import { useBackgroundJob, useBackgroundJobMutations } from './hooks';
-import type { JobDetailScreenProps } from './models/jobDetailScreenProps';
-import { JobProgress } from './components/JobProgress';
-import { JobStatus } from './components/JobStatus';
+
 import { JobAttemptHistory } from './components/JobAttemptHistory';
+import { JobProgress } from './components/JobProgress';
 import { JobResult } from './components/JobResult';
+import { JobStatus } from './components/JobStatus';
 import { formatJobDate } from './formatJobDate';
+import { useBackgroundJob, useBackgroundJobMutations } from './hooks';
+import type { BackgroundJobRetryRequestKey } from './models/backgroundJobRetryRequestKey';
+import type { JobDetailScreenProps } from './models/jobDetailScreenProps';
 
 export function JobDetailScreen({ jobId }: JobDetailScreenProps) {
 
@@ -21,7 +24,7 @@ export function JobDetailScreen({ jobId }: JobDetailScreenProps) {
   const back = useGuardedBack('/jobs');
   const presentation = usePresentationService();
   const busy = useRef(false);
-  const retryRequest = useRef<{ attempt: number; key: string } | null>(null);
+  const retryRequest = useRef<BackgroundJobRetryRequestKey | null>(null);
   const job = query.data;
 
   async function cancelJob() {

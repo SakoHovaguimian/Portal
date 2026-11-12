@@ -1,12 +1,14 @@
 import 'server-only';
+
 import {
   AuthError,
   NotFoundError,
   ValidationError,
 } from '@/errors/domainErrors';
 import { portalEngagementStrings as copy } from '@/strings';
-import { EngagementKeySchema } from '../models/engagementTarget';
+
 import { EngagementInputSchema } from '../models/engagementInput';
+import { EngagementKeySchema } from '../models/engagementKey';
 import { SavedQuerySchema } from '../models/savedQuery';
 import { getDemoEngagementState } from './demoEngagementState';
 import { resolveEngagementTarget } from './engagementTargetRegistry';
@@ -15,7 +17,7 @@ import { resolveEngagementTarget } from './engagementTargetRegistry';
 // MARK: - CREATE ENGAGEMENT RESPONSE
 // **************************************
 
-const json = (body: unknown, status = 200) =>
+const createEngagementResponse = (body: unknown, status = 200) =>
   Response.json(body, { status, headers: { 'cache-control': 'no-store' } });
 
 // **************************************
@@ -38,13 +40,13 @@ export async function handleDemoEngagementRequest(
   // MARK: - READ DEMO ENGAGEMENT REQUEST BODY
   // **************************************
 
-  const input = () => {
+  const readRequestInput = () => {
 
-    const inputPromise = request.json().catch(() => {
+    const requestInputPromise = request.json().catch(() => {
       throw new ValidationError(copy.invalidInput);
     });
 
-    return inputPromise;
+    return requestInputPromise;
 
   };
   const state = getDemoEngagementState();
@@ -76,14 +78,14 @@ export async function handleDemoEngagementRequest(
               .toLocaleLowerCase('en-US')
               .includes(query.query.toLocaleLowerCase('en-US')),
         )
-        .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+        .sort((leftRecord, rightRecord) => rightRecord.updatedAt.localeCompare(leftRecord.updatedAt));
       const offset = filtered.length
         ? Math.min(
           query.offset,
           Math.floor((filtered.length - 1) / query.limit) * query.limit,
         )
         : 0;
-      return json({
+      return createEngagementResponse({
         data: filtered.slice(offset, offset + query.limit),
         total: filtered.length,
         limit: query.limit,
@@ -93,7 +95,7 @@ export async function handleDemoEngagementRequest(
     }
     if (request.method === 'DELETE') {
 
-      const key = EngagementKeySchema.parse(await input());
+      const key = EngagementKeySchema.parse(await readRequestInput());
       const record = state.find(
         (item) =>
           item.userId === userId &&
@@ -124,7 +126,7 @@ export async function handleDemoEngagementRequest(
   );
   if (request.method === 'PUT') {
 
-    const values = EngagementInputSchema.parse(await input());
+    const values = EngagementInputSchema.parse(await readRequestInput());
     if (!record) {
 
       record = {
@@ -154,6 +156,6 @@ export async function handleDemoEngagementRequest(
     target,
     likeCount,
   };
-  return json(engagementSummary);
+  return createEngagementResponse(engagementSummary);
 
 }

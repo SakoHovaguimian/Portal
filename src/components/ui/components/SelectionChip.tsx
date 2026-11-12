@@ -1,7 +1,8 @@
-import type { SelectionChipProps } from '../models/selectionChipProps';
-import { Chip } from './Chip';
-import { Checkbox } from './Checkbox';
 import { cn } from '../lib/cn';
+import type { SelectionChipProps } from '../models/selectionChipProps';
+
+import { Checkbox } from './Checkbox';
+import { Chip } from './Chip';
 
 export function SelectionChip({
   label,

@@ -1,5 +1,5 @@
-import type { ChipProps } from '../models/chipProps';
 import { cn } from '../lib/cn';
+import type { ChipProps } from '../models/chipProps';
 
 export function Chip({
   children,

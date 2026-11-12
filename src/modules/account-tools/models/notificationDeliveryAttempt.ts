@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { DeliveryStatusSchema } from './deliveryStatus';
 
 export const NotificationDeliveryAttemptSchema = z.object({

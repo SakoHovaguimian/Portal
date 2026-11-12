@@ -1,9 +1,11 @@
 import { useState } from 'react';
+
 import { Button, Card, SegmentedTabs, UiIcon } from '@/components/ui';
 import { portalNotificationInboxStrings as copy } from '@/strings';
-import type { NotificationInboxView } from '../models/notificationInboxView';
-import type { NotificationInboxToolbarProps } from '../models/notificationInboxToolbarProps';
+
 import { NotificationDirectoryFilters } from './NotificationDirectoryFilters';
+import type { NotificationInboxToolbarProps } from '../models/notificationInboxToolbarProps';
+import type { NotificationInboxView } from '../models/notificationInboxView';
 
 const allView: NotificationInboxView = 'all';
 const unreadView: NotificationInboxView = 'unread';

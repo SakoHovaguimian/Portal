@@ -1,9 +1,11 @@
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
+
+import { ProjectBrand } from '@/components/ProjectBrand';
 import { portalModules } from '@/config/portalModules';
 import type { ChildrenProps } from '@/models/childrenProps';
-import Link from 'next/link';
 import { portalPublishingStrings } from '@/strings';
-import { ProjectBrand } from '@/components/ProjectBrand';
+
 import styles from '@/modules/blog/Blog.module.css';
 
 const copy = portalPublishingStrings.article;

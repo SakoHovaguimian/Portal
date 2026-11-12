@@ -1,6 +1,7 @@
-import type { FormSectionProps } from '../models/formSectionProps';
-import { IconTile } from './IconTile';
 import { cn } from '../lib/cn';
+import type { FormSectionProps } from '../models/formSectionProps';
+
+import { IconTile } from './IconTile';
 
 export function FormSection({
   id,

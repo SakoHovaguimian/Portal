@@ -1,9 +1,10 @@
+import { locationScheduleFormat } from '../lib/locationScheduleFormat';
 import type { LocationScheduleItemProps } from '../models/locationScheduleItemProps';
+
 import { DescriptionList } from './DescriptionList';
 import { IconTile } from './IconTile';
-import { UiIcon } from './UiIcon';
 import { LocationScheduleTime } from './LocationScheduleCells';
-import { locationScheduleFormat } from '../lib/locationScheduleFormat';
+import { UiIcon } from './UiIcon';
 
 export function LocationScheduleItem({
   name,

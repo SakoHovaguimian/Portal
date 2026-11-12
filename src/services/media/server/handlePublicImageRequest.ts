@@ -1,9 +1,10 @@
 import 'server-only';
 import { OwnershipError, ApiError } from '@/errors/domainErrors';
 import { portalPublishingStrings, portalMediaStrings } from '@/strings';
+
 import { uploadDemoPublicImage } from './demoPublicImages';
-import { validatePublicImageUpload } from './validatePublicImageUpload';
 import type { MediaRequestOptions } from './models/mediaRequestOptions';
+import { validatePublicImageUpload } from './validatePublicImageUpload';
 
 // **************************************
 // MARK: - HANDLE PUBLIC IMAGE REQUEST

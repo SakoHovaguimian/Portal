@@ -1,6 +1,7 @@
 import { ValidationError } from '@/errors/domainErrors';
 import type { ApiClientInterface } from '@/services/api/apiClientInterface';
 import { portalMediaStrings as mediaCopy } from '@/strings';
+
 import {
   publicImageMaxBytes,
   publicImageMimeTypes,

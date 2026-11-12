@@ -1,17 +1,18 @@
-import { portalPublishingStrings } from '@/strings';
-import { BlogContentImage } from './BlogContentImage';
 import { MarkdownContent } from '@/components/ui';
+import { portalPublishingStrings } from '@/strings';
+
+import styles from '../Blog.module.css';
+import { BlogContentImage } from './BlogContentImage';
+import { BlogEmbeddedMedia } from './BlogEmbeddedMedia';
+import { canRenderBlogContent } from '../content/canRenderBlogContent';
+import { BlogContentSchema } from '../models/blogContent';
+import type { BlogContentBlockRendererProps } from '../models/blogContentBlockRendererProps';
+import type { BlogContentImageRendererProps } from '../models/blogContentImageRendererProps';
+import type { BlogContentReaderProps } from '../models/blogContentReaderProps';
 import {
   BlogReadableContentSchema,
 } from '../models/blogReadableContent';
-import { BlogContentSchema } from '../models/blogContent';
 import type { StoredBlogContent } from '../models/storedBlogContent';
-import { BlogEmbeddedMedia } from './BlogEmbeddedMedia';
-import { canRenderBlogContent } from '../content/canRenderBlogContent';
-import styles from '../Blog.module.css';
-import type { BlogContentImageRendererProps } from '../models/blogContentImageRendererProps';
-import type { BlogContentBlockRendererProps } from '../models/blogContentBlockRendererProps';
-import type { BlogContentReaderProps } from '../models/blogContentReaderProps';
 
 const copy = portalPublishingStrings.builder;
 
@@ -40,6 +41,7 @@ function ContentBlock({ block }: BlogContentBlockRendererProps) {
 
     case 'header':
       return <h2>{block.metaData.text}</h2>;
+
     case 'section':
       return (
         <section className={styles.contentSection}>
@@ -54,12 +56,14 @@ function ContentBlock({ block }: BlogContentBlockRendererProps) {
           )}
         </section>
       );
+
     case 'footer':
       return (
         <footer className={styles.contentFooter}>
           <p className={styles.contentText}>{block.metaData.text}</p>
         </footer>
       );
+
     case 'quote':
       return (
         <blockquote className={styles.contentQuote}>
@@ -69,6 +73,7 @@ function ContentBlock({ block }: BlogContentBlockRendererProps) {
           )}
         </blockquote>
       );
+
     case 'bullet':
       return (
         <ul>
@@ -77,10 +82,13 @@ function ContentBlock({ block }: BlogContentBlockRendererProps) {
           ))}
         </ul>
       );
+
     case 'divider':
       return <hr className={styles.contentDivider} />;
+
     case 'image':
       return <ContentImage image={block.metaData} />;
+
     case 'gallery2':
     case 'gallery3':
     case 'gallery4':
@@ -99,6 +107,7 @@ function ContentBlock({ block }: BlogContentBlockRendererProps) {
           )}
         </figure>
       );
+
     case 'callout':
       return (
         <aside className={styles.contentCallout}>
@@ -106,6 +115,7 @@ function ContentBlock({ block }: BlogContentBlockRendererProps) {
           <p className={styles.contentText}>{block.metaData.text}</p>
         </aside>
       );
+
     case 'link':
       return (
         <p>
@@ -119,6 +129,7 @@ function ContentBlock({ block }: BlogContentBlockRendererProps) {
           </a>
         </p>
       );
+
     case 'embed':
       return <BlogEmbeddedMedia metaData={block.metaData} />;
 

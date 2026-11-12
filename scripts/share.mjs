@@ -2,6 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import nextEnv from '@next/env';
+
 import { readExport, formatInitializerCopy as formatShareCopy } from './initializer/catalog.mjs';
 import { createCloudflareEnvironment, requireCloudflaredExecutable, startTunnel } from './share/cloudflare.mjs';
 import { parseShareOptions, resolveLocalPort } from './share/options.mjs';

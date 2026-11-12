@@ -1,12 +1,15 @@
 'use client';
+
 import { useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import type { Route } from 'next';
+
 import { QueryBoundary, InlineLoading } from '@/components/ui';
 import { useRuntimeConfig } from '@/providers/RuntimeProvider';
+
 import { useOnboarding } from './hooks';
-import { isOnboardingRecoveryPath } from './onboardingConfiguration';
 import type { OnboardingGateProps } from './models/onboardingGateProps';
+import { isOnboardingRecoveryPath } from './onboardingConfiguration';
 
 export function OnboardingGate({ children }: OnboardingGateProps) {
 
@@ -16,6 +19,7 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
   const enabled = runtime.onboardingEnabled ?? runtime.demoMode;
   const query = useOnboarding(enabled);
   const recovery = isOnboardingRecoveryPath(pathname);
+
   useEffect(() => {
 
     if (enabled && !recovery && query.data && !query.data.completedAt) {
@@ -28,6 +32,7 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
     }
 
   }, [enabled, recovery, query.data, router]);
+
   if (!enabled || recovery) { return children; }
   return (
     <QueryBoundary query={query} loadingFallback={<InlineLoading />}>

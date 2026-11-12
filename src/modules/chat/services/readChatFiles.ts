@@ -1,7 +1,9 @@
-import { portalChatStrings as copy } from '@/strings';
-import { ValidationError } from '@/errors/domainErrors';
-import { CHAT_ATTACHMENT_LIMIT, CHAT_ATTACHMENT_TYPES, type ChatAttachmentInput } from '../models/chatAttachment';
 import type { UploadFile } from '@/components/ui';
+import { ValidationError } from '@/errors/domainErrors';
+import { portalChatStrings as copy } from '@/strings';
+
+import { CHAT_ATTACHMENT_LIMIT, CHAT_ATTACHMENT_TYPES, type ChatAttachmentInput } from '../models/chatAttachment';
+
 // **************************************
 // MARK: - ENCODE CHAT ATTACHMENTS
 // **************************************

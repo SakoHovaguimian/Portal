@@ -1,8 +1,10 @@
 'use client';
 import { useState, type ComponentProps } from 'react';
-import { Input } from './Input';
+
 import { strings } from '@/strings';
+
 import { Button } from './Button';
+import { Input } from './Input';
 
 export function PasswordInput(
   props: Omit<ComponentProps<typeof Input>, 'type'>,

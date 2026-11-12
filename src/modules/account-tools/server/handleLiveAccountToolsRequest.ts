@@ -1,5 +1,6 @@
 import 'server-only';
 import { z } from 'zod';
+
 import {
   NotFoundError,
   OwnershipError,
@@ -7,23 +8,25 @@ import {
 } from '@/errors/domainErrors';
 import type { BackendForward } from '@/services/api/models/backendForward';
 import { portalAccountToolsStrings as copy } from '@/strings';
+
+import { accountToolsQueryParams } from '../accountToolsQueryParams';
 import { AccountDeletionSchema } from '../models/accountDeletion';
 import { AccountDeviceQuerySchema } from '../models/accountDeviceQuery';
-import { AccountToolsPagingSchema } from '../models/accountToolsPaging';
 import { accountToolsPageSchema } from '../models/accountToolsPage';
-import { NotificationDeliveryQuerySchema } from '../models/notificationDeliveryQuery';
+import { AccountToolsPagingSchema } from '../models/accountToolsPaging';
+import { LegalInformationQuerySchema } from '../models/legalInformationQuery';
 import { LegalItemSchema } from '../models/legalItem';
-import { LegalContextSchema } from '../models/legalContext';
-import { FrequentlyAskedQuestionSectionSchema } from '../models/frequentlyAskedQuestionSection';
-import { accountToolsQueryParams } from '../accountToolsQueryParams';
-import { AccountDeviceTransportSchema } from './models/accountDeviceTransport';
-import { NotificationDeliveryTransportSchema } from './models/notificationDeliveryTransport';
-import { NotificationAttemptTransportSchema } from './models/notificationAttemptTransport';
+import { NotificationDeliveryQuerySchema } from '../models/notificationDeliveryQuery';
 import {
   mapAccountDevice,
   mapNotificationDelivery,
   mapNotificationAttempt,
 } from './accountToolsMappers';
+import { AccountDeletionProfileTransportSchema } from './models/accountDeletionProfileTransport';
+import { AccountDeviceTransportSchema } from './models/accountDeviceTransport';
+import { FrequentlyAskedQuestionsTransportSchema } from './models/frequentlyAskedQuestionsTransport';
+import { NotificationAttemptTransportSchema } from './models/notificationAttemptTransport';
+import { NotificationDeliveryTransportSchema } from './models/notificationDeliveryTransport';
 
 class UpstreamResponse extends Error {
   constructor(readonly response: Response) {
@@ -125,7 +128,7 @@ export async function handleLiveAccountToolsRequest(
 
         const input = AccountDeletionSchema.parse(await readInput());
         const account = await read(
-          z.object({ id: z.string().uuid(), email: z.email() }),
+          AccountDeletionProfileTransportSchema,
           '/users/profile',
         );
         if (userId && account.id !== userId) { throw new OwnershipError(); }
@@ -189,10 +192,9 @@ export async function handleLiveAccountToolsRequest(
       }
       if (resource === 'legal' && !id && !action && method === 'GET') {
 
-        const { context } = z
-          .object({ context: LegalContextSchema })
-          .strict()
-          .parse(Object.fromEntries(url.searchParams));
+        const { context } = LegalInformationQuerySchema.parse(
+          Object.fromEntries(url.searchParams),
+        );
         const items = await read(
           z.array(LegalItemSchema),
           `/system/legal-information?${accountToolsQueryParams({ context })}`,
@@ -203,7 +205,7 @@ export async function handleLiveAccountToolsRequest(
       if (resource === 'faq' && !id && !action && method === 'GET') {
 
         const value = await read(
-          z.object({ sections: z.array(FrequentlyAskedQuestionSectionSchema) }),
+          FrequentlyAskedQuestionsTransportSchema,
           '/system/faq',
         );
         return json({ illustrative: false, sections: value.sections });

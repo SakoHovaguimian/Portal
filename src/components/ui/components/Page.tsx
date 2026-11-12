@@ -1,5 +1,5 @@
-import type { PageProps } from '../models/pageProps';
 import { cn } from '../lib/cn';
+import type { PageProps } from '../models/pageProps';
 
 // Owns the page rhythm through the active theme section spacing.
 export function Page({

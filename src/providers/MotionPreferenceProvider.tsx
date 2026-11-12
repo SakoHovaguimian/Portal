@@ -1,4 +1,3 @@
-import type { MotionPreferenceProviderProps } from './models/motionPreferenceProviderProps';
 import {
   createContext,
   useContext,
@@ -6,12 +5,15 @@ import {
   useMemo,
   useState,
 } from 'react';
+
 import {
   defaultMotionPreference,
   type MotionPreference,
 } from '@/models/motionPreference';
 import { strings } from '@/strings';
+
 import type { MotionPreferenceContextValue } from './models/motionPreferenceContextValue';
+import type { MotionPreferenceProviderProps } from './models/motionPreferenceProviderProps';
 
 const MotionContext = createContext<MotionPreferenceContextValue | null>(null);
 

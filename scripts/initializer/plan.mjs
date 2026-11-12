@@ -1,11 +1,12 @@
 import { createHash, randomBytes } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { defaultConfiguration } from './configuration.mjs';
+
+import { loadAsset } from './assets.mjs';
 import { markedBlock, readExport, sourceLiteral } from './catalog.mjs';
+import { defaultConfiguration } from './configuration.mjs';
 import { safeTarget } from './filesystem.mjs';
 import { initializerError } from './options.mjs';
-import { loadAsset } from './assets.mjs';
 
 const configurationPath = 'src/config/projectConfiguration.ts';
 const stringsPath = 'src/strings.ts';

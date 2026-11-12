@@ -1,5 +1,6 @@
 import { Badge, UiIcon } from '@/components/ui';
 import { portalNotificationInboxStrings as copy } from '@/strings';
+
 import type { NotificationInboxSummaryProps } from '../models/notificationInboxSummaryProps';
 
 export function NotificationInboxSummary({

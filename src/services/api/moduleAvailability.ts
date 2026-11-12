@@ -1,6 +1,6 @@
 import 'server-only';
-import { NotFoundError } from '@/errors/domainErrors';
 import { portalModules } from '@/config/portalModules';
+import { NotFoundError } from '@/errors/domainErrors';
 
 // **************************************
 // MARK: - REQUIRE MODULE AVAILABILITY

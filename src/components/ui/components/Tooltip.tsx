@@ -1,8 +1,9 @@
 'use client';
 
-import type { TooltipProps } from '../models/tooltipProps';
 import { Button as AriaButton, Tooltip as AriaTooltip, TooltipTrigger } from 'react-aria-components';
+
 import { buttonClassName } from '../lib/buttonStyles';
+import type { TooltipProps } from '../models/tooltipProps';
 
 export function Tooltip({
   label,

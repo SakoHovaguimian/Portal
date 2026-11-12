@@ -1,5 +1,6 @@
-import { getThemePreviewStyle } from '@/themes';
 import { strings } from '@/strings';
+import { getThemePreviewStyle } from '@/themes';
+
 import styles from './ThemeStudio.module.css';
 import type { ThemePreviewProps } from '../models/themePreviewProps';
 

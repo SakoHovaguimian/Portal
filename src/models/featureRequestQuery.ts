@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { PaginationSchema } from './pagination';
 
 export const FeatureRequestQuerySchema = PaginationSchema.extend({

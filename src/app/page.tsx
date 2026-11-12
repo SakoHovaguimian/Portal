@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
-import { getServerSession } from '../lib/server/getServerSession';
+
 import { getDefaultProjectRoute } from '@/config/projectRoutes';
+import { getServerSession } from '../lib/server/getServerSession';
 
 export default async function HomePage() {
 

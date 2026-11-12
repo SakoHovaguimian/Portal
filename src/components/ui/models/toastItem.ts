@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react';
+
 import type { ToastIntent } from './toastIntent';
 import type { ToastPosition } from './toastPosition';
 

@@ -1,8 +1,10 @@
 'use client';
 
-import type { ButtonProps } from '../models/buttonProps';
 import { Slot } from '@radix-ui/react-slot';
+
 import { buttonClassName } from '../lib/buttonStyles';
+import type { ButtonProps } from '../models/buttonProps';
+
 import { Spinner } from './Spinner';
 
 export function Button({

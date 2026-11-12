@@ -1,11 +1,5 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { getEffectiveRuntime } from '@/services/demo/demoRuntime';
-import { RuntimeProvider } from '@/providers/RuntimeProvider';
-import { AnalyticsProvider } from '@/services/analytics/components/AnalyticsProvider';
-import { CookieConsentControls } from '@/services/privacy/components/CookieConsentControls';
-import { strings } from '@/strings';
-import type { ChildrenProps } from '@/models/childrenProps';
 import {
   Bricolage_Grotesque,
   Fraunces,
@@ -15,8 +9,15 @@ import {
   Plus_Jakarta_Sans,
   Sora,
 } from 'next/font/google';
+
 import { ThemeScript } from '@/components/ui';
 import { projectConfiguration } from '@/config/projectConfiguration';
+import type { ChildrenProps } from '@/models/childrenProps';
+import { RuntimeProvider } from '@/providers/RuntimeProvider';
+import { AnalyticsProvider } from '@/services/analytics/components/AnalyticsProvider';
+import { getEffectiveRuntime } from '@/services/demo/demoRuntime';
+import { CookieConsentControls } from '@/services/privacy/components/CookieConsentControls';
+import { strings } from '@/strings';
 
 export const metadata: Metadata = {
   title: { default: strings.app.name, template: `%s | ${strings.app.name}` },

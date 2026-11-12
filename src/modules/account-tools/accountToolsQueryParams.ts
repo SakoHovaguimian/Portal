@@ -1,11 +1,15 @@
+// **************************************
+// MARK: - CREATE ACCOUNT TOOLS QUERY PARAMETERS
+// **************************************
+
 export function accountToolsQueryParams(values: object) {
 
-  const params = new URLSearchParams();
+  const queryParameters = new URLSearchParams();
   Object.entries(values).forEach(([key, value]) => {
 
-    if (value !== undefined && value !== '') { params.set(key, String(value)); }
+    if (value !== undefined && value !== '') { queryParameters.set(key, String(value)); }
 
   });
-  return params;
+  return queryParameters;
 
 }

@@ -1,9 +1,11 @@
 'use client';
 
 import { Button, Dialog, DialogTrigger, Popover } from 'react-aria-components';
-import { componentExpansionStrings as copy } from '@/strings';
+
 import { cn } from '../lib/cn';
 import type { AvatarGroupProps } from '../models/avatarGroupProps';
+import { componentExpansionStrings as copy } from '@/strings';
+
 import { Avatar } from './Avatar';
 
 export function AvatarGroup({

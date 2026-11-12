@@ -1,12 +1,14 @@
 'use client';
 
-import type { MosaicTileProps } from '../models/mosaicTileProps';
-import type { ImageMosaicProps } from '../models/imageMosaicProps';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
-import { strings } from '@/strings';
-import type { ImageMosaicItem } from '../models/imageMosaicItem';
+
 import { cn } from '../lib/cn';
+import type { ImageMosaicItem } from '../models/imageMosaicItem';
+import type { ImageMosaicProps } from '../models/imageMosaicProps';
+import type { MosaicTileProps } from '../models/mosaicTileProps';
+import { strings } from '@/strings';
+
 import { ImagePreview } from './ImagePreview';
 import { UiIcon } from './UiIcon';
 

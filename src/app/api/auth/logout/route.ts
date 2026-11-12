@@ -1,7 +1,7 @@
 import { getContainer } from '@/container';
 import { OwnershipError } from '@/errors/domainErrors';
-import { strings } from '@/strings';
 import { errorResponse, trustedMutation } from '@/services/api/routeSafety';
+import { strings } from '@/strings';
 
 // **************************************
 // MARK: - LOG OUT SERVER SESSION

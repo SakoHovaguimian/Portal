@@ -1,8 +1,9 @@
 'use client';
 
-import type { SwitchProps } from '../models/switchProps';
 import { useState } from 'react';
+
 import { cn } from '../lib/cn';
+import type { SwitchProps } from '../models/switchProps';
 
 export function Switch({
   label,

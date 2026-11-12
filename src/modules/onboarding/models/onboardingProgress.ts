@@ -1,7 +1,8 @@
 import { z } from 'zod';
-import { OnboardingStepSchema } from './onboardingStep';
-import { OnboardingProfileSchema } from './onboardingProfile';
+
 import { OnboardingPreferencesSchema } from './onboardingPreferences';
+import { OnboardingProfileSchema } from './onboardingProfile';
+import { OnboardingStepSchema } from './onboardingStep';
 
 export const OnboardingProgressSchema = z.object({
   currentStep: OnboardingStepSchema,

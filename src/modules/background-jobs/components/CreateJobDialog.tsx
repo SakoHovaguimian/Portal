@@ -1,13 +1,16 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { Button, Checkbox, Field, Input, Modal, Select } from '@/components/ui';
+
 import { MutationError } from '@/components/MutationError';
-import { portalJobStrings as copy } from '@/strings';
-import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
+import { Button, Checkbox, Field, Input, Modal, Select } from '@/components/ui';
 import { usePresentationService } from '@/presentation/PresentationProvider';
+import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
+import { portalJobStrings as copy } from '@/strings';
+
 import { useBackgroundJobMutations } from '../hooks';
 import { BackgroundJobCreateInputSchema } from '../models/backgroundJob';
+import type { BackgroundJobCreateRequestKey } from '../models/backgroundJobCreateRequestKey';
 import type { CreateJobDialogProps } from '../models/createJobDialogProps';
 import { sampleJobTypes } from '../models/sampleJobType';
 
@@ -20,7 +23,7 @@ export function CreateJobDialog({ onDismiss, onCreated }: CreateJobDialogProps) 
   const inputRef = useRef<HTMLInputElement>(null);
   const dirty = useRef(false);
   const busy = useRef(false);
-  const request = useRef<{ signature: string; key: string } | null>(null);
+  const request = useRef<BackgroundJobCreateRequestKey | null>(null);
   const requestLeave = useUnsavedFormGuard(dirty, busy);
   const { create } = useBackgroundJobMutations();
   const presentation = usePresentationService();

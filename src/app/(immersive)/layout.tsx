@@ -1,7 +1,8 @@
-import type { ChildrenProps } from '@/models/childrenProps';
 import { redirect } from 'next/navigation';
-import { AppProviders } from '@/providers/AppProviders';
+
 import { getServerSession } from '@/lib/server/getServerSession';
+import type { ChildrenProps } from '@/models/childrenProps';
+import { AppProviders } from '@/providers/AppProviders';
 
 export default async function ImmersiveLayout({
   children,

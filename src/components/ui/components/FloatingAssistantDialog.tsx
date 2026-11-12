@@ -1,6 +1,8 @@
-import type { FloatingAssistantDialogProps } from '../models/floatingAssistantDialogProps';
 import * as Dialog from '@radix-ui/react-dialog';
+
+import type { FloatingAssistantDialogProps } from '../models/floatingAssistantDialogProps';
 import { strings } from '@/strings';
+
 import { IconButton } from './IconButton';
 import { UiIcon } from './UiIcon';
 

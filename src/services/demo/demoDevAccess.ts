@@ -6,8 +6,9 @@ import {
   OwnershipError,
 } from '@/errors/domainErrors';
 import { trustedMutation } from '@/services/api/routeSafety';
-import { getEffectiveRuntime, isDevSettingsAvailable } from './demoRuntime';
 import { portalDemoStrings as copy } from '@/strings';
+
+import { getEffectiveRuntime, isDevSettingsAvailable } from './demoRuntime';
 
 // **************************************
 // MARK: - REQUIRE DEVELOPER ACCESS

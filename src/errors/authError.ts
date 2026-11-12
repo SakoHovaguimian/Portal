@@ -1,4 +1,5 @@
 import { strings } from '@/strings';
+
 import { DomainError } from './domainError';
 
 export class AuthError extends DomainError {

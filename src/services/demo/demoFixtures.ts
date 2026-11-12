@@ -1,9 +1,9 @@
-import { strings } from '@/strings';
 import type {
   DashboardModelMetaTransport,
   FeatureRequestTransport,
   UserTransport,
 } from '../api/models';
+import { strings } from '@/strings';
 
 const now = new Date();
 

@@ -2,6 +2,7 @@ import {
   ThemeIdSchema,
   defaultAppearancePreference,
 } from '@/models/appearance';
+
 import { themeCatalog, getTheme } from './catalog';
 import { compileTheme, type ThemeCssVariables } from './compileTheme';
 import { semanticAliases } from './semanticAliases';

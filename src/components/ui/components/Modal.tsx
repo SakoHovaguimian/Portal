@@ -1,13 +1,15 @@
 'use client';
 
-import type { ModalProps } from '../models/modalProps';
 import * as Dialog from '@radix-ui/react-dialog';
 import { UNSAFE_PortalProvider } from 'react-aria/PortalProvider';
 import { useRef } from 'react';
+
+import { cn } from '../lib/cn';
+import type { ModalProps } from '../models/modalProps';
 import { strings } from '@/strings';
+
 import { IconButton } from './IconButton';
 import { UiIcon } from './UiIcon';
-import { cn } from '../lib/cn';
 
 // Workflow dialogs sit below presentation confirmations so an existing guarded
 // form can request confirmation without losing its draft or focus scope.

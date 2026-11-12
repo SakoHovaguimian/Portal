@@ -1,8 +1,10 @@
 import 'server-only';
-import type { EngagementTargetResolver } from '../models/engagementTargetResolver';
-import { EngagementTargetSchema } from '../models/engagementTarget';
-import { getDemoBlogState } from '@/modules/blog/server/demoBlogState';
+
 import { portalModules } from '@/config/portalModules';
+
+import { getDemoBlogState } from '@/modules/blog/server/demoBlogState';
+import { EngagementTargetSchema } from '../models/engagementTarget';
+import type { EngagementTargetResolver } from '../models/engagementTargetResolver';
 
 const resolvers = new Map<string, EngagementTargetResolver>();
 

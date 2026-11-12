@@ -1,6 +1,7 @@
 import { Avatar, Badge, IconMenu } from '@/components/ui';
 import type { IconMenuItem } from '@/components/ui/models/iconMenuItem';
 import { portalChatStrings as copy } from '@/strings';
+
 import type { ChatMember } from '../../models/chatMember';
 import type { DetailsMembersProps } from '../../models/detailsMembersProps';
 

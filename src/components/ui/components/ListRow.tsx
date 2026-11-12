@@ -1,7 +1,8 @@
+import type { Ref } from 'react';
+
+import { cn } from '../lib/cn';
 import type { ListGroupProps } from '../models/listGroupProps';
 import type { ListRowProps } from '../models/listRowProps';
-import type { Ref } from 'react';
-import { cn } from '../lib/cn';
 
 // A divided list surface. Children are ListRow elements wrapped in <li>.
 export function ListGroup({

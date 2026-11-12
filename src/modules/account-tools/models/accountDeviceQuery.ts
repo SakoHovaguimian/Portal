@@ -1,6 +1,7 @@
 import { z } from 'zod';
-import { AccountToolsPagingSchema } from './accountToolsPaging';
+
 import { AccountDeviceTypeSchema } from './accountDeviceType';
+import { AccountToolsPagingSchema } from './accountToolsPaging';
 
 export const AccountDeviceQuerySchema = AccountToolsPagingSchema.extend({
   query: z.string().trim().max(500).default(''),

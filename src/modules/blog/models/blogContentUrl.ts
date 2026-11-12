@@ -1,6 +1,7 @@
-import { portalPublishingStrings } from '@/strings';
 import { z } from 'zod';
+
 import { isPublicHttpsUrl } from '@/services/media/models/publicImageUrl';
+import { portalPublishingStrings } from '@/strings';
 
 const copy = portalPublishingStrings.builder;
 

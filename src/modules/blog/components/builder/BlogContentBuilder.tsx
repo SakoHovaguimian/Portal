@@ -1,8 +1,8 @@
 'use client';
 
-import { portalPublishingStrings } from '@/strings';
 import { useState } from 'react';
 import type { ReactNode } from 'react';
+
 import {
   Accordion,
   Button,
@@ -11,18 +11,20 @@ import {
   UiIcon,
 } from '@/components/ui';
 import { usePresentationService } from '@/presentation/PresentationProvider';
+import { portalPublishingStrings } from '@/strings';
+
+import styles from '../../Blog.module.css';
+import { BlogBlockFields } from './BlogBlockFields';
+import { BlogBlockPreview } from './BlogBlockPreview';
+import { createBlogContent } from '../../content/createBlogContent';
 import { BlogContentSchema } from '../../models/blogContent';
-import { BlogReadableContentSchema } from '../../models/blogReadableContent';
-import type { StoredBlogContent } from '../../models/storedBlogContent';
+import type { BlogContentBuilderProps } from '../../models/blogContentBuilderProps';
 import {
   BlogContentTypeSchema,
   type BlogContentType,
 } from '../../models/blogContentType';
-import { createBlogContent } from '../../content/createBlogContent';
-import type { BlogContentBuilderProps } from '../../models/blogContentBuilderProps';
-import { BlogBlockFields } from './BlogBlockFields';
-import { BlogBlockPreview } from './BlogBlockPreview';
-import styles from '../../Blog.module.css';
+import { BlogReadableContentSchema } from '../../models/blogReadableContent';
+import type { StoredBlogContent } from '../../models/storedBlogContent';
 
 const copy = portalPublishingStrings.builder;
 
@@ -222,12 +224,12 @@ export function BlogContentBuilder({
         }
         onMove={(id, targetId) => {
 
-          const next = [...content];
-          const from = next.findIndex((item) => item.id === id);
-          const to = next.findIndex((item) => item.id === targetId);
+          const reorderedContent = [...content];
+          const from = reorderedContent.findIndex((item) => item.id === id);
+          const to = reorderedContent.findIndex((item) => item.id === targetId);
           if (from < 0 || to < 0) { return; }
-          next.splice(to, 0, next.splice(from, 1)[0]);
-          onChangeAction(next);
+          reorderedContent.splice(to, 0, reorderedContent.splice(from, 1)[0]);
+          onChangeAction(reorderedContent);
 
         }}
         renderItem={renderBlockRow}

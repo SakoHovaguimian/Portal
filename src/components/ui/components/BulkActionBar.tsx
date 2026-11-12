@@ -1,7 +1,8 @@
 'use client';
 
-import { componentExpansionStrings as copy } from '@/strings';
 import type { BulkActionBarProps } from '../models/bulkActionBarProps';
+import { componentExpansionStrings as copy } from '@/strings';
+
 import { Button } from './Button';
 
 export function BulkActionBar({

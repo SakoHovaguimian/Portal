@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+
 import { Chip, SelectionTile, UiIcon } from '@/components/ui';
-import { strings } from '@/strings';
 import { useListMotion } from '@/components/ui/lib/useListMotion';
+import { strings } from '@/strings';
+
 import { ShowcaseSection } from './ShowcaseSection';
 import type { TileSpecimen } from '../models/tileSpecimen';
 

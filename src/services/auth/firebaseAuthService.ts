@@ -1,12 +1,14 @@
 import 'server-only';
-import { z } from 'zod';
+
 import { environment } from '@/config/environment';
 import { AuthError, ApiError } from '@/errors/domainErrors';
-import { strings } from '@/strings';
 import type { SignupInput } from '@/models/auth';
-import type { FirebaseAuthSession } from './models/firebaseAuthSession';
+import { strings } from '@/strings';
+
 import type { FirebaseAuthServiceInterface } from './firebaseAuthServiceInterface';
+import { AuthErrorResponseSchema } from './models/authErrorResponse';
 import { AuthResponseSchema } from './models/authResponse';
+import type { FirebaseAuthSession } from './models/firebaseAuthSession';
 import { RefreshResponseSchema } from './models/refreshResponse';
 
 export class FirebaseAuthService implements FirebaseAuthServiceInterface {
@@ -109,9 +111,7 @@ export class FirebaseAuthService implements FirebaseAuthServiceInterface {
     const payload = await response.json();
     if (response.ok) { return payload; }
     if (response.status >= 500) { throw new ApiError(strings.errors.unavailable, 503); }
-    const code = z
-      .object({ error: z.object({ message: z.string() }) })
-      .safeParse(payload);
+    const code = AuthErrorResponseSchema.safeParse(payload);
     const key = code.success ? code.data.error.message.split(' : ')[0] : '';
     const messages: Record<string, string> = {
       EMAIL_EXISTS: strings.auth.emailExists,

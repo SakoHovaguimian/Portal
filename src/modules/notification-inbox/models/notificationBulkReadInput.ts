@@ -1,7 +1,9 @@
 import { z } from 'zod';
+
+import { portalNotificationInboxStrings as copy } from '@/strings';
+
 import { NotificationInboxFiltersSchema } from './notificationInboxQuery';
 import { NotificationReadInputSchema } from './notificationReadInput';
-import { portalNotificationInboxStrings as copy } from '@/strings';
 
 export const NotificationBulkReadInputSchema = z.discriminatedUnion('scope', [
   NotificationReadInputSchema.extend({ scope: z.literal('ALL') }),

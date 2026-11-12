@@ -1,9 +1,10 @@
 'use client';
 
-import { portalPublishingStrings } from '@/strings';
-import { useBlogArticle } from './hooks';
 import { Page, QueryBoundary } from '@/components/ui';
+import { portalPublishingStrings } from '@/strings';
+
 import { BlogEditor } from './components/BlogEditor';
+import { useBlogArticle } from './hooks';
 import type { BlogEditorScreenProps } from './models/blogEditorScreenProps';
 
 const copy = portalPublishingStrings.article;

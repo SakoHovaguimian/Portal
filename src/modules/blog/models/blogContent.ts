@@ -1,18 +1,20 @@
-import { portalPublishingStrings } from '@/strings';
 import { z } from 'zod';
-import { BlogHeaderContentSchema } from './blogHeaderContent';
-import { BlogSectionContentSchema } from './blogSectionContent';
-import { BlogFooterContentSchema } from './blogFooterContent';
-import { BlogQuoteContentSchema } from './blogQuoteContent';
+
+import { portalPublishingStrings } from '@/strings';
+
 import { BlogBulletContentSchema } from './blogBulletContent';
+import { BlogCalloutContentSchema } from './blogCalloutContent';
 import { BlogDividerContentSchema } from './blogDividerContent';
 import { BlogEmbedContentSchema } from './blogEmbedContent';
-import { BlogImageContentSchema } from './blogImageContent';
-import { BlogGalleryTwoContentSchema } from './blogGalleryTwoContent';
-import { BlogGalleryThreeContentSchema } from './blogGalleryThreeContent';
+import { BlogFooterContentSchema } from './blogFooterContent';
 import { BlogGalleryFourContentSchema } from './blogGalleryFourContent';
-import { BlogCalloutContentSchema } from './blogCalloutContent';
+import { BlogGalleryThreeContentSchema } from './blogGalleryThreeContent';
+import { BlogGalleryTwoContentSchema } from './blogGalleryTwoContent';
+import { BlogHeaderContentSchema } from './blogHeaderContent';
+import { BlogImageContentSchema } from './blogImageContent';
 import { BlogLinkContentSchema } from './blogLinkContent';
+import { BlogQuoteContentSchema } from './blogQuoteContent';
+import { BlogSectionContentSchema } from './blogSectionContent';
 
 const copy = portalPublishingStrings.builder;
 

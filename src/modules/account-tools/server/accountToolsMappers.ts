@@ -1,6 +1,6 @@
 import type { AccountDeviceTransport } from './models/accountDeviceTransport';
-import type { NotificationDeliveryTransport } from './models/notificationDeliveryTransport';
 import type { NotificationAttemptTransport } from './models/notificationAttemptTransport';
+import type { NotificationDeliveryTransport } from './models/notificationDeliveryTransport';
 
 // **************************************
 // MARK: - MAP ACCOUNT DEVICE

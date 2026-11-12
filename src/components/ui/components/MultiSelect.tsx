@@ -8,8 +8,10 @@ import {
   Select as AriaSelect,
   SelectValue,
 } from 'react-aria-components';
-import type { MultiSelectProps } from '../models/multiSelectProps';
+
 import { cn } from '../lib/cn';
+import type { MultiSelectProps } from '../models/multiSelectProps';
+
 import { Button } from './Button';
 import { UiIcon } from './UiIcon';
 

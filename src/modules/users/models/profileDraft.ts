@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { parseDate } from '@internationalized/date';
+
 import { strings, portalEditStrings } from '@/strings';
 
 export const ProfileDraftSchema = z.object({
@@ -29,5 +30,3 @@ export const ProfileDraftSchema = z.object({
 });
 
 export type ProfileDraft = z.infer<typeof ProfileDraftSchema>;
-
-export type ProfileDraftErrors = Partial<Record<keyof ProfileDraft, string>>;

@@ -1,16 +1,19 @@
 import 'server-only';
 import { randomUUID } from 'node:crypto';
-import { z } from 'zod';
+
+import { NotFoundError, OwnershipError, ValidationError } from '@/errors/domainErrors';
+import type { UserTransport } from '@/services/api/models/userTransport';
+import { portalChatStrings as copy } from '@/strings';
+
+import { ChatConversationInputSchema, ChatConversationUpdateSchema } from '../models/chatConversation';
 import { ChatMemberUpdateSchema } from '../models/chatMemberUpdate';
 import { ChatReactionInputSchema } from '../models/chatReaction';
-import type { UserTransport } from '@/services/api/models/userTransport';
-import { NotFoundError, OwnershipError, ValidationError } from '@/errors/domainErrors';
-import { portalChatStrings as copy } from '@/strings';
-import { ChatConversationInputSchema, ChatConversationUpdateSchema } from '../models/chatConversation';
 import { ConversationMessageInputSchema, ConversationMessageUpdateSchema, type ConversationMessage } from '../models/conversationMessage';
+import { ConversationMessagePinInputSchema } from '../models/conversationMessagePinInput';
 import { getDemoChatWorkspace } from './demoChatState';
-import { validateChatAttachment } from './validateChatAttachment';
 import { readChatInput } from './readChatInput';
+import { validateChatAttachment } from './validateChatAttachment';
+
 // **************************************
 // MARK: - HANDLE DEMO CHAT REQUEST
 // **************************************
@@ -33,6 +36,7 @@ export async function handleDemoChatRequest(request: Request, path: string, acto
   }
   const state = getDemoChatWorkspace(actor);
   const method = request.method;
+
   // **************************************
   // MARK: - CREATE DEMO CHAT RESPONSE
   // **************************************
@@ -41,11 +45,13 @@ export async function handleDemoChatRequest(request: Request, path: string, acto
     status,
     headers: { 'cache-control': 'no-store' },
   });
+
   // **************************************
   // MARK: - READ DEMO CHAT INPUT
   // **************************************
 
   const input = () => readChatInput(request);
+
   // **************************************
   // MARK: - AUTHORIZE CHAT CONVERSATION
   // **************************************
@@ -62,6 +68,7 @@ export async function handleDemoChatRequest(request: Request, path: string, acto
     return conversation;
 
   };
+
   // **************************************
   // MARK: - AUTHORIZE CHAT GROUP MANAGEMENT
   // **************************************
@@ -76,6 +83,7 @@ export async function handleDemoChatRequest(request: Request, path: string, acto
     return conversation;
 
   };
+
   // **************************************
   // MARK: - REFRESH CHAT CONVERSATION PREVIEW
   // **************************************
@@ -87,6 +95,7 @@ export async function handleDemoChatRequest(request: Request, path: string, acto
     conversation.updatedAt = new Date().toISOString();
 
   };
+
   // **************************************
   // MARK: - PROJECT MEMBER CONVERSATION VIEW
   // **************************************
@@ -112,8 +121,8 @@ export async function handleDemoChatRequest(request: Request, path: string, acto
   };
   if (resource === 'people' && !id && method === 'GET') {
 
-    const matchingItems = json(options.empty ? [] : state.people.filter((person) => person.id !== actor.id));
-    return matchingItems;
+    const peopleResponse = json(options.empty ? [] : state.people.filter((person) => person.id !== actor.id));
+    return peopleResponse;
 
   }
   if (resource === 'attachments' && id && !action && method === 'GET') {
@@ -146,8 +155,8 @@ export async function handleDemoChatRequest(request: Request, path: string, acto
         return matches;
 
       });
-      const response = json(options.empty ? [] : conversations.toSorted((a, b) => b.updatedAt.localeCompare(a.updatedAt)).map(view));
-      return response;
+      const conversationsResponse = json(options.empty ? [] : conversations.toSorted((firstConversation, secondConversation) => secondConversation.updatedAt.localeCompare(firstConversation.updatedAt)).map(view));
+      return conversationsResponse;
 
     }
     if (method === 'POST') {
@@ -243,9 +252,9 @@ export async function handleDemoChatRequest(request: Request, path: string, acto
     }
     if (action === 'read' && method === 'POST') {
 
-            conversation.members.find((member) => member.id === actor.id)!.lastReadAt = new Date().toISOString();
-            conversation.unreadCount = 0;
-            return json(view(conversation));
+      conversation.members.find((member) => member.id === actor.id)!.lastReadAt = new Date().toISOString();
+      conversation.unreadCount = 0;
+      return json(view(conversation));
 
     }
     if (action === 'members') {
@@ -308,8 +317,8 @@ export async function handleDemoChatRequest(request: Request, path: string, acto
         const sentId = state.sent.get(`${id}:${actor.id}:${value.clientId}`);
         if (sentId) {
 
-          const response = json(state.messages.find((message) => message.id === sentId));
-          return response;
+          const sentMessageResponse = json(state.messages.find((message) => message.id === sentId));
+          return sentMessageResponse;
 
         }
         if (value.replyToId && !state.messages.some((message) => message.id === value.replyToId && message.conversationId === id && !message.deletedAt)) {
@@ -362,9 +371,9 @@ export async function handleDemoChatRequest(request: Request, path: string, acto
           ...preferences,
           archived: false,
         });
-                conversation.members.find((member) => member.id === actor.id)!.lastReadAt = message.createdAt;
-                refresh(message);
-                return json(message, 201);
+        conversation.members.find((member) => member.id === actor.id)!.lastReadAt = message.createdAt;
+        refresh(message);
+        return json(message, 201);
 
       }
 
@@ -403,7 +412,7 @@ export async function handleDemoChatRequest(request: Request, path: string, acto
     }
     if (action === 'pin' && method === 'POST') {
 
-      const { pinned } = z.object({ pinned: z.boolean() }).strict().parse(await input());
+      const { pinned } = ConversationMessagePinInputSchema.parse(await input());
       message.pinned = pinned;
       return json(message);
 

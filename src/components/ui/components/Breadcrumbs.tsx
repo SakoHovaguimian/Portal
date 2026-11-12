@@ -2,6 +2,7 @@
 
 import type { BreadcrumbsProps } from '../models/breadcrumbsProps';
 import { strings } from '@/strings';
+
 import { NavigationLink } from './NavigationLink';
 import { UiIcon } from './UiIcon';
 

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { AccountDeviceTypeSchema } from '../../models/accountDeviceType';
 
 export const AccountDeviceTransportSchema = z.object({

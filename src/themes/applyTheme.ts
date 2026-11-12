@@ -1,4 +1,5 @@
 import type { AppearancePreference } from '@/models/appearancePreference';
+
 import { getTheme } from './catalog';
 import { compileTheme } from './compileTheme';
 

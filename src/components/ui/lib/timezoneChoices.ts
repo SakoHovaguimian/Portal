@@ -1,5 +1,6 @@
-import { addressTimezoneCountries } from './addressTimezoneCountries';
 import { strings } from '@/strings';
+
+import { addressTimezoneCountries } from './addressTimezoneCountries';
 
 const labels = strings.address;
 export const featuredTimezones = [

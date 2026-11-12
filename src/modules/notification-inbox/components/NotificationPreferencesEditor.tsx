@@ -1,16 +1,19 @@
 'use client';
+
 import { useRef, useState, type FormEvent } from 'react';
+
+import { MutationError } from '@/components/MutationError';
 import { Button, FormActions, BookmarkButton } from '@/components/ui';
 import { Switch } from '@/components/ui/components/Switch';
-import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
 import { usePresentationService } from '@/presentation/PresentationProvider';
-import { MutationError } from '@/components/MutationError';
+import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
 import { portalNotificationInboxStrings as copy } from '@/strings';
+
+import { useSaveNotificationPreferences } from '../hooks';
 import { NotificationCategorySchema } from '../models/notificationCategory';
 import { NotificationChannelSchema } from '../models/notificationChannel';
 import type { NotificationPreference } from '../models/notificationPreference';
 import type { NotificationPreferencesEditorProps } from '../models/notificationPreferencesEditorProps';
-import { useSaveNotificationPreferences } from '../hooks';
 
 export function NotificationPreferencesEditor({
   initial,
@@ -44,24 +47,24 @@ export function NotificationPreferencesEditor({
 
   }
 
-  function change(
+  function handlePreferenceChange(
     category: NotificationPreference['category'],
     channel: NotificationPreference['channel'],
     enabled: boolean,
   ) {
 
-    const next = draft.map((item) =>
+    const nextPreferences = draft.map((item) =>
       item.category === category && item.channel === channel
         ? { ...item, enabled }
         : item,
     );
-    dirty.current = JSON.stringify(next) !== JSON.stringify(saved);
+    dirty.current = JSON.stringify(nextPreferences) !== JSON.stringify(saved);
     mutation.reset();
-    setDraft(next);
+    setDraft(nextPreferences);
 
   }
 
-  async function submit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
 
     event.preventDefault();
     if (busy.current || !isDirty) { return; }
@@ -98,7 +101,7 @@ export function NotificationPreferencesEditor({
 
   }
 
-  function discard() {
+  function handleDiscard() {
 
     setSaved(initial);
     setDraft(clonePreferences(initial));
@@ -124,7 +127,7 @@ export function NotificationPreferencesEditor({
         checked={checked}
         disabled={disabled}
         onChange={(event) =>
-          change(category, channel, event.target.checked)
+          handlePreferenceChange(category, channel, event.target.checked)
         }
       />
     );
@@ -179,7 +182,7 @@ export function NotificationPreferencesEditor({
   }
 
   return (
-    <form noValidate onSubmit={submit} className="grid gap-5">
+    <form noValidate onSubmit={handleSubmit} className="grid gap-5">
       {renderPreferenceSections()}
       <MutationError error={mutation.error} />
       <FormActions
@@ -190,7 +193,7 @@ export function NotificationPreferencesEditor({
       >
         <Button
           variant="destructive"
-          onClick={discard}
+          onClick={handleDiscard}
           disabled={!isDirty || mutation.isPending}
         >
           {copy.discardAction}

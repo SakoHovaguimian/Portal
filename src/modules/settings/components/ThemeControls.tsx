@@ -1,20 +1,22 @@
 'use client';
 
 import { useId, useRef, useState } from 'react';
+
 import { Badge, Field, Radio, Select, SegmentedTabs } from '@/components/ui';
 import { ThemeModeSchema, type ThemeMode } from '@/models/appearance';
-import { useThemePreference } from '@/providers/ThemePreferenceProvider';
 import { useMotionPreference } from '@/providers/MotionPreferenceProvider';
+import { useThemePreference } from '@/providers/ThemePreferenceProvider';
 import { strings } from '@/strings';
 import { themeCatalog } from '@/themes';
-import { ThemePreview } from './ThemePreview';
+
 import { ThemeLivePreview } from './ThemeLivePreview';
+import { ThemePreview } from './ThemePreview';
 import styles from './ThemeStudio.module.css';
 import type { ThemeModeOption } from '../models/themeModeOption';
 
 const copy = strings.designSystem;
 const motionValues = { system: 'system', reduced: 'reduced' } as const;
-const modes: ThemeModeOption[] = [
+const themeModeOptions: ThemeModeOption[] = [
   {
     value: ThemeModeSchema.enum.light,
     label: strings.ui.appearanceScreen.light,
@@ -163,7 +165,7 @@ export function ThemeControls() {
             {copy.mode}
           </span>
           <SegmentedTabs
-            tabs={modes}
+            tabs={themeModeOptions}
             label={copy.mode}
             value={theme.mode}
             disabled={pending}

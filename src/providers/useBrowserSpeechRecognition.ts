@@ -1,12 +1,13 @@
 'use client';
 
-import { strings } from '@/strings';
 import { useCallback, useEffect, useRef, useState } from 'react';
+
 import type {
   BrowserSpeechRecognition,
   BrowserSpeechRecognitionEvent,
   BrowserSpeechWindow,
 } from '@/models/browserSpeechRecognition';
+import { strings } from '@/strings';
 
 const transcriptSettlementTimeoutMilliseconds = 3_000;
 

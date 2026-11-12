@@ -1,5 +1,6 @@
-import type { TimezoneNameProps } from '../models/timezoneNameProps';
 import { Fragment } from 'react';
+
+import type { TimezoneNameProps } from '../models/timezoneNameProps';
 
 // Prefer IANA path boundaries to breaking timezone names in the middle of a word.
 export function TimezoneName({ value }: TimezoneNameProps) {

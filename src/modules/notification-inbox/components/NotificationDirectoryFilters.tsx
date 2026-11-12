@@ -1,5 +1,6 @@
 import { DirectoryFilters, Field, Select } from '@/components/ui';
 import { portalNotificationInboxStrings as copy } from '@/strings';
+
 import type { NotificationDirectoryFiltersProps } from '../models/notificationDirectoryFiltersProps';
 
 const anyCategory = '';
@@ -10,6 +11,20 @@ export function NotificationDirectoryFilters({
   query,
   update,
 }: NotificationDirectoryFiltersProps) {
+
+  function renderCategoryOption([value, label]: [string, string]) {
+
+    return (
+      <option key={value} value={value}>
+        {label}
+      </option>
+    );
+
+  }
+
+  const categoryOptions = Object.entries(copy.categories).map(
+    renderCategoryOption,
+  );
 
   return (
     <DirectoryFilters
@@ -43,11 +58,7 @@ export function NotificationDirectoryFilters({
               }
             >
               <option value={anyCategory}>{copy.allCategories}</option>
-              {Object.entries(copy.categories).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
+              {categoryOptions}
             </Select>
           </Field>
           <Field labelText={copy.sortLabel}>

@@ -1,5 +1,6 @@
 import { lstat, readFile } from 'node:fs/promises';
 import { extname, resolve } from 'node:path';
+
 import { initializerError } from './options.mjs';
 
 function validImage(content, extension) {

@@ -1,7 +1,8 @@
+import { cn } from '../lib/cn';
 import type { DataPanelProps } from '../models/dataPanelProps';
 import type { ChildrenProps } from '../../../models/childrenProps';
+
 import { Card } from './Card';
-import { cn } from '../lib/cn';
 
 // One surface for a directory: filters, records, and paging share its edges.
 // Background refreshes show a thin progress line and announce busyLabel.

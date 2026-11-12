@@ -1,4 +1,5 @@
 import type { NumberFieldProps } from 'react-aria-components';
+
 import type { ControlSize } from './controlSize';
 
 export interface NumberStepperProps extends Pick<

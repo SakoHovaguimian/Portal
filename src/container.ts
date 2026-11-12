@@ -1,12 +1,16 @@
 import 'server-only';
+
+// Application configuration
 import { environment } from '@/config/environment';
+
+// Foundational services
 import { ApiClient } from '@/services/api/apiClient';
+import { createDemoModuleHandlers } from '@/services/api/demoModuleHandlers';
+import { FirebaseAuthService } from '@/services/auth/firebaseAuthService';
 import { DemoApiClient } from '@/services/demo/demoApiClient';
 import { DemoFirebaseAuthService } from '@/services/demo/demoFirebaseAuthService';
-import { FirebaseAuthService } from '@/services/auth/firebaseAuthService';
-import { SessionService } from '@/services/session/sessionService';
 import { getEffectiveRuntime } from '@/services/demo/demoRuntime';
-import { createDemoModuleHandlers } from '@/services/api/demoModuleHandlers';
+import { SessionService } from '@/services/session/sessionService';
 
 export class ServiceContainer {
 

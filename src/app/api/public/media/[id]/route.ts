@@ -1,8 +1,8 @@
+import { portalModules } from '@/config/portalModules';
+import { DomainError } from '@/errors/domainErrors';
 import type { IdRouteProps } from '@/models/idRouteProps';
 import { getEffectiveRuntime } from '@/services/demo/demoRuntime';
 import { readDemoPublicImage } from '@/services/media/server/demoPublicImages';
-import { DomainError } from '@/errors/domainErrors';
-import { portalModules } from '@/config/portalModules';
 
 // **************************************
 // MARK: - READ DEMO PUBLIC IMAGE

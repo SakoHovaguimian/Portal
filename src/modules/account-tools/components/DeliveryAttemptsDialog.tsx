@@ -7,13 +7,14 @@ import {
   QueryBoundary,
 } from '@/components/ui';
 import { portalAccountToolsStrings as copy } from '@/strings';
-import type { NotificationDeliveryAttempt } from '../models/notificationDeliveryAttempt';
-import { useDeliveryAttempts } from '../hooks';
-import { formatAccountToolsDate } from '../formatAccountToolsDate';
+
 import { AccountToolsLoading } from './AccountToolsLoading';
 import { AccountToolsPagination } from './AccountToolsPagination';
 import { DeliveryStatusBadge } from './DeliveryStatusBadge';
+import { formatAccountToolsDate } from '../formatAccountToolsDate';
+import { useDeliveryAttempts } from '../hooks';
 import type { DeliveryAttemptsDialogProps } from '../models/deliveryAttemptsDialogProps';
+import type { NotificationDeliveryAttempt } from '../models/notificationDeliveryAttempt';
 
 export function DeliveryAttemptsDialog({
   delivery,

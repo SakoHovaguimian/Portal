@@ -1,7 +1,8 @@
+import { cn } from '../lib/cn';
 import type { CardViewProps } from '../models/cardViewProps';
+
 import { Card } from './Card';
 import { IconTile } from './IconTile';
-import { cn } from '../lib/cn';
 
 export function CardView({
   title,

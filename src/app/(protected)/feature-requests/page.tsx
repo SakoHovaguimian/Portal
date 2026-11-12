@@ -1,6 +1,8 @@
-import type { SearchRouteProps } from '@/models/searchRouteProps';
 import type { Metadata } from 'next';
+
+import type { SearchRouteProps } from '@/models/searchRouteProps';
 import { strings } from '@/strings';
+
 import { FeatureRequestsScreen } from '@/modules/feature-requests/FeatureRequestsScreen';
 
 export const metadata: Metadata = { title: strings.ui.appShell.featureRequests };

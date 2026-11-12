@@ -1,5 +1,4 @@
 'use client';
-import { strings } from '@/strings';
 import { initializeApp, getApps } from 'firebase/app';
 import {
   deleteToken,
@@ -9,8 +8,11 @@ import {
   onMessage,
   type MessagePayload,
 } from 'firebase/messaging';
-import type { MessagingConfig } from './models/messagingConfig';
+
 import type { ApiClientInterface } from '@/services/api/apiClientInterface';
+import { strings } from '@/strings';
+
+import type { MessagingConfig } from './models/messagingConfig';
 import type { NotificationDisableOptions } from './models/notificationDisableOptions';
 import type { NotificationStatus } from './models/notificationStatus';
 

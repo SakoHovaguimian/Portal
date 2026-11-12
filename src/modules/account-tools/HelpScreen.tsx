@@ -1,18 +1,21 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
+
 import { Page, PageHeader, SegmentedPanels } from '@/components/ui';
 import { useDirectoryState } from '@/queries/useDirectoryState';
 import { portalAccountToolsStrings as copy } from '@/strings';
-import type { HelpSection } from './models/helpSection';
+
 import { FrequentlyAskedQuestionsPanel } from './components/FrequentlyAskedQuestionsPanel';
 import { LegalInformationPanel } from './components/LegalInformationPanel';
+import type { HelpSection } from './models/helpSection';
 
 const helpSections = {
   faq: 'faq',
   terms: 'terms',
   privacy: 'privacy',
 } as const;
+
 export function HelpScreen() {
 
   const params = useSearchParams();

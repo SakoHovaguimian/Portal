@@ -1,8 +1,10 @@
 'use client';
 import { useCallback, useEffect, useRef, type RefObject } from 'react';
-import { useNavigationGuard } from './NavigationGuardProvider';
+
 import { usePresentationService } from '@/presentation/PresentationProvider';
 import { strings } from '@/strings';
+
+import { useNavigationGuard } from './NavigationGuardProvider';
 
 function confirmFormLeave(
   dirty: RefObject<boolean>,

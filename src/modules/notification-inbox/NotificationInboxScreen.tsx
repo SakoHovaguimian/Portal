@@ -1,5 +1,9 @@
 'use client';
+
 import { useEffect } from 'react';
+
+// Shared UI
+import { MutationError } from '@/components/MutationError';
 import {
   Button,
   Card,
@@ -13,18 +17,23 @@ import {
   buttonClassName,
 } from '@/components/ui';
 import { NavigationLink } from '@/components/ui/components/NavigationLink';
+
+// Shared Services And Copy
 import { useNavigationGuard } from '@/providers/NavigationGuardProvider';
-import { MutationError } from '@/components/MutationError';
-import { portalNotificationInboxStrings as copy } from '@/strings';
-import { useNotificationInbox, useNotificationCounts } from './hooks';
-import { notificationInboxFilters } from './notificationInboxQueryParams';
-import { useNotificationDirectory } from './useNotificationDirectory';
-import { useNotificationActions } from './useNotificationActions';
-import { NotificationRecord } from './components/NotificationRecord';
-import { NotificationInboxToolbar } from './components/NotificationInboxToolbar';
 import { NotificationControls } from '@/services/notifications/components/NotificationControls';
+import { portalNotificationInboxStrings as copy } from '@/strings';
+
+// Inbox Components
 import { NotificationInboxSummary } from './components/NotificationInboxSummary';
+import { NotificationInboxToolbar } from './components/NotificationInboxToolbar';
+import { NotificationRecord } from './components/NotificationRecord';
+
+// Inbox Hooks And Models
+import { useNotificationInbox, useNotificationCounts } from './hooks';
 import type { NotificationInboxItem } from './models/notificationInboxItem';
+import { notificationInboxFilters } from './notificationInboxQueryParams';
+import { useNotificationActions } from './useNotificationActions';
+import { useNotificationDirectory } from './useNotificationDirectory';
 
 export function NotificationInboxScreen() {
 

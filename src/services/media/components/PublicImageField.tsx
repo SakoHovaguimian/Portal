@@ -1,11 +1,12 @@
 'use client';
 import { Button, Field, FileInput, Input, UiIcon } from '@/components/ui';
-import { isPublicImageReference } from '@/services/media/models/publicImageUrl';
 import { portalMediaStrings as mediaCopy } from '@/strings';
+
+import { PublicImagePreview } from './PublicImagePreview';
 import { publicImageMimeTypes } from '../models/publicImage';
 import type { PublicImageFieldProps } from '../models/publicImageFieldProps';
+import { isPublicImageReference } from '@/services/media/models/publicImageUrl';
 import { usePublicImageUpload } from '../usePublicImageUpload';
-import { PublicImagePreview } from './PublicImagePreview';
 
 export function PublicImageField({
   id,

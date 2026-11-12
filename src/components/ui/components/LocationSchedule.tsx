@@ -1,5 +1,5 @@
-import type { LocationScheduleProps } from '../models/locationScheduleProps';
 import { locationScheduleFormat } from '../lib/locationScheduleFormat';
+import type { LocationScheduleProps } from '../models/locationScheduleProps';
 
 export function LocationSchedule({
   schedule,

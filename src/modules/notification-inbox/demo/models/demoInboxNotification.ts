@@ -1,8 +1,9 @@
+import type { DemoInboxNotificationStatus } from './demoInboxNotificationStatus';
 import type { NotificationInboxItem } from '../../models/notificationInboxItem';
 
 export type DemoInboxNotification = NotificationInboxItem & {
   deleted: boolean;
-  status: 'PUBLISHED' | 'SCHEDULED' | 'EXPIRED';
+  status: DemoInboxNotificationStatus;
   inAppEnabled: boolean;
   expiresAt: string | null;
 };

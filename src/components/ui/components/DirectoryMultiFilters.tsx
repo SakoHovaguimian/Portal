@@ -1,13 +1,15 @@
 'use client';
 
-import type { DirectoryMultiFiltersProps } from '../models/directoryMultiFiltersProps';
 import { useCallback, useRef } from 'react';
+
 import {
   useDirectoryFilters,
   type DirectoryFiltersValue,
 } from '../lib/useDirectoryFilters';
-import { Field, Input } from './Input';
+import type { DirectoryMultiFiltersProps } from '../models/directoryMultiFiltersProps';
+
 import { IconButton } from './IconButton';
+import { Field, Input } from './Input';
 import { MultiSelect } from './MultiSelect';
 import { UiIcon } from './UiIcon';
 

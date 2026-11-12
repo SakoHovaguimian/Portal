@@ -1,5 +1,6 @@
 import type Link from 'next/link';
 import type { ComponentProps } from 'react';
+
 import type { NavigationPermission } from './navigationPermission';
 
 export type NavigationLinkProps = Omit<

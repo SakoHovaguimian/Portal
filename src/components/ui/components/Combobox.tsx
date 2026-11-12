@@ -12,13 +12,15 @@ import {
   Popover,
   Text,
 } from 'react-aria-components';
-import { componentExpansionStrings as copy } from '@/strings';
+
+import { cn } from '../lib/cn';
 import type { ComboboxOption } from '../models/comboboxOption';
 import type { ComboboxProps } from '../models/comboboxProps';
-import { cn } from '../lib/cn';
-import { UiIcon } from './UiIcon';
-import { Spinner } from './Spinner';
+import { componentExpansionStrings as copy } from '@/strings';
+
 import { Button } from './Button';
+import { Spinner } from './Spinner';
+import { UiIcon } from './UiIcon';
 
 export function Combobox({
   label,

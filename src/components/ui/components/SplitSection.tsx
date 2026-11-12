@@ -1,7 +1,8 @@
-import type { SplitSectionProps } from '../models/splitSectionProps';
-import type { SectionStackProps } from '../models/sectionStackProps';
-import { Card } from './Card';
 import { cn } from '../lib/cn';
+import type { SectionStackProps } from '../models/sectionStackProps';
+import type { SplitSectionProps } from '../models/splitSectionProps';
+
+import { Card } from './Card';
 
 // Settings-style row: the title column explains, the panel holds the fields.
 // Columns respond to the section's own width, so it also works in narrow regions.

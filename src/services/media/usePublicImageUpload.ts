@@ -1,8 +1,10 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import { useServiceContainer } from '@/providers/AppProviders';
+
 import { DomainError } from '@/errors/domainErrors';
+import { useServiceContainer } from '@/providers/AppProviders';
 import { portalMediaStrings as mediaCopy } from '@/strings';
+
 import type { PublicImageUploadOptions } from './models/publicImageUploadOptions';
 
 export function usePublicImageUpload({

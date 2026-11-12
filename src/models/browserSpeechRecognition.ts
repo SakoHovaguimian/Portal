@@ -1,5 +1,5 @@
-import type { BrowserSpeechRecognitionEvent } from './browserSpeechRecognitionEvent';
 import type { BrowserSpeechRecognitionErrorEvent } from './browserSpeechRecognitionErrorEvent';
+import type { BrowserSpeechRecognitionEvent } from './browserSpeechRecognitionEvent';
 
 export interface BrowserSpeechRecognition {
   continuous: boolean;

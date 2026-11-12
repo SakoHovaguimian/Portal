@@ -1,6 +1,8 @@
 import { z } from 'zod';
-import { LoginInputSchema } from './loginInput';
+
 import { strings } from '@/strings';
+
+import { LoginInputSchema } from './loginInput';
 
 export const SignupInputSchema = LoginInputSchema.extend({
   firstName: z.string().trim().min(1, strings.auth.name).max(80),

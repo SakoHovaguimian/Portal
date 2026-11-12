@@ -1,10 +1,12 @@
 'use client';
 
 import { useId, useRef, useState } from 'react';
-import { componentExpansionStrings as copy } from '@/strings';
-import type { UploadFieldProps } from '../models/uploadFieldProps';
-import type { FileRejection } from '../models/fileRejection';
+
 import { validateUploadFiles } from '../lib/validateUploadFiles';
+import type { FileRejection } from '../models/fileRejection';
+import type { UploadFieldProps } from '../models/uploadFieldProps';
+import { componentExpansionStrings as copy } from '@/strings';
+
 import { Button } from './Button';
 import { DropZone } from './DropZone';
 import { FileInput } from './FileInput';

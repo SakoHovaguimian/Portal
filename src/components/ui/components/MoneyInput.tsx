@@ -1,7 +1,9 @@
 'use client';
 
-import type { MoneyInputProps } from '../models/moneyInputProps';
 import { useState } from 'react';
+
+import type { MoneyInputProps } from '../models/moneyInputProps';
+
 import { Input } from './Input';
 
 export function MoneyInput({

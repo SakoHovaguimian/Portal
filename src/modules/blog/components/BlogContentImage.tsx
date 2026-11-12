@@ -1,4 +1,5 @@
 import Image from 'next/image';
+
 import type { BlogContentImageProps } from '../models/blogContentImageProps';
 
 export function BlogContentImage({

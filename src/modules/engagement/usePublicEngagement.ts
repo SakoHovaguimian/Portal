@@ -1,11 +1,14 @@
 'use client';
+
 import { useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createPublicEngagementService } from '@/publicClientContainer';
+
 import { DomainError } from '@/errors/domainErrors';
+import { createPublicEngagementService } from '@/publicClientContainer';
 import { portalEngagementStrings as copy } from '@/strings';
-import type { EngagementKey } from './models/engagementTarget';
+
 import type { EngagementInput } from './models/engagementInput';
+import type { EngagementKey } from './models/engagementKey';
 
 export function usePublicEngagement(key: EngagementKey) {
 

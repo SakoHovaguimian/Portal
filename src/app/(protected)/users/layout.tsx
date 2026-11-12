@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
-import type { ChildrenProps } from '@/models/childrenProps';
+
 import { portalModules } from '@/config/portalModules';
+import type { ChildrenProps } from '@/models/childrenProps';
 
 export default function ModuleLayout({ children }: ChildrenProps) {
 

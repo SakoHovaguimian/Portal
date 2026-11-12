@@ -1,5 +1,6 @@
 import 'server-only';
 import { ZodError } from 'zod';
+
 import { DomainError } from '@/errors/domainErrors';
 import { strings } from '@/strings';
 

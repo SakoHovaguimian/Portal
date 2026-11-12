@@ -1,7 +1,8 @@
 import { Badge, Card } from '@/components/ui';
 import { portalJobStrings as copy } from '@/strings';
-import type { BackgroundJobProps } from '../models/backgroundJobProps';
+
 import { formatJobDate } from '../formatJobDate';
+import type { BackgroundJobProps } from '../models/backgroundJobProps';
 
 export function JobAttemptHistory({ job }: BackgroundJobProps) {
 

@@ -1,4 +1,5 @@
 import type { ProgressBarProps as AriaProgressBarProps } from 'react-aria-components';
+
 import type { ControlSize } from './controlSize';
 import type { ControlTone } from './controlTone';
 

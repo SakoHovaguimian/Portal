@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { NotificationCategorySchema } from '../../models/notificationCategory';
 
 export const NotificationTransportSchema = z.object({

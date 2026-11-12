@@ -1,13 +1,14 @@
-import type { TableSortButtonProps } from '../models/tableSortButtonProps';
 import { cn } from '../lib/cn';
-import { Button } from './Button';
-import { UiIcon } from './UiIcon';
-import { strings } from '@/strings';
-import { TableRowLink } from './TableRowLink';
-import styles from './DataTable.module.css';
 import type { DataTableProps } from '../models/dataTableProps';
-import { TableSelectionCheckbox } from './TableSelectionCheckbox';
+import type { TableSortButtonProps } from '../models/tableSortButtonProps';
+import { strings } from '@/strings';
 import { componentExpansionStrings } from '@/strings';
+
+import { Button } from './Button';
+import styles from './DataTable.module.css';
+import { TableRowLink } from './TableRowLink';
+import { TableSelectionCheckbox } from './TableSelectionCheckbox';
+import { UiIcon } from './UiIcon';
 
 export type { Column } from '../models/tableColumn';
 

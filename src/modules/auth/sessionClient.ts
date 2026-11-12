@@ -1,11 +1,13 @@
 'use client';
 
-import { strings } from '@/strings';
 import type { Route } from 'next';
-import type { AuthSessionCreationResponse } from './models/authSessionCreationResponse';
-import type { AuthSessionErrorResponse } from './models/authSessionErrorResponse';
+
 import { getDefaultProjectRoute, isProjectPathEnabled } from '@/config/projectRoutes';
 import type { UserRole } from '@/models/userRole';
+import { strings } from '@/strings';
+
+import type { AuthSessionCreationResponse } from './models/authSessionCreationResponse';
+import type { AuthSessionErrorResponse } from './models/authSessionErrorResponse';
 
 const allowedRedirectPrefixes = [
   '/dashboard',

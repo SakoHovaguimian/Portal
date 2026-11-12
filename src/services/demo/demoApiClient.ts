@@ -1,25 +1,31 @@
 import 'server-only';
 import { z } from 'zod';
-import { UserMutationInputSchema } from '@/models/user';
-import { FeatureRequestMutationInputSchema } from '@/models/featureRequest';
+
+// Shared configuration, models, and services
+import { portalModules } from '@/config/portalModules';
 import {
   AuthError,
   NotFoundError,
   OwnershipError,
   ValidationError,
 } from '@/errors/domainErrors';
-import { strings } from '@/strings';
-import { ChatMessageInputSchema } from '@/modules/chat/models/chatMessage';
+import { FeatureRequestMutationInputSchema } from '@/models/featureRequest';
+import { UserMutationInputSchema } from '@/models/user';
+import { mapUserMutationToTransport } from '../api/domainMappers';
 import type { ServerSession } from '@/services/session/models/serverSession';
-import { getDemoState } from './demoState';
+import { strings } from '@/strings';
+
+// Feature models and handlers
+import { ChatMessageInputSchema } from '@/modules/chat/models/chatMessage';
+import { handleDemoOnboardingRequest } from '@/modules/onboarding/demo/handleDemoOnboardingRequest';
+
+// Demo state, fixtures, and contracts
 import { dashboardModelMeta } from './demoFixtures';
-import { DemoPageQuerySchema } from './models/demoPageQuery';
 import { getDemoContext } from './demoRuntime';
 import { simulateDemoRequest } from './demoSimulation';
+import { getDemoState } from './demoState';
+import { DemoPageQuerySchema } from './models/demoPageQuery';
 import type { DemoRequestHandler } from './models/demoRequestHandler';
-import { handleDemoOnboardingRequest } from '@/modules/onboarding/demo/handleDemoOnboardingRequest';
-import { mapUserMutationToTransport } from '../api/domainMappers';
-import { portalModules } from '@/config/portalModules';
 
 export class DemoApiClient {
 

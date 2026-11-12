@@ -1,11 +1,13 @@
 'use client';
 
-import type { StepperProps } from '../models/stepperProps';
 import { useId, type CSSProperties } from 'react';
+
+import { cn } from '../lib/cn';
+import type { StepperProps } from '../models/stepperProps';
 import { strings } from '@/strings';
+
 import { Button } from './Button';
 import { UiIcon } from './UiIcon';
-import { cn } from '../lib/cn';
 
 // Segmented progress for multi-stage flows. Each segment is a button so
 // reachable stages can be revisited; unreachable stages stay disabled.

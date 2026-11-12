@@ -1,10 +1,11 @@
 import 'server-only';
 import { AuthError } from '@/errors/domainErrors';
-import { strings } from '@/strings';
-import { createDemoOnboarding } from '@/modules/onboarding/demo/onboardingState';
 import type { SignupInput } from '@/models/auth';
-import type { FirebaseAuthSession } from '@/services/auth/models/firebaseAuthSession';
 import type { FirebaseAuthServiceInterface } from '@/services/auth/firebaseAuthServiceInterface';
+import type { FirebaseAuthSession } from '@/services/auth/models/firebaseAuthSession';
+import { strings } from '@/strings';
+
+import { createDemoOnboarding } from '@/modules/onboarding/demo/onboardingState';
 import { getDemoState, passwordMatches, passwordRecord } from './demoState';
 
 export class DemoFirebaseAuthService implements FirebaseAuthServiceInterface {

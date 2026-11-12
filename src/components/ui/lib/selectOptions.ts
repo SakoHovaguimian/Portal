@@ -1,4 +1,5 @@
 import { Children, Fragment, isValidElement, type ReactNode } from 'react';
+
 import type { SelectOption } from '../models/selectOption';
 
 function textContent(children: ReactNode): string {

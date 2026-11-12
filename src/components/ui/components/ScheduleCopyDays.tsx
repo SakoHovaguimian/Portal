@@ -1,10 +1,12 @@
 'use client';
 
-import type { ScheduleCopyDaysProps } from '../models/scheduleCopyDaysProps';
 import { useId, useRef, useState } from 'react';
+
+import type { ScheduleCopyDaysProps } from '../models/scheduleCopyDaysProps';
+import { strings } from '@/strings';
+
 import { Button } from './Button';
 import { Checkbox } from './Checkbox';
-import { strings } from '@/strings';
 
 export function ScheduleCopyDays({
   source,

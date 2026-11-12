@@ -1,6 +1,8 @@
 import { z } from 'zod';
-import { NotificationInboxFiltersSchema } from './notificationInboxQuery';
+
 import { portalNotificationInboxStrings as copy } from '@/strings';
+
+import { NotificationInboxFiltersSchema } from './notificationInboxQuery';
 
 export const NotificationArchiveInputSchema = z.discriminatedUnion('scope', [
   z.object({ scope: z.literal('ALL') }).strict(),

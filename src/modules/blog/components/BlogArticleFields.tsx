@@ -1,19 +1,21 @@
 'use client';
 
-import { portalPublishingStrings } from '@/strings';
 import Image from 'next/image';
+
 import { Button, Field, Input, SplitSection, TextArea } from '@/components/ui';
+import { portalPublishingStrings } from '@/strings';
+
+import styles from '../BlogAdmin.module.css';
+import { BlogCoverField } from './BlogCoverField';
+import { BlogTopicField } from './BlogTopicField';
+import { useBlogOptions } from '../hooks';
+import type { BlogArticleDraft } from '../models/blogArticle';
+import type { BlogArticleFieldsProps } from '../models/blogArticleFieldsProps';
 import {
   BlogCoverSchema,
   blogCoverSource,
 } from '../models/blogCover';
 import { BlogCoverPresetSchema } from '../models/blogCoverPreset';
-import type { BlogArticleDraft } from '../models/blogArticle';
-import { useBlogOptions } from '../hooks';
-import type { BlogArticleFieldsProps } from '../models/blogArticleFieldsProps';
-import { BlogTopicField } from './BlogTopicField';
-import { BlogCoverField } from './BlogCoverField';
-import styles from '../BlogAdmin.module.css';
 
 const copy = portalPublishingStrings.article;
 
@@ -30,7 +32,7 @@ export function BlogArticleFields({
     key: Key,
     value: BlogArticleDraft[Key],
   ) => onChangeAction({ ...form, [key]: value });
-  const error = (key: keyof BlogArticleDraft) =>
+  const renderFieldError = (key: keyof BlogArticleDraft) =>
     errors[key] && (
       <p
         id={`blog-${key}-error`}
@@ -40,12 +42,10 @@ export function BlogArticleFields({
         {errors[key]}
       </p>
     );
-  return (
-    <SplitSection
-      id="blog-details"
-      title={copy.articleDetails}
-      description={copy.articleDetailsDescription}
-    >
+
+  function renderTitleField() {
+
+    return (
       <div className="grid gap-1.5">
         <Field labelText={copy.titleLabel}>
           <Input
@@ -82,8 +82,15 @@ export function BlogArticleFields({
             }}
           />
         </Field>
-        {error('title')}
+        {renderFieldError('title')}
       </div>
+    );
+
+  }
+
+  function renderSlugField() {
+
+    return (
       <div className="grid gap-1.5">
         <Field labelText={copy.slugLabel}>
           <Input
@@ -104,8 +111,15 @@ export function BlogArticleFields({
         <p id="blog-slug-hint" className="m-0 text-xs text-tertiary">
           {copy.slugHint}
         </p>
-        {error('slug')}
+        {renderFieldError('slug')}
       </div>
+    );
+
+  }
+
+  function renderDescriptionField() {
+
+    return (
       <div className="grid gap-1.5">
         <Field labelText={copy.descriptionLabel}>
           <TextArea
@@ -121,8 +135,15 @@ export function BlogArticleFields({
             onChange={(event) => update('description', event.target.value)}
           />
         </Field>
-        {error('description')}
+        {renderFieldError('description')}
       </div>
+    );
+
+  }
+
+  function renderAuthorField() {
+
+    return (
       <div className="grid gap-1.5">
         <Field labelText={copy.authorLabel}>
           <Input
@@ -136,9 +157,16 @@ export function BlogArticleFields({
             onChange={(event) => update('author', event.target.value)}
           />
         </Field>
-        {error('author')}
+        {renderFieldError('author')}
       </div>
-      {options.isError && (
+    );
+
+  }
+
+  function renderOptionsError() {
+
+    return (
+      options.isError && (
         <div className="grid gap-2">
           <p className="m-0 text-sm text-error-primary">
             {copy.optionsErrorHint}
@@ -151,7 +179,14 @@ export function BlogArticleFields({
             {copy.retryOptions}
           </Button>
         </div>
-      )}
+      )
+    );
+
+  }
+
+  function renderReusableOptionsFields() {
+
+    return (
       <div className="grid items-start gap-5 sm:grid-cols-2">
         <div className="grid min-w-0 gap-1.5">
           <BlogTopicField
@@ -161,7 +196,7 @@ export function BlogArticleFields({
             invalid={Boolean(errors.category)}
             onChange={(value) => update('category', value)}
           />
-          {error('category')}
+          {renderFieldError('category')}
         </div>
         <div className="grid min-w-0 gap-1.5">
           <BlogCoverField
@@ -172,11 +207,17 @@ export function BlogArticleFields({
             onChange={(value) => update('cover', value)}
             onUploadStateChange={onUploadStateChangeAction}
           />
-          {error('cover')}
+          {renderFieldError('cover')}
         </div>
       </div>
-      <p className="m-0 text-xs text-tertiary">{copy.reusableOptionsHint}</p>
-      {form.cover !== 'none' &&
+    );
+
+  }
+
+  function renderCoverPreview() {
+
+    return (
+      form.cover !== 'none' &&
         BlogCoverSchema.safeParse(form.cover).success && (
         <div className={styles.editorCover} data-cover={form.cover}>
           <Image
@@ -196,7 +237,25 @@ export function BlogArticleFields({
               : copy.customCover}
           </p>
         </div>
-      )}
+      )
+    );
+
+  }
+
+  return (
+    <SplitSection
+      id="blog-details"
+      title={copy.articleDetails}
+      description={copy.articleDetailsDescription}
+    >
+      {renderTitleField()}
+      {renderSlugField()}
+      {renderDescriptionField()}
+      {renderAuthorField()}
+      {renderOptionsError()}
+      {renderReusableOptionsFields()}
+      <p className="m-0 text-xs text-tertiary">{copy.reusableOptionsHint}</p>
+      {renderCoverPreview()}
     </SplitSection>
   );
 

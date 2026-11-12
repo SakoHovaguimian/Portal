@@ -1,5 +1,5 @@
-import type { MobileRecordRowProps } from '../models/mobileRecordRowProps';
 import { cn } from '../lib/cn';
+import type { MobileRecordRowProps } from '../models/mobileRecordRowProps';
 
 // Compact record summaries keep facts below the identity and status at the end.
 export function MobileRecordRow({

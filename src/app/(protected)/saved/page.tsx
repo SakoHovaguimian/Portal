@@ -1,10 +1,12 @@
-import type { SearchRouteProps } from '@/models/searchRouteProps';
 import { notFound } from 'next/navigation';
-import { portalModules } from '@/config/portalModules';
 import type { Metadata } from 'next';
-import { SavedItemsScreen } from '@/modules/engagement/SavedItemsScreen';
-import { SavedQuerySchema } from '@/modules/engagement/models/savedQuery';
+
+import { portalModules } from '@/config/portalModules';
+import type { SearchRouteProps } from '@/models/searchRouteProps';
 import { portalEngagementStrings as copy } from '@/strings';
+
+import { SavedQuerySchema } from '@/modules/engagement/models/savedQuery';
+import { SavedItemsScreen } from '@/modules/engagement/SavedItemsScreen';
 
 export const metadata: Metadata = { title: copy.title };
 

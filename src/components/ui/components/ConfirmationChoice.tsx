@@ -1,5 +1,6 @@
-import type { ConfirmationChoiceProps } from '../models/confirmationChoiceProps';
 import { cn } from '../lib/cn';
+import type { ConfirmationChoiceProps } from '../models/confirmationChoiceProps';
+
 import { Checkbox } from './Checkbox';
 
 // A prominent name or detail check before reviewing a consequential action.

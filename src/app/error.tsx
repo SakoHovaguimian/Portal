@@ -1,8 +1,8 @@
 'use client';
 
+import { ErrorState } from '@/components/ui';
 import type { GlobalErrorProps } from '@/models/globalErrorProps';
 import { strings } from '@/strings';
-import { ErrorState } from '@/components/ui';
 
 export default function GlobalError({
   reset,

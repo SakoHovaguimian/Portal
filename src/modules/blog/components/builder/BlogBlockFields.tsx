@@ -1,7 +1,8 @@
 'use client';
 
-import { portalPublishingStrings } from '@/strings';
 import { Field, Input, MarkdownEditor, TextArea } from '@/components/ui';
+import { portalPublishingStrings } from '@/strings';
+
 import { BlogImageFields } from './BlogImageFields';
 import type { BlogBlockFieldsProps } from '../../models/blogBlockFieldsProps';
 
@@ -33,7 +34,7 @@ export function BlogBlockFields({
     'aria-invalid': invalid(key),
     'aria-describedby': invalid(key) ? `${id}-error` : undefined,
   });
-  const input = (
+  const renderInputField = (
     key: string,
     label: string,
     value: string,
@@ -52,7 +53,7 @@ export function BlogBlockFields({
       />
     </Field>
   );
-  const text = (
+  const renderTextField = (
     key: string,
     label: string,
     value: string,
@@ -74,7 +75,7 @@ export function BlogBlockFields({
 
     case 'header': {
 
-      const headingInput = input(
+      const headingInput = renderInputField(
         'text',
         copy.headingLabel,
         block.metaData.text,
@@ -87,9 +88,10 @@ export function BlogBlockFields({
       return headingInput;
 
     }
+
     case 'footer': {
 
-      const footerText = text(
+      const footerText = renderTextField(
         'text',
         copy.textLabel,
         block.metaData.text,
@@ -102,10 +104,11 @@ export function BlogBlockFields({
       return footerText;
 
     }
+
     case 'section':
       return (
         <>
-          {input(
+          {renderInputField(
             'title',
             copy.headingLabel,
             block.metaData.title ?? '',
@@ -137,7 +140,7 @@ export function BlogBlockFields({
               </Field>
             </>
           ) : (
-            text(
+            renderTextField(
               'body',
               copy.textLabel,
               block.metaData.body,
@@ -151,16 +154,17 @@ export function BlogBlockFields({
           )}
         </>
       );
+
     case 'quote':
       return (
         <>
-          {text('text', copy.textLabel, block.metaData.text, (value) =>
+          {renderTextField('text', copy.textLabel, block.metaData.text, (value) =>
             onChangeAction({
               ...block,
               metaData: { ...block.metaData, text: value },
             }),
           )}
-          {input(
+          {renderInputField(
             'attribution',
             copy.attributionLabel,
             block.metaData.attribution ?? '',
@@ -172,10 +176,11 @@ export function BlogBlockFields({
           )}
         </>
       );
+
     case 'bullet':
       return (
         <>
-          {text(
+          {renderTextField(
             'items',
             copy.itemsLabel,
             block.metaData.items.join('\n'),
@@ -189,12 +194,14 @@ export function BlogBlockFields({
           <p className="m-0 text-sm text-tertiary">{copy.itemsHint}</p>
         </>
       );
+
     case 'divider':
       return <p className="m-0 text-sm text-tertiary">{copy.dividerHint}</p>;
+
     case 'embed':
       return (
         <>
-          {input(
+          {renderInputField(
             'title',
             copy.headingLabel,
             block.metaData.title ?? '',
@@ -204,7 +211,7 @@ export function BlogBlockFields({
                 metaData: { ...block.metaData, title },
               }),
           )}
-          {input(
+          {renderInputField(
             'url',
             copy.urlLabel,
             block.metaData.url,
@@ -215,7 +222,7 @@ export function BlogBlockFields({
               }),
             2000,
           )}
-          {input(
+          {renderInputField(
             'caption',
             copy.captionLabel,
             block.metaData.caption ?? '',
@@ -229,6 +236,7 @@ export function BlogBlockFields({
           <p className="m-0 text-sm text-tertiary">{copy.embedHint}</p>
         </>
       );
+
     case 'image':
       return (
         <BlogImageFields
@@ -243,6 +251,7 @@ export function BlogBlockFields({
           onUploadStateChangeAction={onUploadStateChangeAction}
         />
       );
+
     case 'gallery2':
     case 'gallery3':
     case 'gallery4':
@@ -285,7 +294,7 @@ export function BlogBlockFields({
               />
             </fieldset>
           ))}
-          {input(
+          {renderInputField(
             'caption',
             copy.captionLabel,
             block.metaData.caption ?? '',
@@ -298,10 +307,11 @@ export function BlogBlockFields({
           )}
         </>
       );
+
     case 'callout':
       return (
         <>
-          {input(
+          {renderInputField(
             'title',
             copy.headingLabel,
             block.metaData.title ?? '',
@@ -311,7 +321,7 @@ export function BlogBlockFields({
                 metaData: { ...block.metaData, title },
               }),
           )}
-          {text('text', copy.textLabel, block.metaData.text, (value) =>
+          {renderTextField('text', copy.textLabel, block.metaData.text, (value) =>
             onChangeAction({
               ...block,
               metaData: { ...block.metaData, text: value },
@@ -319,16 +329,17 @@ export function BlogBlockFields({
           )}
         </>
       );
+
     case 'link':
       return (
         <>
-          {input('text', copy.linkLabel, block.metaData.text, (value) =>
+          {renderInputField('text', copy.linkLabel, block.metaData.text, (value) =>
             onChangeAction({
               ...block,
               metaData: { ...block.metaData, text: value },
             }),
           )}
-          {input(
+          {renderInputField(
             'url',
             copy.urlLabel,
             block.metaData.url,

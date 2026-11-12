@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+
 import { Button, InfoPopover, Message, Tooltip, UiIcon } from '@/components/ui';
 import { usePresentationService } from '@/presentation/PresentationProvider';
 import { strings } from '@/strings';
+
 import { ShowcaseSection } from './ShowcaseSection';
 
 const copy = strings.componentLibrary;

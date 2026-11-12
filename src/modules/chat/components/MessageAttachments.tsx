@@ -1,9 +1,12 @@
 'use client';
-import type { MessageAttachmentsProps } from '../models/messageAttachmentsProps';
+
 import Image from 'next/image';
+
 import { Button, UiIcon } from '@/components/ui';
 import { portalChatStrings as copy } from '@/strings';
+
 import type { ChatAttachment } from '../models/chatAttachment';
+import type { MessageAttachmentsProps } from '../models/messageAttachmentsProps';
 
 export function MessageAttachments({ attachments }: MessageAttachmentsProps) {
 

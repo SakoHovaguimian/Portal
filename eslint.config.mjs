@@ -1,12 +1,13 @@
 import { defineConfig, globalIgnores } from 'eslint/config';
 import nextVitals from 'eslint-config-next/core-web-vitals';
 import nextTypescript from 'eslint-config-next/typescript';
-import titleCaseRule from './scripts/eslint/title-case-rule.mjs';
+
 import blockLayoutRule from './scripts/eslint/block-layout-rule.mjs';
 import constructorLayoutRule from './scripts/eslint/constructor-layout-rule.mjs';
 import interfaceLayoutRule from './scripts/eslint/interface-layout-rule.mjs';
 import namedReturnRule from './scripts/eslint/named-return-rule.mjs';
 import serviceMarkRule from './scripts/eslint/service-mark-rule.mjs';
+import titleCaseRule from './scripts/eslint/title-case-rule.mjs';
 import zodEnumLayoutRule from './scripts/eslint/zod-enum-layout-rule.mjs';
 
 export default defineConfig([
@@ -55,7 +56,7 @@ export default defineConfig([
       'padding-line-between-statements': [
         'error',
         { blankLine: 'always', prev: 'import', next: '*' },
-        { blankLine: 'never', prev: 'import', next: 'import' },
+        { blankLine: 'any', prev: 'import', next: 'import' },
         { blankLine: 'always', prev: 'export', next: 'export' },
         { blankLine: 'always', prev: ['function', 'class'], next: '*' },
         { blankLine: 'always', prev: '*', next: ['function', 'class'] },

@@ -8,6 +8,7 @@ import {
 import { NavigationLink } from '@/components/ui/components/NavigationLink';
 import { useNavigationGuard } from '@/providers/NavigationGuardProvider';
 import { portalNotificationInboxStrings as copy } from '@/strings';
+
 import type { NotificationCategory } from '../models/notificationCategory';
 import type { NotificationRecordProps } from '../models/notificationRecordProps';
 import { notificationDestination } from '../notificationDestination';

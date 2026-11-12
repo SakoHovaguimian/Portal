@@ -1,7 +1,8 @@
 import { Button, EmptyState, IconTile, UiIcon } from '@/components/ui';
 import { componentBrowserStrings as copy } from '@/strings';
-import type { ComponentSpecimen } from '../models/componentSpecimen';
+
 import type { ComponentCatalogProps } from '../models/componentCatalogProps';
+import type { ComponentSpecimen } from '../models/componentSpecimen';
 
 export function ComponentCatalog({
   items,

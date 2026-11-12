@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { NotificationSettingsScreen } from '@/modules/notification-inbox/NotificationSettingsScreen';
-import { portalNotificationInboxStrings as copy } from '@/strings';
+
 import { portalModules } from '@/config/portalModules';
+import { portalNotificationInboxStrings as copy } from '@/strings';
+
+import { NotificationSettingsScreen } from '@/modules/notification-inbox/NotificationSettingsScreen';
 
 export const metadata: Metadata = { title: copy.preferencesTitle };
 

@@ -1,10 +1,11 @@
+import { cn } from '../lib/cn';
 import type { ScheduleWindow } from '../models/scheduleWindow';
 import type { ScheduleWindowFieldsProps } from '../models/scheduleWindowFieldsProps';
+import { strings } from '@/strings';
+
 import { Button } from './Button';
 import { Field } from './Field';
 import { Input } from './Input';
-import { strings } from '@/strings';
-import { cn } from '../lib/cn';
 
 // Shared weekly/dated schedule controls; draft ownership stays with the caller.
 export function ScheduleWindowFields({

@@ -1,6 +1,7 @@
 'use client';
 
 import type { ResponsiveSectionNavigationProps } from '../models/responsiveSectionNavigationProps';
+
 import { SegmentedTabs } from './Tabs';
 
 // Section destinations and ordinary segmented controls share one responsive rule.

@@ -1,9 +1,11 @@
 'use client';
 
+import { useEffect, useLayoutEffect, useRef } from 'react';
+
+import { useFloatingAssistantContext } from '../lib/floatingAssistantContext';
 import type { FloatingAssistantActionProps } from '../models/floatingAssistantActionProps';
 import type { FloatingAssistantProps } from '../models/floatingAssistantProps';
-import { useEffect, useLayoutEffect, useRef } from 'react';
-import { useFloatingAssistantContext } from '../lib/floatingAssistantContext';
+
 import { FloatingAssistantDialog } from './FloatingAssistantDialog';
 
 export function FloatingAssistantAction({

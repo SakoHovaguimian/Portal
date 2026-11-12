@@ -1,10 +1,12 @@
 'use client';
 
 import { useRef, useState, type KeyboardEvent } from 'react';
+
 import type {
   MarkdownAction,
   MarkdownSelection,
 } from '../models/markdownAction';
+
 import { applyMarkdownAction } from './markdownCommands';
 
 export function useMarkdownEditor(

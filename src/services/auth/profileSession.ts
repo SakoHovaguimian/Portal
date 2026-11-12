@@ -1,13 +1,14 @@
 import 'server-only';
-import { getContainer } from '@/container';
-import { mapUserRoleTransport } from './mapUserRoleTransport';
 import { environment } from '@/config/environment';
-import { getDemoState } from '@/services/demo/demoState';
-import { mapUserTransportToDomain } from '@/services/api/domainMappers';
-import type { UserProfileTransport } from './models/userProfileTransport';
-import type { FirebaseAuthSession } from './models/firebaseAuthSession';
-import type { SessionUser } from '@/models/sessionUser';
+import { getContainer } from '@/container';
 import { AuthError } from '@/errors/domainErrors';
+import type { SessionUser } from '@/models/sessionUser';
+import { mapUserTransportToDomain } from '@/services/api/domainMappers';
+import { getDemoState } from '@/services/demo/demoState';
+
+import { mapUserRoleTransport } from './mapUserRoleTransport';
+import type { FirebaseAuthSession } from './models/firebaseAuthSession';
+import type { UserProfileTransport } from './models/userProfileTransport';
 
 // **************************************
 // MARK: - GET AUTHENTICATED PROFILE SESSION

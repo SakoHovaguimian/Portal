@@ -1,6 +1,7 @@
 'use client';
 
 import { useLayoutEffect, useRef } from 'react';
+
 import { motionDuration } from './motionPreferences';
 
 // Animate ordered items between their old and new positions without delaying state.

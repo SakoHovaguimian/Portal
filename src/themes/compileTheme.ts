@@ -1,6 +1,8 @@
 import type { CSSProperties } from 'react';
-import type { ThemeCssVariables } from './models/themeCssVariables';
+
 import type { ThemeMode } from '@/models/themeMode';
+
+import type { ThemeCssVariables } from './models/themeCssVariables';
 import type { ThemeDefinition } from './models/themeDefinition';
 import { semanticAliases, darkSemanticAliases } from './semanticAliases';
 

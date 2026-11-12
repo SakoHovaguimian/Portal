@@ -1,11 +1,13 @@
 'use client';
 
 import { useId, useRef, useState } from 'react';
+
 import { Badge, Button, Field, Message, Select, Slider, UiIcon } from '@/components/ui';
-import { usePresentationService } from '@/presentation/PresentationProvider';
 import type { PresentationMotionConfig } from '@/presentation/models/presentationMotionConfig';
 import { PresentationMotionEasingSchema } from '@/presentation/models/presentationMotionEasing';
+import { usePresentationService } from '@/presentation/PresentationProvider';
 import { strings, portalOverlayMotionStrings as copy } from '@/strings';
+
 import type { OverlayMotionDraft } from '../models/overlayMotionDraft';
 
 export function OverlayMotionControls() {

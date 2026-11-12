@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { strings } from '@/strings';
 
 export const LoginInputSchema = z.object({

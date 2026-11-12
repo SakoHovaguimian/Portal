@@ -1,6 +1,7 @@
 import 'server-only';
 import { environment } from '@/config/environment';
 import { strings } from '@/strings';
+
 import type { ApiRequestOptions } from './apiClientInterface';
 import { parseApiResponse } from './response';
 

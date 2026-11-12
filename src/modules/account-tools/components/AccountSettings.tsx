@@ -1,13 +1,15 @@
 'use client';
 
-import { NavigationLink } from '@/components/ui/components/NavigationLink';
-import { useNavigationGuard } from '@/providers/NavigationGuardProvider';
 import { useState } from 'react';
+
+import { NavigationLink } from '@/components/ui/components/NavigationLink';
 import { Button, SectionStack, SplitSection, UiIcon } from '@/components/ui';
 import { useSessionState } from '@/providers/AppProviders';
+import { useNavigationGuard } from '@/providers/NavigationGuardProvider';
 import { useRuntimeConfig } from '@/providers/RuntimeProvider';
 import { canManagePlatform } from '@/services/auth/permissions';
 import { portalAccountToolsStrings as copy } from '@/strings';
+
 import { AccountDeletionDialog } from './AccountDeletionDialog';
 import './accountSettings.css';
 

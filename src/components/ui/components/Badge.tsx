@@ -1,5 +1,5 @@
-import type { BadgeProps } from '../models/badgeProps';
 import { cn } from '../lib/cn';
+import type { BadgeProps } from '../models/badgeProps';
 
 const tones = {
   neutral: 'bg-utility-gray-50 text-utility-gray-700 ring-utility-gray-200',

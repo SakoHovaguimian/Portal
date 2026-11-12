@@ -1,7 +1,9 @@
 'use client';
 
-import type { SegmentedPanelsProps } from '../models/segmentedPanelsProps';
 import { useId } from 'react';
+
+import type { SegmentedPanelsProps } from '../models/segmentedPanelsProps';
+
 import { ResponsiveSectionNavigation } from './ResponsiveSectionNavigation';
 
 export function SegmentedPanels<T extends string>({

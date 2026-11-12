@@ -1,7 +1,9 @@
-import type { IdRouteProps } from '@/models/idRouteProps';
 import type { Metadata } from 'next';
-import { BlogEditorScreen } from '@/modules/blog/BlogEditorScreen';
+
+import type { IdRouteProps } from '@/models/idRouteProps';
 import { portalPublishingStrings } from '@/strings';
+
+import { BlogEditorScreen } from '@/modules/blog/BlogEditorScreen';
 
 export const metadata: Metadata = {
   title: portalPublishingStrings.article.editTitle,

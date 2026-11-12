@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
+
 import { DirectoryPagination } from '@/components/ui';
 import { portalAccountToolsStrings as copy } from '@/strings';
+
 import type { AccountToolsPaginationProps } from '../models/accountToolsPaginationProps';
 
 export function AccountToolsPagination({

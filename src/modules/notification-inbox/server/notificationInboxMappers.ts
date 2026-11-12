@@ -1,10 +1,10 @@
-import type { NotificationTransport } from './models/notificationTransport';
-import type { NotificationCountsTransport } from './models/notificationCountsTransport';
-import type { NotificationSettingsTransport } from './models/notificationSettingsTransport';
 import type {
   NotificationInboxFilters,
   NotificationInboxQuery,
 } from '../models/notificationInboxQuery';
+import type { NotificationCountsTransport } from './models/notificationCountsTransport';
+import type { NotificationSettingsTransport } from './models/notificationSettingsTransport';
+import type { NotificationTransport } from './models/notificationTransport';
 
 // **************************************
 // MARK: - MAP NOTIFICATION
@@ -82,19 +82,19 @@ export function notificationTransportParams(
 ) {
 
   const { category, sortOrder, ...fields } = query;
-  const params = new URLSearchParams();
+  const parameters = new URLSearchParams();
   Object.entries(fields).forEach(([key, value]) => {
 
-    if (value !== undefined && value !== '') { params.set(key, String(value)); }
+    if (value !== undefined && value !== '') { parameters.set(key, String(value)); }
 
   });
-  if (category) { params.append('category', category); }
+  if (category) { parameters.append('category', category); }
   if (sortOrder) {
 
-    params.set('sort_order', sortOrder);
-    params.set('sort_by', 'published_at');
+    parameters.set('sort_order', sortOrder);
+    parameters.set('sort_by', 'published_at');
 
   }
-  return params;
+  return parameters;
 
 }

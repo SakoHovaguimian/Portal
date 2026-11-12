@@ -1,9 +1,10 @@
-import type { SliderControlProps } from '../models/sliderControlProps';
 import { useId } from 'react';
 import { I18nProvider } from 'react-aria';
 import { Label, Slider as AriaSlider, SliderOutput, SliderThumb, SliderTrack, type SliderProps as AriaSliderProps } from 'react-aria-components';
-import { strings } from '@/strings';
+
 import { cn } from '../lib/cn';
+import type { SliderControlProps } from '../models/sliderControlProps';
+import { strings } from '@/strings';
 import './ValueControls.css';
 
 /** Shared interaction/paint owner for single-value and ordered two-thumb sliders. */

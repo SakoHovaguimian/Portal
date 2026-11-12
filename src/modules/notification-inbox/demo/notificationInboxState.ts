@@ -1,13 +1,15 @@
 import 'server-only';
+
+import { projectConfiguration } from '@/config/projectConfiguration';
+import { getDefaultProjectRoute, isProjectPathEnabled } from '@/config/projectRoutes';
 import { populatedDemoUsers } from '@/services/demo/demoPresets';
 import { portalNotificationInboxStrings as copy } from '@/strings';
+
+import type { DemoInboxNotification } from './models/demoInboxNotification';
+import type { DemoNotificationInboxState } from './models/demoNotificationInboxState';
 import { NotificationCategorySchema } from '../models/notificationCategory';
 import { NotificationChannelSchema } from '../models/notificationChannel';
 import type { NotificationPreference } from '../models/notificationPreference';
-import type { DemoNotificationInboxState } from './models/demoNotificationInboxState';
-import type { DemoInboxNotification } from './models/demoInboxNotification';
-import { projectConfiguration } from '@/config/projectConfiguration';
-import { getDefaultProjectRoute, isProjectPathEnabled } from '@/config/projectRoutes';
 
 const owner = globalThis as typeof globalThis & {
   portalNotificationInboxState?: DemoNotificationInboxState;

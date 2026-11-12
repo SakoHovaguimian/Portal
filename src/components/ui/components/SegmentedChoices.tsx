@@ -1,8 +1,9 @@
 import { useId } from 'react';
-import { strings } from '@/strings';
+
 import { cn } from '../lib/cn';
 import { useSegmentedIndicator } from '../lib/useSegmentedIndicator';
 import type { SegmentedTabsProps } from '../models/segmentedTabsProps';
+import { strings } from '@/strings';
 
 export function SegmentedChoices<T extends string>({
   tabs,

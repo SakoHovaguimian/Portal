@@ -1,8 +1,11 @@
 'use client';
+
 import { useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+
 import { useCurrentTimezone } from '@/components/ui/lib/useCurrentTimezone';
 import { useServiceContainer, useSessionState } from '@/providers/AppProviders';
+
 import { useNotificationSettings } from '../hooks';
 import { NotificationTimezoneSchema } from '../models/notificationTimezone';
 import { notificationInboxQueryKeys } from '../queryKeys';

@@ -1,8 +1,10 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+
 import { Button, UploadField, type UploadFile } from '@/components/ui';
 import { componentExpansionStrings as copy } from '@/strings';
+
 import { ShowcaseSection } from './ShowcaseSection';
 
 function initialFiles(): UploadFile[] {
@@ -55,15 +57,15 @@ export function UploadsShowcase() {
               ...item,
               progress,
               status:
-                  progress === 100
-                    ? fail
-                      ? 'error'
-                      : 'complete'
-                    : 'uploading',
+                progress === 100
+                  ? fail
+                    ? 'error'
+                    : 'complete'
+                  : 'uploading',
               error:
-                  progress === 100 && fail
-                    ? copy.examples.failureHint
-                    : undefined,
+                progress === 100 && fail
+                  ? copy.examples.failureHint
+                  : undefined,
             }
             : item,
         );

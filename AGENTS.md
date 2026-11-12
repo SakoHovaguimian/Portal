@@ -6,7 +6,7 @@ Portal is a Node 22 / TypeScript web template using Next.js 16.4.5, React 19.2.4
 
 - Do not create a worktree unless explicitly requested.
 - Do not write tests. Do not run Xcode builds unless explicitly requested. Verify with static checks, the web build, and focused manual workflows.
-- Follow the permanent [Portal code standards](docs/PORTAL_STANDARDS.md) for exact ESLint-owned formatting, service MARKs, named callback results, and hook-safe Lego block composition. Preserve behavior and appearance.
+- Follow the permanent [Portal code standards](docs/PORTAL_STANDARDS.md) for Obelisk-derived import grouping, exact ESLint-owned formatting, service MARKs, named callback results, and hook-safe Lego block composition. Preserve behavior and appearance.
 - Split independent models into separate files. Keep each schema, inferred type, and directly derived input schema together.
 - All user-visible strings belong in the single [src/strings.ts](src/strings.ts) file, including labels, metadata, validation, errors, accessibility text, notifications, and static demo copy. Use named formatters for interpolation. Never place new display copy inline or create separate string catalogs.
 - Use Title Case for actions, CTAs, page/section/dialog titles, field labels, navigation, table headers, options, and short status/toast titles. Capitalize every word, including A, And, Of, and To; preserve acronyms and brand spelling. Keep supporting prose, validation, and data in their appropriate case. Follow [copy casing and lint exceptions](docs/STRINGS.md#copy-casing); `copy/title-case` and `check:strings` enforce the catalog rule.

@@ -1,5 +1,6 @@
-import type { DescriptionListProps } from '../models/descriptionListProps';
 import { cn } from '../lib/cn';
+import type { DescriptionListProps } from '../models/descriptionListProps';
+
 import { UiIcon } from './UiIcon';
 
 // Grid suits wide review summaries; rows suit narrow side panels where each

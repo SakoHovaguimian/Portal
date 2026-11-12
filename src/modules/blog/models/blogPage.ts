@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { BlogArticleSchema } from './blogArticle';
 
 export const BlogPageSchema = z.object({

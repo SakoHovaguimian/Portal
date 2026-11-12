@@ -1,5 +1,5 @@
-import type { ConversationMessage } from './conversationMessage';
 import type { ChatReactionEmoji } from './chatReaction';
+import type { ConversationMessage } from './conversationMessage';
 
 export interface ChatMessageActions {
   projections: Record<string, ConversationMessage>;

@@ -1,8 +1,9 @@
 'use client';
 
-import type { FieldProps } from '../models/fieldProps';
 import { cloneElement, isValidElement, useId, type ReactElement } from 'react';
+
 import { cn } from '../lib/cn';
+import type { FieldProps } from '../models/fieldProps';
 
 export function Field({
   labelText,

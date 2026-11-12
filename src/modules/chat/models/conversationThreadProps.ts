@@ -1,7 +1,7 @@
-import type { ChatMessageActions } from './chatMessageActions';
 import type { ChatConversation } from './chatConversation';
-import type { ConversationMessage } from './conversationMessage';
 import type { ChatDraft } from './chatDraft';
+import type { ChatMessageActions } from './chatMessageActions';
+import type { ConversationMessage } from './conversationMessage';
 import type { PendingChatMessage } from './pendingChatMessage';
 
 export interface ConversationThreadProps {

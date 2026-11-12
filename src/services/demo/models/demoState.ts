@@ -1,7 +1,8 @@
 import type { FeatureRequestTransport } from '@/services/api/models';
-import type { DemoUser } from './demoUser';
-import type { DemoPasswordRecord } from './demoPasswordRecord';
+
 import type { ChatMessage } from '@/modules/chat/models/chatMessage';
+import type { DemoPasswordRecord } from './demoPasswordRecord';
+import type { DemoUser } from './demoUser';
 
 export interface DemoState {
   generation: string;

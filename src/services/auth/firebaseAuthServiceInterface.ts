@@ -1,5 +1,6 @@
-import type { FirebaseAuthSession } from './models/firebaseAuthSession';
 import type { SignupInput } from '@/models/auth';
+
+import type { FirebaseAuthSession } from './models/firebaseAuthSession';
 
 export interface FirebaseAuthServiceInterface {
 

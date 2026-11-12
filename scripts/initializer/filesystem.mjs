@@ -1,6 +1,7 @@
 import { chmod, copyFile, lstat, mkdir, open, rename, rm, rmdir } from 'node:fs/promises';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { randomUUID } from 'node:crypto';
+
 import { initializerError } from './options.mjs';
 
 export async function safeTarget(root, path) {

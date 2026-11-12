@@ -1,6 +1,7 @@
 import 'server-only';
 import { NotFoundError, ValidationError } from '@/errors/domainErrors';
 import { portalMediaStrings as copy } from '@/strings';
+
 import type { DemoPublicImage } from './models/demoPublicImage';
 import { validatePublicImageUpload } from './validatePublicImageUpload';
 

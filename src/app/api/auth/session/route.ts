@@ -1,16 +1,17 @@
-import { SessionActionInputSchema } from '@/services/session/models/sessionActionInput';
 import { getContainer } from '@/container';
 import {
   AuthError,
   NotFoundError,
   OwnershipError,
 } from '@/errors/domainErrors';
-import { getProfileSession } from '@/services/auth/profileSession';
 import { errorResponse, trustedMutation } from '@/services/api/routeSafety';
-import { strings } from '@/strings';
-import { getEffectiveRuntime } from '@/services/demo/demoRuntime';
+import { getProfileSession } from '@/services/auth/profileSession';
 import { createDemoIdentitySession } from '@/services/demo/demoIdentity';
+import { getEffectiveRuntime } from '@/services/demo/demoRuntime';
 import { getDemoState } from '@/services/demo/demoState';
+import { SessionActionInputSchema } from '@/services/session/models/sessionActionInput';
+import { strings } from '@/strings';
+
 import { getDemoOnboardingProgress } from '@/modules/onboarding/demo/onboardingState';
 
 // **************************************

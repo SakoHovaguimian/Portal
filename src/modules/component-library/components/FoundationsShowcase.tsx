@@ -1,5 +1,6 @@
 import { UiIcon, type IconName } from '@/components/ui';
 import { strings } from '@/strings';
+
 import { ShowcaseSection } from './ShowcaseSection';
 
 const copy = strings.componentLibrary;

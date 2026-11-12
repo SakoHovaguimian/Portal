@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
+
 import {
   Button,
   DropZone,
@@ -9,6 +10,7 @@ import {
   UiIcon,
 } from '@/components/ui';
 import { strings } from '@/strings';
+
 import { ShowcaseSection } from './ShowcaseSection';
 
 const copy = strings.designSystem;

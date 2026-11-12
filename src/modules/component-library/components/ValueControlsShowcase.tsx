@@ -1,9 +1,10 @@
 'use client';
 
 import { strings } from '@/strings';
+
 import { ProgressExamples } from './ProgressExamples';
-import { SlidersExamples } from './SlidersExamples';
 import { ShowcaseSection } from './ShowcaseSection';
+import { SlidersExamples } from './SlidersExamples';
 
 export function ValueControlsShowcase() {
 

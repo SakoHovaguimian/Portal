@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
+
+import { getDefaultProjectRoute } from '@/config/projectRoutes';
 import { getEffectiveRuntime } from '@/services/demo/demoRuntime';
 import { resolveDemoSession } from '@/services/demo/resolveDemoSession';
 import {
   decodeSession,
   sessionCookieName,
 } from '@/services/session/sessionCodec';
-import { getDefaultProjectRoute } from '@/config/projectRoutes';
 
 // **************************************
 // MARK: - PROXY PROTECTED ROUTE

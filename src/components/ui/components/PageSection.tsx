@@ -1,5 +1,5 @@
-import type { PageSectionProps } from '../models/pageSectionProps';
 import { cn } from '../lib/cn';
+import type { PageSectionProps } from '../models/pageSectionProps';
 
 // A titled page region (h2). Content decides whether it sits on a Card.
 export function PageSection({

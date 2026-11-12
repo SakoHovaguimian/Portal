@@ -1,9 +1,9 @@
 import type { AlertPresentation } from './alertPresentation';
+import type { PresentationMotionConfig } from './presentationMotionConfig';
+import type { PresentationRequest } from './presentationRequest';
+import type { ResolvedPresentationMotionConfig } from './resolvedPresentationMotionConfig';
 import type { SheetPresentation } from './sheetPresentation';
 import type { ToastPresentation } from './toastPresentation';
-import type { PresentationRequest } from './presentationRequest';
-import type { PresentationMotionConfig } from './presentationMotionConfig';
-import type { ResolvedPresentationMotionConfig } from './resolvedPresentationMotionConfig';
 
 export type PresentationService = {
   present: (request: PresentationRequest) => Promise<string | boolean>;

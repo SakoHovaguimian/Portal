@@ -1,13 +1,16 @@
 'use client';
+
 import { useEffect, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+
 import { useServiceContainer } from '@/providers/AppProviders';
-import type { ChatMessageActions } from './models/chatMessageActions';
+
 import type { ChatConversation } from './models/chatConversation';
-import type { ConversationMessage } from './models/conversationMessage';
 import type { ChatMessageAction } from './models/chatMessageAction';
+import type { ChatMessageActions } from './models/chatMessageActions';
 import type { ChatMessageQueue } from './models/chatMessageQueue';
 import type { ChatReactionEmoji } from './models/chatReaction';
+import type { ConversationMessage } from './models/conversationMessage';
 import { projectChatMessage } from './services/projectChatMessage';
 
 /** Message-local queues preserve rapid intent order; pending projections shield polling without delaying input. */
@@ -29,14 +32,14 @@ export function useChatMessageActions(userId: string): ChatMessageActions {
     void queryClient.cancelQueries({ queryKey: key, exact: true }, { revert: false });
     queryClient.setQueryData<ConversationMessage[]>(key, (current) => {
 
-      const next = current?.some((item) => item.id === message.id) ? current.map((item) => item.id === message.id ? message : item) : [...(current ?? []), message];
-      return next;
+      const updatedMessages = current?.some((item) => item.id === message.id) ? current.map((item) => item.id === message.id ? message : item) : [...(current ?? []), message];
+      return updatedMessages;
 
     });
     queryClient.setQueryData<ChatConversation[]>(['chat', userId, 'conversations'], (current) => {
 
-      const next = current?.map((conversation) => conversation.lastMessage?.id === message.id ? { ...conversation, lastMessage: message } : conversation);
-      return next;
+      const updatedConversations = current?.map((conversation) => conversation.lastMessage?.id === message.id ? { ...conversation, lastMessage: message } : conversation);
+      return updatedConversations;
 
     });
 
@@ -57,9 +60,9 @@ export function useChatMessageActions(userId: string): ChatMessageActions {
 
       setProjections((current) => {
 
-        const next = { ...current };
-        if (queue.operations.length) { next[messageId] = message; } else { delete next[messageId]; }
-        return next;
+        const nextProjections = { ...current };
+        if (queue.operations.length) { nextProjections[messageId] = message; } else { delete nextProjections[messageId]; }
+        return nextProjections;
 
       });
 
@@ -91,8 +94,8 @@ export function useChatMessageActions(userId: string): ChatMessageActions {
 
           setFailedIds((current) => {
 
-            const next = current.includes(messageId) ? current : [...current, messageId];
-            return next;
+            const nextFailedIds = current.includes(messageId) ? current : [...current, messageId];
+            return nextFailedIds;
 
           });
 
@@ -123,8 +126,8 @@ export function useChatMessageActions(userId: string): ChatMessageActions {
     queues.current.set(message.id, queue);
     setFailedIds((current) => {
 
-      const next = current.filter((id) => id !== message.id);
-      return next;
+      const remainingFailedIds = current.filter((id) => id !== message.id);
+      return remainingFailedIds;
 
     });
     const completion = new Promise<ConversationMessage>((resolve, reject) => {
@@ -154,19 +157,20 @@ export function useChatMessageActions(userId: string): ChatMessageActions {
         const existing = current.find((message) => message.id === id);
         if (JSON.stringify(existing) !== JSON.stringify(value)) {
 
-          changed = true; projected.set(id, value);
+          changed = true;
+          projected.set(id, value);
 
         }
 
       }
       if (!changed) { return; }
-      const next = current.map((message) => projected.get(message.id) ?? message);
+      const projectedMessages = current.map((message) => projected.get(message.id) ?? message);
       for (const [id, message] of projected) {
 
-        if (!current.some((item) => item.id === id)) { next.push(message); }
+        if (!current.some((item) => item.id === id)) { projectedMessages.push(message); }
 
       }
-      queryClient.setQueryData(eventKey, next);
+      queryClient.setQueryData(eventKey, projectedMessages);
 
     });
 

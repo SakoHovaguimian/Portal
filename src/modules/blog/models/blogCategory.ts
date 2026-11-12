@@ -1,5 +1,6 @@
-import { portalPublishingStrings } from '@/strings';
 import { z } from 'zod';
+
+import { portalPublishingStrings } from '@/strings';
 
 const copy = portalPublishingStrings.article;
 

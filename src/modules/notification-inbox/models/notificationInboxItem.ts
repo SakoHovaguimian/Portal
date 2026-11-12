@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { NotificationCategorySchema } from './notificationCategory';
 
 export const NotificationInboxItemSchema = z.object({

@@ -1,10 +1,12 @@
 import { z } from 'zod';
-import { BackgroundJobStatusSchema } from './backgroundJobStatus';
-import { BackgroundJobProgressSchema } from './backgroundJobProgress';
+
+import { portalJobStrings as copy } from '@/strings';
+
 import { BackgroundJobAttemptSchema } from './backgroundJobAttempt';
 import { BackgroundJobFailureSchema } from './backgroundJobFailure';
+import { BackgroundJobProgressSchema } from './backgroundJobProgress';
 import { BackgroundJobResultSchema } from './backgroundJobResult';
-import { portalJobStrings as copy } from '@/strings';
+import { BackgroundJobStatusSchema } from './backgroundJobStatus';
 
 export const BackgroundJobSchema = z.object({
   id: z.uuid(),

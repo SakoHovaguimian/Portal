@@ -1,5 +1,7 @@
 import { z } from 'zod';
+
 import { portalNotificationInboxStrings as copy } from '@/strings';
+
 import { NotificationCategorySchema } from './notificationCategory';
 import { NotificationChannelSchema } from './notificationChannel';
 

@@ -1,21 +1,24 @@
 import { portalPublishingStrings } from '@/strings';
+
 import 'server-only';
+
+import { portalModules } from '@/config/portalModules';
+import { NotFoundError } from '@/errors/domainErrors';
 import { ApiClient } from '@/services/api/apiClient';
 import type {
   ApiClientInterface,
   ApiRequestOptions,
 } from '@/services/api/apiClientInterface';
 import { parseApiResponse } from '@/services/api/response';
-import { NotFoundError } from '@/errors/domainErrors';
-import { handleDemoBlogRequest } from '../server/demoBlogApi';
 import {
   getDemoContext,
   getEffectiveRuntime,
 } from '@/services/demo/demoRuntime';
 import { simulateDemoRequest } from '@/services/demo/demoSimulation';
+
 import { BlogQuerySchema } from '../models/blogQuery';
+import { handleDemoBlogRequest } from '../server/demoBlogApi';
 import { BlogService } from './blogService';
-import { portalModules } from '@/config/portalModules';
 
 const copy = portalPublishingStrings.article;
 

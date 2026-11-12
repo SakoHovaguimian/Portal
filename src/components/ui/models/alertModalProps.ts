@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactNode, RefObject } from 'react';
-import type { AlertTone } from './alertTone';
+
 import type { AlertAlignment } from './alertAlignment';
+import type { AlertTone } from './alertTone';
 
 export interface AlertModalProps {
   open: boolean;

@@ -1,5 +1,3 @@
-import type { ThemePreferenceProviderProps } from './models/themePreferenceProviderProps';
-import type { ThemePreferenceContext } from './models/themePreferenceContext';
 import {
   createContext,
   useContext,
@@ -8,14 +6,18 @@ import {
   useRef,
   useState,
 } from 'react';
+
 import {
   AppearancePreferenceSchema,
   defaultAppearancePreference,
   type AppearancePreference,
   type ThemeId,
 } from '@/models/appearance';
-import { applyTheme } from '@/themes/applyTheme';
 import { strings } from '@/strings';
+import { applyTheme } from '@/themes/applyTheme';
+
+import type { ThemePreferenceContext } from './models/themePreferenceContext';
+import type { ThemePreferenceProviderProps } from './models/themePreferenceProviderProps';
 
 const ThemeContext = createContext<ThemePreferenceContext | null>(null);
 

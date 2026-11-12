@@ -3,8 +3,9 @@
 import { useCallback } from 'react';
 import type { Route } from 'next';
 import { useRouter } from 'next/navigation';
-import { internalNavigationHref } from './navigationHistory';
+
 import { useNavigationGuard } from './NavigationGuardProvider';
+import { internalNavigationHref } from './navigationHistory';
 
 // Client navigation that first asks the active form's leave guard.
 // Pass it to PageHeader/Breadcrumbs `onNavigate` and guarded link handlers.

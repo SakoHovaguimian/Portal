@@ -1,13 +1,18 @@
 import 'server-only';
 import { z } from 'zod';
+
+import { NotFoundError } from '@/errors/domainErrors';
+import type { BackendForward } from '@/services/api/models/backendForward';
+
+import { ChatConversationInputSchema, ChatConversationUpdateSchema } from '../models/chatConversation';
+import { ChatEmptyMutationInputSchema } from '../models/chatEmptyMutationInput';
 import { ChatMemberUpdateSchema } from '../models/chatMemberUpdate';
 import { ChatReactionInputSchema } from '../models/chatReaction';
-import type { BackendForward } from '@/services/api/models/backendForward';
-import { NotFoundError } from '@/errors/domainErrors';
-import { ChatConversationInputSchema, ChatConversationUpdateSchema } from '../models/chatConversation';
 import { ConversationMessageInputSchema, ConversationMessageUpdateSchema } from '../models/conversationMessage';
-import { validateChatAttachment } from './validateChatAttachment';
+import { ConversationMessagePinInputSchema } from '../models/conversationMessagePinInput';
 import { readChatInput } from './readChatInput';
+import { validateChatAttachment } from './validateChatAttachment';
+
 // **************************************
 // MARK: - FORWARD LIVE CHAT REQUEST
 // **************************************
@@ -53,7 +58,7 @@ export async function handleLiveChatRequest(request: Request, path: string, forw
       schema = ConversationMessageInputSchema;
     }
     if (id && action === 'read' && method === 'POST') {
-      schema = z.object({}).strict();
+      schema = ChatEmptyMutationInputSchema;
     }
     if (id && action === 'members' && ['POST', 'PATCH', 'DELETE'].includes(method)) {
       schema = ChatMemberUpdateSchema;
@@ -66,10 +71,10 @@ export async function handleLiveChatRequest(request: Request, path: string, forw
       schema = ConversationMessageUpdateSchema;
     }
     if (!action && method === 'DELETE') {
-      schema = z.object({}).strict();
+      schema = ChatEmptyMutationInputSchema;
     }
     if (action === 'pin' && method === 'POST') {
-      schema = z.object({ pinned: z.boolean() }).strict();
+      schema = ConversationMessagePinInputSchema;
     }
     if (action === 'reactions' && method === 'POST') {
       schema = ChatReactionInputSchema;

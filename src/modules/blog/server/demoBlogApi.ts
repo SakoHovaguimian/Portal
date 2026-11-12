@@ -1,23 +1,25 @@
 import 'server-only';
+
 import {
   DomainError,
   NotFoundError,
   OwnershipError,
   ValidationError,
 } from '@/errors/domainErrors';
+import { uploadDemoPublicImage } from '@/services/media/server/demoPublicImages';
 import { portalPublishingStrings } from '@/strings';
+
+import { blogContentText } from '@/modules/blog/content/blogContentText';
 import {
   BlogMutationInputSchema,
   type BlogArticle,
 } from '@/modules/blog/models/blogArticle';
-import { BlogRevisionInputSchema } from '@/modules/blog/models/blogRevisionInput';
 import { blogCategoryLabel } from '@/modules/blog/models/blogCategory';
-import { BlogQuerySchema } from '@/modules/blog/models/blogQuery';
 import type { BlogCoverChoice } from '@/modules/blog/models/blogCoverChoice';
-import { getDemoBlogState } from './demoBlogState';
-import { uploadDemoPublicImage } from '@/services/media/server/demoPublicImages';
-import { blogContentText } from '@/modules/blog/content/blogContentText';
+import { BlogQuerySchema } from '@/modules/blog/models/blogQuery';
+import { BlogRevisionInputSchema } from '@/modules/blog/models/blogRevisionInput';
 import type { DemoBlogActor } from '../models/demoBlogActor';
+import { getDemoBlogState } from './demoBlogState';
 
 const copy = portalPublishingStrings.article;
 
@@ -138,12 +140,12 @@ export async function handleDemoBlogRequest(
         return matchesSearch;
 
       })
-      .sort((a, b) => {
+      .sort((firstArticle, secondArticle) => {
 
         const publishDateOrder =
-          Date.parse(isPublic ? b.publishedAt || b.updatedAt : b.updatedAt) -
-          Date.parse(isPublic ? a.publishedAt || a.updatedAt : a.updatedAt);
-        const articleOrder = publishDateOrder || b.id.localeCompare(a.id);
+          Date.parse(isPublic ? secondArticle.publishedAt || secondArticle.updatedAt : secondArticle.updatedAt) -
+          Date.parse(isPublic ? firstArticle.publishedAt || firstArticle.updatedAt : firstArticle.updatedAt);
+        const articleOrder = publishDateOrder || secondArticle.id.localeCompare(firstArticle.id);
         return articleOrder;
 
       });

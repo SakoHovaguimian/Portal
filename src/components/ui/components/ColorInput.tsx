@@ -12,8 +12,10 @@ import {
   Popover,
   SliderTrack,
 } from 'react-aria-components';
-import { strings } from '@/strings';
+
 import type { ColorInputProps } from '../models/colorInputProps';
+import { strings } from '@/strings';
+
 import { ColorPickerValueField } from './ColorPickerValueField';
 import { UiIcon } from './UiIcon';
 

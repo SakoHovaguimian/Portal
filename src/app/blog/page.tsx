@@ -1,9 +1,11 @@
-import type { SearchRouteProps } from '@/models/searchRouteProps';
 import type { Metadata } from 'next';
+
+import type { SearchRouteProps } from '@/models/searchRouteProps';
 import { portalPublishingStrings } from '@/strings';
+
+import { blogQueryFromSearch } from '@/modules/blog/models/blogQuery';
 import { PublicBlogScreen } from '@/modules/blog/PublicBlogScreen';
 import { publicBlogService } from '@/modules/blog/services/publicBlogService';
-import { blogQueryFromSearch } from '@/modules/blog/models/blogQuery';
 
 const copy = portalPublishingStrings.article;
 

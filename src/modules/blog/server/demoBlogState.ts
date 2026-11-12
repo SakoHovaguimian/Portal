@@ -1,7 +1,9 @@
 import 'server-only';
-import { portalPublishingStrings } from '@/strings';
-import { BlogArticleSchema, type BlogArticle } from '../models/blogArticle';
+
 import { projectConfiguration } from '@/config/projectConfiguration';
+import { portalPublishingStrings } from '@/strings';
+
+import { BlogArticleSchema, type BlogArticle } from '../models/blogArticle';
 
 const copy = portalPublishingStrings.article;
 

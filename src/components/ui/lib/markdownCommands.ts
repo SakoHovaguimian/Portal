@@ -1,8 +1,8 @@
-import { strings } from '@/strings';
 import type {
   MarkdownAction,
   MarkdownSelection,
 } from '../models/markdownAction';
+import { strings } from '@/strings';
 
 export function applyMarkdownAction(
   action: MarkdownAction,

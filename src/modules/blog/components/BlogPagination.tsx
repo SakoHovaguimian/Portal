@@ -1,7 +1,8 @@
 'use client';
 
-import { portalPublishingStrings } from '@/strings';
 import { DirectoryPagination } from '@/components/ui';
+import { portalPublishingStrings } from '@/strings';
+
 import type { BlogPaginationProps } from '../models/blogPaginationProps';
 
 const copy = portalPublishingStrings.article;
