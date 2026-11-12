@@ -2,7 +2,7 @@
 
 import * as Dialog from '@radix-ui/react-dialog';
 import { UNSAFE_PortalProvider } from 'react-aria/PortalProvider';
-import { useRef } from 'react';
+import { useRef, type CSSProperties } from 'react';
 
 import { cn } from '../lib/cn';
 import type { ModalProps } from '../models/modalProps';
@@ -23,8 +23,17 @@ export function Modal({
   footer,
   initialFocusRef,
   size = 'default',
+  motionEnabled = true,
+  motionDurationMs,
+  motionExitDurationMs,
+  motionStyle,
 }: ModalProps) {
 
+  const overlayStyle = {
+    ...motionStyle,
+    ...(motionDurationMs === undefined ? {} : { '--ui-overlay-duration': `${motionDurationMs}ms` }),
+    ...(motionExitDurationMs === undefined ? {} : { '--ui-overlay-exit-duration': `${motionExitDurationMs}ms` }),
+  } as CSSProperties;
   const returnFocusRef = useRef<HTMLElement | null>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const overlaysRef = useRef<HTMLDivElement>(null);
@@ -88,9 +97,11 @@ export function Modal({
       }}
     >
       <Dialog.Portal>
-        <Dialog.Overlay className="ui-backdrop fixed inset-0 z-60 bg-(--dashboard-shell-overlay) backdrop-blur-sm" />
+        <Dialog.Overlay data-motion={motionEnabled ? undefined : 'off'} style={overlayStyle} className="ui-backdrop fixed inset-0 z-60 bg-(--dashboard-shell-overlay) backdrop-blur-sm" />
         <Dialog.Content
           ref={contentRef}
+          data-motion={motionEnabled ? undefined : 'off'}
+          style={overlayStyle}
           className={cn('ui-dialog fixed top-1/2 left-1/2 z-70 flex max-h-[calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-2rem)] w-[min(calc(100vw-2rem),44rem)] -translate-x-1/2 -translate-y-1/2 flex-col rounded-overlay border-control border-secondary bg-primary shadow-(--shadow-overlay) outline-none', size === 'wide' && 'w-[min(calc(100vw-2rem),64rem)]')}
           {...(!description ? { 'aria-describedby': undefined } : {})}
           onOpenAutoFocus={(event) => {

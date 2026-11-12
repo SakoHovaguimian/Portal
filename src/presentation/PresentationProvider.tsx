@@ -11,6 +11,7 @@ import type { OverlayQueueItem } from './models/overlayQueueItem';
 import type { PresentationProviderProps } from './models/presentationProviderProps';
 import type { PresentationService } from './models/presentationService';
 import type { ResolvedPresentationMotion } from './models/resolvedPresentationMotion';
+import type { ToastLifetime } from './models/toastLifetime';
 import type { AlertPresentation, SheetPresentation, ToastPresentation } from './types';
 import { usePresentationMotion } from './usePresentationMotion';
 
@@ -29,6 +30,7 @@ export function PresentationProvider({ children, service: preferenceService }: P
   const { resolveMotion } = motion;
   const queueRef = useRef<OverlayQueueItem[]>([]);
   const timersRef = useRef(new Map<string, ReturnType<typeof setTimeout>>());
+  const toastLifetimeRef = useRef(new Map<string, ToastLifetime>());
   const toastMotionRef = useRef(new Map<string, ResolvedPresentationMotion>());
   const exitingToastRef = useRef(new Set<string>());
 
@@ -38,6 +40,7 @@ export function PresentationProvider({ children, service: preferenceService }: P
     if (timer) { clearTimeout(timer); }
     timersRef.current.delete(id);
     toastMotionRef.current.delete(id);
+    toastLifetimeRef.current.delete(id);
     exitingToastRef.current.delete(id);
     setToasts((current) => {
 
@@ -53,7 +56,7 @@ export function PresentationProvider({ children, service: preferenceService }: P
     if (!presentation || exitingToastRef.current.has(id)) { return; }
     const timer = timersRef.current.get(id);
     if (timer) { clearTimeout(timer); }
-    const duration = presentation.enabled && document.documentElement.dataset.presentationMotion !== 'off' && !prefersReducedMotion() ? presentation.durationMs : 0;
+    const duration = presentation.enabled && document.documentElement.dataset.presentationMotion !== 'off' && !prefersReducedMotion() ? presentation.exitDurationMs : 0;
     if (!duration) {
 
       removeToast(id);
@@ -71,11 +74,30 @@ export function PresentationProvider({ children, service: preferenceService }: P
     timersRef.current.set(id, setTimeout(() => removeToast(id), duration + 80));
 
   }, [removeToast]);
+  const pauseToast = useCallback((id: string) => {
+
+    const lifetime = toastLifetimeRef.current.get(id);
+    if (!lifetime || lifetime.startedAt === null || exitingToastRef.current.has(id)) { return; }
+    lifetime.remaining = Math.max(0, lifetime.remaining - (Date.now() - lifetime.startedAt));
+    lifetime.startedAt = null;
+    clearTimeout(timersRef.current.get(id));
+    timersRef.current.delete(id);
+
+  }, []);
+  const resumeToast = useCallback((id: string) => {
+
+    const lifetime = toastLifetimeRef.current.get(id);
+    if (!lifetime || lifetime.startedAt !== null || exitingToastRef.current.has(id)) { return; }
+    lifetime.startedAt = Date.now();
+    timersRef.current.set(id, setTimeout(() => dismissToast(id), lifetime.remaining));
+
+  }, [dismissToast]);
   const clearToasts = useCallback(() => {
 
     timersRef.current.forEach((timer) => clearTimeout(timer));
     timersRef.current.clear();
     toastMotionRef.current.clear();
+    toastLifetimeRef.current.clear();
     exitingToastRef.current.clear();
     setToasts([]);
 
@@ -128,6 +150,7 @@ export function PresentationProvider({ children, service: preferenceService }: P
       motionEnabled: resolved.enabled, motionDurationMs: resolved.durationMs, motionStyle: resolved.style,
     };
     toastMotionRef.current.set(id, resolved);
+    toastLifetimeRef.current.set(id, { remaining: request.durationMs ?? 4200, startedAt: Date.now() });
     setToasts((current) => [...current, toast]);
     timersRef.current.set(id, setTimeout(() => dismissToast(id), request.durationMs ?? 4200));
     return id;
@@ -154,7 +177,7 @@ export function PresentationProvider({ children, service: preferenceService }: P
     current.resolve(value);
     setClosedOverlay(current);
     setActiveOverlay(null);
-    const duration = current.resolvedMotion.enabled && document.documentElement.dataset.presentationMotion !== 'off' && !prefersReducedMotion() ? current.resolvedMotion.durationMs : 0;
+    const duration = current.resolvedMotion.enabled && document.documentElement.dataset.presentationMotion !== 'off' && !prefersReducedMotion() ? current.resolvedMotion.exitDurationMs : 0;
     if (!duration) {
       queueMicrotask(() => finishOverlayExit(current.id));
     } else {
@@ -178,6 +201,7 @@ export function PresentationProvider({ children, service: preferenceService }: P
       timersRef.current.forEach((timer) => clearTimeout(timer));
       timersRef.current.clear();
       toastMotionRef.current.clear();
+      toastLifetimeRef.current.clear();
       exitingToastRef.current.clear();
       if (overlayTimerRef.current) { clearTimeout(overlayTimerRef.current); }
       activeOverlayRef.current?.resolve(false);
@@ -267,7 +291,7 @@ export function PresentationProvider({ children, service: preferenceService }: P
   return (
     <PresentationContext.Provider value={service}>
       {children}
-      <ToastStack toasts={toasts} onDismiss={dismissToast} onExitComplete={removeToast} />
+      <ToastStack toasts={toasts} onDismiss={dismissToast} onExitComplete={removeToast} onPause={pauseToast} onResume={resumeToast} />
       {renderAlert()}
       {renderSheet()}
     </PresentationContext.Provider>

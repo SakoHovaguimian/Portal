@@ -145,6 +145,13 @@ export const blueprintTheme = {
     hoverScale: 1,
     enterScale: 1,
     pressScale: 1,
+    overlays: {
+      modal: { duration: 160, exitDuration: 80, scale: 1, travel: 4 },
+      alert: { duration: 160, exitDuration: 80, scale: 1, travel: 4 },
+      sheet: { duration: 220, exitDuration: 120, scale: 1, travel: 16 },
+      menu: { duration: 200, exitDuration: 100, scale: 1, travel: 12 },
+      toast: { duration: 260, exitDuration: 120, scale: 1, travel: 16 },
+    },
   },
   selection: {
     light: {

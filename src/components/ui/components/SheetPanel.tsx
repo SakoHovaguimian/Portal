@@ -4,11 +4,12 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { useRef, type CSSProperties } from 'react';
 
 import { cn } from '../lib/cn';
+import { useSheetDrag } from '../lib/useSheetDrag';
 import type { SheetPanelProps } from '../models/sheetPanelProps';
 import type { SheetSide } from '../models/sheetSide';
 import type { SheetSize } from '../models/sheetSize';
 import type { SheetTone } from '../models/sheetTone';
-import { labels, strings } from '@/strings';
+import { strings } from '@/strings';
 
 import { Button } from './Button';
 
@@ -24,14 +25,6 @@ const toneClasses: Record<SheetTone, string> = {
   success: 'border-success-secondary/70',
   warning: 'border-warning-secondary/70',
   danger: 'border-error-secondary/70',
-};
-
-const accentClasses: Record<SheetTone, string> = {
-  neutral: 'bg-secondary_subtle text-primary',
-  info: 'bg-brand-primary/20 text-brand-secondary',
-  success: 'bg-success-secondary/25 text-success-primary',
-  warning: 'bg-warning-secondary/35 text-warning-primary',
-  danger: 'bg-error-secondary/25 text-error-primary',
 };
 
 const sideClasses: Record<SheetSide, string> = {
@@ -74,10 +67,12 @@ export function SheetPanel({
   content,
   motionEnabled = true,
   motionDurationMs,
+  motionExitDurationMs,
   motionStyle,
   onExitComplete,
 }: SheetPanelProps) {
 
+  const { panelRef, handleProps } = useSheetDrag(open, onCancel);
   const returnFocusRef = useRef<HTMLElement | null>(null);
 
   function renderContent() {
@@ -86,15 +81,6 @@ export function SheetPanel({
 
       return (
         <div className="flex items-start gap-4">
-          <div
-            className={cn(
-              'inline-flex items-center gap-2 rounded-chip px-3 py-1 text-xs font-semibold tracking-[0.16em]',
-              accentClasses[tone],
-            )}
-          >
-            <span className="h-2 w-2 rounded-full bg-current opacity-70" />
-            {labels.sides[side]}
-          </div>
           <div className="min-w-0 flex-1">
             <Dialog.Title className="font-display text-2xl font-semibold tracking-tight text-primary">
               {title}
@@ -152,6 +138,11 @@ export function SheetPanel({
 
     return (
       <div className="flex h-full w-full flex-col gap-5 p-6">
+        {side === 'bottom' && (
+          <Button variant="ghost" className="ui-sheet-handle -my-3 w-full shrink-0 self-center" aria-label={strings.ui.sheetPanel.dismissSheet} {...handleProps}>
+            <span aria-hidden="true" className="h-1 w-10 rounded-full bg-text-tertiary" />
+          </Button>
+        )}
         {renderHeader()}
 
         {renderDetails()}
@@ -181,15 +172,17 @@ export function SheetPanel({
             motionEnabled
               ? ({
                 ...motionStyle,
+                ...(motionExitDurationMs === undefined ? {} : { '--ui-overlay-exit-duration': `${motionExitDurationMs}ms` }),
                 '--ui-overlay-duration':
                     motionDurationMs === undefined
-                      ? 'var(--presentation-sheet-duration, clamp(320ms, calc(var(--motion-duration-enter) * 1.5), 420ms))'
+                      ? 'var(--presentation-sheet-duration, var(--motion-sheet-duration))'
                       : `${motionDurationMs}ms`,
               } as CSSProperties)
               : undefined
           }
         />
         <Dialog.Content
+          ref={panelRef}
           onAnimationEnd={(event) => {
 
             if (event.target === event.currentTarget && event.animationName === 'ui-sheet-exit') { onExitComplete?.(); }
@@ -197,6 +190,7 @@ export function SheetPanel({
           }}
           data-ui-presentation-layer="true"
           data-side={side}
+          data-motion-target="sheet"
           data-motion={motionEnabled ? undefined : 'off'}
           {...(!description ? { 'aria-describedby': undefined } : {})}
           onOpenAutoFocus={() => {
@@ -225,9 +219,10 @@ export function SheetPanel({
             motionEnabled
               ? ({
                 ...motionStyle,
+                ...(motionExitDurationMs === undefined ? {} : { '--ui-overlay-exit-duration': `${motionExitDurationMs}ms` }),
                 '--ui-overlay-duration':
                     motionDurationMs === undefined
-                      ? 'var(--presentation-sheet-duration, clamp(320ms, calc(var(--motion-duration-enter) * 1.5), 420ms))'
+                      ? 'var(--presentation-sheet-duration, var(--motion-sheet-duration))'
                       : `${motionDurationMs}ms`,
               } as CSSProperties)
               : undefined

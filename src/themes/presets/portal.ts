@@ -146,6 +146,13 @@ export const portalTheme = {
     hoverScale: 1.02,
     enterScale: 0.99,
     pressScale: 0.985,
+    overlays: {
+      modal: { duration: 260, exitDuration: 160, scale: 0.98, travel: 12 },
+      alert: { duration: 280, exitDuration: 160, scale: 0.98, travel: 16 },
+      sheet: { duration: 340, exitDuration: 200, scale: 1, travel: 32 },
+      menu: { duration: 300, exitDuration: 180, scale: 0.98, travel: 28 },
+      toast: { duration: 380, exitDuration: 180, scale: 1, travel: 24 },
+    },
   },
   selection: {
     light: {

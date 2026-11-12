@@ -6,6 +6,7 @@ import { defaultAppearancePreference } from '@/models/appearancePreference';
 import { ThemeIdSchema } from '@/models/themeId';
 import { presentationMotionStorageKey, presentationMotionChangeEvent, type PresentationMotionPreferenceService } from '@/services/presentation-motion/presentationMotionPreferenceService';
 import { getTheme } from '@/themes';
+import { resolveThemeOverlayMotion } from '@/themes/resolveThemeOverlayMotion';
 
 import type { MotionTarget } from './models/motionTarget';
 import { PresentationMotionConfigSchema, defaultPresentationMotionConfig, type PresentationMotionConfig } from './models/presentationMotionConfig';
@@ -87,37 +88,76 @@ export function usePresentationMotion(preferenceService: PresentationMotionPrefe
   const defaults = useMemo<ResolvedPresentationMotionConfig>(() => {
 
     const theme = getTheme(themeId);
-    const duration = Math.max(320, Math.min(420, Math.round(theme.motion.enter * 1.5)));
-    return { enabled: true, alertDurationMs: duration, sheetDurationMs: duration, toastDurationMs: duration, scale: Math.round(Math.max(0.88, Math.min(0.96, theme.motion.enterScale - 0.03)) * 100) / 100, travelPx: 20, easing: 'smooth' };
+    const alert = resolveThemeOverlayMotion(theme.motion, 'alert');
+    return {
+      enabled: true,
+      modalDurationMs: resolveThemeOverlayMotion(theme.motion, 'modal').duration,
+      menuDurationMs: resolveThemeOverlayMotion(theme.motion, 'menu').duration,
+      alertDurationMs: alert.duration,
+      sheetDurationMs: resolveThemeOverlayMotion(theme.motion, 'sheet').duration,
+      toastDurationMs: resolveThemeOverlayMotion(theme.motion, 'toast').duration,
+      exitDurationMs: alert.exitDuration,
+      scale: alert.scale, travelPx: alert.travel, easing: 'smooth',
+    };
 
   }, [themeId]);
-  const effectiveMotionConfig = useMemo<ResolvedPresentationMotionConfig>(() => {
+  const overrides = useMemo(() => {
 
-    let merged = { ...defaults, ...motionConfig };
+    let merged = { ...motionConfig };
     for (const preview of previews.values()) { merged = { ...merged, ...preview }; }
-    return { ...merged, enabled: merged.enabled && !reducedMotion };
+    return merged;
 
-  }, [defaults, motionConfig, previews, reducedMotion]);
-  const easingValue = useCallback((easing: ResolvedPresentationMotionConfig['easing']) => {
+  }, [motionConfig, previews]);
+  const effectiveMotionConfig = useMemo<ResolvedPresentationMotionConfig>(() => {
+    return { ...defaults, ...overrides, enabled: overrides.enabled && !reducedMotion };
+  }, [defaults, overrides, reducedMotion]);
+  const resolveMotion = useCallback((target: MotionTarget, override?: PresentationMotionOverride): ResolvedPresentationMotion => {
 
     const theme = getTheme(themeId);
-    return easing === 'spring' ? theme.motion.spring : easing === 'snappy' ? 'cubic-bezier(0.16, 1, 0.3, 1)' : theme.motion.ease;
+    const profile = resolveThemeOverlayMotion(theme.motion, target);
+    const durationMs = Math.max(0, Math.min(1000, override?.durationMs ?? overrides[`${target}DurationMs`] ?? profile.duration));
+    const exitDurationMs = Math.max(0, Math.min(1000, override?.exitDurationMs ?? overrides.exitDurationMs ?? Math.min(durationMs, profile.exitDuration)));
+    const easing = override?.easing ?? overrides.easing;
+    const easingValue = easing === 'spring' ? theme.motion.spring : easing === 'snappy' ? 'cubic-bezier(0.16, 1, 0.3, 1)' : easing === 'smooth' ? theme.motion.ease : profile.easing;
+    const style = {
+      '--ui-overlay-duration': `${durationMs}ms`,
+      '--ui-overlay-exit-duration': `${exitDurationMs}ms`,
+      '--ui-overlay-scale': Math.max(0.88, Math.min(1, override?.scale ?? overrides.scale ?? profile.scale)),
+      '--ui-overlay-travel': `${Math.max(0, Math.min(64, override?.travelPx ?? overrides.travelPx ?? profile.travel))}px`,
+      '--ui-overlay-ease': easingValue,
+    } as CSSProperties;
+    return { enabled: effectiveMotionConfig.enabled && override?.enabled !== false, durationMs, exitDurationMs, style };
 
-  }, [themeId]);
+  }, [themeId, overrides, effectiveMotionConfig.enabled]);
 
   useEffect(() => {
 
     const root = document.documentElement;
-    const config = effectiveMotionConfig;
-    root.style.setProperty('--presentation-alert-duration', `${config.alertDurationMs}ms`);
-    root.style.setProperty('--presentation-sheet-duration', `${config.sheetDurationMs}ms`);
-    root.style.setProperty('--presentation-toast-duration', `${config.toastDurationMs}ms`);
-    root.style.setProperty('--presentation-scale', String(config.scale));
-    root.style.setProperty('--presentation-travel', `${config.travelPx}px`);
-    root.style.setProperty('--presentation-ease', easingValue(config.easing));
-    root.dataset.presentationMotion = config.enabled ? 'on' : 'off';
+    for (const target of ['modal', 'alert', 'sheet', 'menu', 'toast'] as const) {
 
-  }, [effectiveMotionConfig, easingValue]);
+      const resolved = resolveMotion(target);
+      for (const role of ['duration', 'exit-duration', 'scale', 'travel', 'ease']) {
+        root.style.setProperty(`--presentation-${target}-${role}`, String(resolved.style[`--ui-overlay-${role}` as keyof CSSProperties]));
+      }
+
+    }
+    root.dataset.presentationMotion = effectiveMotionConfig.enabled ? 'on' : 'off';
+    const cleanup = () => {
+
+      for (const target of ['modal', 'alert', 'sheet', 'menu', 'toast']) {
+
+        for (const role of ['duration', 'exit-duration', 'scale', 'travel', 'ease']) {
+          root.style.removeProperty(`--presentation-${target}-${role}`);
+        }
+
+      }
+      delete root.dataset.presentationMotion;
+
+    };
+
+    return cleanup;
+
+  }, [effectiveMotionConfig.enabled, resolveMotion]);
 
   const setMotionConfig = useCallback((patch: Partial<PresentationMotionConfig>) => {
 
@@ -166,20 +206,6 @@ export function usePresentationMotion(preferenceService: PresentationMotionPrefe
     return cleanup;
 
   }, []);
-  const resolveMotion = useCallback((target: MotionTarget, override?: PresentationMotionOverride): ResolvedPresentationMotion => {
-
-    const config = effectiveMotionConfig;
-    const duration = target === 'toast' ? config.toastDurationMs : target === 'sheet' ? config.sheetDurationMs : config.alertDurationMs;
-    const durationMs = Math.max(0, Math.min(1000, override?.durationMs ?? duration));
-    const style = {
-      '--ui-overlay-duration': `${durationMs}ms`,
-      '--ui-overlay-scale': Math.max(0.88, Math.min(1, override?.scale ?? config.scale)),
-      '--ui-overlay-travel': `${Math.max(0, Math.min(64, override?.travelPx ?? config.travelPx))}px`,
-      '--ui-overlay-ease': easingValue(override?.easing ?? config.easing),
-    } as CSSProperties;
-    return { enabled: config.enabled && override?.enabled !== false, durationMs, style };
-
-  }, [effectiveMotionConfig, easingValue]);
   const getMotionDefaults = useCallback(() => defaults, [defaults]);
   const getMotionConfig = useCallback(() => motionConfig, [motionConfig]);
   return { motionConfig, effectiveMotionConfig, reducedMotion, getMotionDefaults, getMotionConfig, setMotionConfig, resetMotionConfig, configureMotion, resolveMotion };

@@ -4,6 +4,9 @@ import { PresentationMotionEasingSchema } from './presentationMotionEasing';
 
 export const PresentationMotionConfigSchema = z.object({
   enabled: z.boolean().default(true),
+  modalDurationMs: z.number().min(0).max(1000).optional(),
+  menuDurationMs: z.number().min(0).max(1000).optional(),
+  exitDurationMs: z.number().min(0).max(1000).optional(),
   toastDurationMs: z.number().min(0).max(1000).optional(),
   alertDurationMs: z.number().min(0).max(1000).optional(),
   sheetDurationMs: z.number().min(0).max(1000).optional(),

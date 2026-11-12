@@ -146,6 +146,13 @@ export const atelierTheme = {
     hoverScale: 1,
     enterScale: 1,
     pressScale: 1,
+    overlays: {
+      modal: { duration: 280, exitDuration: 160, scale: 1, travel: 8 },
+      alert: { duration: 280, exitDuration: 160, scale: 1, travel: 8 },
+      sheet: { duration: 340, exitDuration: 180, scale: 1, travel: 24 },
+      menu: { duration: 300, exitDuration: 160, scale: 1, travel: 20 },
+      toast: { duration: 360, exitDuration: 160, scale: 1, travel: 16 },
+    },
   },
   selection: {
     light: {

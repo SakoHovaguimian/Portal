@@ -25,7 +25,7 @@ export function Field({
         'flex min-w-0 text-sm font-medium text-secondary',
         orientation === 'inline'
           ? 'flex-row items-center gap-3 [&>label]:shrink-0 [&>label]:text-tertiary'
-          : 'flex-col gap-1.5',
+          : 'flex-col gap-2',
         className,
       )}
     >

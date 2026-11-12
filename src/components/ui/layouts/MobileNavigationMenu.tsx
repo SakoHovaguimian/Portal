@@ -40,10 +40,11 @@ export function MobileNavigationMenu(props: AppSidebarProps) {
         </IconButton>
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay data-motion-target="sheet" className="ui-backdrop fixed inset-0 z-60 bg-(--dashboard-shell-overlay) lg:hidden" />
+        <Dialog.Overlay data-motion-target="menu" className="ui-backdrop fixed inset-0 z-60 bg-(--dashboard-shell-overlay) lg:hidden" />
         <Dialog.Content
           aria-describedby={undefined}
           data-side="left"
+          data-motion-target="menu"
           className="ui-sheet ui-mobile-navigation fixed inset-0 z-70 h-dvh w-full overflow-y-auto overscroll-y-contain bg-(--dashboard-shell-panel-solid) outline-none lg:hidden"
           onCloseAutoFocus={(event) => {
 

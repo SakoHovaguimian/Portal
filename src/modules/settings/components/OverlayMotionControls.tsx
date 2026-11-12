@@ -26,6 +26,9 @@ export function OverlayMotionControls() {
   const travel = draft.travelPx ?? configuration.travelPx ?? defaults.travelPx;
   const easing = draft.easing ?? configuration.easing ?? defaults.easing;
   const customized = !configuration.enabled || [
+    configuration.modalDurationMs,
+    configuration.menuDurationMs,
+    configuration.exitDurationMs,
     configuration.alertDurationMs,
     configuration.sheetDurationMs,
     configuration.toastDurationMs,
@@ -63,11 +66,14 @@ export function OverlayMotionControls() {
     const pendingPatch: Partial<PresentationMotionConfig> = { ...patch };
     if (draft.durationMs !== undefined) {
 
+      pendingPatch.modalDurationMs ??= draft.durationMs;
+      pendingPatch.menuDurationMs ??= draft.durationMs;
       pendingPatch.alertDurationMs ??= draft.durationMs;
       pendingPatch.sheetDurationMs ??= draft.durationMs;
       pendingPatch.toastDurationMs ??= draft.durationMs;
 
     }
+    if (draft.exitDurationMs !== undefined) { pendingPatch.exitDurationMs ??= draft.exitDurationMs; }
     if (draft.scale !== undefined) { pendingPatch.scale ??= draft.scale; }
     if (draft.travelPx !== undefined) { pendingPatch.travelPx ??= draft.travelPx; }
     if (draft.easing !== undefined) { pendingPatch.easing ??= draft.easing; }
@@ -130,7 +136,21 @@ export function OverlayMotionControls() {
           onValueChange={(value) => {
             setDraft((current) => ({ ...current, durationMs: value }));
           }}
-          onValueCommit={(value) => commit({ alertDurationMs: value, sheetDurationMs: value, toastDurationMs: value })}
+          onValueCommit={(value) => commit({ modalDurationMs: value, menuDurationMs: value, alertDurationMs: value, sheetDurationMs: value, toastDurationMs: value })}
+        />
+        <Slider
+          label={copy.exitDurationLabel}
+          description={copy.exitDurationHint}
+          value={draft.exitDurationMs ?? configuration.exitDurationMs ?? defaults.exitDurationMs}
+          min={0}
+          max={1000}
+          step={10}
+          disabled={pending}
+          formatOptions={{ style: 'unit', unit: 'millisecond', unitDisplay: 'short' }}
+          onValueChange={(value) => {
+            setDraft((current) => ({ ...current, exitDurationMs: value }));
+          }}
+          onValueCommit={(value) => commit({ exitDurationMs: value })}
         />
         <Slider
           label={copy.scaleLabel}

@@ -101,3 +101,39 @@ The Next font variables use `--font-portal-*` on the document root. Theme-owned 
 `ThemeDefinition.radius.avatar` owns avatar corners, including image clipping and group overflow controls. `compileTheme` maps it through the prefixed runtime adapter to `--radius-avatar` / `rounded-avatar`. Every preset supplies this role; Blueprint uses zero, while Cupertino explicitly keeps circular avatars. Presence markers retain their circular semantic shape.
 
 Optional `controls.switchTrackRadius` and `controls.switchThumbRadius` fall back to the theme's control and small radii. The compiler maps them to `--radius-switch-track` and `--radius-switch-thumb` through `theme.css`. Switch frames, checkbox input geometry, thumb, and interaction halo use the same roles. Cupertino supplies explicit pill/circle values. Avoid screen-local theme ID checks or hardcoded rounding.
+
+## Overlay Motion Profiles
+
+`ThemeMotion.overlays` optionally defines `modal`, `alert`, `sheet`, `menu`, and `toast`. Each partial profile accepts `duration` and `exitDuration` in milliseconds, `scale`, `travel` in pixels, and a CSS `easing` value. Every bundled preset supplies all five profiles; no component branches on its theme ID. Older objects omit the extension and derive defaults from their existing `enter`, `fast`, `enterScale`, and `ease` roles through `resolveThemeOverlayMotion`.
+
+For example, a theme can give sheets a longer settle and keep dialog motion compact:
+
+```ts
+motion: {
+  ...base.motion,
+  overlays: {
+    ...base.motion.overlays,
+    modal: { duration: 320, exitDuration: 180, scale: 0.96, travel: 12 },
+    sheet: { duration: 420, exitDuration: 240, scale: 1, travel: 40,
+      easing: 'cubic-bezier(0.16, 1, 0.3, 1)' },
+  },
+},
+```
+
+`compileTheme` emits `--motion-{surface}-{duration/exit-duration/scale/travel/ease}` → `--portal-*` application values → semantic registrations in `theme.css`. Scoped theme previews receive the same unprefixed roles. `usePresentationMotion` resolves the same canonical function for JavaScript duration snapshots and optional `--presentation-{surface}-*` overrides. Generic Modal uses `modal`; AlertModal uses `alert`; SheetPanel uses `sheet`; mobile navigation and authored popovers use `menu`; ToastStack uses `toast`. Tooltips retain the lightweight feedback timings.
+
+Priority: saved/device Reduced Motion → per-request override → scoped preview → saved browser override → individual theme profile → inherited theme fallback. `PresentationMotionConfig` supports separate `modalDurationMs`, `alertDurationMs`, `sheetDurationMs`, `menuDurationMs`, and `toastDurationMs`, plus a shared optional `exitDurationMs`, scale, travel, and easing. Existing saved records remain valid. Appearance’s duration sliders deliberately override all surfaces; **Use Theme Defaults** removes overrides rather than freezing a copy of the current values. The displayed defaults summarize the alert profile.
+
+Shipped entrance/exit timings (ms):
+
+| Theme       | Modal   | Alert   | Sheet   | Menu    | Toast   |
+| ----------- | ------- | ------- | ------- | ------- | ------- |
+| Portal      | 260/160 | 280/160 | 340/200 | 300/180 | 380/180 |
+| Studio      | 320/180 | 320/180 | 400/220 | 360/200 | 420/200 |
+| Atelier     | 280/160 | 280/160 | 340/180 | 300/160 | 360/160 |
+| Blueprint   | 160/80  | 160/80  | 220/120 | 200/100 | 260/120 |
+| Arcade      | 240/120 | 240/120 | 300/160 | 260/140 | 340/160 |
+| Dusk        | 340/180 | 340/180 | 400/220 | 360/200 | 420/200 |
+| macOS / iOS | 320/180 | 320/180 | 420/240 | 380/220 | 440/200 |
+
+Dialog travel is a small displacement. Sheet/menu/toast travel extends their edge runway; their own dimensions supply the offscreen starting position. Authored popovers use a quarter of the menu travel with its scale/easing and actual trigger origin. List reflow uses the shared theme entrance role on wrappers, independently of toast arrival. Bottom-sheet settling resolves its own entrance duration/easing. A duration of zero is supported, and reduced motion suppresses existing JavaScript movement as well as subsequent transitions.

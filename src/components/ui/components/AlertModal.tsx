@@ -52,6 +52,7 @@ export function AlertModal({
   details,
   motionEnabled = true,
   motionDurationMs,
+  motionExitDurationMs,
   motionStyle,
   onExitComplete,
   restoreFocusRef,
@@ -136,6 +137,7 @@ export function AlertModal({
       <Dialog.Portal>
         <Dialog.Overlay
           data-ui-presentation-layer="true"
+          data-motion-target="alert"
           data-motion={motionEnabled ? undefined : 'off'}
           className={cn(
             'ui-backdrop fixed inset-0 z-80 bg-(--dashboard-shell-overlay) backdrop-blur-sm',
@@ -144,9 +146,10 @@ export function AlertModal({
             motionEnabled
               ? ({
                 ...motionStyle,
+                ...(motionExitDurationMs === undefined ? {} : { '--ui-overlay-exit-duration': `${motionExitDurationMs}ms` }),
                 '--ui-overlay-duration':
                     motionDurationMs === undefined
-                      ? 'var(--presentation-alert-duration, clamp(320ms, calc(var(--motion-duration-enter) * 1.5), 420ms))'
+                      ? 'var(--presentation-alert-duration, var(--motion-alert-duration))'
                       : `${motionDurationMs}ms`,
               } as CSSProperties)
               : undefined
@@ -159,6 +162,7 @@ export function AlertModal({
 
           }}
           data-ui-presentation-layer="true"
+          data-motion-target="alert"
           role="alertdialog"
           data-alignment={alignment}
           data-motion={motionEnabled ? undefined : 'off'}
@@ -199,9 +203,10 @@ export function AlertModal({
             motionEnabled
               ? ({
                 ...motionStyle,
+                ...(motionExitDurationMs === undefined ? {} : { '--ui-overlay-exit-duration': `${motionExitDurationMs}ms` }),
                 '--ui-overlay-duration':
                     motionDurationMs === undefined
-                      ? 'var(--presentation-alert-duration, clamp(320ms, calc(var(--motion-duration-enter) * 1.5), 420ms))'
+                      ? 'var(--presentation-alert-duration, var(--motion-alert-duration))'
                       : `${motionDurationMs}ms`,
               } as CSSProperties)
               : undefined

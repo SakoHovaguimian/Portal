@@ -1,6 +1,8 @@
 import type { ReactNode, RefObject } from 'react';
 
-export interface ModalProps {
+import type { OverlayMotionProps } from './overlayMotionProps';
+
+export interface ModalProps extends OverlayMotionProps {
   open: boolean;
   title: string;
   description?: string;

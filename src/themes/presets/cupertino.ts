@@ -145,6 +145,13 @@ export const cupertinoTheme = {
     hoverScale: 1.01,
     enterScale: 0.99,
     pressScale: 0.985,
+    overlays: {
+      modal: { duration: 320, exitDuration: 180, scale: 0.96, travel: 12, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' },
+      alert: { duration: 320, exitDuration: 180, scale: 0.96, travel: 12, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' },
+      sheet: { duration: 420, exitDuration: 240, scale: 1, travel: 40, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' },
+      menu: { duration: 380, exitDuration: 220, scale: 0.98, travel: 32, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' },
+      toast: { duration: 440, exitDuration: 200, scale: 1, travel: 24, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' },
+    },
   },
   controls: {
     trackRadius: '9999px',

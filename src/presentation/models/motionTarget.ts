@@ -1,1 +1,3 @@
-export type MotionTarget = 'toast' | 'alert' | 'sheet';
+import type { ThemeOverlayTarget } from '@/themes/models/themeOverlayTarget';
+
+export type MotionTarget = ThemeOverlayTarget;

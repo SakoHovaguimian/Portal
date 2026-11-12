@@ -147,6 +147,13 @@ export const duskTheme = {
     hoverScale: 1.01,
     enterScale: 0.985,
     pressScale: 0.985,
+    overlays: {
+      modal: { duration: 340, exitDuration: 180, scale: 0.98, travel: 12 },
+      alert: { duration: 340, exitDuration: 180, scale: 0.98, travel: 12 },
+      sheet: { duration: 400, exitDuration: 220, scale: 1, travel: 32 },
+      menu: { duration: 360, exitDuration: 200, scale: 0.98, travel: 28 },
+      toast: { duration: 420, exitDuration: 200, scale: 1, travel: 24 },
+    },
   },
   selection: {
     light: {

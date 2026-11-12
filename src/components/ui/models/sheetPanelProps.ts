@@ -1,10 +1,12 @@
-import type { CSSProperties, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 import type { SheetSide } from './sheetSide';
 import type { SheetSize } from './sheetSize';
 import type { SheetTone } from './sheetTone';
 
-export interface SheetPanelProps {
+import type { OverlayMotionProps } from './overlayMotionProps';
+
+export interface SheetPanelProps extends OverlayMotionProps {
   open: boolean;
   title: string;
   description?: string;
@@ -17,8 +19,5 @@ export interface SheetPanelProps {
   onConfirm: () => void;
   details?: ReactNode;
   content?: ReactNode;
-  motionEnabled?: boolean;
-  motionDurationMs?: number;
-  motionStyle?: CSSProperties;
   onExitComplete?: () => void;
 }

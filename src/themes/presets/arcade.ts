@@ -145,6 +145,13 @@ export const arcadeTheme = {
     hoverScale: 1.03,
     enterScale: 0.97,
     pressScale: 0.96,
+    overlays: {
+      modal: { duration: 240, exitDuration: 120, scale: 0.97, travel: 12 },
+      alert: { duration: 240, exitDuration: 120, scale: 0.97, travel: 12 },
+      sheet: { duration: 300, exitDuration: 160, scale: 1, travel: 28 },
+      menu: { duration: 260, exitDuration: 140, scale: 0.98, travel: 24 },
+      toast: { duration: 340, exitDuration: 160, scale: 1, travel: 20 },
+    },
   },
   selection: {
     light: {

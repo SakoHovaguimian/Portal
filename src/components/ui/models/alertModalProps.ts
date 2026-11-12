@@ -1,9 +1,11 @@
-import type { CSSProperties, ReactNode, RefObject } from 'react';
+import type { ReactNode, RefObject } from 'react';
 
 import type { AlertAlignment } from './alertAlignment';
 import type { AlertTone } from './alertTone';
 
-export interface AlertModalProps {
+import type { OverlayMotionProps } from './overlayMotionProps';
+
+export interface AlertModalProps extends OverlayMotionProps {
   open: boolean;
   title: string;
   description: string;
@@ -14,9 +16,6 @@ export interface AlertModalProps {
   onCancel: () => void;
   onConfirm: () => void;
   details?: ReactNode;
-  motionEnabled?: boolean;
-  motionDurationMs?: number;
-  motionStyle?: CSSProperties;
   onExitComplete?: () => void;
   restoreFocusRef?: RefObject<HTMLElement | null>;
 }

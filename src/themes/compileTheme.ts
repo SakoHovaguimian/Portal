@@ -4,6 +4,7 @@ import type { ThemeMode } from '@/models/themeMode';
 
 import type { ThemeCssVariables } from './models/themeCssVariables';
 import type { ThemeDefinition } from './models/themeDefinition';
+import { resolveThemeOverlayMotion } from './resolveThemeOverlayMotion';
 import { semanticAliases, darkSemanticAliases } from './semanticAliases';
 
 export type { ThemeCssVariables } from './models/themeCssVariables';
@@ -260,6 +261,16 @@ export function compileThemeRoles(
     '--selection-hover-opacity': selection.hover,
     '--selection-border-opacity': selection.border,
   };
+  for (const target of ['modal', 'alert', 'sheet', 'menu', 'toast'] as const) {
+
+    const profile = resolveThemeOverlayMotion(motion, target);
+    tokens[`--motion-${target}-duration`] = `${profile.duration}ms`;
+    tokens[`--motion-${target}-exit-duration`] = `${profile.exitDuration}ms`;
+    tokens[`--motion-${target}-scale`] = String(profile.scale);
+    tokens[`--motion-${target}-travel`] = `${profile.travel}px`;
+    tokens[`--motion-${target}-ease`] = profile.easing;
+
+  }
   // Neutral primitive utilities stay in the theme's material family in either mode.
   for (const [shade, amount] of [
     [25, 1],

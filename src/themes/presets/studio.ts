@@ -147,6 +147,13 @@ export const studioTheme = {
     hoverScale: 1.02,
     enterScale: 0.98,
     pressScale: 0.97,
+    overlays: {
+      modal: { duration: 320, exitDuration: 180, scale: 0.97, travel: 16 },
+      alert: { duration: 320, exitDuration: 180, scale: 0.97, travel: 16 },
+      sheet: { duration: 400, exitDuration: 220, scale: 1, travel: 36 },
+      menu: { duration: 360, exitDuration: 200, scale: 0.98, travel: 32 },
+      toast: { duration: 420, exitDuration: 200, scale: 1, travel: 24 },
+    },
   },
   selection: {
     light: {

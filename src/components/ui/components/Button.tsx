@@ -39,6 +39,9 @@ export function Button({
           return;
 
         }
+        // Safari does not focus clicked native buttons. Normalize this before
+        // an action opens an overlay so its return-focus target is reliable.
+        if (!asChild && !disabled && !loading) { event.currentTarget.focus({ preventScroll: true }); }
         onClickCapture?.(event);
 
       }}
