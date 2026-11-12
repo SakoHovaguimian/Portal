@@ -1,5 +1,12 @@
 # Migration verification
 
+## Remote Sharing — November 12, 2026
+
+- Added `npm run share` with a temporary Cloudflare Quick Tunnel, configurable local port, process-only public origin, and exact Next.js development-origin allowance. Environment files and backend ownership are unchanged.
+- `npm run check` and `DEMO_MODE=true npm run build` passed under Node 22.21.1. Focused ESLint fixes were run twice; `git diff --check` passed. No tests were added.
+- A real Quick Tunnel served the demo login and dashboard in the browser. Demo account sign-in and subsequent authenticated proxy reads/mutations returned 200. Control + C returned exit 0, removed the owned tunnel/Next process tree, and closed the local port. Invalid-port, missing-helper, and occupied-port paths failed without reusing another server.
+- No live Firebase, backend, Socket.IO, Messaging, or analytics integration was exercised. Windows process-tree cleanup and Cloudflare email-code protection were not manually exercised. The preview tunnel was stopped after verification.
+
 ## Portal Standards Migration — November 3, 2026
 
 Completed every module and shared-file gate using four Luna Max workers, exactly three modules per worker, with one module active per worker and coordinator acceptance before advancing. The coordinator handled the remaining two modules and all shared files. The durable contract is [Portal Code Standards](PORTAL_STANDARDS.md), linked from AGENTS and all module/service/query authoring guides. The one-off migration prompt and temporary rollout ledger have been removed.

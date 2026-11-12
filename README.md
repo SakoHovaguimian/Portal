@@ -16,6 +16,8 @@ Open http://localhost:3001. The sample environment sets `DEMO_MODE=true`. Choose
 
 Demo mode includes users, profile updates, feature requests, dashboard counts, conversation-scoped chat, background jobs, resumable onboarding, publishing, uploads, saved content, a notification inbox, and account tools. `/dev-settings` controls populated/loading/empty/error responses, finite latency, account switching, and a full fixture reset. It makes no Firebase, backend, Socket.IO, Messaging, or Amplitude calls. Browser notification opt-in is simulated per account.
 
+To let someone try the local app remotely, install `cloudflared` and run `npm run share`. Control + C stops the tunnel and development server it starts. See [remote sharing and backend port overrides](docs/SHARING.md).
+
 ## Start a new project
 
 Run `npm run initialize -- --help` for guided setup, or preview a preset:
@@ -55,6 +57,7 @@ Authentication uses Firebase REST on the server. Access and refresh tokens live 
 
 ```sh
 npm run dev
+npm run share
 npm run check
 DEMO_MODE=true npm run build
 DEMO_MODE=true npm start

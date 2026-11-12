@@ -1,3 +1,22 @@
+// @preserve-case: Developer CLI copy, command syntax, and named interpolation templates.
+export const shareCommandCopy = {
+  helpBody: 'Usage: npm run share -- [--port 3001] [--help]\nStarts Portal and a temporary Cloudflare tunnel. Control + C stops both.\nSHARE_PORT changes the local port. SHARE_ALLOWED_EMAILS restricts visitors to comma-separated emails.\nInstall cloudflared first: brew install cloudflared\nUses the usual development .env files; PORTAL_APP_ORIGIN is set for this process only.',
+  startingBody: 'Starting a temporary Cloudflare link…',
+  readyBody: 'Portal is ready: {url}\nLocal port: {port}. Keep this terminal and computer running. Press Control + C to stop sharing.',
+  publicBody: 'Anyone with this link can reach the app. Use demo data for previews, or set SHARE_ALLOWED_EMAILS to require an email code.',
+  protectedBody: 'Visitors must verify an allowed email address before accessing this link.',
+  stoppingBody: 'Stopping the tunnel and the development server…',
+  optionsHint: 'Use npm run share -- --port 3001 or npm run share -- --help.',
+  invalidPortHint: 'Choose a port between 1 and 65535.',
+  installHint: 'Install cloudflared first: brew install cloudflared. Alternatively, set CLOUDFLARED_PATH to its executable.',
+  portHint: 'Port {port} is unavailable. Stop the existing server or choose another port; sharing will not reuse it.',
+  childHint: 'Could not start {name}. Check its installation and local configuration.',
+  exitHint: '{name} stopped unexpectedly ({code}). Stopping the remaining sharing processes.',
+  tunnelHint: 'Cloudflare did not connect within 90 seconds. Check your internet connection and cloudflared version, then retry.',
+  serverHint: 'The app did not become ready within 120 seconds. Check the server output above, then retry.',
+  unexpectedHint: 'Sharing could not start. Check the local configuration and retry.',
+};
+
 // PROJECT_IDENTITY_START
 export const portalProjectStrings = {
   name: 'Portal',
