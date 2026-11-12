@@ -1,159 +1,254 @@
 import { spawn } from 'node:child_process';
-import { createServer } from 'node:net';
 import { setTimeout as delay } from 'node:timers/promises';
 
 export class ShareProcesses {
 
-  children = [];
-  controller = new AbortController();
-  stopping = false;
+  childProcesses = [];
+  cancellationController = new AbortController();
+  isStopping = false;
 
   constructor() {
 
-    this.onSignal = () => this.controller.abort(new Error('interrupted'));
-    process.on('SIGINT', this.onSignal);
-    process.on('SIGTERM', this.onSignal);
+    this.handleShutdownSignal = () => this.cancellationController.abort(new Error('interrupted'));
+
+    process.on('SIGINT', this.handleShutdownSignal);
+    process.on('SIGTERM', this.handleShutdownSignal);
 
   }
 
-  get signal() {
-    return this.controller.signal;
+  // **************************************
+  // MARK: - GET SHUTDOWN SIGNAL
+  // **************************************
+
+  get shutdownSignal() {
+    return this.cancellationController.signal;
   }
 
-  start(name, command, args, env, capture = false) {
+  // **************************************
+  // MARK: - START PROCESS
+  // **************************************
 
-    this.signal.throwIfAborted();
-    const child = spawn(command, args, {
-      env,
+  startProcess(processName, executablePath, processArguments, processEnvironment, captureOutput = false) {
+
+    this.shutdownSignal.throwIfAborted();
+
+    const childProcess = spawn(executablePath, processArguments, {
+      env: processEnvironment,
       detached: process.platform !== 'win32',
-      stdio: capture ? ['ignore', 'pipe', 'pipe'] : 'inherit',
+      stdio: captureOutput ? ['ignore', 'pipe', 'pipe'] : 'inherit',
       windowsHide: true,
     });
-    this.children.push(child);
-    child.on('error', () => this.controller.abort(new Error('childHint', { cause: { name } })));
-    child.on('exit', (code, signal) => {
 
-      if (!this.stopping) {
-        this.controller.abort(new Error('exitHint', { cause: { name, code: code ?? signal } }));
+    this.childProcesses.push(childProcess);
+    this.observeProcessLifecycle(childProcess, processName);
+
+    return childProcess;
+
+  }
+
+  // **************************************
+  // MARK: - OBSERVE PROCESS LIFECYCLE
+  // **************************************
+
+  observeProcessLifecycle(childProcess, processName) {
+
+    childProcess.on('error', () => {
+      this.cancellationController.abort(new Error('childHint', { cause: { name: processName } }));
+    });
+
+    childProcess.on('exit', (exitCode, exitSignal) => {
+
+      if (!this.isStopping) {
+
+        this.cancellationController.abort(new Error('exitHint', {
+          cause: { name: processName, code: exitCode ?? exitSignal },
+        }));
+
       }
 
     });
-    return child;
 
   }
 
-  async waitFor(predicate, timeout, errorKey) {
+  // **************************************
+  // MARK: - WAIT UNTIL READY
+  // **************************************
 
-    const deadline = Date.now() + timeout;
-    while (!await predicate()) {
+  async waitUntilReady(isReady, timeoutMilliseconds, errorKey) {
 
-      this.signal.throwIfAborted();
-      if (Date.now() >= deadline) { throw new Error(errorKey); }
-      await delay(250, undefined, { signal: this.signal });
+    const deadlineAt = Date.now() + timeoutMilliseconds;
+
+    while (!await isReady()) {
+
+      this.shutdownSignal.throwIfAborted();
+
+      if (Date.now() >= deadlineAt) {
+        throw new Error(errorKey);
+      }
+
+      await delay(250, undefined, { signal: this.shutdownSignal });
 
     }
-    this.signal.throwIfAborted();
+
+    this.shutdownSignal.throwIfAborted();
 
   }
 
-  async waitForStop() {
+  // **************************************
+  // MARK: - WAIT FOR SHUTDOWN
+  // **************************************
 
-    this.signal.throwIfAborted();
-    const stopped = new Promise((resolve) => this.signal.addEventListener('abort', resolve, { once: true }));
-    await stopped;
-    this.signal.throwIfAborted();
+  async waitForShutdown() {
+
+    this.shutdownSignal.throwIfAborted();
+
+    const shutdownPromise = new Promise((resolve) => {
+      this.shutdownSignal.addEventListener('abort', resolve, { once: true });
+    });
+
+    await shutdownPromise;
+    this.shutdownSignal.throwIfAborted();
 
   }
 
-  async stop() {
+  // **************************************
+  // MARK: - STOP PROCESSES
+  // **************************************
 
-    this.stopping = true;
-    // Each child owns a separate process group, including npm/watch descendants.
+  async stopProcesses() {
+
+    this.isStopping = true;
+
     if (process.platform === 'win32') {
+      await this.stopWindowsProcessTrees();
+    } else {
+      await this.stopPosixProcessGroups();
+    }
 
-      const tasks = this.children.filter((child) => child.pid).map((child) => {
+    process.off('SIGINT', this.handleShutdownSignal);
+    process.off('SIGTERM', this.handleShutdownSignal);
 
-        const stopped = new Promise((resolve) => {
+  }
 
-          const killer = spawn('taskkill', ['/PID', String(child.pid), '/T', '/F'], { stdio: 'ignore' });
-          killer.once('exit', resolve);
-          killer.once('error', resolve);
+  // **************************************
+  // MARK: - STOP WINDOWS PROCESS TREES
+  // **************************************
 
-        });
+  async stopWindowsProcessTrees() {
 
-        return stopped;
+    const spawnedProcesses = this.childProcesses.filter((childProcess) => childProcess.pid);
+    const shutdownPromises = spawnedProcesses.map((childProcess) => this.stopWindowsProcessTree(childProcess));
 
+    await Promise.all(shutdownPromises);
+
+  }
+
+  // **************************************
+  // MARK: - STOP WINDOWS PROCESS TREE
+  // **************************************
+
+  stopWindowsProcessTree(childProcess) {
+
+    const shutdownPromise = new Promise((resolve) => {
+
+      const taskkillProcess = spawn('taskkill', ['/PID', String(childProcess.pid), '/T', '/F'], {
+        stdio: 'ignore',
       });
 
-      await Promise.all(tasks);
+      taskkillProcess.once('exit', resolve);
+      taskkillProcess.once('error', resolve);
 
-    } else {
+    });
 
-      for (const child of this.children) { this.signalGroup(child, 'SIGTERM'); }
-      const deadline = Date.now() + 15000;
-      while (this.children.some((child) => this.groupExists(child)) && Date.now() < deadline) {
-        await delay(100);
-      }
-      for (const child of this.children) { this.signalGroup(child, 'SIGKILL'); }
-
-    }
-    process.off('SIGINT', this.onSignal);
-    process.off('SIGTERM', this.onSignal);
+    return shutdownPromise;
 
   }
 
-  groupExists(child) {
+  // **************************************
+  // MARK: - STOP POSIX PROCESS GROUPS
+  // **************************************
 
-    if (!child.pid) { return false; }
+  async stopPosixProcessGroups() {
+
+    // Each child owns a separate process group, including npm/watch descendants.
+    for (const childProcess of this.childProcesses) {
+      this.signalProcessGroup(childProcess, 'SIGTERM');
+    }
+
+    await this.waitForProcessGroupsToExit();
+
+    for (const childProcess of this.childProcesses) {
+      this.signalProcessGroup(childProcess, 'SIGKILL');
+    }
+
+  }
+
+  // **************************************
+  // MARK: - WAIT FOR PROCESS GROUPS TO EXIT
+  // **************************************
+
+  async waitForProcessGroupsToExit() {
+
+    const deadlineAt = Date.now() + 15_000;
+
+    while (this.hasRunningProcessGroups() && Date.now() < deadlineAt) {
+      await delay(100);
+    }
+
+  }
+
+  // **************************************
+  // MARK: - CHECK RUNNING PROCESS GROUPS
+  // **************************************
+
+  hasRunningProcessGroups() {
+
+    const hasRunningGroups = this.childProcesses.some((childProcess) => this.isProcessGroupRunning(childProcess));
+    return hasRunningGroups;
+
+  }
+
+  // **************************************
+  // MARK: - CHECK PROCESS GROUP RUNNING
+  // **************************************
+
+  isProcessGroupRunning(childProcess) {
+
+    if (!childProcess.pid) {
+      return false;
+    }
+
     try {
 
-      process.kill(-child.pid, 0);
+      process.kill(-childProcess.pid, 0);
       return true;
 
-    } catch { return false; }
-
-  }
-
-  signalGroup(child, signal) {
-
-    if (!child.pid) { return; }
-    try { process.kill(-child.pid, signal); } catch (error) {
-
-      if (error.code !== 'ESRCH') { throw error; }
-
+    } catch {
+      return false;
     }
 
   }
 
-}
+  // **************************************
+  // MARK: - SIGNAL PROCESS GROUP
+  // **************************************
 
-export async function assertPortAvailable(port) {
+  signalProcessGroup(childProcess, shutdownSignal) {
 
-  const available = new Promise((resolve, reject) => {
-
-    const server = createServer();
-    server.once('error', () => reject(new Error('portHint', { cause: { port } })));
-    server.listen(port, '127.0.0.1', () => server.close(resolve));
-
-  });
-
-  await available;
-
-}
-
-export async function waitForServer(processes, url) {
-
-  await processes.waitFor(async () => {
+    if (!childProcess.pid) {
+      return;
+    }
 
     try {
+      process.kill(-childProcess.pid, shutdownSignal);
+    } catch (signalError) {
 
-      const signal = AbortSignal.any([processes.signal, AbortSignal.timeout(2000)]);
-      const response = await fetch(url, { signal, redirect: 'manual' });
-      await response.body?.cancel();
-      return response.status >= 200 && response.status < 400;
+      if (signalError.code !== 'ESRCH') {
+        throw signalError;
+      }
 
-    } catch { return false; }
+    }
 
-  }, 120000, 'serverHint');
+  }
 
 }

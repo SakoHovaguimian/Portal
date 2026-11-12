@@ -1,41 +1,109 @@
 import { spawnSync } from 'node:child_process';
 import { devNull } from 'node:os';
 
-export function cloudflareEnvironment() {
+// **************************************
+// MARK: - CREATE CLOUDFLARE ENVIRONMENT
+// **************************************
+
+export function createCloudflareEnvironment() {
 
   // Quick Tunnels must not inherit an existing named tunnel or its token.
-  const env = Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith('TUNNEL_')));
-  return env;
+  const cloudflareEnvironment = Object.fromEntries(
+    Object.entries(process.env).filter(([variableName]) => !variableName.startsWith('TUNNEL_')),
+  );
+
+  return cloudflareEnvironment;
 
 }
 
-export function requireCloudflared(env) {
+// **************************************
+// MARK: - REQUIRE CLOUDFLARED EXECUTABLE
+// **************************************
 
-  const command = env.CLOUDFLARED_PATH || 'cloudflared';
-  const result = spawnSync(command, ['--version'], { env, stdio: 'ignore', timeout: 5000 });
-  if (result.error || result.status !== 0) { throw new Error('installHint'); }
-  return command;
+export function requireCloudflaredExecutable(cloudflareEnvironment) {
+
+  const cloudflaredExecutable = cloudflareEnvironment.CLOUDFLARED_PATH || 'cloudflared';
+  const versionCheckResult = spawnSync(cloudflaredExecutable, ['--version'], {
+    env: cloudflareEnvironment,
+    stdio: 'ignore',
+    timeout: 5000,
+  });
+
+  if (versionCheckResult.error || versionCheckResult.status !== 0) {
+    throw new Error('installHint');
+  }
+
+  return cloudflaredExecutable;
 
 }
 
-export async function startTunnel(processes, command, env, port) {
+// **************************************
+// MARK: - BUILD TUNNEL ARGUMENTS
+// **************************************
 
-  const args = ['tunnel', '--config', devNull, '--no-autoupdate', '--url', `http://127.0.0.1:${port}`, '--protocol', 'http2'];
-  if (env.SHARE_ALLOWED_EMAILS?.trim()) { args.push('--allowed-mail', env.SHARE_ALLOWED_EMAILS.trim()); }
-  const child = processes.start('cloudflared', command, args, env, true);
-  let output = '';
-  let publicUrl;
-  let connected = false;
-  const consume = (chunk) => {
+function buildTunnelArguments(cloudflareEnvironment, localPort) {
 
-    output = (output + chunk.toString()).slice(-32000);
-    publicUrl ||= output.match(/https:\/\/[a-z0-9-]+\.trycloudflare\.com\b/)?.[0];
-    connected ||= output.includes('Registered tunnel connection');
+  const tunnelArguments = [
+    'tunnel',
+    '--config', devNull,
+    '--no-autoupdate',
+    '--url', `http://127.0.0.1:${localPort}`,
+    '--protocol', 'http2',
+  ];
+  const allowedEmails = cloudflareEnvironment.SHARE_ALLOWED_EMAILS?.trim();
+
+  if (allowedEmails) {
+    tunnelArguments.push('--allowed-mail', allowedEmails);
+  }
+
+  return tunnelArguments;
+
+}
+
+// **************************************
+// MARK: - OBSERVE TUNNEL CONNECTION
+// **************************************
+
+function observeTunnelConnection(tunnelProcess) {
+
+  const tunnelConnection = { outputBuffer: '', publicUrl: undefined, isConnected: false };
+  const handleTunnelOutput = (outputChunk) => {
+
+    tunnelConnection.outputBuffer = (tunnelConnection.outputBuffer + outputChunk.toString()).slice(-32_000);
+    tunnelConnection.publicUrl ||= tunnelConnection.outputBuffer.match(/https:\/\/[a-z0-9-]+\.trycloudflare\.com\b/)?.[0];
+    tunnelConnection.isConnected ||= tunnelConnection.outputBuffer.includes('Registered tunnel connection');
 
   };
-  child.stdout.on('data', consume);
-  child.stderr.on('data', consume);
-  await processes.waitFor(() => publicUrl && connected, 90000, 'tunnelHint');
-  return publicUrl;
+
+  tunnelProcess.stdout.on('data', handleTunnelOutput);
+  tunnelProcess.stderr.on('data', handleTunnelOutput);
+
+  return tunnelConnection;
+
+}
+
+// **************************************
+// MARK: - START TUNNEL
+// **************************************
+
+export async function startTunnel(shareProcesses, cloudflaredExecutable, cloudflareEnvironment, localPort) {
+
+  const tunnelArguments = buildTunnelArguments(cloudflareEnvironment, localPort);
+  const tunnelProcess = shareProcesses.startProcess(
+    'cloudflared',
+    cloudflaredExecutable,
+    tunnelArguments,
+    cloudflareEnvironment,
+    true,
+  );
+  const tunnelConnection = observeTunnelConnection(tunnelProcess);
+
+  await shareProcesses.waitUntilReady(
+    () => tunnelConnection.publicUrl && tunnelConnection.isConnected,
+    90_000,
+    'tunnelHint',
+  );
+
+  return tunnelConnection.publicUrl;
 
 }
