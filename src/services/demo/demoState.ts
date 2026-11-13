@@ -59,19 +59,10 @@ export function getDemoState(): DemoState {
       credentials: new Map(
         users.map((user) => [
           user.external_id,
-          passwordRecord(strings.ui.demoState.password123),
+          passwordRecord(strings.ui.demoState.password123Data),
         ]),
       ),
       refreshTokens: new Map(),
-      messages: projectConfiguration.starterData === 'empty' ? [] : [
-        {
-          id: '77777777-7777-4777-8777-777777777777',
-          userId: users[0].id,
-          author: strings.chat.author,
-          message: strings.chat.seed,
-          createdAt: new Date().toISOString(),
-        },
-      ],
     };
 
   }
@@ -97,6 +88,5 @@ registerDemoAccountReset('core', (userId) => {
   state.featureRequests = state.featureRequests.filter(
     (item) => item.user_id !== userId,
   );
-  state.messages = state.messages.filter((item) => item.userId !== userId);
 
 });

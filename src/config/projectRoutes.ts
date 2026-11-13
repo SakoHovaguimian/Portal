@@ -3,70 +3,30 @@ import type { Route } from 'next';
 import type { UserRole } from '@/models/userRole';
 import { canManageContent } from '@/services/auth/permissions';
 
-import type { ProjectConfiguration } from './models/projectConfiguration';
-import { portalModules } from './portalModules';
-import { projectConfiguration } from './projectConfiguration';
+import type { ProjectNavigationItem } from './models/projectNavigationItem';
+import type { ProjectRouting } from './models/projectRouting';
 
-export const projectNavigationRoutes = {
-  dashboard: '/dashboard',
-  users: '/users',
-  featureRequests: '/feature-requests',
-  chat: '/chat',
-  backgroundJobs: '/jobs',
-  publishing: '/blog',
-  notifications: '/notifications',
-  saved: '/saved',
-  profile: '/profile',
-  appearance: '/settings/appearance',
-  account: '/settings/account',
-  help: '/help',
-} as const;
+function matchesPrefix(pathname: string, prefix: string) {
+  return pathname === prefix || pathname.startsWith(`${prefix}/`);
+}
 
-const capabilities: Partial<Record<
-  ProjectConfiguration['navigation'][number],
-  keyof ProjectConfiguration['modules']
->> = {
-  dashboard: 'dashboard',
-  users: 'users',
-  featureRequests: 'featureRequests',
-  chat: 'chat',
-  backgroundJobs: 'backgroundJobs',
-  publishing: 'publishing',
-  notifications: 'notifications',
-  saved: 'engagement',
-  account: 'accountTools',
-  help: 'accountTools',
-};
+export function getProjectDestinationHref(item: ProjectNavigationItem, role?: UserRole) {
+  return item.staffHref && role && canManageContent(role) ? item.staffHref : item.href;
+}
 
-export function isProjectDestinationEnabled(
-  destination: ProjectConfiguration['navigation'][number],
-) {
+export function getDefaultProjectRoute(routing: ProjectRouting, role?: UserRole): Route {
 
-  const capability = capabilities[destination];
-  return !capability || portalModules[capability];
+  const destination = routing.navigation[0];
+  return destination ? getProjectDestinationHref(destination, role) : '/profile';
 
 }
 
-export function getDefaultProjectRoute(role?: UserRole): Route {
+export function isProjectRedirectAllowed(routing: ProjectRouting, pathname: string) {
 
-  const destination = projectConfiguration.navigation.find(
-    isProjectDestinationEnabled,
-  );
-  if (destination === 'publishing' && role && canManageContent(role)) { return '/admin/blog'; }
-  return destination ? projectNavigationRoutes[destination] : '/profile';
+  const allowed = !routing.disabledPaths.includes(pathname) &&
+    !routing.disabledPrefixes.some((prefix) => matchesPrefix(pathname, prefix)) &&
+    routing.redirectPrefixes.some((prefix) => matchesPrefix(pathname, prefix));
 
-}
-
-export function isProjectPathEnabled(pathname: string) {
-
-  const destination = Object.entries(projectNavigationRoutes).find(
-    ([, route]) => pathname === route || pathname.startsWith(`${route}/`),
-  )?.[0] as ProjectConfiguration['navigation'][number] | undefined;
-  if (destination && !isProjectDestinationEnabled(destination)) { return false; }
-  if (pathname.startsWith('/admin/blog') && !portalModules.publishing) { return false; }
-  if (pathname === '/onboarding' && !portalModules.onboarding) { return false; }
-  if (pathname === '/settings/notifications' && !portalModules.notifications) { return false; }
-  if (['/settings/devices', '/settings/delivery-history'].includes(pathname) && !portalModules.accountTools) { return false; }
-  return true;
+  return allowed;
 
 }

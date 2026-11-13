@@ -77,7 +77,7 @@ export class SessionService {
         }
         : session,
     );
-    if (Buffer.byteLength(token) > 3800) { throw new AuthError(strings.auth.sessionTooLarge, 500); }
+    if (Buffer.byteLength(token) > 3800) { throw new AuthError(strings.auth.sessionTooLargeHint, 500); }
     (await cookies()).set(sessionCookieName, token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

@@ -52,7 +52,7 @@ export function FoundationsShowcase() {
         <div className="grid grid-cols-3 gap-x-2 gap-y-4 sm:grid-cols-5 xl:grid-cols-5 2xl:grid-cols-9">
           {colorSwatches}
         </div>
-        <p className="m-0 text-xs text-tertiary">{copy.accessibleGreen}</p>
+        <p className="m-0 text-xs text-tertiary">{copy.accessibleGreenHint}</p>
       </div>
     );
 

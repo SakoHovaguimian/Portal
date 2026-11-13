@@ -64,7 +64,7 @@ export function usePublicImageUpload({
         setFailure(
           error instanceof DomainError
             ? error.message
-            : mediaCopy.imageUploadError,
+            : mediaCopy.imageUploadErrorHint,
         );
 
       }

@@ -91,7 +91,7 @@ export function getDemoChatWorkspace(actor: Pick<UserTransport, 'id' | 'first_na
     email: user.email,
     team: copy.member,
   }));
-  const personas = copy.demo.people.map((person, index) => ({
+  const personas = copy.demoData.people.map((person, index) => ({
     ...person,
     id: `60000000-0000-4000-8000-${String(index + 1).padStart(12, '0')}`,
   }));
@@ -127,24 +127,24 @@ export function getDemoChatWorkspace(actor: Pick<UserTransport, 'id' | 'first_na
   const seeds = [
     {
       kind: 'group' as const,
-      name: copy.demo.launchName,
-      description: copy.demo.launchDescription,
+      name: copy.demoData.launchName,
+      description: copy.demoData.launchDescription,
       people: seedPeople.slice(0, 5),
-      bodies: copy.demo.messages,
+      bodies: copy.demoData.messages,
     },
     {
       kind: 'direct' as const,
       name: seedPeople[1].name,
       description: emptyDescription,
       people: seedPeople.slice(0, 2),
-      bodies: copy.demo.directMessages,
+      bodies: copy.demoData.directMessages,
     },
     {
       kind: 'group' as const,
-      name: copy.demo.designName,
-      description: copy.demo.designDescription,
+      name: copy.demoData.designName,
+      description: copy.demoData.designDescription,
       people: [seedPeople[0], seedPeople[1], seedPeople[3]],
-      bodies: copy.demo.noteMessages,
+      bodies: copy.demoData.noteMessages,
     },
   ];
   for (const [index, seed] of seeds.entries()) {
@@ -176,10 +176,10 @@ export function getDemoChatWorkspace(actor: Pick<UserTransport, 'id' | 'first_na
     if (index === 0) {
 
       const message = messages[0];
-      const bytes = new TextEncoder().encode(copy.demo.fileBody);
+      const bytes = new TextEncoder().encode(copy.demoData.fileBody);
       const attachment = {
         id: randomUUID(),
-        name: copy.demo.fileName,
+        name: copy.demoData.fileName,
         size: bytes.byteLength,
         mimeType: 'text/plain' as const,
       };

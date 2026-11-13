@@ -19,9 +19,9 @@ export const BlogEmbedContentSchema = z
         title: z
           .string()
           .trim()
-          .min(1, copy.invalidHeading)
-          .max(200, copy.invalidHeading),
-        caption: z.string().trim().max(1000, copy.invalidCaption).default(''),
+          .min(1, copy.invalidHeadingHint)
+          .max(200, copy.invalidHeadingHint),
+        caption: z.string().trim().max(1000, copy.invalidCaptionHint).default(''),
       })
       .strict(),
   })

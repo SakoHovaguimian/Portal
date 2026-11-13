@@ -38,7 +38,7 @@ export function DemoSimulationNotice() {
   return (
     <Message
       title={copy.simulationActive}
-      description={failed ? copy.simulationRestoreFailed : copy.simulationDescription(copy.scenarios[current.scenario], delay)}
+      description={failed ? copy.simulationRestoreFailedHint : copy.simulationDescription(copy.scenarios[current.scenario], delay)}
       intent="info"
       action={<Button variant="secondary" loading={mutation.isPending} onClick={() => void restoreSimulation()}>{copy.normalResponses}</Button>}
     />

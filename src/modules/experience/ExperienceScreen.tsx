@@ -21,25 +21,25 @@ const solutions = [
   {
     title: strings.ui.experienceScreen.dashboardFirstSurfaces,
     description:
-      strings.ui.experienceScreen.cardsListsFormsAndSideNavigationAllUseThe,
+      strings.ui.experienceScreen.cardsListsFormsAndSideNavigationAllUseTheHint,
   },
   {
     title: strings.ui.experienceScreen.accentColorAsSupport,
     description:
       strings.ui.experienceScreen
-        .selectedThemeColorsHighlightActiveStatesPillsAndKey,
+        .selectedThemeColorsHighlightActiveStatesPillsAndKeyHint,
   },
   {
     title: strings.ui.experienceScreen.darkModeThatStaysReadable,
     description:
       strings.ui.experienceScreen
-        .theDarkThemeUsesLayeredSlatePanelsAndRestrained,
+        .theDarkThemeUsesLayeredSlatePanelsAndRestrainedHint,
   },
   {
     title: strings.ui.experienceScreen.overlayControlsPreserved,
     description:
       strings.ui.experienceScreen
-        .toastsAlertsAndSheetsStillRunThroughOnePresentation,
+        .toastsAlertsAndSheetsStillRunThroughOnePresentationHint,
   },
 ] as const;
 
@@ -62,80 +62,80 @@ const faqItems = [
   {
     question: strings.ui.experienceScreen.canWeStillLaunchHeroOnly,
     answer:
-      strings.ui.experienceScreen.yesThisShowcaseRouteIsOptionalAndCanStay,
+      strings.ui.experienceScreen.yesThisShowcaseRouteIsOptionalAndCanStayHint,
   },
   {
     question: strings.ui.experienceScreen.canWeKeepAuthOptional,
     answer:
-      strings.ui.experienceScreen.yesTheVisualRestyleDoesNotChangeTheScaffold,
+      strings.ui.experienceScreen.yesTheVisualRestyleDoesNotChangeTheScaffoldHint,
   },
   {
     question: strings.ui.experienceScreen.canTheSelectedAccentStaySubtle,
     answer:
       strings.ui.experienceScreen
-        .yesTheNewSystemDeliberatelyLimitsAccentUsageTo,
+        .yesTheNewSystemDeliberatelyLimitsAccentUsageToHint,
   },
   {
     question: strings.ui.experienceScreen.areTheChartsRealYet,
     answer:
       strings.ui.experienceScreen
-        .theAnalyticsWidgetsInTheRedesignedDashboardUseMock,
+        .theAnalyticsWidgetsInTheRedesignedDashboardUseMockHint,
   },
   {
     question: strings.ui.experienceScreen.doesDarkModeKeepTheSameStructure,
     answer:
-      strings.ui.experienceScreen.yesTheSameCardAndShellHierarchyCarriesThrough,
+      strings.ui.experienceScreen.yesTheSameCardAndShellHierarchyCarriesThroughHint,
   },
   {
     question: strings.ui.experienceScreen.canWeSwapTheThemePerUser,
     answer:
       strings.ui.experienceScreen
-        .yesThemeChoiceLivesInAppearancePreferences,
+        .yesThemeChoiceLivesInAppearancePreferencesHint,
   },
   {
     question: strings.ui.experienceScreen.willFormControlsMatchTheDashboard,
     answer:
-      strings.ui.experienceScreen.yesInputsButtonsTabsAndOverlaysNowInheritThe,
+      strings.ui.experienceScreen.yesInputsButtonsTabsAndOverlaysNowInheritTheHint,
   },
   {
     question: strings.ui.experienceScreen.areTheSideNavigationItemsReusable,
-    answer: strings.ui.experienceScreen.yesTheSidebarIsStillDrivenFromOneShared,
+    answer: strings.ui.experienceScreen.yesTheSidebarIsStillDrivenFromOneSharedHint,
   },
   {
     question: strings.ui.experienceScreen.canWeAddMoreDashboardWidgetsLater,
     answer:
       strings.ui.experienceScreen
-        .yesTheCurrentMockedCardsAreIntentionallyBuiltFrom,
+        .yesTheCurrentMockedCardsAreIntentionallyBuiltFromHint,
   },
   {
     question:
       strings.ui.experienceScreen.willRecordsAndRegistryStayInTheDashboard,
     answer:
       strings.ui.experienceScreen
-        .yesThoseExistingOperationalPanelsRemainInPlaceAnd,
+        .yesThoseExistingOperationalPanelsRemainInPlaceAndHint,
   },
   {
     question: strings.ui.experienceScreen.doOverlayAnimationsStillWork,
     answer:
       strings.ui.experienceScreen
-        .yesAlertToastAndSheetTimingControlsAreUntouched,
+        .yesAlertToastAndSheetTimingControlsAreUntouchedHint,
   },
   {
     question: strings.ui.experienceScreen.canTheFooterBeBrandSpecific,
-    answer: strings.ui.experienceScreen.yesTheFullWidthFooterIsJustContentAnd,
+    answer: strings.ui.experienceScreen.yesTheFullWidthFooterIsJustContentAndHint,
   },
   {
     question: strings.ui.experienceScreen.willTheAuthPagesKeepThisStyle,
-    answer: strings.ui.experienceScreen.yesLoginAndSignupNowUseTheSameFlatter,
+    answer: strings.ui.experienceScreen.yesLoginAndSignupNowUseTheSameFlatterHint,
   },
   {
     question: strings.ui.experienceScreen.canWeTurnSomeSectionsOff,
     answer:
-      strings.ui.experienceScreen.yesTheShowcaseRouteIsModularAndSectionsCan,
+      strings.ui.experienceScreen.yesTheShowcaseRouteIsModularAndSectionsCanHint,
   },
   {
     question: strings.ui.experienceScreen.isThisMeantToReplaceTheOldGlossyLook,
-    answer: strings.ui.experienceScreen.yesTheGoalOfThisPassIsToMove,
+    answer: strings.ui.experienceScreen.yesTheGoalOfThisPassIsToMoveHint,
   },
 ] as const;
 
@@ -289,7 +289,7 @@ export function ExperienceScreen() {
         title: strings.ui.experienceScreen.dashboardSurfacePreset,
         description:
           strings.ui.experienceScreen
-            .primaryCardsMutedPanelsAndFlatterDataRowsStay,
+            .primaryCardsMutedPanelsAndFlatterDataRowsStayHint,
         tone: 'info',
         confirmLabel: strings.ui.experienceScreen.looksGood,
         cancelLabel: strings.ui.experienceScreen.close,
@@ -304,18 +304,18 @@ export function ExperienceScreen() {
         title: strings.ui.experienceScreen.accentUsageGuardrails,
         description:
           strings.ui.experienceScreen
-            .useTheSelectedAccentForActiveStatesChipsAnd,
+            .useTheSelectedAccentForActiveStatesChipsAndHint,
         tone: 'success',
         side: 'right',
         details: (
           <div className="grid gap-1.5">
             <p className="m-0 text-sm text-secondary">
-              {strings.ui.experienceScreen.keepLargeBackgroundsMostlyNeutral}
+              {strings.ui.experienceScreen.keepLargeBackgroundsMostlyNeutralHint}
             </p>
             <p className="m-0 text-sm text-secondary">
               {
                 strings.ui.experienceScreen
-                  .letBrandColorShowUpInNavigationStateTags
+                  .letBrandColorShowUpInNavigationStateTagsHint
               }
             </p>
           </div>
@@ -331,7 +331,7 @@ export function ExperienceScreen() {
         title: strings.ui.experienceScreen.darkModeNotes,
         description:
           strings.ui.experienceScreen
-            .layeredSlateSurfacesReplaceThePreviousGlossyLook,
+            .layeredSlateSurfacesReplaceThePreviousGlossyLookHint,
         tone: 'warning',
         side: 'bottom',
         size: 'lg',
@@ -340,13 +340,13 @@ export function ExperienceScreen() {
             <p className="m-0 text-sm text-secondary">
               {
                 strings.ui.experienceScreen
-                  .cardsStayLiftedThroughBordersAndPanelContrastNot
+                  .cardsStayLiftedThroughBordersAndPanelContrastNotHint
               }
             </p>
             <p className="m-0 text-sm text-secondary">
               {
                 strings.ui.experienceScreen
-                  .textHierarchyStaysConsistentBetweenLightAndDarkThemes
+                  .textHierarchyStaysConsistentBetweenLightAndDarkThemesHint
               }
             </p>
           </div>
@@ -360,7 +360,7 @@ export function ExperienceScreen() {
       title: strings.ui.experienceScreen.presentationStylingUpdated,
       description:
         strings.ui.experienceScreen
-          .toastsAlertsAndSheetsNowInheritTheSameFlatter,
+          .toastsAlertsAndSheetsNowInheritTheSameFlatterHint,
       tone: 'success',
       alignment: 'top',
       confirmLabel: strings.ui.experienceScreen.great,
@@ -542,7 +542,7 @@ export function ExperienceScreen() {
             <p className="mt-5 max-w-3xl text-base leading-7 text-secondary sm:text-lg">
               {
                 strings.ui.experienceScreen
-                  .thisRouteShowsTheNewDirectionAcrossHeroContent
+                  .thisRouteShowsTheNewDirectionAcrossHeroContentHint
               }
             </p>
             <div className="mt-7 flex flex-wrap gap-2">
@@ -666,7 +666,7 @@ export function ExperienceScreen() {
             <p className="text-base leading-7 text-secondary">
               {
                 strings.ui.experienceScreen
-                  .theRestyleKeepsYourAppStructureDataContractsAnd
+                  .theRestyleKeepsYourAppStructureDataContractsAndHint
               }
             </p>
           </div>
@@ -698,11 +698,11 @@ export function ExperienceScreen() {
 
       const workflowSteps = [
         strings.ui.experienceScreen
-          .promptFirstSetupStillDrivesShellAndRouteDecisions,
+          .promptFirstSetupStillDrivesShellAndRouteDecisionsHint,
         strings.ui.experienceScreen
-          .themeChoicePropagatesThroughOneSemanticTokenLayer,
+          .themeChoicePropagatesThroughOneSemanticTokenLayerHint,
         strings.ui.experienceScreen
-          .sharedUiPrimitivesKeepDetailPagesAlignedAutomatically,
+          .sharedUiPrimitivesKeepDetailPagesAlignedAutomaticallyHint,
       ].map(renderWorkflowStep);
 
       function renderChangeNote([title, description]: string[]) {
@@ -727,17 +727,17 @@ export function ExperienceScreen() {
         [
           strings.ui.experienceScreen.surfaces,
           strings.ui.experienceScreen
-            .reducedBlurRemovedGlossyCardsAndStandardizedWhiteOr,
+            .reducedBlurRemovedGlossyCardsAndStandardizedWhiteOrHint,
         ],
         [
           strings.ui.experienceScreen.navigation,
           strings.ui.experienceScreen
-            .sidebarAndTopChromeNowMatchTheFlatterDashboard,
+            .sidebarAndTopChromeNowMatchTheFlatterDashboardHint,
         ],
         [
           strings.ui.experienceScreen.darkMode,
           strings.ui.experienceScreen
-            .panelsStayDistinctThroughLayeringBordersAndShadowRestraint,
+            .panelsStayDistinctThroughLayeringBordersAndShadowRestraintHint,
         ],
       ].map(renderChangeNote);
 
@@ -761,7 +761,7 @@ export function ExperienceScreen() {
               <p className="text-base leading-7 text-secondary">
                 {
                   strings.ui.experienceScreen
-                    .routesStayThinServicesKeepOrchestrationAndPresentationFlows
+                    .routesStayThinServicesKeepOrchestrationAndPresentationFlowsHint
                 }
               </p>
             </div>
@@ -831,11 +831,11 @@ export function ExperienceScreen() {
 
       const activityRows = [
         strings.ui.experienceScreen
-          .sidebarChromeUpdatedToFlatterCardTreatment,
+          .sidebarChromeUpdatedToFlatterCardTreatmentHint,
         strings.ui.experienceScreen
-          .tablesNowUseSofterRowHoverAndCleanerSeparators,
+          .tablesNowUseSofterRowHoverAndCleanerSeparatorsHint,
         strings.ui.experienceScreen
-          .themeAccentsDriveSelectedStateWithoutFloodingSurfaces,
+          .themeAccentsDriveSelectedStateWithoutFloodingSurfacesHint,
       ].map(renderRecentActivity);
 
       function renderGalleryNote(item: string, index: number) {
@@ -859,13 +859,13 @@ export function ExperienceScreen() {
 
       const galleryNotes = [
         strings.ui.experienceScreen
-          .activeStateNowLivesInNavigationPillsAndPrimary,
+          .activeStateNowLivesInNavigationPillsAndPrimaryHint,
         strings.ui.experienceScreen
-          .cardsRelyOnBorderContrastAndSpacingMoreThan,
+          .cardsRelyOnBorderContrastAndSpacingMoreThanHint,
         strings.ui.experienceScreen
-          .theDarkPaletteUsesSlateLayersInsteadOfGlossy,
+          .theDarkPaletteUsesSlateLayersInsteadOfGlossyHint,
         strings.ui.experienceScreen
-          .featurePagesInheritTheNewSystemThroughSharedPrimitives,
+          .featurePagesInheritTheNewSystemThroughSharedPrimitivesHint,
       ].map(renderGalleryNote);
 
       return (
@@ -963,7 +963,7 @@ export function ExperienceScreen() {
             <p className="m-0 max-w-3xl text-sm leading-7 text-secondary">
               {
                 strings.ui.experienceScreen
-                  .useTheSameControlsAsBeforeToChangeToast
+                  .useTheSameControlsAsBeforeToChangeToastHint
               }
             </p>
           </div>
@@ -983,7 +983,7 @@ export function ExperienceScreen() {
                   title: strings.ui.experienceScreen.fastMotionPreset,
                   description:
                     strings.ui.experienceScreen
-                      .presentationOverlaysNowAnimateAtASnappierPace,
+                      .presentationOverlaysNowAnimateAtASnappierPaceHint,
                   intent: 'success',
                 });
 
@@ -1006,7 +1006,7 @@ export function ExperienceScreen() {
                   title: strings.ui.experienceScreen.relaxedMotionPreset,
                   description:
                     strings.ui.experienceScreen
-                      .transitionsNowRunWithSlowerTimingForACalmer,
+                      .transitionsNowRunWithSlowerTimingForACalmerHint,
                   intent: 'info',
                 });
 
@@ -1024,7 +1024,7 @@ export function ExperienceScreen() {
                   title: strings.ui.experienceScreen.motionDisabled,
                   description:
                     strings.ui.experienceScreen
-                      .allPresentationAnimationsAreNowTurnedOff,
+                      .allPresentationAnimationsAreNowTurnedOffHint,
                   intent: 'warning',
                   motion: { enabled: false },
                 });
@@ -1042,7 +1042,7 @@ export function ExperienceScreen() {
                   title: strings.ui.experienceScreen.defaultMotionRestored,
                   description:
                     strings.ui.experienceScreen
-                      .toastAlertAndSheetTimingsAreBackToDefault,
+                      .toastAlertAndSheetTimingsAreBackToDefaultHint,
                   tone: 'info',
                   confirmLabel: strings.ui.experienceScreen.done,
                   cancelLabel: strings.ui.experienceScreen.dismiss,
@@ -1088,7 +1088,7 @@ export function ExperienceScreen() {
                   {strings.ui.experienceScreen.founderSemanticStudio}
                 </p>
                 <p className="m-0">
-                  {strings.ui.experienceScreen.supportSemanticstudioDev}
+                  {strings.ui.experienceScreen.supportSemanticstudioDevData}
                 </p>
                 <p className="m-0">
                   {strings.ui.experienceScreen.value14155550199}
@@ -1125,7 +1125,7 @@ export function ExperienceScreen() {
                 <p className="m-0">
                   {
                     strings.ui.experienceScreen
-                      .builtForFrontendBackendSemanticParity
+                      .builtForFrontendBackendSemanticParityHint
                   }
                 </p>
               </div>
@@ -1242,7 +1242,7 @@ export function ExperienceScreen() {
             <p className="max-w-2xl text-sm leading-7 text-secondary">
               {
                 strings.ui.experienceScreen
-                  .operationalSoftwareImmersiveRoutesAndFrontendArchitectureThatStay
+                  .operationalSoftwareImmersiveRoutesAndFrontendArchitectureThatStayHint
               }
             </p>
           </div>

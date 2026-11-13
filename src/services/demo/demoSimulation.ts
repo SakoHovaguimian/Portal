@@ -50,6 +50,6 @@ export async function simulateDemoRequest(
 
   }
   signal?.throwIfAborted();
-  if (context.scenario === 'error') { throw new ApiError(portalDemoStrings.simulatedError, 503); }
+  if (context.scenario === 'error') { throw new ApiError(portalDemoStrings.simulatedErrorHint, 503); }
 
 }

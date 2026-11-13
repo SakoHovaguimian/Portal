@@ -20,7 +20,7 @@ export const users: UserTransport[] = [
     external_id: 'firebase-demo-user-1',
     first_name: strings.ui.demoFixtures.sako,
     last_name: strings.ui.demoFixtures.template,
-    email: strings.ui.demoFixtures.sakoExampleCom,
+    email: strings.ui.demoFixtures.sakoExampleComData,
     phone_number: strings.ui.demoFixtures.value15551110001,
     date_of_birth: daysAgo(12000),
     created_at: daysAgo(120),
@@ -32,7 +32,7 @@ export const users: UserTransport[] = [
     external_id: 'firebase-demo-user-2',
     first_name: strings.ui.demoFixtures.ada,
     last_name: strings.ui.demoFixtures.operator,
-    email: strings.ui.demoFixtures.adaExampleCom,
+    email: strings.ui.demoFixtures.adaExampleComData,
     phone_number: strings.ui.demoFixtures.value15551110002,
     date_of_birth: daysAgo(10000),
     created_at: daysAgo(90),
@@ -44,7 +44,7 @@ export const users: UserTransport[] = [
     external_id: 'firebase-demo-user-3',
     first_name: strings.ui.demoFixtures.mina,
     last_name: strings.ui.demoFixtures.signals,
-    email: strings.ui.demoFixtures.minaExampleCom,
+    email: strings.ui.demoFixtures.minaExampleComData,
     phone_number: null,
     date_of_birth: null,
     created_at: daysAgo(45),
@@ -58,7 +58,7 @@ export const featureRequests: FeatureRequestTransport[] = [
     id: '44444444-4444-4444-8444-444444444444',
     user_id: users[0].id,
     message:
-      strings.ui.demoFixtures.addSemanticDashboardSavedViewsWithSharableFilters,
+      strings.ui.demoFixtures.addSemanticDashboardSavedViewsWithSharableFiltersHint,
     created_at: daysAgo(20),
     updated_at: daysAgo(3),
     deleted: false,
@@ -69,7 +69,7 @@ export const featureRequests: FeatureRequestTransport[] = [
     user_id: users[0].id,
     message:
       strings.ui.demoFixtures
-        .exposeFeatureRequestOwnershipHistoryForAuditTrails,
+        .exposeFeatureRequestOwnershipHistoryForAuditTrailsHint,
     created_at: daysAgo(10),
     updated_at: daysAgo(2),
     deleted: false,
@@ -78,7 +78,7 @@ export const featureRequests: FeatureRequestTransport[] = [
   {
     id: '66666666-6666-4666-8666-666666666666',
     user_id: users[1].id,
-    message: strings.ui.demoFixtures.supportCompactTableModeWithPinnedColumns,
+    message: strings.ui.demoFixtures.supportCompactTableModeWithPinnedColumnsHint,
     created_at: daysAgo(5),
     updated_at: daysAgo(1),
     deleted: false,

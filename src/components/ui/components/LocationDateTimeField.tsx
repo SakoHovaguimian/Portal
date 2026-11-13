@@ -26,7 +26,7 @@ export function LocationDateTimeField({
   const copy = strings.scheduleEditor;
   const instants = localDateTimeInstants(value, timezone);
   const invalidTime = Boolean(value && !instants.length);
-  const message = invalidTime ? copy.invalidTime : error;
+  const message = invalidTime ? copy.invalidTimeHint : error;
   const repeated = instants.length > 1;
   const selected =
     preferredInstant && instants.includes(preferredInstant)
@@ -60,7 +60,7 @@ export function LocationDateTimeField({
     const occurrences = instants.map(renderOccurrence);
 
     return (
-      <Field labelText={copy.repeatedTime}>
+      <Field labelText={copy.repeatedTimeHint}>
         <Select
           value={selected}
           disabled={disabled}

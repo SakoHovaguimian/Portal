@@ -32,7 +32,7 @@ class PublicBlogApiClient implements ApiClientInterface {
 
   async request<T>(path: string, options: ApiRequestOptions = {}): Promise<T> {
 
-    if (!portalModules.publishing) { throw new NotFoundError(copy.missingArticle); }
+    if (!portalModules.publishing) { throw new NotFoundError(copy.missingArticleHint); }
     // Public reads deliberately never read or refresh a visitor session.
     if ((await getEffectiveRuntime()).demoMode) {
 
@@ -57,7 +57,7 @@ class PublicBlogApiClient implements ApiClientInterface {
         path,
         null,
       );
-      if (!response) { throw new NotFoundError(copy.missingArticle); }
+      if (!response) { throw new NotFoundError(copy.missingArticleHint); }
       return parseApiResponse<T>(response);
 
     }

@@ -114,14 +114,14 @@ export class FirebaseAuthService implements FirebaseAuthServiceInterface {
     const code = AuthErrorResponseSchema.safeParse(payload);
     const key = code.success ? code.data.error.message.split(' : ')[0] : '';
     const messages: Record<string, string> = {
-      EMAIL_EXISTS: strings.auth.emailExists,
-      INVALID_EMAIL: strings.auth.invalidEmail,
-      USER_DISABLED: strings.auth.disabled,
-      TOO_MANY_ATTEMPTS_TRY_LATER: strings.auth.tooMany,
-      WEAK_PASSWORD: strings.auth.password,
+      EMAIL_EXISTS: strings.auth.emailExistsHint,
+      INVALID_EMAIL: strings.auth.invalidEmailHint,
+      USER_DISABLED: strings.auth.disabledHint,
+      TOO_MANY_ATTEMPTS_TRY_LATER: strings.auth.tooManyHint,
+      WEAK_PASSWORD: strings.auth.passwordHint,
     };
     throw new AuthError(
-      messages[key] || strings.auth.invalidCredentials,
+      messages[key] || strings.auth.invalidCredentialsHint,
       key === 'EMAIL_EXISTS' ? 409 : 401,
     );
 

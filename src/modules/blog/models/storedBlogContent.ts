@@ -20,8 +20,8 @@ export const StoredBlogContentSchema = z
         ([key]) => !['id', 'contentType', 'metaData'].includes(key),
       ),
     );
-    if (!StoredBlogMetadataSchema.safeParse(additional).success) { context.addIssue({ code: 'custom', message: copy.invalidStoredContent }); }
-    if (new TextEncoder().encode(JSON.stringify(block)).length > 250000) { context.addIssue({ code: 'custom', message: copy.invalidContentSize }); }
+    if (!StoredBlogMetadataSchema.safeParse(additional).success) { context.addIssue({ code: 'custom', message: copy.invalidStoredContentHint }); }
+    if (new TextEncoder().encode(JSON.stringify(block)).length > 250000) { context.addIssue({ code: 'custom', message: copy.invalidContentSizeHint }); }
 
   });
 
@@ -29,4 +29,4 @@ export type StoredBlogContent = z.infer<typeof StoredBlogContentSchema>;
 
 export const StoredBlogContentsSchema = z
   .array(StoredBlogContentSchema)
-  .max(100, copy.tooManyBlocks);
+  .max(100, copy.tooManyBlocksHint);

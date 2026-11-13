@@ -23,7 +23,7 @@ export function ThemeToggle() {
     } catch {
 
       await presentation.showToast({
-        title: strings.ui.shellActions.themeSaveFailed,
+        title: strings.ui.shellActions.themeSaveFailedHint,
         intent: 'danger',
       });
 

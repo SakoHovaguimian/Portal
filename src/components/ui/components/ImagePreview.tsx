@@ -86,7 +86,7 @@ export function ImagePreview({
                 <div className="grid place-content-center gap-3 p-6 text-center text-tertiary">
                   {image?.src ? (
                     <p role="alert" className="m-0 text-sm">
-                      {strings.mediaEditor.previewFailed}
+                      {strings.mediaEditor.previewFailedHint}
                     </p>
                   ) : (
                     image?.fallback

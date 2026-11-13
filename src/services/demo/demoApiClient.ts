@@ -1,26 +1,18 @@
 import 'server-only';
 import { z } from 'zod';
 
-// Shared configuration, models, and services
-import { portalModules } from '@/config/portalModules';
+import { getProjectRouting } from '@/config/getProjectRouting';
 import {
   AuthError,
   NotFoundError,
   OwnershipError,
   ValidationError,
 } from '@/errors/domainErrors';
-import { FeatureRequestMutationInputSchema } from '@/models/featureRequest';
 import { UserMutationInputSchema } from '@/models/user';
-import { mapUserMutationToTransport } from '../api/domainMappers';
 import type { ServerSession } from '@/services/session/models/serverSession';
 import { strings } from '@/strings';
 
-// Feature models and handlers
-import { ChatMessageInputSchema } from '@/modules/chat/models/chatMessage';
-import { handleDemoOnboardingRequest } from '@/modules/onboarding/demo/handleDemoOnboardingRequest';
-
-// Demo state, fixtures, and contracts
-import { dashboardModelMeta } from './demoFixtures';
+import { mapUserMutationToTransport } from '../api/domainMappers';
 import { getDemoContext } from './demoRuntime';
 import { simulateDemoRequest } from './demoSimulation';
 import { getDemoState } from './demoState';
@@ -29,15 +21,7 @@ import type { DemoRequestHandler } from './models/demoRequestHandler';
 
 export class DemoApiClient {
 
-  constructor(private readonly handlers: DemoRequestHandler[] = []) {}
-
-  // **************************************
-  // MARK: - REGISTER DEMO REQUEST HANDLER
-  // **************************************
-
-  register(handler: DemoRequestHandler) {
-    this.handlers.push(handler);
-  }
+  constructor(private readonly handlers: readonly DemoRequestHandler[]) {}
 
   // **************************************
   // MARK: - HANDLE DEMO API REQUEST
@@ -105,7 +89,8 @@ export class DemoApiClient {
       };
 
     };
-    for (const handler of [handleDemoOnboardingRequest, ...this.handlers]) {
+    const routing = getProjectRouting();
+    for (const handler of this.handlers) {
 
       const response = await handler({
         request,
@@ -119,42 +104,13 @@ export class DemoApiClient {
         input,
         page,
         empty,
+        routing,
       });
       if (response) { return response; }
 
     }
-    const search = (
-      url.searchParams.get('query') ||
-      url.searchParams.get('search') ||
-      ''
-    )
-      .trim()
-      .toLowerCase();
-    const visibleRequests = state.featureRequests.filter(
-      (item) => !item.deleted && item.user_id === current.id,
-    );
     if (resource === 'users') {
 
-      if (method === 'GET' && !id) {
-
-        const usersResponse = json(
-          page(
-            state.users.filter((user) => {
-
-              const matchesSearch = [user.first_name, user.last_name, user.email].some((value) =>
-                value.toLowerCase().includes(search),
-              );
-
-              return matchesSearch;
-
-            },
-            ),
-          ),
-        );
-
-        return usersResponse;
-
-      }
       const user =
         id === 'profile' ? current : state.users.find((user) => user.id === id);
       if (!user) { throw new NotFoundError(); }
@@ -175,156 +131,6 @@ export class DemoApiClient {
           updated_at: new Date().toISOString(),
         });
         return json(user);
-
-      }
-
-    }
-    if (resource === 'feature-requests') {
-
-      if (method === 'GET' && !id) {
-
-        const requestsResponse = json(
-          page(
-            visibleRequests
-              .filter((item) => item.message.toLowerCase().includes(search))
-              .map((item) => ({ ...item, user: current })),
-          ),
-        );
-
-        return requestsResponse;
-
-      }
-      if (method === 'POST' && !id) {
-
-        const body = FeatureRequestMutationInputSchema.parse(await input());
-        const now = new Date().toISOString();
-        const item = {
-          id: crypto.randomUUID(),
-          user_id: current.id,
-          message: body.message,
-          created_at: now,
-          updated_at: now,
-          deleted: false,
-          user: current,
-        };
-        state.featureRequests.unshift(item);
-        return json(item, 201);
-
-      }
-      const item = visibleRequests.find((item) => item.id === id);
-      if (!item) { throw new NotFoundError(); }
-      if (method === 'GET') { return json({ ...item, user: current }); }
-      if (method === 'PATCH') {
-
-        item.message = FeatureRequestMutationInputSchema.parse(
-          await input(),
-        ).message;
-        item.updated_at = new Date().toISOString();
-        return json(item);
-
-      }
-      if (method === 'DELETE') {
-
-        item.deleted = true;
-        return new Response(null, { status: 204 });
-
-      }
-
-    }
-    if (resource === 'dashboard' && method === 'GET') {
-
-      const models = [
-        {
-          key: 'user',
-          display_name: strings.ui.demoApiClient.users,
-          field_count: 10,
-          record_count: empty ? 0 : state.users.length,
-        },
-        {
-          key: 'featureRequest',
-          display_name: strings.ui.demoApiClient.featureRequests,
-          field_count: 7,
-          record_count: empty ? 0 : visibleRequests.length,
-        },
-      ].filter((model) => model.key === 'user' ? portalModules.users : portalModules.featureRequests);
-      if (id === 'overview') {
-
-        const overviewResponse = json({
-          models: models.map((model) => {
-
-            const modelOverview = ({
-              model: model.key,
-              display_name: model.display_name,
-              total_count: model.record_count,
-              period_count: empty
-                ? 0
-                : (model.key === 'user' ? state.users : visibleRequests).filter(
-                  (item) =>
-                    Date.parse(item.created_at) >= Date.now() - 30 * 86400000,
-                ).length,
-              growth_percent: null,
-            });
-
-            return modelOverview;
-
-          }),
-          date_range: {
-            from: new Date(Date.now() - 30 * 86400000).toISOString(),
-            to: new Date().toISOString(),
-          },
-        });
-
-        return overviewResponse;
-
-      }
-      if (id === 'models' && !parts[2]) { return json({ models }); }
-      if (id === 'models') {
-
-        const meta = dashboardModelMeta[parts[2]];
-        if (!meta || !models.some((model) => model.key === parts[2])) { throw new NotFoundError(); }
-        return json({
-          ...meta,
-          total_records: empty
-            ? 0
-            : parts[2] === 'user'
-              ? state.users.length
-              : visibleRequests.length,
-        });
-
-      }
-      if (id === 'records') {
-
-        const model = url.searchParams.get('model');
-        if ((model !== 'user' && model !== 'featureRequest') || !models.some((item) => item.key === model)) { throw new NotFoundError(); }
-        const rows = model === 'user' ? state.users : visibleRequests;
-        const recordsResponse = json(
-          page(
-            rows.filter((item) =>
-              JSON.stringify(item).toLowerCase().includes(search),
-            ),
-          ),
-        );
-
-        return recordsResponse;
-
-      }
-
-    }
-    if (resource === 'chat' && id === 'messages') {
-
-      if (method === 'GET') { return json(empty ? [] : state.messages.slice(-100)); }
-      if (method === 'POST') {
-
-        const body = ChatMessageInputSchema.parse(await input());
-        const message = {
-          id: crypto.randomUUID(),
-          userId: current.id,
-          author: `${current.first_name} ${current.last_name}`,
-          message: body.message,
-          createdAt: new Date().toISOString(),
-        };
-        state.messages.push(message);
-        return json(message, 201);
 
       }
 

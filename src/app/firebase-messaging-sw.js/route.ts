@@ -1,4 +1,6 @@
 import { getRuntimeConfig } from '@/config/environment';
+import { getProjectRouting } from '@/config/getProjectRouting';
+import { isProjectRedirectAllowed } from '@/config/projectRoutes';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,11 +21,12 @@ export function GET() {
     });
 
   }
+  const destination = isProjectRedirectAllowed(getProjectRouting(), '/chat') ? '/chat' : '/';
   const script = `
 self.addEventListener('notificationclick', (event) => {
 
   event.notification.close();
-  const url = new URL('/chat', self.location.origin).href;
+  const url = new URL(${JSON.stringify(destination)}, self.location.origin).href;
   event.waitUntil(clients.matchAll({ type: 'window', includeUncontrolled: true }).then(async (windows) => {
 
     const existing = windows.find((client) => new URL(client.url).origin === self.location.origin);

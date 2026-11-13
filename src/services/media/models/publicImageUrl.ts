@@ -59,5 +59,5 @@ export function isPublicImageReference(value: string): boolean {
 export const PublicImageReferenceSchema = z
   .string()
   .trim()
-  .max(2000, mediaCopy.imageUrlError)
-  .refine(isPublicImageReference, mediaCopy.imageUrlError);
+  .max(2000, mediaCopy.imageUrlErrorHint)
+  .refine(isPublicImageReference, mediaCopy.imageUrlErrorHint);

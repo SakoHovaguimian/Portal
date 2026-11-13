@@ -66,7 +66,7 @@ export function FileList({
               {item.name}
             </p>
             <p className="m-0 mt-1 text-xs text-tertiary">
-              {copy.upload.fileSize(item.size)}
+              {copy.upload.fileSizeData(item.size)}
             </p>
             <p role="status" className="m-0 mt-1 text-xs text-secondary">
               {copy.upload.statuses[item.status]}

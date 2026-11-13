@@ -13,8 +13,8 @@ export const BlogFooterContentSchema = z
         text: z
           .string()
           .trim()
-          .min(1, copy.invalidShortText)
-          .max(4000, copy.invalidShortText),
+          .min(1, copy.invalidShortTextHint)
+          .max(4000, copy.invalidShortTextHint),
       })
       .strict(),
   })

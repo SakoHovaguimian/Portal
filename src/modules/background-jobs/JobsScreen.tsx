@@ -108,7 +108,7 @@ export function JobsScreen() {
         count={query.data.data.length}
         busy={query.isFetching}
         label={copy.paginationLabel}
-        range={(first, last) => copy.range(first, last, total)}
+        range={(first, last) => copy.rangeHint(first, last, total)}
         onNavigate={directory.setOffset}
       />
     );

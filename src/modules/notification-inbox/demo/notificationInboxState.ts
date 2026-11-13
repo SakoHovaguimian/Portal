@@ -1,7 +1,8 @@
 import 'server-only';
 
+import type { ProjectRouting } from '@/config/models/projectRouting';
 import { projectConfiguration } from '@/config/projectConfiguration';
-import { getDefaultProjectRoute, isProjectPathEnabled } from '@/config/projectRoutes';
+import { getDefaultProjectRoute, isProjectRedirectAllowed } from '@/config/projectRoutes';
 import { populatedDemoUsers } from '@/services/demo/demoPresets';
 import { portalNotificationInboxStrings as copy } from '@/strings';
 
@@ -45,7 +46,7 @@ export function defaultNotificationPreferences(): NotificationPreference[] {
 // MARK: - GET DEMO NOTIFICATION INBOX STATE
 // **************************************
 
-export function getDemoNotificationInboxState(): DemoNotificationInboxState {
+export function getDemoNotificationInboxState(routing: ProjectRouting): DemoNotificationInboxState {
 
   if (!owner.portalNotificationInboxState) {
 
@@ -86,7 +87,7 @@ export function getDemoNotificationInboxState(): DemoNotificationInboxState {
             ).toISOString();
             return {
               ...template,
-              destination: isProjectPathEnabled(template.destination) ? template.destination : getDefaultProjectRoute(),
+              destination: isProjectRedirectAllowed(routing, template.destination) ? template.destination : getDefaultProjectRoute(routing),
               id: crypto.randomUUID(),
               userId: user.id,
               createdAt: instant,
@@ -145,7 +146,7 @@ export function getDemoNotificationInboxState(): DemoNotificationInboxState {
 
 export function getDemoEffectiveTimezone(userId: string) {
 
-  const settings = getDemoNotificationInboxState().settings.get(userId);
+  const settings = owner.portalNotificationInboxState?.settings.get(userId);
   return settings?.timezone ?? settings?.lastTimezone ?? 'UTC';
 
 }
@@ -154,15 +155,17 @@ export function getDemoEffectiveTimezone(userId: string) {
 // MARK: - RESET DEMO NOTIFICATION INBOX STATE
 // **************************************
 
-export function resetDemoNotificationInboxState(userId?: string) {
+export function resetDemoNotificationInboxState() {
+  owner.portalNotificationInboxState = undefined;
+}
 
-  if (!userId) {
+// **************************************
+// MARK: - RESET DEMO NOTIFICATION ACCOUNT STATE
+// **************************************
 
-    owner.portalNotificationInboxState = undefined;
-    return;
+export function resetDemoNotificationInboxAccount(userId: string, routing: ProjectRouting) {
 
-  }
-  const state = getDemoNotificationInboxState();
+  const state = getDemoNotificationInboxState(routing);
   state.notifications = state.notifications.filter(
     (item) => item.userId !== userId,
   );

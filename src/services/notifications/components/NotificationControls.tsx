@@ -13,12 +13,19 @@ export function NotificationControls() {
   const state = realtime.notificationStatus;
   const enabled = state === 'enabled' || state === 'demo-enabled';
   const available = state === 'available' || state === 'demo' || enabled;
+  const statusDescriptions = {
+    enabled: strings.notifications.enabled,
+    available: strings.notifications.availableHint,
+    denied: strings.notifications.deniedHint,
+    unsupported: strings.notifications.unsupportedHint,
+    unconfigured: strings.notifications.unconfiguredHint,
+  };
   const description =
     state === 'demo'
-      ? copy.notificationsAvailable
+      ? copy.notificationsAvailableHint
       : state === 'demo-enabled'
-        ? copy.notificationsEnabled
-        : strings.notifications[state];
+        ? copy.notificationsEnabledHint
+        : statusDescriptions[state];
 
   function renderNotificationAction() {
 
@@ -37,7 +44,7 @@ export function NotificationControls() {
               if (enabled) { await realtime.disableNotifications(); } else { await realtime.enableNotifications(); }
 
             } catch {
-              setError(strings.notifications.failed);
+              setError(strings.notifications.failedHint);
             } finally {
               setPending(false);
             }

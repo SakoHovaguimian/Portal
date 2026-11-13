@@ -40,7 +40,7 @@ export const handleDemoOnboardingRequest: DemoRequestHandler = async ({
   } else if (update.step === 'preferences') {
 
     if (!progress.completedSteps.includes('profile')) {
-      throw new ValidationError(copy.invalidStep);
+      throw new ValidationError(copy.invalidStepHint);
     }
     progress.preferences = update.input;
     if (!progress.completedSteps.includes('preferences')) {
@@ -54,7 +54,7 @@ export const handleDemoOnboardingRequest: DemoRequestHandler = async ({
       !progress.completedSteps.includes('profile') ||
       !progress.completedSteps.includes('preferences')
     ) {
-      throw new OwnershipError(copy.invalidStep);
+      throw new OwnershipError(copy.invalidStepHint);
     }
     if (!progress.completedAt) {
       progress.completedAt = new Date().toISOString();

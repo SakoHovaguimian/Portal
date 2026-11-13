@@ -64,7 +64,7 @@ export function PatternsShowcase() {
     return (
       <Specimen
         title={copy.patternLabels.header}
-        description={copy.patternHints.header}
+        description={copy.patternHints.headerHint}
       >
         <PageHeader
           headingLevel="h3"

@@ -18,15 +18,15 @@ const BlogArticleFieldsSchema = z.object({
   slug: z
     .string()
     .trim()
-    .min(3, copy.invalidSlug)
-    .max(100, copy.invalidSlug)
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, copy.invalidSlug),
-  title: z.string().min(1, copy.invalidTitle).max(500, copy.invalidTitle),
+    .min(3, copy.invalidSlugHint)
+    .max(100, copy.invalidSlugHint)
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, copy.invalidSlugHint),
+  title: z.string().min(1, copy.invalidTitleHint).max(500, copy.invalidTitleHint),
   description: z
     .string()
     .min(1, copy.invalidDescription)
     .max(20000, copy.invalidDescription),
-  author: z.string().min(1, copy.invalidAuthor).max(500, copy.invalidAuthor),
+  author: z.string().min(1, copy.invalidAuthorHint).max(500, copy.invalidAuthorHint),
   content: StoredBlogContentsSchema.default([]),
   // Older deployed responses may still include writing awaiting migration.
   body: z.string().max(50000, copy.invalidBody).optional(),
@@ -54,13 +54,13 @@ export const BlogMutationInputSchema = BlogArticleFieldsSchema.pick({
     author: z
       .string()
       .trim()
-      .min(2, copy.invalidAuthor)
-      .max(100, copy.invalidAuthor),
+      .min(2, copy.invalidAuthorHint)
+      .max(100, copy.invalidAuthorHint),
     title: z
       .string()
       .trim()
-      .min(3, copy.invalidTitle)
-      .max(140, copy.invalidTitle),
+      .min(3, copy.invalidTitleHint)
+      .max(140, copy.invalidTitleHint),
     description: z
       .string()
       .trim()
@@ -71,7 +71,7 @@ export const BlogMutationInputSchema = BlogArticleFieldsSchema.pick({
   })
   .strict()
   .refine((article) => article.content.length > 0, {
-    message: builderCopy.invalidContent,
+    message: builderCopy.invalidContentHint,
     path: ['content'],
   });
 

@@ -20,9 +20,9 @@ export async function validatePublicImageUpload(
 
   const data = await readImageUploadForm(request);
   const file = data.get('file');
-  if (!(file instanceof File)) { throw new ValidationError(copy.imageMissingError); }
-  if (!publicImageMimeTypes.some((type) => type === file.type)) { throw new ValidationError(copy.imageTypeError); }
-  if (!file.size || file.size > publicImageMaxBytes) { throw new ValidationError(copy.imageSizeError); }
+  if (!(file instanceof File)) { throw new ValidationError(copy.imageMissingErrorHint); }
+  if (!publicImageMimeTypes.some((type) => type === file.type)) { throw new ValidationError(copy.imageTypeErrorHint); }
+  if (!file.size || file.size > publicImageMaxBytes) { throw new ValidationError(copy.imageSizeErrorHint); }
   const bytes = new Uint8Array(await file.arrayBuffer());
   const signatures: Record<string, () => boolean> = {
     'image/png': () => {
@@ -42,7 +42,7 @@ export async function validatePublicImageUpload(
       Buffer.from(bytes.subarray(0, 4)).toString('ascii') === 'RIFF' &&
       Buffer.from(bytes.subarray(8, 12)).toString('ascii') === 'WEBP',
   };
-  if (!signatures[file.type]?.()) { throw new ValidationError(copy.imageInvalidError); }
+  if (!signatures[file.type]?.()) { throw new ValidationError(copy.imageInvalidErrorHint); }
   return file;
 
 }

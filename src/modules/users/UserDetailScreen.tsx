@@ -74,7 +74,7 @@ export function UserDetailScreen({ userId }: UserDetailScreenProps) {
       return (
         <ErrorState
           title={strings.ui.userDetailScreen.userUnavailable}
-          description={strings.ui.userDetailScreen.weCouldNotLoadThisUserProfile}
+          description={strings.ui.userDetailScreen.weCouldNotLoadThisUserProfileHint}
           onRetry={() => void refetch()}
         />
       );
@@ -85,7 +85,7 @@ export function UserDetailScreen({ userId }: UserDetailScreenProps) {
       return (
         <EmptyState
           title={strings.ui.userDetailScreen.missingUser}
-          description={strings.ui.userDetailScreen.thisUserRecordCouldNotBeFound}
+          description={strings.ui.userDetailScreen.thisUserRecordCouldNotBeFoundHint}
         />
       );
 

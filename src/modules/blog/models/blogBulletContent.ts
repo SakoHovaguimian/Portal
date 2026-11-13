@@ -15,11 +15,11 @@ export const BlogBulletContentSchema = z
             z
               .string()
               .trim()
-              .min(1, copy.invalidItems)
-              .max(1000, copy.invalidItems),
+              .min(1, copy.invalidItemsHint)
+              .max(1000, copy.invalidItemsHint),
           )
-          .min(1, copy.invalidItems)
-          .max(30, copy.invalidItems),
+          .min(1, copy.invalidItemsHint)
+          .max(30, copy.invalidItemsHint),
       })
       .strict(),
   })

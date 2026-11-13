@@ -76,22 +76,22 @@ function getErrorMessage(error: unknown): string {
     // Check for domain error codes
     const anyError = error as { code?: string; status?: number };
     if (anyError.code === 'AUTH_ERROR' || anyError.status === 401) {
-      return strings.ui.queryBoundary.youNeedToBeLoggedInToViewThis;
+      return strings.ui.queryBoundary.youNeedToBeLoggedInToViewThisHint;
     }
     if (anyError.code === 'OWNERSHIP_ERROR' || anyError.status === 403) {
 
       return strings.ui.queryBoundary
-        .youDoNotHavePermissionToAccessThisResource;
+        .youDoNotHavePermissionToAccessThisResourceHint;
 
     }
     if (anyError.code === 'NOT_FOUND_ERROR' || anyError.status === 404) {
-      return strings.ui.queryBoundary.theRequestedResourceCouldNotBeFound;
+      return strings.ui.queryBoundary.theRequestedResourceCouldNotBeFoundHint;
     }
     if (error instanceof DomainError && error.status < 500) { return error.message; }
     return strings.errors.requestFailed;
 
   }
-  return strings.ui.queryBoundary.anUnexpectedErrorOccurred;
+  return strings.ui.queryBoundary.anUnexpectedErrorOccurredHint;
 
 }
 

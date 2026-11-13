@@ -42,7 +42,7 @@ export function ThemeControls() {
     try {
       await action();
     } catch {
-      setError(copy.preferenceFailed);
+      setError(copy.preferenceFailedHint);
     } finally {
 
       pendingRef.current = false;

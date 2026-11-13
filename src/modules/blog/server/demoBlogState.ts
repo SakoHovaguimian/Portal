@@ -19,7 +19,7 @@ const demoGlobal = globalThis as typeof globalThis & {
 export function createDemoBlogArticles(): BlogArticle[] {
 
   if (projectConfiguration.starterData === 'empty') { return []; }
-  const articles = [copy.demo.title, copy.demo.secondTitle, copy.demo.draftTitle].map(
+  const articles = [copy.demoData.title, copy.demoData.secondTitle, copy.demoData.draftTitle].map(
     (title, index) => {
 
       // **************************************
@@ -40,9 +40,9 @@ export function createDemoBlogArticles(): BlogArticle[] {
           'your-next-article',
         ][index],
         description: [
-          copy.demo.description,
-          copy.demo.secondDescription,
-          copy.demo.draftDescription,
+          copy.demoData.description,
+          copy.demoData.secondDescription,
+          copy.demoData.draftDescription,
         ][index],
         author: copy.defaultAuthor,
         category: ['ideas', 'guides', 'stories'][index],
@@ -56,39 +56,39 @@ export function createDemoBlogArticles(): BlogArticle[] {
           {
             id: id(2),
             contentType: 'header',
-            metaData: { text: copy.demo.heading },
+            metaData: { text: copy.demoData.heading },
           },
           {
             id: id(3),
             contentType: 'section',
-            metaData: { title: empty, body: copy.demo.body, format: 'plain' },
+            metaData: { title: empty, body: copy.demoData.body, format: 'plain' },
           },
           {
             id: id(4),
             contentType: 'quote',
             metaData: {
-              text: copy.demo.quote,
+              text: copy.demoData.quote,
               attribution: copy.defaultAuthor,
             },
           },
           {
             id: id(5),
             contentType: 'bullet',
-            metaData: { items: [...copy.demo.items] },
+            metaData: { items: [...copy.demoData.items] },
           },
           {
             id: id(6),
             contentType: 'callout',
             metaData: {
-              title: copy.demo.calloutTitle,
-              text: copy.demo.callout,
+              title: copy.demoData.calloutTitle,
+              text: copy.demoData.callout,
             },
           },
           { id: id(7), contentType: 'divider', metaData: {} },
           {
             id: id(8),
             contentType: 'footer',
-            metaData: { text: copy.demo.footer },
+            metaData: { text: copy.demoData.footer },
           },
         ],
       });

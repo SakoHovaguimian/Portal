@@ -13,29 +13,41 @@ Use a named formatter for variable copy, with typed parameters when adding new m
 
 Technical identifiers are not display strings: routes, API keys/field names, protocol verbs and headers, schema enums, storage keys, analytics event names, CSS classes/tokens, SVG paths, and external user/backend content retain their original values. Sample credentials and authored fixture names are display/demo content, never production secrets. Real credentials must never enter the catalog.
 
+## Contextual Buckets
+
+The file starts with project identity and shared application/UI copy, followed by labeled sections for Account Tools, Background Jobs, Chat, Engagement, Notifications, Onboarding, Publishing/Media, Component Library/Motion, Demo Accounts, and CLI tools. Within `strings.ui`, screen copy is grouped by Authentication, Dashboard, Feature Requests, User Directory, and Appearance. Shared controls and error/demo copy have their own labeled groups.
+
+Keep a feature's copy in its existing named export or nested screen bucket. Use actions, validation, and demo subgroups as a feature grows. Put cross-feature copy in the shared section. Use semantic key names so the casing validator can identify each role. Update callers when clarifying an ambiguous key. The [module guide](MODULES.md) maps each feature to its declaration and copy bucket.
+
+Country and region names are imported reference data in [addressCountries](../src/components/ui/data/addressCountries.ts), with independent country/region types beside the shared UI models. Address field labels, placeholders, and formatters stay in `strings.address`.
+
 ## Copy casing
 
 Use **Title Case** for actions and CTAs, page/section/card/dialog titles, text-field labels, navigation and tabs, table headers, filter/selection options, badges, short statuses, and toast titles. Apply the same case to accessible action names. This project's UI style capitalizes **every word**, including short words: `Save Changes`, `Date Of Birth`, `Back To Workspace`, and `Choose A Country`. Capitalize hyphenated words (`Dashboard-First Surfaces`), keep contractions together (`Doesn't`), and preserve acronyms and canonical brand spelling (`API`, `AI`, `iOS`, `macOS`).
 
 Use sentence case for supporting descriptions, help/hints, complete validation/error messages, notification bodies, descriptive alt text, and instructional placeholders. Preserve the original case of user/backend content, geographic names, credentials, email addresses, URLs, version identifiers, units, and example Markdown/code. Do not transform copy at render time or use CSS capitalization; author the right case in the catalog.
 
-The ESLint error rule `copy/title-case` checks `strings` and `labels` in `src/strings.ts`, including arrays, formatter template segments, and conditional output. `npm run check:strings` runs the same casing check alongside the inline-copy guard. The `addressCountries` dataset keeps its geographic spelling. Dynamic formatter parameters keep the caller's original data; formatter arguments such as locale codes and separators are not title-cased.
+The rule at the top of `src/strings.ts` applies to every UI export in the file. ESLint `copy/title-case` and `npm run check:strings` run the same validator. It checks authored strings, arrays, formatter template segments, and conditional output. Project identity, initializer CLI copy, and sharing CLI copy keep their supplied spelling.
 
-New catalog entries default to Title Case, so a new CTA key is checked even if its name is unfamiliar. Keys ending in `Title`, `Label`, `Heading`, `Header`, `Caption`, `Action`, `CTA`, `Button`, or `Column` are title roles. Description/hint/help/body/guidance/placeholder/alt/paragraph/explanation keys use sentence case, and sample/example/syntax keys preserve data spelling. Prefer semantic names such as `emptyTitle` and `emptyHint` when adding copy.
+New UI entries default to Title Case. Keys ending in `Title`, `Label`, `Heading`, `Header`, `Caption`, `Action`, `CTA`, `Button`, `Column`, `Option`, `Tab`, `Badge`, `Status`, or `Question` declare title roles. Use those suffixes for ambiguous UI names.
 
-For a key whose role is ambiguous, put a reasoned annotation immediately before its property. An annotation on a group applies to its contents; keep exemptions narrow and never exempt an action or heading merely to silence lint.
+Keys ending in `Description`, `Hint`, `Body`, `Guidance`, `Placeholder`, `Alt`, `Paragraph`, `Explanation`, `Message`, `Summary`, `Byline`, `Answer`, `Reason`, or `Rejection` declare prose. The `errors`, `validation`, and `environment` groups also contain prose. Prose groups carry their role to ordinary children, so `typeDescriptions.header` is a description. An explicit suffixed title key such as `emptyTitle` always receives title validation.
+
+Sample/example/syntax groups and keys ending in `Data`, `Value`, `Version`, `Keywords`, `Emoji`, or `Providers` preserve data spelling. Keep actions and headings in UI buckets. Imported country/region records live in their dedicated data file. Dynamic formatter arguments retain the caller's spelling.
+
+Express the role in the key or bucket. Casing comments have no effect on the validator.
 
 ```ts
-saveChanges: 'Save Changes',
+saveAction: 'Save Changes',
 emptyTitle: 'No Requests Yet',
 emptyHint: 'Create your first request to get started.',
-// @sentence-case: Complete validation message.
-invalidEmail: 'Enter a valid email address.',
-// @preserve-case: Demo credential; casing must stay exact.
-password123: 'password123',
+validation: {
+  invalidEmail: 'Enter a valid email address.',
+},
+seedPasswordData: 'password123',
 ```
 
-`@title-case: Reason.` explicitly selects title casing when needed. Preserve mixed-case brand terms in the lint helper's canonical-word set before using them in title copy. The checker reviews authored literal output, not arbitrary computed expressions or external content; review those manually.
+Preserve mixed-case brand terms in the validator's canonical-word set before using them in title copy. The checker reviews authored literal output. Review arbitrary computed copy and external content manually.
 
 `npm run check:strings` statically finds JSX text, display attributes, and common string-literal patterns outside `src/strings.ts`. Only that exact file is exempt from the inline-copy check; the catalog itself is checked for casing. It is a guardrail, not a complete localization parser. Review interpolated copy, computed labels, metadata, validation, and externally supplied strings manually. Do not weaken its rules to permit new inline copy; identify technical identifiers explicitly when necessary.
 

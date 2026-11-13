@@ -68,7 +68,7 @@ export function BlogTopicField({
                 const result = BlogCategorySchema.safeParse(value);
                 if (!result.success) {
 
-                  setFailure(copy.invalidTopic);
+                  setFailure(copy.invalidTopicHint);
                   return;
 
                 }

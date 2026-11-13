@@ -168,7 +168,7 @@ function DevSettingsForm({ settings }: DevSettingsFormProps) {
   function renderAccountOption([
     key,
     account,
-  ]: [string, (typeof copy.accounts)[keyof typeof copy.accounts]]) {
+  ]: [string, (typeof copy.accountsData)[keyof typeof copy.accountsData]]) {
 
     return (
       <option key={key} value={key}>
@@ -312,7 +312,7 @@ function DevSettingsForm({ settings }: DevSettingsFormProps) {
 
   function renderAccountSection() {
 
-    const accountOptions = Object.entries(copy.accounts).map(
+    const accountOptions = Object.entries(copy.accountsData).map(
       renderAccountOption,
     );
 
@@ -336,10 +336,10 @@ function DevSettingsForm({ settings }: DevSettingsFormProps) {
           </Select>
         </Field>
         <p className="m-0 text-sm text-secondary">
-          {copy.accounts[preset].description}
+          {copy.accountsData[preset].description}
         </p>
         <p className="m-0 break-all text-sm text-secondary">
-          {copy.accounts[preset].email}
+          {copy.accountsData[preset].email}
         </p>
         <div>
           <Button

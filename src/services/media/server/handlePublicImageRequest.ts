@@ -20,10 +20,10 @@ export async function handlePublicImageRequest({
 
   const pathname = new URL(path, 'http://portal.internal').pathname;
   if (!['/media/images', '/blog/media/upload'].includes(pathname)) { return null; }
-  if (actor?.role !== 'admin' && actor?.role !== 'superadmin') { throw new OwnershipError(portalPublishingStrings.article.permissionError); }
+  if (actor?.role !== 'admin' && actor?.role !== 'superadmin') { throw new OwnershipError(portalPublishingStrings.article.permissionErrorHint); }
   if (request.method !== 'POST') { return new Response(null, { status: 405, headers: { allow: 'POST' } }); }
   if (demoMode) { return uploadDemoPublicImage(request); }
-  if (!forward) { throw new ApiError(portalMediaStrings.imageUploadError, 503); }
+  if (!forward) { throw new ApiError(portalMediaStrings.imageUploadErrorHint, 503); }
   const file = await validatePublicImageUpload(request.clone());
   const body = new FormData();
   body.set('file', file);

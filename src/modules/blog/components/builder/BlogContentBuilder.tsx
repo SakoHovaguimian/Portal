@@ -184,8 +184,8 @@ export function BlogContentBuilder({
               className="m-0 text-sm text-error-primary"
             >
               {unsupported
-                ? copy.unsupportedStoredFields
-                : result.error.issues[0]?.message || copy.invalidBlock}
+                ? copy.unsupportedStoredFieldsHint
+                : result.error.issues[0]?.message || copy.invalidBlockHint}
             </p>
           )}
         </div>
@@ -294,7 +294,7 @@ export function BlogContentBuilder({
         {copy.addBlock}
       </Button>
       {content.length >= 100 && (
-        <p className="m-0 text-sm text-tertiary">{copy.tooManyBlocks}</p>
+        <p className="m-0 text-sm text-tertiary">{copy.tooManyBlocksHint}</p>
       )}
       {renderBlockPalette()}
     </div>

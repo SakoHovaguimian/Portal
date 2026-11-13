@@ -77,7 +77,7 @@ Add preview states for new reusable controls here. Verify desktop/narrow layout,
 
 ## Address data attribution
 
-Country/region labels in `src/strings.ts` retain the country-region-data notice:
+Country/region labels in `src/components/ui/data/addressCountries.ts` retain the country-region-data notice:
 
 ```text
 The MIT License (MIT)

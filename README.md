@@ -30,7 +30,7 @@ The initializer configures identity, local brand assets, theme defaults, capabil
 
 ## Reusable Modules
 
-Choose project capabilities in [project configuration](src/config/projectConfiguration.ts), exposed through [portalModules](src/config/portalModules.ts); disabled modules are removed from navigation and rejected at the API boundary. [Portal navigation](src/config/portalNavigation.tsx) composes destinations from those capabilities and the trusted role. The core remains one npm application.
+Choose project capabilities in [project configuration](src/config/projectConfiguration.ts), exposed through [portalModules](src/config/portalModules.ts); disabled modules are removed from navigation and rejected at the API boundary. [Portal navigation](src/config/portalNavigation.tsx) composes destinations from those capabilities and the trusted role. Each feature declares navigation and demo/live wiring in its own module file. See [adding and removing features](docs/MODULES.md) when trimming a clone. The core remains one npm application.
 
 - `/admin/blog` provides revision-checked drafts, typed content blocks, previews, publication, and public `/blog` readers. See [publishing](docs/BLOG.md).
 - `/chat` provides direct messages, group conversations, attachments, replies, reactions, message management, and member-aware access. See [chat](docs/CHAT.md).

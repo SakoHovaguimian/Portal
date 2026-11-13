@@ -5,7 +5,7 @@ import { DomainError } from './domainError';
 export class OwnershipError extends DomainError {
   constructor(
     message: string = strings.ui.domainErrors
-      .youDoNotHavePermissionToPerformThisAction,
+      .youDoNotHavePermissionToPerformThisActionHint,
   ) {
 
     super(message, 'OWNERSHIP_ERROR', 403);

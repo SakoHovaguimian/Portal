@@ -19,8 +19,8 @@ export const BlogLinkContentSchema = z
         text: z
           .string()
           .trim()
-          .min(1, copy.invalidHeading)
-          .max(200, copy.invalidHeading),
+          .min(1, copy.invalidHeadingHint)
+          .max(200, copy.invalidHeadingHint),
       })
       .strict(),
   })

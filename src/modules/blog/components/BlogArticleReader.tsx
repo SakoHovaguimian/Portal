@@ -80,7 +80,7 @@ export function BlogArticleReader({
         {article.content.length ? (
           <BlogContentReader content={article.content} />
         ) : !article.body?.trim() ? (
-          <p>{copy.previewEmpty}</p>
+          <p>{copy.previewEmptyHint}</p>
         ) : null}
         {article.body?.trim() && (
           <MarkdownContent value={article.body} headingContext="article" />

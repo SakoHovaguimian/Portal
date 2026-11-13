@@ -126,7 +126,7 @@ export function BlogEditor({ initialArticle }: BlogEditorProps) {
 
     if (form.body !== undefined) {
 
-      setErrors({ content: builderCopy.legacyConversionRequired });
+      setErrors({ content: builderCopy.legacyConversionRequiredHint });
       document.getElementById('blog-legacy-body')?.focus();
       return null;
 
@@ -144,9 +144,9 @@ export function BlogEditor({ initialArticle }: BlogEditorProps) {
       const key = issue.path[0] as keyof BlogArticleDraft;
       fieldErrors[key] =
         issue.code === 'unrecognized_keys'
-          ? builderCopy.unsupportedStoredFields
+          ? builderCopy.unsupportedStoredFieldsHint
           : issue.code === 'invalid_union'
-            ? builderCopy.invalidBlock
+            ? builderCopy.invalidBlockHint
             : issue.message;
 
     }
@@ -371,7 +371,7 @@ export function BlogEditor({ initialArticle }: BlogEditorProps) {
           />
         </Field>
         <p id="blog-legacy-description" className="m-0 text-sm text-tertiary">
-          {builderCopy.legacyConversionRequired}
+          {builderCopy.legacyConversionRequiredHint}
         </p>
         <Button
           variant="secondary"

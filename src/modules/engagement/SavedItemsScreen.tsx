@@ -207,7 +207,7 @@ export function SavedItemsScreen({ query }: SavedItemsScreenProps) {
         className="flex flex-wrap items-center justify-between gap-3 border-t border-secondary p-4"
       >
         <span className="text-sm text-secondary">
-          {copy.range(
+          {copy.rangeHint(
             page.total ? page.offset + 1 : 0,
             Math.min(page.total, page.offset + page.limit),
             page.total,

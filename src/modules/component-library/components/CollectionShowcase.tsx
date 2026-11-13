@@ -180,7 +180,7 @@ export function CollectionShowcase() {
           <EmptyState
             variant="plain"
             title={copy.noResults}
-            description={strings.ui.usersScreen.tryADifferentSearch}
+            description={strings.ui.usersScreen.tryADifferentSearchHint}
             action={
               <Button
                 variant="secondary"

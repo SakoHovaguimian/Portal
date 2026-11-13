@@ -28,7 +28,7 @@ export function IosPushNotification({
             {copy.pushAppName}
           </span>
           <span className="shrink-0 text-xs text-(--ios-push-secondary)">
-            {copy.pushNow}
+            {copy.pushNowData}
           </span>
         </div>
         <p className="m-0 wrap-break-word text-sm leading-snug font-semibold">

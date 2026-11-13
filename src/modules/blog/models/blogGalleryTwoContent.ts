@@ -12,8 +12,8 @@ export const BlogGalleryTwoContentSchema = z
     contentType: z.literal('gallery2'),
     metaData: z
       .object({
-        images: z.array(BlogImageSchema).length(2, copy.invalidGallery),
-        caption: z.string().trim().max(1000, copy.invalidCaption).default(''),
+        images: z.array(BlogImageSchema).length(2, copy.invalidGalleryHint),
+        caption: z.string().trim().max(1000, copy.invalidCaptionHint).default(''),
       })
       .strict(),
   })

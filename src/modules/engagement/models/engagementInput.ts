@@ -9,6 +9,6 @@ export const EngagementInputSchema = z
     rating: z.number().int().min(1).max(5).nullable().optional(),
   })
   .strict()
-  .refine((input) => Object.keys(input).length > 0, copy.invalidInput);
+  .refine((input) => Object.keys(input).length > 0, copy.invalidInputHint);
 
 export type EngagementInput = z.infer<typeof EngagementInputSchema>;

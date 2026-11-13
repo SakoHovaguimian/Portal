@@ -19,8 +19,8 @@ export async function uploadPublicImage(
   signal?: AbortSignal,
 ) {
 
-  if (!publicImageMimeTypes.some((type) => type === file.type)) { throw new ValidationError(mediaCopy.imageTypeError); }
-  if (!file.size || file.size > publicImageMaxBytes) { throw new ValidationError(mediaCopy.imageSizeError); }
+  if (!publicImageMimeTypes.some((type) => type === file.type)) { throw new ValidationError(mediaCopy.imageTypeErrorHint); }
+  if (!file.size || file.size > publicImageMaxBytes) { throw new ValidationError(mediaCopy.imageSizeErrorHint); }
   const body = new FormData();
   body.set('file', file);
   body.set('mediaType', 'IMAGE');

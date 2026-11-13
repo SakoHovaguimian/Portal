@@ -19,7 +19,7 @@ export const OnboardingPreferencesSchema = z
           return false;
         }
 
-      }, copy.invalidTimezone),
+      }, copy.invalidTimezoneHint),
     emailDigest: z.boolean(),
   })
   .strict();

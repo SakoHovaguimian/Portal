@@ -1,4 +1,4 @@
-import { addressCountries } from '@/strings';
+import { addressCountries } from '../data/addressCountries';
 
 import { addressTimezoneCountries } from './addressTimezoneCountries';
 

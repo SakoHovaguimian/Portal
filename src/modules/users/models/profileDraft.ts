@@ -7,13 +7,13 @@ export const ProfileDraftSchema = z.object({
   firstName: z
     .string()
     .trim()
-    .min(1, strings.auth.name)
-    .max(80, portalEditStrings.nameTooLong),
+    .min(1, strings.auth.nameHint)
+    .max(80, portalEditStrings.nameTooLongHint),
   lastName: z
     .string()
     .trim()
-    .min(1, strings.auth.name)
-    .max(80, portalEditStrings.nameTooLong),
+    .min(1, strings.auth.nameHint)
+    .max(80, portalEditStrings.nameTooLongHint),
   phoneNumber: z.string(),
   dateOfBirth: z.string().refine((value) => {
 
@@ -26,7 +26,7 @@ export const ProfileDraftSchema = z.object({
       return false;
     }
 
-  }, portalEditStrings.invalidDate),
+  }, portalEditStrings.invalidDateHint),
 });
 
 export type ProfileDraft = z.infer<typeof ProfileDraftSchema>;

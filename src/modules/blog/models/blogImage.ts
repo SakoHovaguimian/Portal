@@ -12,9 +12,9 @@ export const BlogImageSchema = z
     alt: z
       .string()
       .trim()
-      .min(1, copy.uploadAltRequired)
-      .max(500, copy.invalidImage),
-    caption: z.string().trim().max(1000, copy.invalidCaption).default(''),
+      .min(1, copy.uploadAltRequiredHint)
+      .max(500, copy.invalidImageHint),
+    caption: z.string().trim().max(1000, copy.invalidCaptionHint).default(''),
   })
   .strict();
 

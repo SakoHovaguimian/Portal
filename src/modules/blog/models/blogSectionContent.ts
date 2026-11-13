@@ -12,12 +12,12 @@ export const BlogSectionContentSchema = z
     contentType: z.literal('section'),
     metaData: z
       .object({
-        title: z.string().trim().max(200, copy.invalidHeading).default(''),
+        title: z.string().trim().max(200, copy.invalidHeadingHint).default(''),
         body: z
           .string()
           .trim()
-          .min(1, copy.invalidText)
-          .max(50000, copy.invalidLegacyText),
+          .min(1, copy.invalidTextHint)
+          .max(50000, copy.invalidLegacyTextHint),
         format: BlogContentTextFormatSchema.default('plain'),
       })
       .strict()
@@ -27,7 +27,7 @@ export const BlogSectionContentSchema = z
 
           context.addIssue({
             code: 'custom',
-            message: copy.invalidText,
+            message: copy.invalidTextHint,
             path: ['body'],
           });
 

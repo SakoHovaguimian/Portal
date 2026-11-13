@@ -13,8 +13,8 @@ import { publicImageMaxBytes } from '../models/publicImage';
 export async function readImageUploadForm(request: Request): Promise<FormData> {
 
   const maxBytes = publicImageMaxBytes + 65536;
-  if (Number(request.headers.get('content-length')) > maxBytes) { throw new ValidationError(copy.imageSizeError); }
-  if (!request.body) { throw new ValidationError(copy.imageMissingError); }
+  if (Number(request.headers.get('content-length')) > maxBytes) { throw new ValidationError(copy.imageSizeErrorHint); }
+  if (!request.body) { throw new ValidationError(copy.imageMissingErrorHint); }
   const reader = request.body.getReader();
   const chunks: Uint8Array[] = [];
   let length = 0;
@@ -28,7 +28,7 @@ export async function readImageUploadForm(request: Request): Promise<FormData> {
       if (length > maxBytes) {
 
         await reader.cancel();
-        throw new ValidationError(copy.imageSizeError);
+        throw new ValidationError(copy.imageSizeErrorHint);
 
       }
       chunks.push(result.value);
@@ -51,7 +51,7 @@ export async function readImageUploadForm(request: Request): Promise<FormData> {
   })
     .formData()
     .catch(() => {
-      throw new ValidationError(copy.imageMissingError);
+      throw new ValidationError(copy.imageMissingErrorHint);
     });
 
   return formDataPromise;

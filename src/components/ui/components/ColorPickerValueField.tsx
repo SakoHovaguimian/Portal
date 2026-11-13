@@ -107,11 +107,11 @@ export function ColorPickerValueField({
             : 'm-0 text-xs text-tertiary'
         }
       >
-        {invalid ? copy.invalidHex : copy.hexHint}
+        {invalid ? copy.invalidHexHint : copy.hexHint}
       </p>
       <div role="status" className="text-xs text-secondary empty:hidden">
         {copyFailed
-          ? copy.copyFailed
+          ? copy.copyFailedHint
           : copiedValue === hex && valid
             ? copy.copied
             : null}

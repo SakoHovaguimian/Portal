@@ -64,7 +64,7 @@ export async function enforceLiveOnboarding(
     throw new ApiError(strings.errors.unavailable, 503);
   }
   if (!parsed.data.completedAt) {
-    throw new DomainError(copy.required, 'ONBOARDING_REQUIRED', 403);
+    throw new DomainError(copy.requiredHint, 'ONBOARDING_REQUIRED', 403);
   }
 
 }

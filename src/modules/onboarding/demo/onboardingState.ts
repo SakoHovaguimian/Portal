@@ -1,7 +1,6 @@
 import 'server-only';
 
 import { demoPresetForUser } from '@/services/demo/demoPresets';
-import { registerDemoReset } from '@/services/demo/demoResetRegistry';
 import { getDemoState } from '@/services/demo/demoState';
 import type { DemoUser } from '@/services/demo/models/demoUser';
 
@@ -80,5 +79,3 @@ export function restartDemoOnboarding(userId: string) {
 export function resetDemoOnboardingState() {
   getOnboardingState().clear();
 }
-
-registerDemoReset('onboarding', resetDemoOnboardingState);

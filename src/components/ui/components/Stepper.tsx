@@ -40,7 +40,7 @@ export function Stepper<Key extends string>({
           variant="ghost"
           disabled={disabled || step.disabled}
           aria-current={step.state === 'current' ? 'step' : undefined}
-          aria-label={strings.ui.stepper.accessibleLabel(
+          aria-label={strings.ui.stepper.accessibleLabelHint(
             step.label,
             step.stateLabel,
             index + 1,

@@ -12,7 +12,7 @@ export default function GlobalError({
     <main style={{ padding: '1.5rem' }}>
       <ErrorState
         title={strings.ui.error.applicationError}
-        description={strings.ui.error.thisPageCouldNotBeLoadedPleaseTryAgain}
+        description={strings.ui.error.thisPageCouldNotBeLoadedPleaseTryAgainHint}
         onRetry={reset}
       />
     </main>

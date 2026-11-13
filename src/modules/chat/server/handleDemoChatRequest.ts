@@ -27,7 +27,7 @@ export async function handleDemoChatRequest(request: Request, path: string, acto
   if (area !== 'chat') {
     return null;
   }
-  // Preserve the original public compatibility endpoint, owned by the demo core.
+  // Preserve the original public compatibility endpoint, handled by the legacy chat adapter.
   if (resource === 'messages' && !id) {
     return null;
   }

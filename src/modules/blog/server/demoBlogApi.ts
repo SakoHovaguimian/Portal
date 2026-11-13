@@ -46,9 +46,9 @@ export async function handleDemoBlogRequest(
   const isPublic = parts[0] === 'public';
   const [resource, id, action, ...rest] = isPublic ? parts.slice(1) : parts;
   if (resource !== 'blog') { return null; }
-  if (rest.length) { throw new NotFoundError(copy.missingArticle); }
-  if (isPublic && request.method !== 'GET') { throw new OwnershipError(copy.permissionError); }
-  if (!isPublic && actor?.role !== 'admin' && actor?.role !== 'superadmin') { throw new OwnershipError(copy.permissionError); }
+  if (rest.length) { throw new NotFoundError(copy.missingArticleHint); }
+  if (isPublic && request.method !== 'GET') { throw new OwnershipError(copy.permissionErrorHint); }
+  if (!isPublic && actor?.role !== 'admin' && actor?.role !== 'superadmin') { throw new OwnershipError(copy.permissionErrorHint); }
   if (
     !isPublic &&
     id === 'media' &&
@@ -90,7 +90,7 @@ export async function handleDemoBlogRequest(
   const input = () => {
 
     const inputPromise = request.json().catch(() => {
-      throw new ValidationError(copy.invalidInput);
+      throw new ValidationError(copy.invalidInputHint);
     });
 
     return inputPromise;
@@ -106,7 +106,7 @@ export async function handleDemoBlogRequest(
     revision: number | undefined,
   ) => {
 
-    if (article.revision !== revision) { throw new DomainError(copy.conflictError, 'BLOG_CONFLICT', 409); }
+    if (article.revision !== revision) { throw new DomainError(copy.conflictErrorHint, 'BLOG_CONFLICT', 409); }
 
   };
   if (!id && request.method === 'GET') {
@@ -166,7 +166,7 @@ export async function handleDemoBlogRequest(
   if (!isPublic && !id && request.method === 'POST') {
 
     const body = BlogMutationInputSchema.parse(await input());
-    if (articles.some((article) => article.slug === body.slug)) { throw new ValidationError(copy.duplicateSlug); }
+    if (articles.some((article) => article.slug === body.slug)) { throw new ValidationError(copy.duplicateSlugHint); }
     const now = new Date().toISOString();
     const article: BlogArticle = {
       ...body,
@@ -188,7 +188,7 @@ export async function handleDemoBlogRequest(
         item.status === 'published'
       : item.id === id,
   );
-  if (!article) { throw new NotFoundError(copy.missingArticle); }
+  if (!article) { throw new NotFoundError(copy.missingArticleHint); }
   if (request.method === 'GET' && (!action || (isPublic && id === 'id'))) { return json(article); }
   if (!isPublic && request.method === 'PATCH' && !action) {
 
@@ -196,7 +196,7 @@ export async function handleDemoBlogRequest(
     checkRevision(article, body.revision);
     if (
       articles.some((item) => item.id !== article.id && item.slug === body.slug)
-    ) { throw new ValidationError(copy.duplicateSlug); }
+    ) { throw new ValidationError(copy.duplicateSlugHint); }
     Object.assign(article, body, {
       updatedAt: new Date().toISOString(),
       revision: article.revision + 1,
@@ -251,6 +251,6 @@ export async function handleDemoBlogRequest(
     });
 
   }
-  throw new NotFoundError(copy.missingArticle);
+  throw new NotFoundError(copy.missingArticleHint);
 
 }

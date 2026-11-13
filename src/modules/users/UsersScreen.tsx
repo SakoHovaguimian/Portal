@@ -29,7 +29,7 @@ export function UsersScreen({ query = '' }: UsersScreenProps) {
       <PageHeader
         title={strings.ui.appShell.users}
         description={
-          strings.ui.usersScreen.findPeopleInYourWorkspaceAndViewTheirProfiles
+          strings.ui.usersScreen.findPeopleInYourWorkspaceAndViewTheirProfilesHint
         }
       />
     );
@@ -100,7 +100,7 @@ export function UsersScreen({ query = '' }: UsersScreenProps) {
       <div className="p-4">
         <ErrorState
           title={strings.ui.usersScreen.usersUnavailable}
-          description={strings.ui.usersScreen.weCouldNotLoadUsersRightNow}
+          description={strings.ui.usersScreen.weCouldNotLoadUsersRightNowHint}
           onRetry={() => void refetch()}
         />
       </div>
@@ -108,7 +108,7 @@ export function UsersScreen({ query = '' }: UsersScreenProps) {
       <EmptyState
         variant="plain"
         title={strings.ui.usersScreen.noUsersFound}
-        description={strings.ui.usersScreen.tryADifferentSearch}
+        description={strings.ui.usersScreen.tryADifferentSearchHint}
       />
     ) : (
       renderUserTable(data.data)

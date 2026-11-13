@@ -19,7 +19,7 @@ export async function handlePublishingRequest(
   if (!/^\/(?:public\/)?blog(?:\/|$)/.test(pathname)) { return null; }
   const isPublic = pathname.startsWith('/public/');
   if (isPublic && request.method !== 'GET') { return new Response(null, { status: 405, headers: { allow: 'GET' } }); }
-  if (!isPublic && actor?.role !== 'admin' && actor?.role !== 'superadmin') { throw new OwnershipError(portalPublishingStrings.article.permissionError); }
+  if (!isPublic && actor?.role !== 'admin' && actor?.role !== 'superadmin') { throw new OwnershipError(portalPublishingStrings.article.permissionErrorHint); }
   if (demoMode) { return handleDemoBlogRequest(request, path, actor, options); }
   if (!forward) {
 

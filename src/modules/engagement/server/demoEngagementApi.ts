@@ -43,7 +43,7 @@ export async function handleDemoEngagementRequest(
   const readRequestInput = () => {
 
     const requestInputPromise = request.json().catch(() => {
-      throw new ValidationError(copy.invalidInput);
+      throw new ValidationError(copy.invalidInputHint);
     });
 
     return requestInputPromise;

@@ -1,53 +1,14 @@
-import { UiIcon } from '../components/UiIcon';
 import { cn } from '../lib/cn';
 import type { AppShellProps } from '../models/appShellProps';
 import { strings } from '@/strings';
 
-import { AppSidebar, type AppSidebarItem } from './AppSidebar';
+import { AppSidebar } from './AppSidebar';
 import { MobileNavigationMenu } from './MobileNavigationMenu';
-
-const navigation: AppSidebarItem[] = [
-  {
-    href: '/dashboard',
-    label: strings.ui.appShell.dashboard,
-    icon: <UiIcon name="grid" />,
-  },
-  {
-    href: '/users',
-    label: strings.ui.appShell.users,
-    icon: <UiIcon name="user" />,
-  },
-  {
-    href: '/feature-requests',
-    label: strings.ui.appShell.featureRequests,
-    icon: <UiIcon name="file" />,
-  },
-  {
-    href: '/chat',
-    label: strings.ui.appShell.chat,
-    icon: <UiIcon name="mail" />,
-  },
-  {
-    href: '/profile',
-    label: strings.ui.appShell.profile,
-    icon: <UiIcon name="user" />,
-  },
-  {
-    href: '/settings/appearance',
-    label: strings.ui.appShell.appearance,
-    icon: <UiIcon name="settings" />,
-  },
-  {
-    href: '/dev-settings/components',
-    label: strings.componentLibrary.title,
-    icon: <UiIcon name="code" />,
-    placement: 'bottom',
-  },
-];
 
 export function AppShell({
   children,
   session,
+  homeHref,
   utilitySlot,
   accountSlot,
   bannerSlot,
@@ -58,12 +19,13 @@ export function AppShell({
   contentLayout = 'page',
 }: AppShellProps) {
 
-  const items = (navigationItems ?? navigation).map((item) => ({
+  const items = navigationItems.map((item) => ({
     ...item,
     active: activePath === item.href || activePath?.startsWith(`${item.href}/`),
   }));
   const sidebar = {
     session,
+    homeHref,
     items,
     onNavigate,
     accountSlot,

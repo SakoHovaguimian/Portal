@@ -27,7 +27,7 @@ export function CookieConsentControls({
 
     return settings ? (
       <p className="text-sm text-secondary">
-        {config.demoMode ? strings.privacy.demo : strings.privacy.description}
+        {config.demoMode ? strings.privacy.demoHint : strings.privacy.description}
       </p>
     ) : null;
 
@@ -43,7 +43,7 @@ export function CookieConsentControls({
           onClick={() => {
 
             saveConsent('declined');
-            setMessage(strings.privacy.saved);
+            setMessage(strings.privacy.savedHint);
 
           }}
           aria-pressed={consent === 'declined'}
@@ -54,7 +54,7 @@ export function CookieConsentControls({
           onClick={() => {
 
             saveConsent('accepted');
-            setMessage(strings.privacy.saved);
+            setMessage(strings.privacy.savedHint);
 
           }}
           aria-pressed={consent === 'accepted'}

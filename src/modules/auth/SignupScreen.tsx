@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { Button, Field, Input, PasswordInput } from '@/components/ui';
-import { useRuntimeConfig } from '@/providers/RuntimeProvider';
+import { useProjectRouting, useRuntimeConfig } from '@/providers/RuntimeProvider';
 import { strings, portalDemoStrings } from '@/strings';
 
 import { AuthCardShell } from './AuthCardShell';
@@ -15,6 +15,7 @@ import { createSession, resolveSessionRedirect } from './sessionClient';
 export function SignupScreen({ redirectTo }: AuthRedirectProps) {
 
   const router = useRouter();
+  const routing = useProjectRouting();
   const { demoMode } = useRuntimeConfig();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -42,7 +43,7 @@ export function SignupScreen({ redirectTo }: AuthRedirectProps) {
       });
 
       router.push(
-        resolveSessionRedirect(redirectTo, result.onboardingRequired, result.user.role),
+        resolveSessionRedirect(routing, redirectTo, result.onboardingRequired, result.user.role),
       );
       router.refresh();
 
@@ -123,7 +124,7 @@ export function SignupScreen({ redirectTo }: AuthRedirectProps) {
             className="auth-panel-hover"
             type="email"
             autoComplete="email"
-            placeholder={strings.ui.signupScreen.youCompanyCom}
+            placeholder={strings.ui.signupScreen.youCompanyComData}
             leadingIcon={<MailIcon className="h-5 w-5" />}
             value={email}
             aria-invalid={Boolean(error)}
@@ -136,7 +137,7 @@ export function SignupScreen({ redirectTo }: AuthRedirectProps) {
           <PasswordInput
             className="auth-panel-hover"
             autoComplete="new-password"
-            placeholder={strings.ui.signupScreen.atLeast8Characters}
+            placeholder={strings.ui.signupScreen.atLeast8CharactersHint}
             leadingIcon={<LockIcon className="h-5 w-5" />}
             value={password}
             aria-invalid={Boolean(error)}
@@ -165,7 +166,7 @@ export function SignupScreen({ redirectTo }: AuthRedirectProps) {
     <AuthCardShell
       badge={strings.ui.signupScreen.onboarding}
       title={strings.ui.signupScreen.createYourWorkspaceAccount}
-      description={strings.ui.signupScreen.createYourAccountToJoinTheWorkspace}
+      description={strings.ui.signupScreen.createYourAccountToJoinTheWorkspaceHint}
       footerPrompt={strings.ui.signupScreen.alreadyHaveAnAccount}
       footerHref={
         redirectTo

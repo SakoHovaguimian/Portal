@@ -20,8 +20,8 @@ export {
 export const BlogContentUrlSchema = z
   .string()
   .trim()
-  .max(2000, copy.invalidUrl)
-  .refine(isPublicHttpsUrl, copy.invalidUrl);
+  .max(2000, copy.invalidUrlHint)
+  .refine(isPublicHttpsUrl, copy.invalidUrlHint);
 
 // Editors retain incomplete and older values; the reader checks URLs before use.
 export const BlogReadableContentUrlSchema = z.string();

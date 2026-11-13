@@ -130,7 +130,7 @@ export function MarkdownEditor({
           {value.trim() ? (
             <MarkdownContent value={value} />
           ) : (
-            <p className="m-0 text-sm text-tertiary">{copy.emptyPreview}</p>
+            <p className="m-0 text-sm text-tertiary">{copy.emptyPreviewHint}</p>
           )}
         </div>
       </div>
@@ -139,7 +139,7 @@ export function MarkdownEditor({
       </p>
       {limitReached && (
         <p role="alert" className="m-0 text-sm text-error-primary">
-          {copy.limitReached(maxLength)}
+          {copy.limitReachedHint(maxLength)}
         </p>
       )}
       <details className="text-sm text-secondary">

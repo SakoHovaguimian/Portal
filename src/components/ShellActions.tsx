@@ -32,7 +32,7 @@ export function ShellActions() {
             const response = await fetch('/api/auth/logout', {
               method: 'POST',
             });
-            if (!response.ok) { throw new Error(strings.auth.logoutFailed); }
+            if (!response.ok) { throw new Error(strings.auth.logoutFailedHint); }
             await queryClient.cancelQueries();
             queryClient.clear();
             setSession(null);
@@ -41,7 +41,7 @@ export function ShellActions() {
 
           } catch {
 
-            setError(strings.auth.logoutFailed);
+            setError(strings.auth.logoutFailedHint);
             setPending(false);
 
           }

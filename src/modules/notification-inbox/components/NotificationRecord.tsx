@@ -7,6 +7,7 @@ import {
 } from '@/components/ui';
 import { NavigationLink } from '@/components/ui/components/NavigationLink';
 import { useNavigationGuard } from '@/providers/NavigationGuardProvider';
+import { useProjectRouting } from '@/providers/RuntimeProvider';
 import { portalNotificationInboxStrings as copy } from '@/strings';
 
 import type { NotificationCategory } from '../models/notificationCategory';
@@ -35,7 +36,8 @@ export function NotificationRecord({
 }: NotificationRecordProps) {
 
   const { confirmNavigation } = useNavigationGuard();
-  const href = notificationDestination(item.destination);
+  const routing = useProjectRouting();
+  const href = notificationDestination(routing, item.destination);
   const instant = item.publishedAt ?? item.createdAt;
   const headingId = `notification-${item.id}`;
   return (

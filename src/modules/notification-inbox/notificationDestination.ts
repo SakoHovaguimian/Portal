@@ -1,4 +1,6 @@
+import type { ProjectRouting } from '@/config/models/projectRouting';
 import { portalModules } from '@/config/portalModules';
+import { isProjectRedirectAllowed } from '@/config/projectRoutes';
 
 const supportedRoutes = new Set([
   'dashboard',
@@ -13,7 +15,7 @@ const supportedRoutes = new Set([
 ]);
 
 /** Notification payloads cannot navigate to external origins, auth, or executable URLs. */
-export function notificationDestination(destination: string | null) {
+export function notificationDestination(routing: ProjectRouting, destination: string | null) {
 
   if (
     !destination ||
@@ -26,7 +28,8 @@ export function notificationDestination(destination: string | null) {
     const url = new URL(destination, 'https://portal.internal');
     if (
       url.origin !== 'https://portal.internal' ||
-      !supportedRoutes.has(url.pathname.split('/')[1])
+      !supportedRoutes.has(url.pathname.split('/')[1]) ||
+      !isProjectRedirectAllowed(routing, url.pathname)
     ) { return null; }
     return `${url.pathname}${url.search}${url.hash}`;
 

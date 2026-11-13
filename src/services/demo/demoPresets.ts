@@ -40,7 +40,7 @@ export function createDemoUsers(): DemoUser[] {
   }));
   for (const key of ['empty', 'onboarding', 'admin', 'superadmin'] as const) {
 
-    const account = copy.accounts[key];
+    const account = copy.accountsData[key];
     const now = new Date().toISOString();
     result.push({
       id: demoPresetIds[key],

@@ -74,7 +74,7 @@ export function FeatureRequestsScreen({ query = '' }: FeatureRequestsScreenProps
         title={strings.ui.appShell.featureRequests}
         description={
           strings.ui.featureRequestsScreen
-            .shareIdeasForImprovingYourWorkspaceAndFollowYour
+            .shareIdeasForImprovingYourWorkspaceAndFollowYourHint
         }
       />
     );
@@ -106,7 +106,7 @@ export function FeatureRequestsScreen({ query = '' }: FeatureRequestsScreenProps
 
               }}
               placeholder={
-                strings.ui.featureRequestsScreen.describeTheWorkflowGapOrIdea
+                strings.ui.featureRequestsScreen.describeTheWorkflowGapOrIdeaHint
               }
             />
           </Field>
@@ -147,7 +147,7 @@ export function FeatureRequestsScreen({ query = '' }: FeatureRequestsScreenProps
       <ErrorState
         title={strings.ui.featureRequestsScreen.featureRequestsUnavailable}
         description={
-          strings.ui.featureRequestsScreen.weCouldNotLoadTheRequestQueue
+          strings.ui.featureRequestsScreen.weCouldNotLoadTheRequestQueueHint
         }
         onRetry={() => void refetch()}
       />
@@ -162,7 +162,7 @@ export function FeatureRequestsScreen({ query = '' }: FeatureRequestsScreenProps
         title={strings.ui.featureRequestsScreen.noRequestsYet}
         description={
           strings.ui.featureRequestsScreen
-            .createTheFirstFeatureRequestToSeedTheWorkflow
+            .createTheFirstFeatureRequestToSeedTheWorkflowHint
         }
       />
     ) : null;

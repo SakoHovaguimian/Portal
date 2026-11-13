@@ -1,6 +1,8 @@
 import 'server-only';
 import { z } from 'zod';
 
+import type { ProjectRouting } from '@/config/models/projectRouting';
+
 // Shared Session And Demo Services
 import {
   AuthError,
@@ -36,8 +38,6 @@ import {
   getDemoNotificationInboxState,
 } from './notificationInboxState';
 
-export { resetDemoNotificationInboxState } from './notificationInboxState';
-
 // **************************************
 // MARK: - CREATE DEMO NO STORE JSON RESPONSE
 // **************************************
@@ -54,6 +54,7 @@ export async function handleNotificationInboxRequest(
   path: string,
   session: ServerSession,
   context: DemoContext,
+  routing: ProjectRouting,
 ): Promise<Response | null> {
 
   const url = new URL(path, 'http://portal.internal');
@@ -72,7 +73,7 @@ export async function handleNotificationInboxRequest(
   );
   if (!session.demo || !currentUser) { throw new AuthError(); }
 
-  const state = getDemoNotificationInboxState();
+  const state = getDemoNotificationInboxState(routing);
   const now = new Date().toISOString();
 
   // **************************************

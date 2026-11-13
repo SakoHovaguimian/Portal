@@ -1,9 +1,10 @@
 'use client';
 
+import { strings } from '@/strings';
+
+import { addressCountries } from '../data/addressCountries';
 import { addressRegions } from '../lib/addressChoices';
 import type { AddressSelectProps } from '../models/addressSelectProps';
-import { addressCountries, strings } from '@/strings';
-
 import { Select } from './Select';
 
 export function AddressSelect({

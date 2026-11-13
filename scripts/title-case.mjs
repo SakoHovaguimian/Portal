@@ -15,10 +15,14 @@ const preservedWords = new Set([
 ]);
 const words = /[\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)*/gu;
 const titleRole =
-  /(?:title|label|heading|header|caption|action|cta|button|column)s?$/i;
+  /(?:title|label|heading|header|caption|action|cta|button|column|option|tab|badge|status|question)s?$/i;
+const explicitTitleRole =
+  /^.+(?:Title|Label|Heading|Header|Caption|Action|CTA|Button|Column|Option|Tab|Badge|Status|Question)s?$/;
 const sentenceRole =
-  /(?:description|hint|help|body|guidance|placeholder|alt|paragraph|explanation)s?$/i;
-const dataRole = /^(?:sample|example|syntax)|(?:sample|example)$/i;
+  /(?:description|hint|body|guidance|placeholder|alt|paragraph|explanation|message|summary|byline|answer|reason|rejection)s?$/i;
+const dataRole = /^(?:sample|example|syntax)|(?:sample|example|value|data|version|keywords|emoji|providers)$/i;
+const proseGroups = new Set(['errors', 'validation', 'environment']);
+const dataExports = new Set(['portalProjectStrings', 'projectInitializerCopy', 'shareCommandCopy']);
 
 export function titleCase(value) {
 
@@ -32,19 +36,14 @@ export function titleCase(value) {
 
 }
 
-function copyStyle(property, source, inherited) {
+function copyStyle(key, inherited) {
 
-  const comments = source.slice(property.getFullStart(), property.getStart());
-  const annotation = comments.match(
-    /@(sentence|preserve|title)-case:[ \t]+\S[^\r\n]*/,
-  );
-  if (annotation) { return annotation[1]; }
+  if (explicitTitleRole.test(key)) { return 'title'; }
   if (inherited !== 'title') { return inherited; }
-  const key = property.name.getText().replace(/^['"]|['"]$/g, '');
   if (titleRole.test(key)) { return 'title'; }
-  if (sentenceRole.test(key)) { return 'sentence'; }
+  if (sentenceRole.test(key) || proseGroups.has(key)) { return 'sentence'; }
   if (dataRole.test(key)) { return 'preserve'; }
-  return 'title';
+  return inherited;
 
 }
 
@@ -81,10 +80,19 @@ export function titleCaseViolations(source, file = 'src/strings.ts') {
       visit(
         node.initializer,
         [...keyPath, key],
-        copyStyle(node, source, style),
+        copyStyle(key, style),
       );
 
     } else if (ts.isObjectLiteralExpression(node)) {
+      ts.forEachChild(node, (child) => visit(child, keyPath, style));
+    } else if (
+      ts.isArrayLiteralExpression(node) ||
+      ts.isAsExpression(node) ||
+      ts.isSatisfiesExpression(node) ||
+      ts.isParenthesizedExpression(node) ||
+      ts.isBlock(node) ||
+      ts.isIfStatement(node)
+    ) {
       ts.forEachChild(node, (child) => visit(child, keyPath, style));
     } else if (style !== 'title') {
       return;
@@ -123,15 +131,6 @@ export function titleCaseViolations(source, file = 'src/strings.ts') {
 
       if (node.expression) { visit(node.expression, keyPath, style); }
 
-    } else if (
-      ts.isArrayLiteralExpression(node) ||
-      ts.isAsExpression(node) ||
-      ts.isSatisfiesExpression(node) ||
-      ts.isParenthesizedExpression(node) ||
-      ts.isBlock(node) ||
-      ts.isIfStatement(node)
-    ) {
-      ts.forEachChild(node, (child) => visit(child, keyPath, style));
     }
 
   }
@@ -143,7 +142,7 @@ export function titleCaseViolations(source, file = 'src/strings.ts') {
 
       if (
         !declaration.initializer ||
-        !['strings', 'labels'].includes(declaration.name.getText(sf))
+        dataExports.has(declaration.name.getText(sf))
       ) { continue; }
       visit(declaration.initializer, [declaration.name.getText(sf)], 'title');
 

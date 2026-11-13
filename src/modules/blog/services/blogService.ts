@@ -165,7 +165,7 @@ export class BlogService {
         { signal },
       ),
     );
-    if (article.status !== 'published') { throw new NotFoundError(copy.missingArticle); }
+    if (article.status !== 'published') { throw new NotFoundError(copy.missingArticleHint); }
     return article;
 
   }

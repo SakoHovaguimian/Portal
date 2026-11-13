@@ -13,12 +13,12 @@ export const BlogQuoteContentSchema = z
         text: z
           .string()
           .trim()
-          .min(1, copy.invalidShortText)
-          .max(4000, copy.invalidShortText),
+          .min(1, copy.invalidShortTextHint)
+          .max(4000, copy.invalidShortTextHint),
         attribution: z
           .string()
           .trim()
-          .max(200, copy.invalidAttribution)
+          .max(200, copy.invalidAttributionHint)
           .default(''),
       })
       .strict(),

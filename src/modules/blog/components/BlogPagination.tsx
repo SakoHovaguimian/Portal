@@ -25,7 +25,7 @@ export function BlogPagination({
         hasMore,
         nextOffset: hasMore ? page.offset + page.limit : null,
       }}
-      range={(from, to) => copy.articleRange(from, to, page.total)}
+      range={(from, to) => copy.articleRangeHint(from, to, page.total)}
       onNavigate={onNavigateAction}
     />
   );

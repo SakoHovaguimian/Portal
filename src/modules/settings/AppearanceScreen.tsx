@@ -50,7 +50,7 @@ export function AppearanceScreen() {
       <SplitSection
         id="notifications"
         title={strings.notifications.title}
-        description={strings.notifications.available}
+        description={strings.notifications.availableHint}
       >
         <NotificationControls />
       </SplitSection>

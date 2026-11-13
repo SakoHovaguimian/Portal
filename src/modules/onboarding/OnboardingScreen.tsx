@@ -21,6 +21,7 @@ import {
   TimezoneSelect,
 } from '@/components/ui';
 import { useSessionState } from '@/providers/AppProviders';
+import { useProjectRouting } from '@/providers/RuntimeProvider';
 import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
 import { portalOnboardingStrings as copy } from '@/strings';
 
@@ -59,6 +60,7 @@ function OnboardingForm({
 }: OnboardingFormProps) {
 
   const router = useRouter();
+  const routing = useProjectRouting();
   const mutation = useSaveOnboarding();
   const { session, setSession } = useSessionState();
   const [step, setStep] = useState<OnboardingStep>(progress.currentStep);
@@ -98,7 +100,7 @@ function OnboardingForm({
         : OnboardingPreferencesSchema.safeParse(preferences);
     if (step !== 'review' && !parsed.success) {
 
-      setValidation(parsed.error.issues[0]?.message ?? copy.invalidName);
+      setValidation(parsed.error.issues[0]?.message ?? copy.invalidNameHint);
       const field = parsed.error.issues[0]?.path[0];
       formRef.current
         ?.querySelector<HTMLElement>(
@@ -132,7 +134,7 @@ function OnboardingForm({
       }
       if (savedProgress.completedAt) {
 
-        router.replace(resolveOnboardingRedirect(redirectTo));
+        router.replace(resolveOnboardingRedirect(routing, redirectTo));
         router.refresh();
         return;
 
@@ -163,7 +165,7 @@ function OnboardingForm({
         intent="success"
         action={
           <Button
-            onClick={() => router.push(resolveOnboardingRedirect(redirectTo))}
+            onClick={() => router.push(resolveOnboardingRedirect(routing, redirectTo))}
           >
             {copy.continue}
           </Button>

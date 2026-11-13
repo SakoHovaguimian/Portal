@@ -104,7 +104,7 @@ export function DraftChatReview({
             intent="danger"
             title={
               field.validationMessage ??
-                    strings.assistantMessages.invalidValue
+                    strings.assistantMessages.invalidValueHint
             }
           />
         )}
@@ -127,7 +127,7 @@ export function DraftChatReview({
       <p className="m-0 text-xs text-secondary">{copy.previewHint}</p>
       {reviewFields}
       {!Object.keys(review).length && (
-        <Message intent="info" title={strings.draftAssistant.noSuggestions} />
+        <Message intent="info" title={strings.draftAssistant.noSuggestionsHint} />
       )}
       {!!result?.questions?.length && (
         <Message
@@ -144,7 +144,7 @@ export function DraftChatReview({
         />
       )}
       {stale && (
-        <Message intent="warning" title={strings.draftAssistant.changed} />
+        <Message intent="warning" title={strings.draftAssistant.changedHint} />
       )}
       <div className="flex flex-wrap gap-3">
         <Button

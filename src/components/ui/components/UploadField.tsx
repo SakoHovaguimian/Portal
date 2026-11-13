@@ -78,7 +78,7 @@ export function UploadField({
             {description ?? copy.upload.dropHint}
           </p>
           <p className="m-0 mt-1 text-xs text-tertiary">
-            {copy.upload.limits(
+            {copy.upload.limitsHint(
               acceptedTypesLabel ?? accept,
               Number.isFinite(limit) ? limit : undefined,
               maxSizeBytes,

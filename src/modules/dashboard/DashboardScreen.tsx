@@ -52,7 +52,7 @@ const salesVsRefundsRefunds = [-1800, -1200, -2500, -1700, -3200, -1400];
 
 const topChannels = [
   {
-    source: strings.ui.dashboardScreen.githubCom,
+    source: strings.ui.dashboardScreen.githubComData,
     visitors: strings.ui.dashboardScreen.value24k2,
     revenue: strings.ui.dashboardScreen.value3877,
     sales: strings.ui.dashboardScreen.value267,
@@ -73,14 +73,14 @@ const topChannels = [
     conversion: strings.ui.dashboardScreen.value42,
   },
   {
-    source: strings.ui.dashboardScreen.vimeoCom,
+    source: strings.ui.dashboardScreen.vimeoComData,
     visitors: strings.ui.dashboardScreen.value19k,
     revenue: strings.ui.dashboardScreen.value2236,
     sales: strings.ui.dashboardScreen.value220,
     conversion: strings.ui.dashboardScreen.value42,
   },
   {
-    source: strings.ui.dashboardScreen.indiehackersCom,
+    source: strings.ui.dashboardScreen.indiehackersComData,
     visitors: strings.ui.dashboardScreen.value17k2,
     revenue: strings.ui.dashboardScreen.value2034,
     sales: strings.ui.dashboardScreen.value204,
@@ -575,7 +575,7 @@ export function DashboardScreen() {
         title={strings.ui.dashboardScreen.dashboard}
         description={
           strings.ui.dashboardScreen
-            .reviewYourWorkspaceActivityBrowseRecordsAndManageIncoming
+            .reviewYourWorkspaceActivityBrowseRecordsAndManageIncomingHint
         }
         meta={
           overview.data && (
@@ -615,7 +615,7 @@ export function DashboardScreen() {
             title={strings.ui.dashboardScreen.workspaceDataUnavailable}
             description={
               strings.ui.dashboardScreen
-                .pleaseTryLoadingYourWorkspaceAgain
+                .pleaseTryLoadingYourWorkspaceAgainHint
             }
             onRetry={() => {
 
@@ -668,7 +668,7 @@ export function DashboardScreen() {
             {strings.ui.dashboardScreen.modelExplorer}
           </h2>
           <p className="mt-2 text-sm leading-6 text-secondary">
-            {strings.ui.dashboardScreen.chooseHowMuchSpaceToUseForEachRecord}
+            {strings.ui.dashboardScreen.chooseHowMuchSpaceToUseForEachRecordHint}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -690,11 +690,11 @@ export function DashboardScreen() {
             {strings.ui.dashboardScreen.selectedModel}
           </p>
           <p className="mt-2 text-sm font-semibold text-primary">
-            {modelDetail.data?.displayName || model || strings.ui.dashboardScreen.noRecordsAvailable}
+            {modelDetail.data?.displayName || model || strings.ui.dashboardScreen.noRecordsAvailableHint}
           </p>
           <p className="mt-1 text-sm text-secondary">
             {visibleRows}{' '}
-            {strings.ui.dashboardScreen.visibleRecordsInTheCurrentQuery}
+            {strings.ui.dashboardScreen.visibleRecordsInTheCurrentQueryHint}
           </p>
         </div>
       </Card>
@@ -829,7 +829,7 @@ export function DashboardScreen() {
           <DataTable columns={columns} rows={rows} />
         ) : (
           <p className="m-0 text-sm text-secondary">
-            {strings.ui.dashboardScreen.noRecordsAvailable}
+            {strings.ui.dashboardScreen.noRecordsAvailableHint}
           </p>
         )}
       </Card>
@@ -856,7 +856,7 @@ export function DashboardScreen() {
           </span>
         </div>
         <div className="mt-2 text-sm text-secondary">
-          {strings.ui.dashboardScreen.recordsAvailableForOperationalViews}
+          {strings.ui.dashboardScreen.recordsAvailableForOperationalViewsHint}
         </div>
       </div>
     );

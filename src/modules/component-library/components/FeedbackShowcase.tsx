@@ -103,7 +103,7 @@ export function FeedbackShowcase() {
                 void presentation.showSheet({
                   title: copy.sheetTitle,
                   description: copy.sheetHint,
-                  content: copy.sheetContent,
+                  content: copy.sheetContentHint,
                   confirmLabel: copy.close,
                   cancelLabel: copy.cancel,
                 });

@@ -251,7 +251,7 @@ export function ReviewedDraftChat({
         </div>
         {!speech.isSupported && (
           <p className="m-0 text-xs text-secondary">
-            {strings.draftAssistant.typedInput}
+            {strings.draftAssistant.typedInputHint}
           </p>
         )}
         {speechBusy && (
@@ -260,7 +260,7 @@ export function ReviewedDraftChat({
               ? strings.draftAssistant.finishing
               : speech.isStarting
                 ? strings.draftAssistant.starting
-                : strings.draftAssistant.listening}
+                : strings.draftAssistant.listeningHint}
           </p>
         )}
         {speech.error && <Message intent="warning" title={speech.error} />}

@@ -188,7 +188,7 @@ export function useReviewedDraftAssistant({
         setError(
           cause instanceof ApiError && cause.status === 429
             ? rateLimited
-            : strings.draftAssistant.failed,
+            : strings.draftAssistant.failedHint,
         );
 
       }

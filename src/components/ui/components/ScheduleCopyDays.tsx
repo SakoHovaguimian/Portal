@@ -67,7 +67,7 @@ export function ScheduleCopyDays({
           {targetDays}
         </div>
         {!allowed && (
-          <p className="m-0 text-sm text-error-primary">{copy.hoursLimit}</p>
+          <p className="m-0 text-sm text-error-primary">{copy.hoursLimitHint}</p>
         )}
         <div className="flex flex-wrap gap-2">
           <Button
@@ -77,7 +77,7 @@ export function ScheduleCopyDays({
 
               onApply(targets);
               setAnnouncement(
-                copy.hoursCopied(
+                copy.hoursCopiedHint(
                   days[source],
                   targets.map((day) => days[day]),
                 ),

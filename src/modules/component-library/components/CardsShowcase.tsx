@@ -25,7 +25,7 @@ export function CardsShowcase() {
     void presentation.showSheet({
       title: copy.sheetTitle,
       description: copy.sheetHint,
-      content: copy.sheetContent,
+      content: copy.sheetContentHint,
       confirmLabel: copy.close,
       cancelLabel: copy.cancel,
     });
@@ -89,7 +89,7 @@ export function CardsShowcase() {
           </h4>
           <CardView
             title={copy.active}
-            description={active ? copy.productLive : copy.productInactive}
+            description={active ? copy.productLiveHint : copy.productInactiveHint}
           >
             <Switch
               label={copy.active}

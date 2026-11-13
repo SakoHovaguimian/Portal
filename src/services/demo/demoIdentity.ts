@@ -23,7 +23,7 @@ export async function createDemoIdentitySession(
   const user = getDemoState().users.find(
     (user) => user.id === demoPresetIds[key] && !user.disabled && !user.deleted,
   );
-  if (!user) { throw new AuthError(copy.accountUnavailable, 409); }
+  if (!user) { throw new AuthError(copy.accountUnavailableHint, 409); }
   if (key === 'onboarding') {
 
     resetDemoAccountState(user.id);
@@ -32,7 +32,7 @@ export async function createDemoIdentitySession(
   }
   const auth = await new DemoFirebaseAuthService().signIn(
     user.email,
-    copy.seedPassword,
+    copy.seedPasswordData,
   );
   return {
     auth,

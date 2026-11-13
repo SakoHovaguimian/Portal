@@ -84,7 +84,7 @@ export function ReviewedDraftAssistant({
             </Button>
           </div>
         ) : (
-          <p className="m-0 text-xs text-secondary">{copy.typedInput}</p>
+          <p className="m-0 text-xs text-secondary">{copy.typedInputHint}</p>
         )}
         {speechBusy && (
           <p role="status" className="m-0 text-sm text-secondary">
@@ -92,7 +92,7 @@ export function ReviewedDraftAssistant({
               ? copy.finishing
               : speech.isStarting
                 ? copy.starting
-                : copy.listening}
+                : copy.listeningHint}
           </p>
         )}
         {speech.error && <Message intent="warning" title={speech.error} />}
@@ -269,14 +269,14 @@ export function ReviewedDraftAssistant({
         tabIndex={-1}
         className="grid min-w-0 gap-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
       >
-        <p className="m-0 text-sm text-secondary">{copy.review}</p>
+        <p className="m-0 text-sm text-secondary">{copy.reviewHint}</p>
         {reviewFields}
         {!Object.keys(review).length && (
-          <Message intent="info" title={copy.noSuggestions} />
+          <Message intent="info" title={copy.noSuggestionsHint} />
         )}
         {renderQuestions()}
         {renderWarnings()}
-        {stale && <Message intent="warning" title={copy.changed} />}
+        {stale && <Message intent="warning" title={copy.changedHint} />}
         <div className="flex flex-wrap gap-2">
           <Button disabled={blocked || stale || !canApply} onClick={apply}>
             {copy.apply}

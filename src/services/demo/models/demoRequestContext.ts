@@ -1,3 +1,4 @@
+import type { ProjectRouting } from '@/config/models/projectRouting';
 import type { PaginatedResult } from '@/models/paginatedResult';
 import type { ServerSession } from '@/services/session/models/serverSession';
 
@@ -14,6 +15,7 @@ export interface DemoRequestContext {
   current: DemoUser;
   state: DemoState;
   empty: boolean;
+  routing: ProjectRouting;
 
   input(): Promise<Record<string, unknown>>;
 

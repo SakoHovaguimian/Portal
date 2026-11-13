@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { Button, Field, Input, PasswordInput, Select } from '@/components/ui';
-import { useRuntimeConfig } from '@/providers/RuntimeProvider';
+import { useProjectRouting, useRuntimeConfig } from '@/providers/RuntimeProvider';
 import {
   DemoPresetSchema,
   type DemoPreset,
@@ -19,13 +19,14 @@ import { createSession, resolveSessionRedirect } from './sessionClient';
 export function LoginScreen({ redirectTo }: AuthRedirectProps) {
 
   const router = useRouter();
+  const routing = useProjectRouting();
   const { demoMode, devSettingsEnabled } = useRuntimeConfig();
   const [preset, setPreset] = useState<DemoPreset>('populated');
   const [email, setEmail] = useState(
-    demoMode ? strings.ui.loginScreen.sakoExampleCom : '',
+    demoMode ? strings.ui.loginScreen.sakoExampleComData : '',
   );
   const [password, setPassword] = useState(
-    demoMode ? strings.ui.loginScreen.password123 : '',
+    demoMode ? strings.ui.loginScreen.password123Data : '',
   );
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
@@ -43,7 +44,7 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
       const result = await createSession({ action: 'login', email, password });
 
       router.push(
-        resolveSessionRedirect(redirectTo, result.onboardingRequired, result.user.role),
+        resolveSessionRedirect(routing, redirectTo, result.onboardingRequired, result.user.role),
       );
       router.refresh();
 
@@ -71,7 +72,7 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
 
       const result = await createSession({ action: 'preset', preset });
       router.push(
-        resolveSessionRedirect(redirectTo, result.onboardingRequired, result.user.role),
+        resolveSessionRedirect(routing, redirectTo, result.onboardingRequired, result.user.role),
       );
       router.refresh();
 
@@ -116,7 +117,7 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
   function renderDemoAccountOption(
     [key, account]: [
       string,
-      (typeof demoCopy.accounts)[keyof typeof demoCopy.accounts],
+      (typeof demoCopy.accountsData)[keyof typeof demoCopy.accountsData],
     ],
   ) {
 
@@ -130,7 +131,7 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
 
   function renderDemoPresetSection() {
 
-    const accountOptions = Object.entries(demoCopy.accounts).map(
+    const accountOptions = Object.entries(demoCopy.accountsData).map(
       renderDemoAccountOption,
     );
 
@@ -154,7 +155,7 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
           </Select>
         </Field>
         <p className="m-0 text-sm text-tertiary">
-          {demoCopy.accounts[preset].description}
+          {demoCopy.accountsData[preset].description}
         </p>
         <Button
           variant="secondary"
@@ -208,7 +209,7 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
             className="auth-panel-hover"
             type="email"
             autoComplete="email"
-            placeholder={strings.ui.loginScreen.youCompanyCom}
+            placeholder={strings.ui.loginScreen.youCompanyComData}
             leadingIcon={<MailIcon className="h-5 w-5" />}
             value={email}
             aria-invalid={Boolean(error)}
@@ -221,7 +222,7 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
           <PasswordInput
             className="auth-panel-hover"
             autoComplete="current-password"
-            placeholder={strings.ui.loginScreen.enterYourPassword}
+            placeholder={strings.ui.loginScreen.enterYourPasswordHint}
             leadingIcon={<LockIcon className="h-5 w-5" />}
             value={password}
             aria-invalid={Boolean(error)}
@@ -250,7 +251,7 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
     <AuthCardShell
       badge={strings.ui.loginScreen.access}
       title={strings.ui.loginScreen.welcomeBack}
-      description={strings.ui.loginScreen.signInToKeepUpWithYourPeopleRequests}
+      description={strings.ui.loginScreen.signInToKeepUpWithYourPeopleRequestsHint}
       footerPrompt={strings.ui.loginScreen.needAnAccount}
       footerHref={
         redirectTo

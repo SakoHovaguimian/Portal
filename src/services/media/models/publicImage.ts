@@ -20,10 +20,10 @@ export const PublicImageSchema = z.object({
   url: z
     .string()
     .max(2000)
-    .refine(isPublicImageReference, mediaCopy.imageUrlError),
+    .refine(isPublicImageReference, mediaCopy.imageUrlErrorHint),
   thumbnailUrl: z
     .string()
-    .refine(isPublicImageReference, mediaCopy.imageUrlError)
+    .refine(isPublicImageReference, mediaCopy.imageUrlErrorHint)
     .nullable()
     .optional(),
 });

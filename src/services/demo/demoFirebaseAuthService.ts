@@ -27,7 +27,7 @@ export class DemoFirebaseAuthService implements FirebaseAuthServiceInterface {
       user.deleted ||
       !credential ||
       !passwordMatches(password, credential)
-    ) { throw new AuthError(strings.auth.invalidCredentials); }
+    ) { throw new AuthError(strings.auth.invalidCredentialsHint); }
     return this.session(user.external_id, user.email);
 
   }
@@ -40,7 +40,7 @@ export class DemoFirebaseAuthService implements FirebaseAuthServiceInterface {
 
     const state = getDemoState();
     const email = input.email.trim().toLowerCase();
-    if (state.users.some((user) => user.email.toLowerCase() === email)) { throw new AuthError(strings.auth.emailExists, 409); }
+    if (state.users.some((user) => user.email.toLowerCase() === email)) { throw new AuthError(strings.auth.emailExistsHint, 409); }
     const now = new Date().toISOString();
     const user = {
       id: crypto.randomUUID(),

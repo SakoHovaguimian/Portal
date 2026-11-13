@@ -11,6 +11,7 @@ import {
 } from 'next/font/google';
 
 import { ThemeScript } from '@/components/ui';
+import { getProjectRouting } from '@/config/getProjectRouting';
 import { projectConfiguration } from '@/config/projectConfiguration';
 import type { ChildrenProps } from '@/models/childrenProps';
 import { RuntimeProvider } from '@/providers/RuntimeProvider';
@@ -97,7 +98,7 @@ export default async function RootLayout({
     >
       <body className="bg-primary text-primary antialiased">
         <ThemeScript />
-        <RuntimeProvider config={runtime}>
+        <RuntimeProvider config={runtime} routing={getProjectRouting()}>
           <AnalyticsProvider />
           {children}
           <CookieConsentControls />

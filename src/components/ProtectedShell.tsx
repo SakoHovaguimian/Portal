@@ -8,7 +8,7 @@ import { portalModules } from '@/config/portalModules';
 import { portalNavigation } from '@/config/portalNavigation';
 import { getDefaultProjectRoute } from '@/config/projectRoutes';
 import { useSessionState } from '@/providers/AppProviders';
-import { useRuntimeConfig } from '@/providers/RuntimeProvider';
+import { useProjectRouting, useRuntimeConfig } from '@/providers/RuntimeProvider';
 import { useGuardedBack } from '@/providers/useGuardedBack';
 import { useGuardedNavigate } from '@/providers/useGuardedNavigate';
 import { portalModuleStrings } from '@/strings';
@@ -27,8 +27,10 @@ export function ProtectedShell({
   const pathname = usePathname();
   const { session } = useSessionState();
   const runtime = useRuntimeConfig();
-  const back = useGuardedBack(getDefaultProjectRoute((session ?? initialSession).user.role));
+  const routing = useProjectRouting();
   const current = session ?? initialSession;
+  const homeHref = getDefaultProjectRoute(routing, current.user.role);
+  const back = useGuardedBack(homeHref);
 
   function renderUtilities() {
 
@@ -48,8 +50,9 @@ export function ProtectedShell({
   return (
     <AppShell
       session={current}
-      contentLayout={pathname === '/chat' ? 'workspace' : 'page'}
-      navigationItems={portalNavigation(current.user, runtime)}
+      homeHref={homeHref}
+      contentLayout={routing.workspacePaths.includes(pathname) ? 'workspace' : 'page'}
+      navigationItems={portalNavigation(routing, current.user.role, runtime.devSettingsEnabled)}
       accountSlot={<ShellActions />}
       utilitySlot={renderUtilities()}
       bannerSlot={runtime.demoMode && runtime.devSettingsEnabled ? <DemoSimulationNotice /> : undefined}

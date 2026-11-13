@@ -50,12 +50,12 @@ export const StoredBlogMetadataSchema = z
 
     if (!isStoredValue(value)) {
 
-      context.addIssue({ code: 'custom', message: copy.invalidStoredContent });
+      context.addIssue({ code: 'custom', message: copy.invalidStoredContentHint });
       return;
 
     }
     if (new TextEncoder().encode(JSON.stringify(value)).length > 250000) {
-      context.addIssue({ code: 'custom', message: copy.invalidContentSize });
+      context.addIssue({ code: 'custom', message: copy.invalidContentSizeHint });
     }
 
   });

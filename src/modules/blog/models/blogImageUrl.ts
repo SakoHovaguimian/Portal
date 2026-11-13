@@ -10,7 +10,7 @@ export const isBlogImageUrl = isPublicImageReference;
 export const BlogImageUrlSchema = z
   .string()
   .trim()
-  .max(2000, copy.invalidImageUrl)
-  .refine(isBlogImageUrl, copy.invalidImageUrl);
+  .max(2000, copy.invalidImageUrlHint)
+  .refine(isBlogImageUrl, copy.invalidImageUrlHint);
 
 export type BlogImageUrl = z.infer<typeof BlogImageUrlSchema>;

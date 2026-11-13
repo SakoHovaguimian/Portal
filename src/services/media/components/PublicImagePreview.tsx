@@ -20,7 +20,7 @@ export function PublicImagePreview({ src }: PublicImagePreviewProps) {
           className="flex h-full items-center justify-center gap-3 p-4 text-sm text-secondary"
         >
           <UiIcon name="image" className="size-5 shrink-0" />
-          {mediaCopy.previewUnavailable}
+          {mediaCopy.previewUnavailableHint}
         </div>
       ) : (
         <Image

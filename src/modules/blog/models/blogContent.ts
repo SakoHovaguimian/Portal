@@ -38,10 +38,10 @@ export type BlogContent = z.infer<typeof BlogContentSchema>;
 
 export const BlogContentsSchema = z
   .array(BlogContentSchema)
-  .max(100, copy.tooManyBlocks)
+  .max(100, copy.tooManyBlocksHint)
   .superRefine((items, context) => {
 
-    if (new Set(items.map((item) => item.id)).size !== items.length) { context.addIssue({ code: 'custom', message: copy.duplicateBlocks }); }
-    if (new TextEncoder().encode(JSON.stringify(items)).length > 250000) { context.addIssue({ code: 'custom', message: copy.invalidContentSize }); }
+    if (new Set(items.map((item) => item.id)).size !== items.length) { context.addIssue({ code: 'custom', message: copy.duplicateBlocksHint }); }
+    if (new TextEncoder().encode(JSON.stringify(items)).length > 250000) { context.addIssue({ code: 'custom', message: copy.invalidContentSizeHint }); }
 
   });

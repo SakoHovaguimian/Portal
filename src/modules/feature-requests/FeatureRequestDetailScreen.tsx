@@ -128,7 +128,7 @@ function FeatureRequestForm({ request }: FeatureRequestFormProps) {
         title: strings.ui.featureRequestDetailScreen.deleteThisRequest,
         description:
           strings.ui.featureRequestDetailScreen
-            .thisRequestWillBeRemovedFromYourQueue,
+            .thisRequestWillBeRemovedFromYourQueueHint,
         confirmLabel: strings.ui.featureRequestDetailScreen.deleteRequest,
         cancelLabel: strings.ui.featureRequestDetailScreen.keepRequest,
         tone: 'danger',

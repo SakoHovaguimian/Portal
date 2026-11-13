@@ -93,7 +93,7 @@ export function useBrowserSpeechRecognition(
 
     if (!Recognition) {
 
-      setError(strings.draftAssistant.unsupported);
+      setError(strings.draftAssistant.unsupportedHint);
       return;
 
     }
@@ -131,8 +131,8 @@ export function useBrowserSpeechRecognition(
       finishTranscriptSettlement();
       setError(
         event.error === 'not-allowed'
-          ? strings.draftAssistant.blocked
-          : strings.draftAssistant.stopped,
+          ? strings.draftAssistant.blockedHint
+          : strings.draftAssistant.stoppedHint,
       );
 
     };
@@ -175,7 +175,7 @@ export function useBrowserSpeechRecognition(
       recognitionRef.current = null;
       setIsStarting(false);
       setIsListening(false);
-      setError(strings.draftAssistant.couldNotStart);
+      setError(strings.draftAssistant.couldNotStartHint);
 
     }
 
@@ -209,7 +209,7 @@ export function useBrowserSpeechRecognition(
           recognition.abort();
           setIsStarting(false);
           setIsListening(false);
-          setError(strings.draftAssistant.stopped);
+          setError(strings.draftAssistant.stoppedHint);
 
         }
         finishTranscriptSettlement();

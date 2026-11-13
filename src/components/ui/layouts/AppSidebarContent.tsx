@@ -6,11 +6,11 @@ import { NavigationLink } from '../components/NavigationLink';
 import { SidebarLinks } from '../components/SidebarLinks';
 import { cn } from '../lib/cn';
 import type { AppSidebarContentProps } from '../models/appSidebarContentProps';
-import { getDefaultProjectRoute } from '@/config/projectRoutes';
 import { strings } from '@/strings';
 
 export function AppSidebarContent({
   session,
+  homeHref,
   items,
   onNavigate,
   accountSlot,
@@ -19,7 +19,6 @@ export function AppSidebarContent({
   headerAction,
 }: AppSidebarContentProps) {
 
-  const homeHref = getDefaultProjectRoute(session.user.role);
   const displayName =
     `${session.user.firstName} ${session.user.lastName}`.trim();
   const primaryItems = items.filter((item) => item.placement !== 'bottom');

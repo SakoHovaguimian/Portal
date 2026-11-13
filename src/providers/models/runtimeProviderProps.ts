@@ -1,6 +1,8 @@
+import type { ProjectRouting } from '@/config/models/projectRouting';
 import type { ChildrenProps } from '@/models/childrenProps';
 import type { RuntimeConfig } from '@/models/runtimeConfig';
 
 export interface RuntimeProviderProps extends ChildrenProps {
   config: RuntimeConfig;
+  routing: ProjectRouting;
 }

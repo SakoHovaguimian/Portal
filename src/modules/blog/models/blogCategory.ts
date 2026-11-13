@@ -14,8 +14,8 @@ export const blogCategoryPresets = [
 export const BlogCategorySchema = z
   .string()
   .trim()
-  .min(2, copy.invalidTopic)
-  .max(80, copy.invalidTopic);
+  .min(2, copy.invalidTopicHint)
+  .max(80, copy.invalidTopicHint);
 
 export const StoredBlogCategorySchema = z.string().min(1).max(200);
 

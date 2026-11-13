@@ -13,7 +13,7 @@ export function RecordThumbnail({
   alt,
   loading = false,
   hasImage = true,
-  emptyLabel = strings.media.empty,
+  emptyLabel = strings.media.emptyHint,
 }: RecordThumbnailProps) {
 
   const [failed, setFailed] = useState<string>();
@@ -39,7 +39,7 @@ export function RecordThumbnail({
             {loading
               ? strings.apiMutations.mediaLoading
               : hasImage
-                ? strings.media.previewUnavailable
+                ? strings.media.previewUnavailableHint
                 : emptyLabel}
           </span>
         </>

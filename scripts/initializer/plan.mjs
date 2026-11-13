@@ -41,7 +41,7 @@ export async function createPlan(root, settings, force) {
   configuration.branding.logoPath = logo?.publicPath || null;
   configuration.branding.iconPath = icon?.publicPath || null;
   const configurationContent = `import type { ProjectConfiguration } from './models/projectConfiguration';\n\n/** Project-owned defaults. Configure with npm run initialize -- --help. */\nexport const projectConfiguration: ProjectConfiguration = ${sourceLiteral(configuration)};\n`;
-  const identityContent = `\n// @preserve-case: Product identity is project-provided content.\nexport const portalProjectStrings = ${sourceLiteral(settings.identity)};\n`;
+  const identityContent = `\nexport const portalProjectStrings = ${sourceLiteral(settings.identity)};\n`;
   const catalogContent = `${stringsSource.slice(0, identityBlock.start)}${identityContent}${stringsSource.slice(identityBlock.end)}`;
   const files = [
     { path: configurationPath, content: configurationContent },

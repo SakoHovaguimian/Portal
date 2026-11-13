@@ -29,7 +29,7 @@ export async function uploadDemoPublicImage(
     (size, image) => size + image.bytes.byteLength,
     0,
   );
-  if (images().size >= 20 || storedBytes + bytes.length > 25 * 1024 * 1024) { throw new ValidationError(copy.imageCapacityError); }
+  if (images().size >= 20 || storedBytes + bytes.length > 25 * 1024 * 1024) { throw new ValidationError(copy.imageCapacityErrorHint); }
   const id = crypto.randomUUID();
   images().set(id, { bytes, type: file.type });
   return Response.json(
@@ -55,7 +55,7 @@ export function readDemoPublicImage(id: string): Response {
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(id)
       ? images().get(id)
       : null;
-  if (!image) { throw new NotFoundError(copy.previewUnavailable); }
+  if (!image) { throw new NotFoundError(copy.previewUnavailableHint); }
   return new Response(Buffer.from(image.bytes), {
     headers: {
       'content-type': image.type,

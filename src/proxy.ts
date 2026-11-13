@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { getProjectRouting } from '@/config/getProjectRouting';
 import { getDefaultProjectRoute } from '@/config/projectRoutes';
 import { getEffectiveRuntime } from '@/services/demo/demoRuntime';
 import { resolveDemoSession } from '@/services/demo/resolveDemoSession';
@@ -29,7 +30,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(url);
 
   }
-  if (session && authRoute) { return NextResponse.redirect(new URL(getDefaultProjectRoute(session.user.role), request.url)); }
+  if (session && authRoute) { return NextResponse.redirect(new URL(getDefaultProjectRoute(getProjectRouting(), session.user.role), request.url)); }
   return NextResponse.next();
 
 }
