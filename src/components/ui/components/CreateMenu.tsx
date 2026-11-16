@@ -77,15 +77,28 @@ export function CreateMenu<Value extends string>({
 
       }}
     >
-      <Button
-        ref={trigger}
-        isDisabled={unavailable}
-        className={buttonClassName(variant, cn(styles.trigger, className))}
-        data-morphed={!unavailable && active || undefined}
+      <span
+        className="contents"
+        onPointerDownCapture={(event) => {
+
+          // The menu covers the pill as it opens. Finish this press on the
+          // trigger so its release cannot activate the first menu item.
+          if (!unavailable && event.isPrimary && event.pointerType !== 'touch' && event.button === 0) {
+            trigger.current?.setPointerCapture(event.pointerId);
+          }
+
+        }}
       >
-        <UiIcon name="plus" />
-        <span>{label}</span>
-      </Button>
+        <Button
+          ref={trigger}
+          isDisabled={unavailable}
+          className={buttonClassName(variant, cn(styles.trigger, className))}
+          data-morphed={!unavailable && active || undefined}
+        >
+          <UiIcon name="plus" />
+          <span>{label}</span>
+        </Button>
+      </span>
       <Popover
         placement="bottom start"
         offset={-height}

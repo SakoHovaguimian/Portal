@@ -1,5 +1,11 @@
 # Migration verification
 
+## Interactive Component Library — November 15, 2026
+
+- Verified that all seven new components appear in the catalog. In the local demo, exercised Card Swap by click and fling, Orbit Carousel by swipe and keyboard, Assignee Picker by selection and layout change, and Time Scrubber by dragging and crossing midnight with the keyboard.
+- Verified Image Compare by dragging, changing position with the keyboard, and toggling its labels. Checked Create Menu with both keyboard and pointer, including item activation, return focus, and a single pointer press on a menu that opens over its trigger. Inspected the Time Scrubber, Image Compare, and Create Menu at 390px.
+- Exercised Voice Note with local sample audio through pointer hold, keyboard recording, slide-to-cancel, playback, seeking, and discard. Microphone permission and hardware capture were outside this browser verification.
+
 ## Feature Declarations And Copy Rules — November 13, 2026
 
 - Added one server-only declaration per optional feature for navigation, page/API ownership, demo handling, global/account resets, and optional live adapters. The registry composes enabled declarations. Browser navigation and auth redirects receive serializable routing data through the root runtime provider. Shared sidebar defaults and dispatcher-specific feature lists were removed.
