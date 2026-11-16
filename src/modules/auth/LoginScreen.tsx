@@ -3,7 +3,15 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { Button, Field, Input, PasswordInput, Select } from '@/components/ui';
+import {
+  Button,
+  Field,
+  Input,
+  Message,
+  PasswordInput,
+  Select,
+  UiIcon,
+} from '@/components/ui';
 import { useProjectRouting, useRuntimeConfig } from '@/providers/RuntimeProvider';
 import {
   DemoPresetSchema,
@@ -12,7 +20,6 @@ import {
 import { strings, portalDemoStrings as demoCopy } from '@/strings';
 
 import { AuthCardShell } from './AuthCardShell';
-import { LockIcon, MailIcon } from './authIcons';
 import type { AuthRedirectProps } from './models/authRedirectProps';
 import { createSession, resolveSessionRedirect } from './sessionClient';
 
@@ -29,15 +36,18 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
     demoMode ? strings.ui.loginScreen.password123Data : '',
   );
   const [error, setError] = useState<string | null>(null);
-  const [pending, setPending] = useState(false);
+  const [demoError, setDemoError] = useState<string | null>(null);
+  const [pendingAction, setPendingAction] = useState<'signIn' | 'demo' | null>(null);
+  const pending = pendingAction !== null;
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 
     event.preventDefault();
     const form = event.currentTarget;
     if (pending) { return; }
-    setPending(true);
+    setPendingAction('signIn');
     setError(null);
+    setDemoError(null);
 
     try {
 
@@ -58,7 +68,7 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
       );
 
     } finally {
-      setPending(false);
+      setPendingAction(null);
     }
 
   }
@@ -66,8 +76,9 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
   async function openPreset() {
 
     if (pending) { return; }
-    setPending(true);
+    setPendingAction('demo');
     setError(null);
+    setDemoError(null);
     try {
 
       const result = await createSession({ action: 'preset', preset });
@@ -78,14 +89,14 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
 
     } catch (error) {
 
-      setError(
+      setDemoError(
         error instanceof Error
           ? error.message
           : strings.ui.loginScreen.loginFailed,
       );
 
     } finally {
-      setPending(false);
+      setPendingAction(null);
     }
 
   }
@@ -93,8 +104,9 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
   async function enableDemo() {
 
     if (pending) { return; }
-    setPending(true);
+    setPendingAction('demo');
     setError(null);
+    setDemoError(null);
     try {
 
       const response = await fetch('/api/dev-settings/demo', {
@@ -105,10 +117,10 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
 
     } catch (error) {
 
-      setError(
+      setDemoError(
         error instanceof Error ? error.message : demoCopy.errorDescription,
       );
-      setPending(false);
+      setPendingAction(null);
 
     }
 
@@ -136,15 +148,17 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
     );
 
     return (
-      <div className="grid gap-3 border-b border-secondary pb-5">
-        <h2 className="m-0 text-base font-semibold text-primary">
+      <section
+        className="grid gap-3 rounded-card border-control border-secondary bg-secondary_subtle p-4"
+        aria-labelledby="auth-demo-title"
+      >
+        <h2 id="auth-demo-title" className="m-0 text-sm font-semibold text-primary">
           {demoCopy.presetsTitle}
         </h2>
-        <p className="m-0 text-sm text-secondary">
-          {demoCopy.presetsDescription}
-        </p>
+        <p className="m-0 text-xs text-secondary">{demoCopy.presetsDescription}</p>
         <Field labelText={demoCopy.selectAccount}>
           <Select
+            className="min-h-(--control-height-md)"
             value={preset}
             disabled={pending}
             onValueChange={(value) =>
@@ -154,17 +168,21 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
             {accountOptions}
           </Select>
         </Field>
-        <p className="m-0 text-sm text-tertiary">
-          {demoCopy.accountsData[preset].description}
-        </p>
-        <Button
-          variant="secondary"
-          disabled={pending}
-          onClick={() => void openPreset()}
-        >
-          {demoCopy.signInPreset}
-        </Button>
-      </div>
+        <div className="flex flex-wrap items-center gap-3">
+          <p className="m-0 flex-1 basis-40 text-sm text-secondary">
+            {demoCopy.accountsData[preset].description}
+          </p>
+          <Button
+            variant="secondary"
+            disabled={pending}
+            loading={pendingAction === 'demo'}
+            onClick={() => void openPreset()}
+          >
+            {demoCopy.signInPreset}
+          </Button>
+        </div>
+        {demoError && <Message intent="danger" title={demoError} />}
+      </section>
     );
 
   }
@@ -172,13 +190,17 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
   function renderEnableDemoButton() {
 
     return (
-      <Button
-        variant="secondary"
-        disabled={pending}
-        onClick={() => void enableDemo()}
-      >
-        {demoCopy.demoModeLabel}
-      </Button>
+      <div className="grid justify-items-start gap-3">
+        <Button
+          variant="secondary"
+          disabled={pending}
+          loading={pendingAction === 'demo'}
+          onClick={() => void enableDemo()}
+        >
+          {demoCopy.demoModeLabel}
+        </Button>
+        {demoError && <Message intent="danger" title={demoError} />}
+      </div>
     );
 
   }
@@ -189,13 +211,11 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
       return null;
     }
     return (
-      <p
+      <Message
         id="LoginScreen-error"
-        role="alert"
-        className="auth-reveal rounded-2xl border-control border-error-secondary bg-error-secondary/10 px-4 py-3 text-sm text-error-primary"
-      >
-        {error}
-      </p>
+        intent="danger"
+        title={error}
+      />
     );
 
   }
@@ -203,14 +223,13 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
   function renderLoginForm() {
 
     return (
-      <form noValidate onSubmit={handleSubmit} className="grid gap-4">
+      <form noValidate onSubmit={handleSubmit} className="grid gap-(--space-field)">
         <Field labelText={strings.ui.loginScreen.email}>
           <Input
-            className="auth-panel-hover"
             type="email"
             autoComplete="email"
             placeholder={strings.ui.loginScreen.youCompanyComData}
-            leadingIcon={<MailIcon className="h-5 w-5" />}
+            leadingIcon={<UiIcon name="mail" className="size-5" />}
             value={email}
             aria-invalid={Boolean(error)}
             aria-describedby={error ? 'LoginScreen-error' : undefined}
@@ -220,10 +239,9 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
         </Field>
         <Field labelText={strings.ui.loginScreen.password}>
           <PasswordInput
-            className="auth-panel-hover"
             autoComplete="current-password"
             placeholder={strings.ui.loginScreen.enterYourPasswordHint}
-            leadingIcon={<LockIcon className="h-5 w-5" />}
+            leadingIcon={<UiIcon name="lock" className="size-5" />}
             value={password}
             aria-invalid={Boolean(error)}
             aria-describedby={error ? 'LoginScreen-error' : undefined}
@@ -237,10 +255,11 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
           aria-invalid={Boolean(error)}
           aria-describedby={error ? 'LoginScreen-error' : undefined}
           disabled={pending}
-          loading={pending}
-          className="auth-panel-hover w-full"
+          loading={pendingAction === 'signIn'}
+          className="mt-1 min-h-(--control-height-lg) w-full"
         >
           {strings.ui.loginScreen.signIn}
+          <UiIcon name="arrowRight" className="size-4" />
         </Button>
       </form>
     );
@@ -249,9 +268,8 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
 
   return (
     <AuthCardShell
-      badge={strings.ui.loginScreen.access}
       title={strings.ui.loginScreen.welcomeBack}
-      description={strings.ui.loginScreen.signInToKeepUpWithYourPeopleRequestsHint}
+      description={strings.ui.loginScreen.signInToWorkspaceHint}
       footerPrompt={strings.ui.loginScreen.needAnAccount}
       footerHref={
         redirectTo
@@ -259,14 +277,12 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
           : '/signup'
       }
       footerAction={strings.ui.loginScreen.createAccount}
-      mockHint={
+      supportingContent={
         demoMode
-          ? strings.ui.loginScreen.demoModeIsEnabledSignInWithSakoExample
-          : undefined
+          ? renderDemoPresetSection()
+          : devSettingsEnabled && renderEnableDemoButton()
       }
     >
-      {demoMode && renderDemoPresetSection()}
-      {!demoMode && devSettingsEnabled && renderEnableDemoButton()}
       {renderLoginForm()}
     </AuthCardShell>
   );

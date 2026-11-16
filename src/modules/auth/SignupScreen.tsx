@@ -3,12 +3,18 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { Button, Field, Input, PasswordInput } from '@/components/ui';
+import {
+  Button,
+  Field,
+  Input,
+  Message,
+  PasswordInput,
+  UiIcon,
+} from '@/components/ui';
 import { useProjectRouting, useRuntimeConfig } from '@/providers/RuntimeProvider';
 import { strings, portalDemoStrings } from '@/strings';
 
 import { AuthCardShell } from './AuthCardShell';
-import { LockIcon, MailIcon, UserIcon } from './authIcons';
 import type { AuthRedirectProps } from './models/authRedirectProps';
 import { createSession, resolveSessionRedirect } from './sessionClient';
 
@@ -65,13 +71,11 @@ export function SignupScreen({ redirectTo }: AuthRedirectProps) {
   function renderNameFields() {
 
     return (
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-(--space-field) sm:grid-cols-2">
         <Field labelText={strings.ui.signupScreen.firstName}>
           <Input
-            className="auth-panel-hover"
             autoComplete="given-name"
             placeholder={strings.ui.signupScreen.sako}
-            leadingIcon={<UserIcon className="h-5 w-5" />}
             value={firstName}
             aria-invalid={Boolean(error)}
             aria-describedby={error ? 'SignupScreen-error' : undefined}
@@ -81,10 +85,8 @@ export function SignupScreen({ redirectTo }: AuthRedirectProps) {
         </Field>
         <Field labelText={strings.ui.signupScreen.lastName}>
           <Input
-            className="auth-panel-hover"
             autoComplete="family-name"
             placeholder={strings.ui.signupScreen.hovaguimian}
-            leadingIcon={<UserIcon className="h-5 w-5" />}
             value={lastName}
             aria-invalid={Boolean(error)}
             aria-describedby={error ? 'SignupScreen-error' : undefined}
@@ -103,13 +105,11 @@ export function SignupScreen({ redirectTo }: AuthRedirectProps) {
       return null;
     }
     return (
-      <p
+      <Message
         id="SignupScreen-error"
-        role="alert"
-        className="auth-reveal rounded-2xl border-control border-error-secondary bg-error-secondary/10 px-4 py-3 text-sm text-error-primary"
-      >
-        {error}
-      </p>
+        intent="danger"
+        title={error}
+      />
     );
 
   }
@@ -117,15 +117,14 @@ export function SignupScreen({ redirectTo }: AuthRedirectProps) {
   function renderSignupForm() {
 
     return (
-      <form noValidate onSubmit={handleSubmit} className="grid gap-4">
+      <form noValidate onSubmit={handleSubmit} className="grid gap-(--space-field)">
         {renderNameFields()}
         <Field labelText={strings.ui.signupScreen.email}>
           <Input
-            className="auth-panel-hover"
             type="email"
             autoComplete="email"
             placeholder={strings.ui.signupScreen.youCompanyComData}
-            leadingIcon={<MailIcon className="h-5 w-5" />}
+            leadingIcon={<UiIcon name="mail" className="size-5" />}
             value={email}
             aria-invalid={Boolean(error)}
             aria-describedby={error ? 'SignupScreen-error' : undefined}
@@ -135,10 +134,9 @@ export function SignupScreen({ redirectTo }: AuthRedirectProps) {
         </Field>
         <Field labelText={strings.ui.signupScreen.password}>
           <PasswordInput
-            className="auth-panel-hover"
             autoComplete="new-password"
             placeholder={strings.ui.signupScreen.atLeast8CharactersHint}
-            leadingIcon={<LockIcon className="h-5 w-5" />}
+            leadingIcon={<UiIcon name="lock" className="size-5" />}
             value={password}
             aria-invalid={Boolean(error)}
             aria-describedby={error ? 'SignupScreen-error' : undefined}
@@ -153,9 +151,10 @@ export function SignupScreen({ redirectTo }: AuthRedirectProps) {
           aria-describedby={error ? 'SignupScreen-error' : undefined}
           disabled={pending}
           loading={pending}
-          className="auth-panel-hover w-full"
+          className="mt-1 min-h-(--control-height-lg) w-full"
         >
           {strings.ui.signupScreen.createAccount}
+          <UiIcon name="arrowRight" className="size-4" />
         </Button>
       </form>
     );
@@ -164,8 +163,7 @@ export function SignupScreen({ redirectTo }: AuthRedirectProps) {
 
   return (
     <AuthCardShell
-      badge={strings.ui.signupScreen.onboarding}
-      title={strings.ui.signupScreen.createYourWorkspaceAccount}
+      title={strings.ui.signupScreen.createAccountTitle}
       description={strings.ui.signupScreen.createYourAccountToJoinTheWorkspaceHint}
       footerPrompt={strings.ui.signupScreen.alreadyHaveAnAccount}
       footerHref={
@@ -173,8 +171,15 @@ export function SignupScreen({ redirectTo }: AuthRedirectProps) {
           ? `/login?redirectTo=${encodeURIComponent(redirectTo)}`
           : '/login'
       }
-      footerAction={strings.ui.signupScreen.backToLogin}
-      mockHint={demoMode ? portalDemoStrings.signupHint : undefined}
+      footerAction={strings.ui.loginScreen.signIn}
+      supportingContent={demoMode && (
+        <Message
+          intent="neutral"
+          role="note"
+          title={portalDemoStrings.demoModeLabel}
+          description={portalDemoStrings.signupHint}
+        />
+      )}
     >
       {renderSignupForm()}
     </AuthCardShell>

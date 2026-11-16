@@ -13,16 +13,11 @@ export default async function AuthPage({
 
   const query = await searchParams;
   return (
-    <main className="auth-scene min-h-screen bg-secondary px-6 py-12 sm:px-8">
-      <div className="auth-grid-glow" />
-      <div className="relative z-10 mx-auto grid min-h-[calc(100vh-6rem)] w-full max-w-lg items-center">
-        <SignupScreen
-          redirectTo={
-            typeof query.redirectTo === 'string' ? query.redirectTo : undefined
-          }
-        />
-      </div>
-    </main>
+    <SignupScreen
+      redirectTo={
+        typeof query.redirectTo === 'string' ? query.redirectTo : undefined
+      }
+    />
   );
 
 }

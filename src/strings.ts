@@ -24,6 +24,7 @@ export const strings = {
     description: portalProjectStrings.description,
   },
   auth: {
+    decorativeAlt: '',
     showPassword: 'Show Password',
     hidePassword: 'Hide Password',
     invalidCredentialsHint: 'The email or password is incorrect.',
@@ -873,10 +874,8 @@ export const strings = {
     // Authentication And Account
     loginScreen: {
       loginFailed: 'Login Failed',
-      access: 'Access',
       welcomeBack: 'Welcome Back',
-      signInToKeepUpWithYourPeopleRequestsHint:
-        'Sign in to keep up with your people, requests, and conversations.',
+      signInToWorkspaceHint: 'Sign in with your workspace email and password.',
       needAnAccount: 'Need An Account?',
       createAccount: 'Create Account',
       email: 'Email',
@@ -887,17 +886,13 @@ export const strings = {
       signIn: 'Sign In',
       sakoExampleComData: 'sako@example.com',
       password123Data: 'password123',
-      demoModeIsEnabledSignInWithSakoExample:
-        'Demo mode is enabled. Sign in with sako@example.com and password123, or create a demo account.',
     },
     signupScreen: {
       unableToCreateAccount: 'Unable To Create Account',
-      onboarding: 'Onboarding',
-      createYourWorkspaceAccount: 'Create Your Workspace Account',
+      createAccountTitle: 'Create An Account',
       createYourAccountToJoinTheWorkspaceHint:
         'Create your account to join the workspace.',
       alreadyHaveAnAccount: 'Already Have An Account?',
-      backToLogin: 'Back To Login',
       firstName: 'First Name',
       sako: 'Sako',
       lastName: 'Last Name',
