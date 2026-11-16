@@ -20,9 +20,15 @@ export function ToastGroup({ position, toasts, onDismiss, onExitComplete, onPaus
     }
 
   }, [toasts]);
-  const listRef = useListMotion<HTMLDivElement>(undefined, '--motion-duration-enter', { animateEnter: false, observeResize: true, presentation: true });
+  const top = position.startsWith('top');
+  const listRef = useListMotion<HTMLDivElement>(undefined, '--motion-duration-enter', {
+    animateEnter: false,
+    observeResize: true,
+    presentation: true,
+    anchor: top ? 'top' : 'bottom',
+  });
   const items = toasts.filter((toast) => toast.position === position);
-  if (position.startsWith('top')) { items.reverse(); }
+  if (top) { items.reverse(); }
 
   function renderToast(toast: (typeof items)[number]) {
 

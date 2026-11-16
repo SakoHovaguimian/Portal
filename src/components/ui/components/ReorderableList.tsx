@@ -150,11 +150,10 @@ export function ReorderableList<T extends { id: string }>({
       ordered
       label={label}
       listRef={listRef}
-      className={
-        variant === 'cards'
-          ? 'gap-4 divide-y-0 overflow-visible rounded-none border-0 bg-transparent'
-          : undefined
-      }
+      className={cn(
+        'relative',
+        variant === 'cards' && 'gap-4 divide-y-0 overflow-visible rounded-none border-0 bg-transparent',
+      )}
     >
       {itemRows}
     </ListGroup>

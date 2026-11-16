@@ -1,32 +1,40 @@
 import {
   strings,
+  interactiveComponentStrings as interactive,
   portalUiStrings,
   componentExpansionStrings as added,
   componentBrowserStrings as browser,
 } from '@/strings';
 
+import { AssigneePickerShowcase } from './components/AssigneePickerShowcase';
 import { AvatarsShowcase } from './components/AvatarsShowcase';
 import { BulkSelectionShowcase } from './components/BulkSelectionShowcase';
 import { ButtonsShowcase } from './components/ButtonsShowcase';
+import { CardSwapShowcase } from './components/CardSwapShowcase';
 import { CardsShowcase } from './components/CardsShowcase';
 import { CollectionShowcase } from './components/CollectionShowcase';
 import { ComboboxShowcase } from './components/ComboboxShowcase';
+import { CreateMenuShowcase } from './components/CreateMenuShowcase';
 import { DateRangeShowcase } from './components/DateRangeShowcase';
 import { EditingShowcase } from './components/EditingShowcase';
 import { EmptyStatesShowcase } from './components/EmptyStatesShowcase';
 import { FeedbackShowcase } from './components/FeedbackShowcase';
 import { FoundationsShowcase } from './components/FoundationsShowcase';
+import { ImageCompareShowcase } from './components/ImageCompareShowcase';
 import { InputsShowcase } from './components/InputsShowcase';
 import { InteractionsShowcase } from './components/InteractionsShowcase';
 import { MediaShowcase } from './components/MediaShowcase';
 import { MotionShowcase } from './components/MotionShowcase';
+import { OrbitCarouselShowcase } from './components/OrbitCarouselShowcase';
 import { PatternsShowcase } from './components/PatternsShowcase';
 import { SectionsShowcase } from './components/SectionsShowcase';
 import { SelectionShowcase } from './components/SelectionShowcase';
 import { TableShowcase } from './components/TableShowcase';
 import { TilesShowcase } from './components/TilesShowcase';
+import { TimeScrubberShowcase } from './components/TimeScrubberShowcase';
 import { UploadsShowcase } from './components/UploadsShowcase';
 import { ValueControlsShowcase } from './components/ValueControlsShowcase';
+import { VoiceNoteShowcase } from './components/VoiceNoteShowcase';
 import type { ComponentSpecimen } from './models/componentSpecimen';
 import { ThemeControls } from '@/modules/settings/components/ThemeControls';
 
@@ -247,6 +255,69 @@ export const componentSpecimens: readonly ComponentSpecimen[] = [
     icon: 'code',
     keywords: browser.keywords.editing,
     Preview: EditingShowcase,
+  },
+  {
+    id: 'card-swap',
+    title: interactive.cardSwap.title,
+    description: interactive.cardSwap.description,
+    category: 'media',
+    icon: 'layers',
+    keywords: interactive.cardSwap.keywords,
+    Preview: CardSwapShowcase,
+  },
+  {
+    id: 'orbit-carousel',
+    title: interactive.orbit.title,
+    description: interactive.orbit.description,
+    category: 'media',
+    icon: 'image',
+    keywords: interactive.orbit.keywords,
+    Preview: OrbitCarouselShowcase,
+  },
+  {
+    id: 'assignee-picker',
+    title: interactive.assignees.title,
+    description: interactive.assignees.description,
+    category: 'inputs',
+    icon: 'user',
+    keywords: interactive.assignees.keywords,
+    Preview: AssigneePickerShowcase,
+  },
+  {
+    id: 'time-scrubber',
+    title: interactive.time.title,
+    description: interactive.time.description,
+    category: 'inputs',
+    icon: 'clock',
+    keywords: interactive.time.keywords,
+    Preview: TimeScrubberShowcase,
+  },
+  {
+    id: 'image-compare',
+    title: interactive.compare.title,
+    description: interactive.compare.description,
+    category: 'media',
+    icon: 'image',
+    keywords: interactive.compare.keywords,
+    Preview: ImageCompareShowcase,
+  },
+  {
+    id: 'voice-note',
+    title: interactive.voice.title,
+    description: interactive.voice.description,
+    category: 'media',
+    icon: 'microphone',
+    keywords: interactive.voice.keywords,
+    Preview: VoiceNoteShowcase,
+  },
+  {
+    id: 'create-menu',
+    title: interactive.create.title,
+    description: interactive.create.description,
+    category: 'feedback',
+    icon: 'plus',
+    keywords: interactive.create.keywords,
+    Preview: CreateMenuShowcase,
   },
 ];
 

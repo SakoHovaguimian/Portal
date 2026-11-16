@@ -1,0 +1,68 @@
+.track {
+  position: relative;
+  isolation: isolate;
+  container-type: inline-size;
+  aspect-ratio: 1.6;
+  touch-action: pan-y;
+}
+.track[data-interactive] {
+  cursor: grab;
+}
+.track[data-held] {
+  cursor: grabbing;
+}
+.slot {
+  position: absolute;
+  left: 50%;
+  top: 53%;
+  width: 38%;
+  height: 84%;
+  transform: translate(-50%, -50%) translate(var(--orbit-x), var(--orbit-y))
+    rotate(var(--orbit-rotate)) scale(var(--orbit-scale));
+}
+.drift {
+  width: 100%;
+  height: 100%;
+  perspective: 36rem;
+}
+.drift[data-float] {
+  animation: orbit-float var(--orbit-period) ease-in-out infinite alternate;
+}
+.track:hover .drift,
+.track:focus-within .drift {
+  animation-play-state: paused;
+}
+.card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  user-select: none;
+  transform: rotateX(var(--orbit-tilt-x, 0deg))
+    rotateY(var(--orbit-tilt-y, 0deg));
+  transition: transform var(--motion-duration-base) var(--motion-ease-out);
+}
+.track[data-held] .card {
+  transform: none;
+}
+@keyframes orbit-float {
+  to {
+    transform: translateY(var(--orbit-float));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .track .drift {
+    animation: none;
+  }
+  .track .card {
+    transform: none;
+    transition: none;
+  }
+}
+:global([data-motion='reduced']) .track .drift {
+  animation: none;
+}
+:global([data-motion='reduced']) .track .card {
+  transform: none;
+  transition: none;
+}

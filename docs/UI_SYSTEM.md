@@ -41,7 +41,13 @@ Selection uses `--color-selection-fill`, `--color-selection-hover`, and `--color
 
 `styles/motion.css` and theme timing tokens own presses, switches, checkbox marks, segmented movement, list transitions, popups, and overlays. JavaScript animation uses `motionPreferences.ts` and `useListMotion`. Both device reduced motion and the saved Reduced preference win. Positioning, visibility, state, and focus still update immediately.
 
+For `useListMotion`, attach the ref to a positioned list and give its direct item wrappers stable `data-motion-key` values. The hook measures layout within the list, so scrolling and drag previews do not trigger row movement. Bottom-aligned stacks pass `anchor: 'bottom'` to animate from their pinned edge as the stack changes height.
+
+The shared like and bookmark animation emits a ring and particles on activation. The effect owns its temporary elements and removes them on completion, interruption, or unmount.
+
 SegmentedTabs is a native radio choice group. Two choices stay as a capsule on mobile; longer groups use the authored Select below 600px. The indicator measures actual labels and responds to resizing and font changes. SegmentedPanels keeps inactive drafts mounted with hidden/inert semantics.
+
+See [interactive components](INTERACTIVE_COMPONENTS.md) for the Card Swap, Orbit Carousel, Assignee Picker, Time Scrubber, Image Compare, Voice Note, and Create Menu APIs. Each has a configurable Component Library preview.
 
 Stepper uses the LeafLaunch horizontal bars by default. Pass `orientation="vertical"` for connected stacked stages or `orientation="responsive"` for container-driven switching at 34rem. The library shows horizontal and vertical examples together. Completed/current/upcoming state and disabled eligibility come from the caller. Stages are real buttons with `aria-current="step"`, numbered/check markers, full descriptions, visible focus, and 44px targets.
 

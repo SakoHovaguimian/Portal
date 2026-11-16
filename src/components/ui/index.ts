@@ -303,3 +303,43 @@ export * from './models/dateRangeValue';
 export * from './models/dateRangePickerProps';
 
 export type { DataTableProps } from './models/dataTableProps';
+
+export * from './components/AssigneePicker';
+
+export * from './components/CardSwap';
+
+export * from './components/CreateMenu';
+
+export * from './components/ImageCompare';
+
+export * from './components/OrbitCarousel';
+
+export * from './components/TimeScrubber';
+
+export * from './components/VoiceNote';
+
+export type { AssigneePickerOption } from './models/assigneePickerOption';
+
+export type { AssigneePickerProps } from './models/assigneePickerProps';
+
+export type { CardSwapProps } from './models/cardSwapProps';
+
+export type { ComparisonImage } from './models/comparisonImage';
+
+export type { CreateMenuItem } from './models/createMenuItem';
+
+export type { CreateMenuProps } from './models/createMenuProps';
+
+export type { ImageCompareProps } from './models/imageCompareProps';
+
+export type { MediaCardItem } from './models/mediaCardItem';
+
+export type { OrbitCarouselProps } from './models/orbitCarouselProps';
+
+export type { TimeScrubberProps } from './models/timeScrubberProps';
+
+export type { VoiceNoteCaptureSource } from './models/voiceNoteCaptureSource';
+
+export type { VoiceNoteClip } from './models/voiceNoteClip';
+
+export type { VoiceNoteProps } from './models/voiceNoteProps';

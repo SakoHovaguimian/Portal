@@ -3,6 +3,10 @@ import type { IconName } from '../models/iconName';
 import type { UiIconProps } from '../models/uiIconProps';
 
 const paths: Record<IconName, string> = {
+  folder: 'M3 19V5h7l2 2h9v12H3Z',
+  microphone: 'M9 5a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0V5Zm-3 6a6 6 0 0 0 12 0m-6 6v4m-3 0h6',
+  play: 'M8 5v14l11-7L8 5Z',
+  pause: 'M9 5v14m6-14v14',
   smile: 'M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0ZM8 9h.01M16 9h.01M8 14a4 4 0 0 0 8 0',
   shift: 'm12 3 9 9h-5v9H8v-9H3l9-9Z',
   image: 'M3 3h18v18H3V3Zm0 14 6-6 4 4 3-3 5 5M15 7h.01',

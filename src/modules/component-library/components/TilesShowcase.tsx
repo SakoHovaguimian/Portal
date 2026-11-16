@@ -100,7 +100,7 @@ export function TilesShowcase() {
       <ul
         ref={listRef}
         aria-label={copy.selectedCategories}
-        className="m-0 flex list-none flex-wrap gap-2 p-0"
+        className="relative m-0 flex list-none flex-wrap gap-2 p-0"
       >
         {selectedCategories}
       </ul>

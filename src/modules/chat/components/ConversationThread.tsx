@@ -212,7 +212,7 @@ export function ConversationThread({ conversation, messages: serverMessages, act
           <p className="text-sm text-tertiary">{copy.noResultsHint}</p>
         </div>}
 
-        <ul ref={motion} className="m-0 list-none p-0"><li data-motion-key="timeline-start" aria-hidden="true" className="hidden"/>{rows}</ul>
+        <ul ref={motion} className="relative m-0 list-none p-0"><li data-motion-key="timeline-start" aria-hidden="true" className="hidden"/>{rows}</ul>
 
       </div>
     );

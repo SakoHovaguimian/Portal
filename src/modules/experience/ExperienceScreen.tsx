@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui';
@@ -155,7 +155,8 @@ export function ExperienceScreen() {
     return cleanup;
 
   }, []);
-  const [scrollY, setScrollY] = useState(0);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const heroPreviewRef = useRef<HTMLDivElement>(null);
   const [activeSection, setActiveSection] =
     useState<(typeof sections)[number]['id']>('hero');
   const [revealedSections, setRevealedSections] = useState<
@@ -165,7 +166,11 @@ export function ExperienceScreen() {
 
   useEffect(() => {
 
+    const header = headerRef.current;
+    const heroPreview = heroPreviewRef.current;
+    const targets = sections.map(({ id }) => ({ id, element: document.getElementById(id) }));
     let frame = 0;
+    let previousParallax = 0;
 
     const onScroll = () => {
 
@@ -175,8 +180,24 @@ export function ExperienceScreen() {
 
       frame = window.requestAnimationFrame(() => {
 
-        setScrollY(window.scrollY);
         frame = 0;
+        const activationOffset = (header?.offsetHeight ?? 72) + 24;
+        let nextActiveSection: (typeof sections)[number]['id'] = sections[0].id;
+        for (const { id, element } of targets) {
+
+          if (element && element.getBoundingClientRect().top <= activationOffset) {
+            nextActiveSection = id;
+          }
+
+        }
+        const parallax = Math.min(window.scrollY * 0.1, 30);
+        if (heroPreview && parallax !== previousParallax) {
+
+          heroPreview.style.transform = `translate3d(0, ${-parallax}px, 0)`;
+          previousParallax = parallax;
+
+        }
+        setActiveSection(nextActiveSection);
 
       });
 
@@ -243,43 +264,8 @@ export function ExperienceScreen() {
 
   }, []);
 
-  const heroParallax = useMemo(() => Math.min(scrollY * 0.1, 30), [scrollY]);
   const visibleState = (id: (typeof sections)[number]['id']) =>
     (revealedSections[id] ? 'true' : 'false') as 'true' | 'false';
-
-  useEffect(() => {
-
-    const header = document.querySelector('[data-showcase-header="true"]');
-    const headerHeight =
-      header instanceof HTMLElement ? header.offsetHeight : 72;
-    const activationOffset = headerHeight + 24;
-
-    let nextActiveSection: (typeof sections)[number]['id'] = sections[0].id;
-
-    for (const section of sections) {
-
-      const node = document.getElementById(section.id);
-      if (!(node instanceof HTMLElement)) {
-        continue;
-      }
-
-      if (node.getBoundingClientRect().top <= activationOffset) {
-        nextActiveSection = section.id;
-      }
-
-    }
-
-    const frame = requestAnimationFrame(() => {
-
-      setActiveSection((current) =>
-        current === nextActiveSection ? current : nextActiveSection,
-      );
-
-    });
-    const cleanup = () => cancelAnimationFrame(frame);
-    return cleanup;
-
-  }, [scrollY]);
 
   async function handleSolutionPresentation(index: number) {
 
@@ -377,9 +363,7 @@ export function ExperienceScreen() {
     }
 
     setActiveSection(id);
-    const header = document.querySelector('[data-showcase-header="true"]');
-    const headerHeight =
-      header instanceof HTMLElement ? header.offsetHeight : 72;
+    const headerHeight = headerRef.current?.offsetHeight ?? 72;
     const top =
       window.scrollY + node.getBoundingClientRect().top - headerHeight - 16;
     window.scrollTo({ top: Math.max(top, 0), behavior: 'smooth' });
@@ -412,6 +396,7 @@ export function ExperienceScreen() {
 
     return (
       <div
+        ref={headerRef}
         data-showcase-header="true"
         className="sticky top-0 z-40 border-b border-secondary bg-(--dashboard-shell-topbar) backdrop-blur"
       >
@@ -566,10 +551,7 @@ export function ExperienceScreen() {
             </div>
           </article>
 
-          <div
-            className="grid gap-4"
-            style={{ transform: `translate3d(0, ${-heroParallax}px, 0)` }}
-          >
+          <div ref={heroPreviewRef} className="grid gap-4">
             <article className="rounded-3xl border-control border-secondary bg-primary p-5 shadow-(--dashboard-shell-shadow)">
               <div className="flex items-center justify-between gap-3">
                 <div>

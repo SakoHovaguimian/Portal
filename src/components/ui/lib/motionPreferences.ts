@@ -30,7 +30,7 @@ export function motionDuration(
 
 // Animation is progressive enhancement: an unsupported engine or timing value
 // must never prevent layout, dismissal, or focus from completing.
-export function animateMotion(element: HTMLElement, keyframes: Keyframe[], options: KeyframeAnimationOptions): Animation | null {
+export function animateMotion(element: Element, keyframes: Keyframe[], options: KeyframeAnimationOptions): Animation | null {
 
   if (prefersReducedMotion() || typeof element.animate !== 'function') { return null; }
   try {
