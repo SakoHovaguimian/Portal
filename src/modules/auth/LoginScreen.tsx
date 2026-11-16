@@ -240,7 +240,6 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
         <Field labelText={strings.ui.loginScreen.password}>
           <PasswordInput
             autoComplete="current-password"
-            placeholder={strings.ui.loginScreen.enterYourPasswordHint}
             leadingIcon={<UiIcon name="lock" className="size-5" />}
             value={password}
             aria-invalid={Boolean(error)}

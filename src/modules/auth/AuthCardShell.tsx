@@ -18,7 +18,7 @@ export function AuthCardShell({
       <header className="grid gap-2">
         <h1
           id="auth-title"
-          className="m-0 font-display text-display-md leading-tight font-semibold text-balance wrap-anywhere text-primary xl:text-display-lg"
+          className="m-0 font-display text-display-md leading-tight font-semibold text-balance wrap-anywhere text-primary max-[24rem]:text-display-sm xl:text-display-lg"
         >
           {title}
         </h1>

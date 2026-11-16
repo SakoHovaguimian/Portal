@@ -881,7 +881,6 @@ export const strings = {
       email: 'Email',
       youCompanyComData: 'you@company.com',
       password: 'Password',
-      enterYourPasswordHint: 'Enter your password',
       signingIn: 'Signing In...',
       signIn: 'Sign In',
       sakoExampleComData: 'sako@example.com',
@@ -900,7 +899,6 @@ export const strings = {
       email: 'Email',
       youCompanyComData: 'you@company.com',
       password: 'Password',
-      atLeast8CharactersHint: 'At least 8 characters',
       creatingAccount: 'Creating Account...',
       createAccount: 'Create Account',
       demoAccountsAndChangesLastUntilTheDemoServerHint:

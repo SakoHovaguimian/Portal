@@ -132,18 +132,26 @@ export function SignupScreen({ redirectTo }: AuthRedirectProps) {
             onChange={(event) => setEmail(event.target.value)}
           />
         </Field>
-        <Field labelText={strings.ui.signupScreen.password}>
-          <PasswordInput
-            autoComplete="new-password"
-            placeholder={strings.ui.signupScreen.atLeast8CharactersHint}
-            leadingIcon={<UiIcon name="lock" className="size-5" />}
-            value={password}
-            aria-invalid={Boolean(error)}
-            aria-describedby={error ? 'SignupScreen-error' : undefined}
-            disabled={pending}
-            onChange={(event) => setPassword(event.target.value)}
-          />
-        </Field>
+        <div className="grid gap-2">
+          <Field labelText={strings.ui.signupScreen.password}>
+            <PasswordInput
+              autoComplete="new-password"
+              leadingIcon={<UiIcon name="lock" className="size-5" />}
+              value={password}
+              aria-invalid={Boolean(error)}
+              aria-describedby={
+                error
+                  ? 'SignupScreen-password-hint SignupScreen-error'
+                  : 'SignupScreen-password-hint'
+              }
+              disabled={pending}
+              onChange={(event) => setPassword(event.target.value)}
+            />
+          </Field>
+          <p id="SignupScreen-password-hint" className="m-0 text-xs text-secondary">
+            {strings.auth.passwordHint}
+          </p>
+        </div>
         {renderSignupError()}
         <Button
           type="submit"
