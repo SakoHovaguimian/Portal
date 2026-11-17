@@ -1,0 +1,47 @@
+.trigger {
+  min-height: var(--control-height-lg);
+}
+.stack {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.face {
+  position: relative;
+  display: inline-flex;
+  animation: arrive var(--motion-duration-base) var(--motion-ease-spring) both;
+}
+.stack[data-layout='row'] > .face > span {
+  box-shadow: 0 0 0 2px var(--color-bg-primary);
+}
+.stack[data-layout='row'] > .face + .face {
+  margin-inline-start: calc(-1 * var(--assignee-overlap));
+}
+.stack[data-layout='grid']:not([data-count='1']) {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  place-content: center;
+  gap: calc(3px - var(--assignee-overlap) / 11);
+  width: 2rem;
+  height: 2rem;
+}
+.stack[data-layout='grid']:not([data-count='1']) > .face > span {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  font-size: 0.48rem;
+}
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: translateY(-0.25rem) rotate(-12deg) scale(0.7);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .face {
+    animation: none;
+  }
+}
+:global([data-motion='reduced']) .face {
+  animation: none;
+}

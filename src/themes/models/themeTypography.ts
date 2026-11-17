@@ -1,0 +1,20 @@
+export type ThemeTypography = {
+  bodyFamily: string;
+  displayFamily: string;
+  monoFamily: string;
+  captionSize: string;
+  captionLeading: string;
+  controlSize: string;
+  controlLeading: string;
+  bodySize: string;
+  bodyLeading: string;
+  headingSize: string;
+  headingLeading: string;
+  displaySize: string;
+  displayLeading: string;
+  normalWeight: number;
+  mediumWeight: number;
+  headingWeight: number;
+  boldWeight: number;
+  headingTracking: string;
+};

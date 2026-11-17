@@ -1,0 +1,76 @@
+'use client';
+
+import { Slot } from '@radix-ui/react-slot';
+
+import { buttonClassName } from '../lib/buttonStyles';
+import type { ButtonProps } from '../models/buttonProps';
+
+import { Spinner } from './Spinner';
+
+export function Button({
+  children,
+  variant = 'primary',
+  asChild = false,
+  className,
+  type,
+  loading = false,
+  disabled,
+  onClickCapture,
+  tabIndex,
+  ...props
+}: ButtonProps) {
+
+  const Comp = asChild ? Slot : 'button';
+
+  return (
+    <Comp
+      className={buttonClassName(variant, className)}
+      {...(!asChild ? { type: type ?? 'button' } : {})}
+      {...(!asChild ? { disabled: disabled || loading } : {})}
+      data-variant={variant}
+      aria-disabled={asChild && (disabled || loading) ? true : undefined}
+      tabIndex={asChild && (disabled || loading) ? -1 : tabIndex}
+      onClickCapture={(event) => {
+
+        if (asChild && (disabled || loading)) {
+
+          event.preventDefault();
+          event.stopPropagation();
+          return;
+
+        }
+        // Safari does not focus clicked native buttons. Normalize this before
+        // an action opens an overlay so its return-focus target is reliable.
+        if (!asChild && !disabled && !loading) { event.currentTarget.focus({ preventScroll: true }); }
+        onClickCapture?.(event);
+
+      }}
+      aria-busy={loading || undefined}
+      {...props}
+    >
+      {asChild ? (
+        children
+      ) : (
+        <>
+          {loading ? (
+            <>
+              <span
+                aria-hidden="true"
+                className="invisible inline-flex items-center gap-2"
+              >
+                {children}
+              </span>
+              <span className="sr-only">{children}</span>
+              <span className="absolute inset-0 grid place-items-center">
+                <Spinner />
+              </span>
+            </>
+          ) : (
+            children
+          )}
+        </>
+      )}
+    </Comp>
+  );
+
+}

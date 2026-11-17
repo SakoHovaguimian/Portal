@@ -1,0 +1,42 @@
+import { cn } from '../lib/cn';
+import type { SelectionTileProps } from '../models/selectionTileProps';
+
+import { Checkbox } from './Checkbox';
+
+export function SelectionTile({
+  label,
+  icon,
+  description,
+  className,
+  ...props
+}: SelectionTileProps) {
+
+  return (
+    <Checkbox
+      {...props}
+      description={description}
+      className={cn(
+        'ui-selection-tile min-h-(--control-height-lg) rounded-control border-control border-secondary bg-primary px-3 py-2 hover:border-brand/50 has-checked:border-brand/30 has-checked:bg-brand-primary has-[:disabled]:bg-disabled_subtle has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-brand',
+        className,
+      )}
+      label={
+        <span className="flex items-center gap-3">
+          {icon && (
+            <span
+              aria-hidden="true"
+              className={
+                props.disabled
+                  ? 'ui-tile-icon text-disabled'
+                  : 'ui-tile-icon text-brand-secondary'
+              }
+            >
+              {icon}
+            </span>
+          )}
+          <span>{label}</span>
+        </span>
+      }
+    />
+  );
+
+}

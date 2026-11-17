@@ -1,0 +1,9 @@
+{
+  "editor.tabSize": 2,
+  "[typescript][typescriptreact][javascript][javascriptreact]": {
+    "editor.formatOnSave": false,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    }
+  }
+}

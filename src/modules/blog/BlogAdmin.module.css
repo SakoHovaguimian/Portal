@@ -1,0 +1,40 @@
+.intro {
+  padding-block: calc(var(--spacing) * 2);
+}
+.editor {
+  max-width: 78rem;
+}
+.directoryPanel {
+  min-width: 0;
+}
+.articleIdentity {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 4);
+}
+.articleThumbnail {
+  width: 3.5rem;
+  flex-shrink: 0;
+}
+.editorCover {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 4);
+  padding: calc(var(--spacing) * 4);
+  border: var(--border-width-control) solid var(--color-border-secondary);
+  border-radius: var(--radius-xl);
+}
+.editorCover img {
+  width: 7.5rem;
+  height: 6rem;
+  object-fit: contain;
+}
+.editorCover p {
+  display: grid;
+  gap: calc(var(--spacing) * 1);
+  color: var(--color-text-secondary);
+}
+.editorCover span {
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+}

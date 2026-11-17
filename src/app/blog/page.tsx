@@ -1,0 +1,36 @@
+import type { Metadata } from 'next';
+
+import type { SearchRouteProps } from '@/models/searchRouteProps';
+import { portalPublishingStrings } from '@/strings';
+
+import { blogQueryFromSearch } from '@/modules/blog/models/blogQuery';
+import { PublicBlogScreen } from '@/modules/blog/PublicBlogScreen';
+import { publicBlogService } from '@/modules/blog/services/publicBlogService';
+
+const copy = portalPublishingStrings.article;
+
+export const metadata: Metadata = {
+  title: copy.publicMetadataTitle,
+  description: copy.publicDescription,
+};
+
+export const dynamic = 'force-dynamic';
+
+export default async function BlogPage({
+  searchParams,
+}: SearchRouteProps) {
+
+  const query = blogQueryFromSearch(await searchParams);
+  const [page, options] = await Promise.all([
+    publicBlogService.listPublic(query),
+    publicBlogService.options(true),
+  ]);
+  return (
+    <PublicBlogScreen
+      categories={options.categories}
+      page={page}
+      query={{ ...query, offset: page.offset }}
+    />
+  );
+
+}

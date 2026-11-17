@@ -1,0 +1,55 @@
+.trigger[data-morphed] {
+  opacity: 0;
+}
+.popover {
+  width: min(max(13rem, var(--trigger-width, 0px)), calc(100vw - 1.5rem));
+  clip-path: inset(-1rem round var(--radius-overlay));
+  transition:
+    clip-path var(--motion-duration-enter) var(--motion-ease-out),
+    opacity var(--motion-duration-fast) var(--motion-ease-out);
+}
+.popover[data-entering],
+.popover[data-exiting] {
+  clip-path: inset(
+    0 max(0px, 100% - var(--trigger-width, 5rem))
+      max(0px, 100% - var(--create-height, var(--control-height-md))) 0 round
+      var(--radius-control)
+  );
+}
+.popover[data-placement='top'][data-entering],
+.popover[data-placement='top'][data-exiting] {
+  clip-path: inset(
+    max(0px, 100% - var(--create-height, var(--control-height-md)))
+      max(0px, 100% - var(--trigger-width, 5rem)) 0 0 round
+      var(--radius-control)
+  );
+}
+.popover[data-exiting] {
+  opacity: 0;
+}
+.row {
+  opacity: 1;
+  translate: 0;
+  transition:
+    opacity var(--motion-duration-base) var(--motion-ease-out),
+    translate var(--motion-duration-base) var(--motion-ease-out);
+  transition-delay: calc(
+    var(--create-index) * var(--motion-duration-press) / 5
+  );
+}
+.popover[data-entering] .row,
+.popover[data-exiting] .row {
+  opacity: 0;
+  translate: 0 -0.2rem;
+  transition-delay: 0ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  .popover,
+  .row {
+    transition: none;
+  }
+}
+:global([data-motion='reduced']) .popover,
+:global([data-motion='reduced']) .row {
+  transition: none;
+}

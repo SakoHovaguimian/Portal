@@ -1,0 +1,72 @@
+'use client';
+
+import { useId, useState } from 'react';
+
+import { Button } from '@/components/ui';
+import { portalPublishingStrings } from '@/strings';
+
+import styles from '../Blog.module.css';
+import { resolveBlogEmbed } from '../content/resolveBlogEmbed';
+import type { BlogEmbeddedMediaProps } from '../models/blogEmbeddedMediaProps';
+
+const copy = portalPublishingStrings.builder;
+
+export function BlogEmbeddedMedia({
+  metaData,
+}: BlogEmbeddedMediaProps) {
+
+  const player = resolveBlogEmbed(metaData.url);
+  const titleId = useId();
+  const playerId = `${titleId}-player`;
+  const [activeSource, setActiveSource] = useState<string | null>(null);
+  const loaded = Boolean(player && activeSource === player.src);
+  return (
+    <figure className={styles.contentEmbed} aria-labelledby={titleId}>
+      <div className={styles.contentEmbedCard}>
+        <span className={styles.contentEmbedHost}>
+          {new URL(metaData.url).hostname}
+        </span>
+        <strong id={titleId}>{metaData.title}</strong>
+        {player && (
+          <p className={styles.contentEmbedHint}>
+            {copy.embedConnectionHint(copy.embedProviders[player.provider])}
+          </p>
+        )}
+        <div className={styles.contentEmbedActions}>
+          {player && (
+            <Button
+              variant="secondary"
+              aria-expanded={loaded}
+              aria-controls={loaded ? playerId : undefined}
+              aria-describedby={titleId}
+              onClick={() => setActiveSource(loaded ? null : player.src)}
+            >
+              {loaded ? copy.unloadEmbed : copy.loadEmbed}
+            </Button>
+          )}
+          <Button asChild variant="ghost">
+            <a href={metaData.url} target="_blank" rel="noopener noreferrer">
+              {copy.openEmbed}
+            </a>
+          </Button>
+        </div>
+        {loaded && player && (
+          <iframe
+            id={playerId}
+            className={styles.contentEmbedFrame}
+            data-provider={player.provider}
+            src={player.src}
+            title={metaData.title}
+            loading="lazy"
+            referrerPolicy="strict-origin-when-cross-origin"
+            sandbox="allow-scripts allow-same-origin allow-presentation"
+            allow="encrypted-media; fullscreen; picture-in-picture"
+            allowFullScreen
+          />
+        )}
+      </div>
+      {metaData.caption && <figcaption>{metaData.caption}</figcaption>}
+    </figure>
+  );
+
+}

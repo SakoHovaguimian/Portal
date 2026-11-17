@@ -1,0 +1,49 @@
+import 'server-only';
+
+import { portalModules } from '@/config/portalModules';
+
+import { getDemoBlogState } from '@/modules/blog/server/demoBlogState';
+import { EngagementTargetSchema } from '../models/engagementTarget';
+import type { EngagementTargetResolver } from '../models/engagementTargetResolver';
+
+const resolvers = new Map<string, EngagementTargetResolver>();
+
+// **************************************
+// MARK: - REGISTER ENGAGEMENT TARGET
+// **************************************
+
+export function registerEngagementTarget(
+  type: string,
+  resolver: EngagementTargetResolver,
+) {
+  resolvers.set(type, resolver);
+}
+
+// **************************************
+// MARK: - RESOLVE ENGAGEMENT TARGET
+// **************************************
+
+export async function resolveEngagementTarget(type: string, id: string) {
+
+  const resolved = await resolvers.get(type)?.(id);
+  return resolved ? EngagementTargetSchema.parse(resolved) : null;
+
+}
+// Demo resolvers project only public information. Live authorization belongs to the backend.
+registerEngagementTarget('blog', (id) => {
+
+  if (!portalModules.publishing) { return null; }
+  const article = getDemoBlogState().find(
+    (item) => item.id === id && item.status === 'published',
+  );
+  return article
+    ? {
+      type: 'blog',
+      id: article.id,
+      title: article.title,
+      description: article.description,
+      href: `/blog/${article.slug}`,
+    }
+    : null;
+
+});

@@ -1,0 +1,105 @@
+.shell {
+  width: var(--voice-idle-width, min(100%, 13.5rem));
+  min-width: 0;
+  max-width: 100%;
+  transition: width var(--motion-duration-enter)
+    cubic-bezier(0.3, var(--voice-bounce), 0.4, 1);
+}
+.shell[data-active] {
+  width: var(--voice-open-width, min(100%, 24rem));
+}
+.record {
+  width: 100%;
+  white-space: normal;
+  min-height: var(--control-height-lg);
+}
+.record.hold {
+  touch-action: pan-y;
+  user-select: none;
+}
+.recording,
+.player {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: calc(var(--spacing) * 2);
+}
+.recording {
+  width: 100%;
+  overflow: hidden;
+}
+.player {
+  min-height: var(--control-height-lg);
+  padding: calc(var(--spacing) * 1);
+  border: var(--border-width-control) solid var(--color-border-secondary);
+  border-radius: var(--radius-control);
+  background: var(--color-bg-primary);
+  box-shadow: var(--shadow-control);
+}
+.player > audio {
+  display: none;
+}
+.time {
+  flex-shrink: 0;
+  color: var(--color-text-tertiary);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+.seek {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  border-radius: var(--radius-control);
+  min-width: 0;
+}
+.seek:focus-within {
+  outline: 2px solid var(--color-border-brand);
+}
+.slider {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: ew-resize;
+}
+.waveform {
+  display: grid;
+  grid-template-columns: repeat(var(--voice-bars), minmax(0, 1fr));
+  flex: 1;
+  align-items: center;
+  gap: clamp(1px, 0.4vw, 3px);
+  height: 2.4rem;
+  min-width: 0;
+  color: var(--color-fg-brand-primary);
+}
+.bar {
+  height: calc(10% + 82% * var(--voice-level));
+  border-radius: var(--radius-control);
+  background: currentColor;
+  opacity: clamp(
+    0.32,
+    (var(--voice-position) * var(--voice-bars) - var(--voice-index)) * 2,
+    1
+  );
+}
+.recordingWave {
+  color: var(--color-fg-error-primary);
+}
+.recordingWave .bar {
+  opacity: 1;
+  transition: height var(--motion-duration-press) var(--motion-ease-out);
+}
+@media (prefers-reduced-motion: reduce) {
+  .shell,
+  .recordingWave .bar {
+    transition: none;
+  }
+}
+:global([data-motion='reduced']) .shell,
+:global([data-motion='reduced']) .recordingWave .bar {
+  transition: none;
+}

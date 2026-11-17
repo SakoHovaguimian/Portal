@@ -1,0 +1,66 @@
+.layout {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-block-size: 100dvh;
+  background: var(--color-bg-primary);
+}
+
+.brandPanel,
+.formPanel {
+  min-inline-size: 0;
+  padding: var(--space-page);
+}
+
+.brandPanel {
+  background: var(--color-selection-fill);
+}
+
+.story {
+  display: none;
+}
+
+.formPanel {
+  display: grid;
+  align-items: start;
+  justify-items: center;
+  padding-block: clamp(2.5rem, 6vw, 5rem);
+}
+
+@media (min-width: 56rem) {
+  .layout {
+    grid-template-columns: minmax(0, 46fr) minmax(0, 54fr);
+    grid-template-rows: 1fr;
+  }
+
+  .brandPanel {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    justify-items: center;
+    gap: var(--space-section);
+    padding: clamp(2rem, 4.5vw, 5rem);
+  }
+
+  .brandPanel > * {
+    inline-size: min(100%, 35rem);
+  }
+
+  .story {
+    display: grid;
+    align-self: center;
+    gap: var(--space-section);
+  }
+
+  .artwork {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 5 / 4;
+    border-radius: var(--radius-overlay);
+    background: var(--color-bg-brand-secondary);
+  }
+
+  .formPanel {
+    align-items: center;
+    padding-block: clamp(2rem, 4.25vw, 4rem);
+    padding-inline: clamp(2rem, 5vw, 6rem);
+  }
+}

@@ -1,0 +1,58 @@
+/* Full-screen navigation stays clear of device cutouts and the home indicator. */
+.ui-mobile-navigation {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.ui-floating-assistant {
+  inset-inline-end: max(1rem, env(safe-area-inset-right));
+  bottom: max(
+    1rem,
+    calc(env(safe-area-inset-bottom) + 1rem),
+    var(--ui-assistant-footer-clearance, 0px)
+  );
+}
+
+.ui-assistant-content {
+  padding-bottom: max(
+    calc(var(--spacing) * 6),
+    calc(env(safe-area-inset-bottom) + calc(var(--spacing) * 4))
+  );
+}
+
+.ui-assistant-image-actions {
+  padding-bottom: max(
+    calc(var(--spacing) * 5),
+    calc(env(safe-area-inset-bottom) + calc(var(--spacing) * 4))
+  );
+}
+
+body:has(.ui-floating-assistant) .ui-page {
+  padding-bottom: calc(var(--spacing) * 20);
+}
+
+/* Keep the pinned desktop navigation outside the document's elastic scroll. */
+@media (min-width: 64rem) {
+  html:has(.ui-app-shell) {
+    overscroll-behavior-y: none;
+  }
+
+  /* Paint behind the sidebar's curved edge without shifting header content. */
+  .ui-app-topbar {
+    margin-inline-start: calc(-1 * var(--dashboard-sidebar-radius));
+    padding-inline-start: var(--dashboard-sidebar-radius);
+  }
+}
+
+/* Keep actions reachable on spacious screens without covering mobile fields. */
+@media (min-width: 64rem) and (min-height: 40rem) {
+  .ui-form-actions-sticky {
+    position: sticky;
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    z-index: 20;
+  }
+
+  form:has(.ui-form-actions-sticky) :is(input, textarea, [tabindex='-1']) {
+    scroll-margin-block: 14rem;
+  }
+}

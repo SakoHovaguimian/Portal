@@ -1,0 +1,30 @@
+import { z } from 'zod';
+
+import { portalPublishingStrings } from '@/strings';
+
+const copy = portalPublishingStrings.article;
+
+export const blogCategoryPresets = [
+  'ideas',
+  'community',
+  'guides',
+  'stories',
+] as const;
+
+export const BlogCategorySchema = z
+  .string()
+  .trim()
+  .min(2, copy.invalidTopicHint)
+  .max(80, copy.invalidTopicHint);
+
+export const StoredBlogCategorySchema = z.string().min(1).max(200);
+
+export type BlogCategory = z.infer<typeof BlogCategorySchema>;
+
+export function blogCategoryLabel(category: string) {
+
+  return Object.hasOwn(copy.categories, category)
+    ? copy.categories[category as keyof typeof copy.categories]
+    : category;
+
+}

@@ -1,0 +1,982 @@
+/* Motion is shared by every internal control. State stays with native inputs/React Aria. */
+.ui-button,
+.ui-input,
+.ui-choice,
+.ui-choice-label,
+.ui-switch,
+.ui-selection-tile,
+.ui-card,
+.ui-badge,
+.ui-chip,
+.ui-drop-zone,
+.ui-select-option,
+.ui-sidebar-link,
+.ui-table-row {
+  transition-property:
+    background-color, border-color, color, box-shadow, opacity, scale;
+  transition-duration: var(--motion-duration-fast);
+  transition-timing-function: var(--motion-ease-out);
+}
+
+.ui-button {
+  transition-duration: var(--motion-duration-base);
+  transition-timing-function: var(--motion-ease-spring);
+}
+.ui-button:is(:active, [data-pressed]):not(:disabled):not(
+    [aria-disabled='true']
+  ) {
+  scale: var(--motion-button-press-scale);
+  transition-duration: var(--motion-duration-press);
+}
+.ui-button[aria-disabled='true'] {
+  cursor: not-allowed;
+}
+.ui-button-primary {
+  background-image: linear-gradient(
+    180deg,
+    var(--color-action-start),
+    var(--color-action-end)
+  );
+}
+.ui-button-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--color-bg-brand-solid_hover);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--motion-duration-fast) var(--motion-ease-out);
+}
+.ui-button-primary:disabled,
+.ui-button-primary[aria-disabled='true'] {
+  background-image: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .ui-button-primary:hover:not(:disabled):not([aria-disabled='true'])::before {
+    opacity: 1;
+  }
+  .ui-section-card:hover .ui-section-chevron {
+    translate: 0.2rem 0;
+  }
+  [dir='rtl'] .ui-section-card:hover .ui-section-chevron {
+    translate: -0.2rem 0;
+  }
+  .ui-selection-tile:hover:not(:has(:disabled)) .ui-tile-icon {
+    scale: var(--motion-hover-scale);
+  }
+}
+.ui-button-primary[data-preview-state='hover']::before {
+  opacity: 1;
+}
+
+.ui-sidebar-link::before {
+  transition: opacity var(--motion-duration-fast) var(--motion-ease-out);
+}
+
+.ui-section-chevron,
+.ui-tile-icon,
+.ui-choice-frame,
+.ui-switch-frame {
+  transition:
+    translate var(--motion-duration-base) var(--motion-ease-out),
+    scale var(--motion-duration-base) var(--motion-ease-spring),
+    opacity var(--motion-duration-fast) var(--motion-ease-out);
+}
+.ui-selection-tile:active:not(:has(:disabled)) {
+  scale: var(--motion-button-press-scale);
+}
+.ui-choice-label:active:not(:has(:disabled)) .ui-choice-frame,
+.ui-switch-label:active:not(:has(:disabled)) .ui-switch-frame {
+  scale: var(--motion-button-press-scale);
+}
+.ui-switch-thumb {
+  transition:
+    translate var(--motion-duration-base) var(--motion-ease-spring),
+    scale var(--motion-duration-press) var(--motion-ease-out),
+    opacity var(--motion-duration-fast) var(--motion-ease-out);
+}
+.ui-switch-label:active:not(:has(:disabled)) .ui-switch-thumb {
+  scale: calc(2 - var(--motion-button-press-scale))
+    var(--motion-button-press-scale);
+}
+
+.ui-choice {
+  transition-property:
+    background-color, border-color, border-width, color, box-shadow, opacity,
+    scale;
+}
+.ui-checkbox-mark,
+.ui-checkbox-mixed {
+  opacity: 0;
+  scale: 0.4;
+  transition:
+    opacity var(--motion-duration-fast) var(--motion-ease-out),
+    scale var(--motion-duration-base) var(--motion-ease-spring);
+}
+/* The check path is about 20 units long; the dash draws it from its first stroke. */
+.ui-checkbox-mark path {
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+  transition: stroke-dashoffset var(--motion-duration-base)
+    var(--motion-ease-out);
+}
+.ui-checkbox:checked + .ui-checkbox-mark,
+.ui-checkbox:indeterminate ~ .ui-checkbox-mixed {
+  opacity: 1;
+  scale: 1;
+}
+.ui-checkbox:checked + .ui-checkbox-mark path {
+  stroke-dashoffset: 0;
+  transition-delay: calc(var(--motion-duration-press) * 0.5);
+}
+.ui-checkbox:indeterminate + .ui-checkbox-mark {
+  opacity: 0;
+}
+.ui-radio-dot {
+  opacity: 0;
+  transform: scale(0.2);
+  transform-origin: center;
+  transition:
+    opacity var(--motion-duration-fast) var(--motion-ease-out),
+    transform var(--motion-duration-base) var(--motion-ease-spring);
+}
+.ui-radio:checked + .ui-radio-dot {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Selecting pops the frame and releases a halo. Amplitude follows the theme's scale roles,
+   so flat themes keep a still frame. Labels opt in after the first change. */
+@keyframes ui-choice-pop {
+  0% {
+    scale: 1;
+  }
+  30% {
+    scale: calc(1 - (1 - var(--motion-button-press-scale)) * 5);
+  }
+  65% {
+    scale: calc(1 + (var(--motion-hover-scale) - 1) * 4);
+  }
+  100% {
+    scale: 1;
+  }
+}
+@keyframes ui-choice-halo {
+  from {
+    opacity: 0.45;
+    scale: 1;
+  }
+  to {
+    opacity: 0;
+    scale: 2.2;
+  }
+}
+.ui-choice-frame::after,
+.ui-switch-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--color-accent);
+  opacity: 0;
+  pointer-events: none;
+}
+.ui-switch-frame::after {
+  border-radius: var(--radius-switch-track);
+  background: var(--color-switch-on);
+}
+.ui-choice-label[data-interacted]
+  .ui-choice-frame:has(
+    > :is(.ui-checkbox:checked, .ui-checkbox:indeterminate, .ui-radio:checked)
+  ),
+.ui-switch-label[data-interacted] .ui-switch-frame:has(> .ui-switch:checked) {
+  animation: ui-choice-pop calc(var(--motion-duration-base) * 1.75)
+    var(--motion-ease-out);
+}
+.ui-choice-label[data-interacted]
+  .ui-choice-frame:has(
+    > :is(.ui-checkbox:checked, .ui-checkbox:indeterminate, .ui-radio:checked)
+  )::after,
+.ui-switch-label[data-interacted]
+  .ui-switch-frame:has(> .ui-switch:checked)::after {
+  animation: ui-choice-halo calc(var(--motion-duration-enter) * 2)
+    var(--motion-ease-out);
+}
+
+.ui-segmented-indicator {
+  width: var(--ui-segment-width, 0px);
+  height: var(--ui-segment-height, 0px);
+  transform: translate(var(--ui-segment-x, 0px), var(--ui-segment-y, 0px));
+  opacity: 0;
+}
+.ui-segmented[data-ready='true'] .ui-segmented-indicator {
+  transition:
+    transform var(--motion-duration-base) var(--motion-ease-spring),
+    width var(--motion-duration-base) var(--motion-ease-out),
+    height var(--motion-duration-base) var(--motion-ease-out),
+    opacity var(--motion-duration-fast) var(--motion-ease-out);
+}
+.ui-segment {
+  transition:
+    color var(--motion-duration-fast) var(--motion-ease-out),
+    transform var(--motion-duration-base) var(--motion-ease-spring);
+}
+.ui-segment:active {
+  transform: scale(var(--motion-button-press-scale));
+}
+
+.ui-select-trigger {
+  transition-duration: var(--motion-duration-fast);
+}
+.ui-select-trigger:is(:active, [data-pressed]):not(:disabled) {
+  scale: var(--motion-button-press-scale);
+}
+.ui-select-chevron {
+  transition: rotate var(--motion-duration-base) var(--motion-ease-out);
+}
+.ui-select[data-open] .ui-select-chevron {
+  rotate: 180deg;
+}
+.ui-select[data-open]:not([data-invalid]) .ui-select-trigger {
+  border-color: var(--color-border-brand);
+}
+.ui-select-value {
+  animation: ui-value-enter var(--motion-duration-fast) var(--motion-ease-out);
+}
+.ui-select-option:active:not([data-disabled]) {
+  scale: var(--motion-button-press-scale);
+}
+.ui-option-check {
+  transition:
+    opacity var(--motion-duration-fast) var(--motion-ease-out),
+    scale var(--motion-duration-base) var(--motion-ease-spring);
+}
+.ui-select-option:not([data-selected]) .ui-option-check {
+  scale: 0.65;
+}
+
+.ui-popover {
+  --ui-popover-scale: var(--presentation-menu-scale, var(--motion-menu-scale));
+  --ui-popover-distance: calc(
+    var(--presentation-menu-travel, var(--motion-menu-travel)) * 0.25
+  );
+  --ui-popover-offset: calc(var(--ui-popover-distance) * -1);
+}
+.ui-popover,
+.ui-tooltip {
+  transform-origin: var(--trigger-anchor-point, center top);
+}
+.ui-popover[data-entering],
+.ui-tooltip[data-entering] {
+  animation: ui-popover-enter var(--motion-duration-base) var(--motion-ease-out);
+}
+.ui-popover[data-exiting],
+.ui-tooltip[data-exiting] {
+  animation: ui-popover-exit var(--motion-duration-fast) var(--motion-ease-out);
+}
+.ui-popover[data-placement='top'],
+.ui-tooltip[data-placement='top'] {
+  --ui-popover-offset: var(--ui-popover-distance, 0.375rem);
+}
+.ui-state {
+  animation: ui-content-enter var(--motion-duration-base) var(--motion-ease-out);
+}
+.ui-token-value {
+  animation: ui-value-enter var(--motion-duration-fast) var(--motion-ease-out);
+}
+.ui-drop-zone[data-dragging='true'] {
+  scale: var(--motion-hover-scale);
+}
+/* Overlay transforms are independent of Tailwind's centering translate property. */
+.ui-dialog,
+.ui-backdrop {
+  --ui-overlay-default-duration: var(
+    --presentation-modal-duration,
+    var(--motion-modal-duration)
+  );
+  --ui-overlay-default-exit-duration: var(
+    --presentation-modal-exit-duration,
+    var(--motion-modal-exit-duration)
+  );
+  --ui-overlay-default-scale: var(
+    --presentation-modal-scale,
+    var(--motion-modal-scale)
+  );
+  --ui-overlay-default-travel: var(
+    --presentation-modal-travel,
+    var(--motion-modal-travel)
+  );
+  --ui-overlay-default-ease: var(
+    --presentation-modal-ease,
+    var(--motion-modal-ease)
+  );
+}
+[data-motion-target='alert'] {
+  --ui-overlay-default-duration: var(
+    --presentation-alert-duration,
+    var(--motion-alert-duration)
+  );
+  --ui-overlay-default-exit-duration: var(
+    --presentation-alert-exit-duration,
+    var(--motion-alert-exit-duration)
+  );
+  --ui-overlay-default-scale: var(
+    --presentation-alert-scale,
+    var(--motion-alert-scale)
+  );
+  --ui-overlay-default-travel: var(
+    --presentation-alert-travel,
+    var(--motion-alert-travel)
+  );
+  --ui-overlay-default-ease: var(
+    --presentation-alert-ease,
+    var(--motion-alert-ease)
+  );
+}
+.ui-sheet,
+.ui-backdrop[data-motion-target='sheet'] {
+  --ui-overlay-default-duration: var(
+    --presentation-sheet-duration,
+    var(--motion-sheet-duration)
+  );
+  --ui-overlay-default-exit-duration: var(
+    --presentation-sheet-exit-duration,
+    var(--motion-sheet-exit-duration)
+  );
+  --ui-overlay-default-scale: var(
+    --presentation-sheet-scale,
+    var(--motion-sheet-scale)
+  );
+  --ui-overlay-default-travel: var(
+    --presentation-sheet-travel,
+    var(--motion-sheet-travel)
+  );
+  --ui-overlay-default-ease: var(
+    --presentation-sheet-ease,
+    var(--motion-sheet-ease)
+  );
+}
+[data-motion-target='menu'] {
+  --ui-overlay-default-duration: var(
+    --presentation-menu-duration,
+    var(--motion-menu-duration)
+  );
+  --ui-overlay-default-exit-duration: var(
+    --presentation-menu-exit-duration,
+    var(--motion-menu-exit-duration)
+  );
+  --ui-overlay-default-scale: var(
+    --presentation-menu-scale,
+    var(--motion-menu-scale)
+  );
+  --ui-overlay-default-travel: var(
+    --presentation-menu-travel,
+    var(--motion-menu-travel)
+  );
+  --ui-overlay-default-ease: var(
+    --presentation-menu-ease,
+    var(--motion-menu-ease)
+  );
+}
+.ui-toast {
+  --ui-overlay-default-duration: var(
+    --presentation-toast-duration,
+    var(--motion-toast-duration)
+  );
+  --ui-overlay-default-exit-duration: var(
+    --presentation-toast-exit-duration,
+    var(--motion-toast-exit-duration)
+  );
+  --ui-overlay-default-scale: var(
+    --presentation-toast-scale,
+    var(--motion-toast-scale)
+  );
+  --ui-overlay-default-travel: var(
+    --presentation-toast-travel,
+    var(--motion-toast-travel)
+  );
+  --ui-overlay-default-ease: var(
+    --presentation-toast-ease,
+    var(--motion-toast-ease)
+  );
+}
+.ui-dialog,
+.ui-sheet,
+.ui-toast {
+  transform-origin: center 60%;
+}
+.ui-backdrop[data-state='open'] {
+  animation: ui-fade-in
+    var(--ui-overlay-duration, var(--ui-overlay-default-duration))
+    var(--ui-overlay-ease, var(--ui-overlay-default-ease)) both;
+}
+.ui-backdrop[data-state='closed'] {
+  animation: ui-fade-out
+    var(--ui-overlay-exit-duration, var(--ui-overlay-default-exit-duration))
+    var(--ui-overlay-ease, var(--ui-overlay-default-ease)) both;
+}
+.ui-dialog[data-state='open'] {
+  animation: ui-dialog-enter
+    var(--ui-overlay-duration, var(--ui-overlay-default-duration))
+    var(--ui-overlay-ease, var(--ui-overlay-default-ease)) both;
+}
+.ui-dialog[data-state='closed'] {
+  animation: ui-dialog-exit
+    var(--ui-overlay-exit-duration, var(--ui-overlay-default-exit-duration))
+    var(--ui-overlay-ease, var(--ui-overlay-default-ease)) both;
+  pointer-events: none;
+}
+.ui-dialog[data-alignment='right'] {
+  --ui-dialog-x: var(--ui-overlay-travel, var(--ui-overlay-default-travel));
+  --ui-dialog-y: 0px;
+  transform-origin: right center;
+}
+.ui-dialog[data-alignment='top'] {
+  --ui-dialog-y: calc(
+    var(--ui-overlay-travel, var(--ui-overlay-default-travel)) * -1
+  );
+  transform-origin: center top;
+}
+.ui-sheet[data-state='open'] {
+  animation: ui-sheet-enter
+    var(--ui-overlay-duration, var(--ui-overlay-default-duration))
+    var(--ui-overlay-ease, var(--ui-overlay-default-ease)) both;
+}
+.ui-sheet[data-state='closed'] {
+  animation: ui-sheet-exit
+    var(--ui-overlay-exit-duration, var(--ui-overlay-default-exit-duration))
+    var(--ui-overlay-ease, var(--ui-overlay-default-ease)) both;
+  pointer-events: none;
+}
+.ui-sheet[data-side='left'] {
+  --ui-sheet-x: calc(
+    -100% - var(--ui-overlay-travel, var(--ui-overlay-default-travel))
+  );
+  --ui-sheet-y: 0px;
+  transform-origin: left center;
+}
+.ui-sheet[data-side='right'] {
+  --ui-sheet-x: calc(
+    100% + var(--ui-overlay-travel, var(--ui-overlay-default-travel))
+  );
+  --ui-sheet-y: 0px;
+  transform-origin: right center;
+}
+.ui-sheet[data-side='bottom'] {
+  --ui-sheet-x: 0px;
+  --ui-sheet-y: calc(
+    100% + var(--ui-overlay-travel, var(--ui-overlay-default-travel))
+  );
+  translate: -50% var(--ui-sheet-drag, 0px);
+  transform-origin: center bottom;
+}
+/* Layout wrappers move independently of the toast's edge entrance. */
+.ui-toast-group {
+  --ui-toast-inset-top: max(1rem, env(safe-area-inset-top));
+  --ui-toast-inset-bottom: max(1rem, env(safe-area-inset-bottom));
+  --ui-toast-inset-left: max(1rem, env(safe-area-inset-left));
+  --ui-toast-inset-right: max(1rem, env(safe-area-inset-right));
+  max-width: calc(
+    100vw - var(--ui-toast-inset-left) - var(--ui-toast-inset-right)
+  );
+  max-height: calc(
+    100dvh - var(--ui-toast-inset-top) - var(--ui-toast-inset-bottom)
+  );
+  overflow: visible;
+  overscroll-behavior: contain;
+}
+.ui-toast-group[data-overflow] {
+  pointer-events: auto;
+  overflow-y: auto;
+}
+.ui-toast-group[data-position^='top'] {
+  top: var(--ui-toast-inset-top);
+}
+.ui-toast-group[data-position^='bottom'] {
+  bottom: var(--ui-toast-inset-bottom);
+}
+.ui-toast-group[data-position$='left'] {
+  left: var(--ui-toast-inset-left);
+}
+.ui-toast-group[data-position$='right'] {
+  right: var(--ui-toast-inset-right);
+}
+.ui-toast-group[data-position$='center'] {
+  left: 50%;
+  translate: -50% 0;
+}
+.ui-toast {
+  --ui-toast-x: 0px;
+  --ui-toast-y: calc(
+    100% + var(--ui-toast-inset-bottom) +
+      var(--ui-overlay-travel, var(--ui-overlay-default-travel))
+  );
+  animation: ui-toast-enter
+    var(--ui-overlay-duration, var(--ui-overlay-default-duration))
+    var(--ui-overlay-ease, var(--ui-overlay-default-ease)) both;
+  transform-origin: center bottom;
+}
+.ui-toast[data-position^='top'] {
+  --ui-toast-y: calc(
+    -100% - var(--ui-toast-inset-top) -
+      var(--ui-overlay-travel, var(--ui-overlay-default-travel))
+  );
+  transform-origin: center top;
+}
+.ui-toast[data-position$='right'] {
+  --ui-toast-x: calc(
+    100% + var(--ui-toast-inset-right) +
+      var(--ui-overlay-travel, var(--ui-overlay-default-travel))
+  );
+  --ui-toast-y: 0px;
+  transform-origin: right center;
+}
+.ui-toast[data-position$='left'] {
+  --ui-toast-x: calc(
+    -100% - var(--ui-toast-inset-left) -
+      var(--ui-overlay-travel, var(--ui-overlay-default-travel))
+  );
+  --ui-toast-y: 0px;
+  transform-origin: left center;
+}
+.ui-toast[data-exiting='true'] {
+  animation: ui-toast-exit
+    var(--ui-overlay-exit-duration, var(--ui-overlay-default-exit-duration))
+    var(--ui-overlay-ease, var(--ui-overlay-default-ease)) both;
+  pointer-events: none;
+}
+.ui-toast .ui-message {
+  animation: none;
+}
+:root[data-presentation-motion='off']
+  :is(.ui-backdrop, .ui-dialog, .ui-sheet, .ui-toast, .ui-toast-slot) {
+  animation: none !important;
+  transition: none !important;
+}
+[data-motion='off'],
+[data-motion='off'] * {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Background refresh indicator for DataPanel and other record surfaces. */
+.ui-progress-line {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  z-index: 1;
+  height: 2px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--motion-duration-base) var(--motion-ease-out);
+}
+.ui-progress-line[data-active] {
+  opacity: 1;
+}
+.ui-progress-line::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  width: 35%;
+  border-radius: 9999px;
+  background: var(--color-bg-brand-solid);
+  animation: ui-progress-slide calc(var(--motion-duration-base) * 6)
+    var(--motion-ease-out) infinite;
+}
+@keyframes ui-progress-slide {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(300%);
+  }
+}
+
+/* Persistent layers let forward/backward changes reverse mid-transition. */
+.ui-step-bar-fill {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--motion-duration-base) var(--motion-ease-out);
+}
+.ui-step-bar:dir(rtl) .ui-step-bar-fill {
+  transform-origin: right center;
+}
+.ui-step-bar[data-filled='true'] .ui-step-bar-fill {
+  transform: scaleX(1);
+}
+.ui-step-marker {
+  transition:
+    background-color var(--motion-duration-base) var(--motion-ease-out),
+    border-color var(--motion-duration-base) var(--motion-ease-out),
+    color var(--motion-duration-base) var(--motion-ease-out);
+}
+.ui-step-number,
+.ui-step-check {
+  transition:
+    opacity var(--motion-duration-base) var(--motion-ease-out),
+    transform var(--motion-duration-base) var(--motion-ease-out);
+}
+.ui-step-number {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+.ui-step-check {
+  opacity: 0;
+  transform: scale(0.5) rotate(-45deg);
+}
+.ui-step-marker[data-complete='true'] .ui-step-number {
+  opacity: 0;
+  transform: scale(0.5) rotate(45deg);
+}
+.ui-step-marker[data-complete='true'] .ui-step-check {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+@keyframes ui-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes ui-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes ui-content-enter {
+  from {
+    opacity: 0;
+    translate: 0 var(--ui-content-offset, 0.375rem);
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+@keyframes ui-content-exit {
+  from {
+    opacity: 1;
+    translate: 0 0;
+  }
+  to {
+    opacity: 0;
+    translate: 0 var(--ui-content-offset, 0.375rem);
+  }
+}
+@keyframes ui-value-enter {
+  from {
+    opacity: 0.5;
+    translate: 0 0.125rem;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+.ui-popover[data-placement='left'],
+.ui-tooltip[data-placement='left'] {
+  --ui-popover-x: var(--ui-popover-distance, 0.375rem);
+  --ui-popover-offset: 0px;
+}
+.ui-popover[data-placement='right'],
+.ui-tooltip[data-placement='right'] {
+  --ui-popover-x: calc(var(--ui-popover-distance, 0.375rem) * -1);
+  --ui-popover-offset: 0px;
+}
+@keyframes ui-popover-enter {
+  from {
+    opacity: 0;
+    translate: var(--ui-popover-x, 0px) var(--ui-popover-offset, -0.375rem);
+    scale: var(--ui-popover-scale, var(--motion-enter-scale));
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+}
+@keyframes ui-popover-exit {
+  from {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+  to {
+    opacity: 0;
+    translate: var(--ui-popover-x, 0px) var(--ui-popover-offset, -0.375rem);
+    scale: var(--ui-popover-scale, var(--motion-enter-scale));
+  }
+}
+@keyframes ui-dialog-enter {
+  from {
+    opacity: 0;
+    transform: translate(
+        var(--ui-dialog-x, 0px),
+        var(
+          --ui-dialog-y,
+          var(--ui-overlay-travel, var(--ui-overlay-default-travel))
+        )
+      )
+      scale(var(--ui-overlay-scale, var(--ui-overlay-default-scale)));
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+}
+@keyframes ui-dialog-exit {
+  from {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(
+        var(--ui-dialog-x, 0px),
+        var(
+          --ui-dialog-y,
+          var(--ui-overlay-travel, var(--ui-overlay-default-travel))
+        )
+      )
+      scale(var(--ui-overlay-scale, var(--ui-overlay-default-scale)));
+  }
+}
+@keyframes ui-sheet-enter {
+  from {
+    opacity: 0;
+    transform: translate(var(--ui-sheet-x), var(--ui-sheet-y))
+      scale(
+        calc(
+          1 - (1 - var(--ui-overlay-scale, var(--ui-overlay-default-scale))) *
+            0.35
+        )
+      );
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+}
+@keyframes ui-sheet-exit {
+  from {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(var(--ui-sheet-x), var(--ui-sheet-y))
+      scale(
+        calc(
+          1 - (1 - var(--ui-overlay-scale, var(--ui-overlay-default-scale))) *
+            0.35
+        )
+      );
+  }
+}
+@keyframes ui-toast-enter {
+  from {
+    opacity: 0;
+    transform: translate(var(--ui-toast-x), var(--ui-toast-y))
+      scale(var(--ui-overlay-scale, var(--ui-overlay-default-scale)));
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+}
+@keyframes ui-toast-exit {
+  from {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(var(--ui-toast-x), var(--ui-toast-y))
+      scale(var(--ui-overlay-scale, var(--ui-overlay-default-scale)));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where([class*='ui-'], [class*='ui-'] *),
+  .ui-choice-frame::after,
+  .ui-switch-frame::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .ui-button:is(:active, [data-pressed]),
+  .ui-select-trigger:is(:active, [data-pressed]),
+  .ui-selection-tile:active,
+  .ui-segment:active,
+  .ui-select-option:active,
+  .ui-choice-frame,
+  .ui-switch-frame,
+  .ui-switch-thumb,
+  .ui-tile-icon,
+  .ui-drop-zone {
+    scale: 1 !important;
+  }
+  .ui-section-chevron {
+    translate: none !important;
+  }
+  .ui-segment:active {
+    transform: none !important;
+  }
+  .ui-progress-line::after {
+    width: 100%;
+  }
+}
+@media (forced-colors: active) {
+  .ui-choice {
+    appearance: auto;
+  }
+  .ui-checkbox-mark,
+  .ui-checkbox-mixed,
+  .ui-radio-dot,
+  .ui-choice-frame::after,
+  .ui-switch-frame::after {
+    display: none;
+  }
+}
+
+/* Conversation entries share the application's motion timing and reduced-motion contract. */
+@keyframes ui-chat-message-enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.4rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.ui-chat-message {
+  animation: ui-chat-message-enter var(--motion-duration-base)
+    var(--motion-ease-out) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ui-chat-message {
+    animation: none;
+  }
+}
+
+/* Preview the insertion gap while the picked-up row follows the pointer. */
+.ui-reorder-row[data-reordering='true'] {
+  transition:
+    translate var(--motion-duration-fast) var(--motion-ease-out),
+    border-radius var(--motion-duration-base) var(--motion-ease-out);
+}
+.ui-reorder-row[data-dragging='true'] {
+  z-index: 1;
+  background: var(--color-bg-primary);
+  box-shadow: var(--shadow-overlay);
+  outline: var(--control-focus-outline-width) solid var(--color-border-brand);
+  outline-offset: -2px;
+  transition: border-radius var(--motion-duration-base) var(--motion-ease-out);
+}
+
+/* List rows own the group's outer corners by visual slot, so a lifted row is never
+   clipped and its corners ease into place when it reaches the first or last slot. */
+.ui-list-group:has(> .ui-reorder-row[data-reordering='true']) {
+  overflow: visible;
+}
+.ui-reorder-row[data-variant='list'] {
+  --ui-reorder-outer-radius: max(
+    0px,
+    calc(var(--radius-card) - var(--border-width-control))
+  );
+  --ui-reorder-inner-radius: 0px;
+  border-start-start-radius: var(--ui-reorder-inner-radius);
+  border-start-end-radius: var(--ui-reorder-inner-radius);
+  border-end-start-radius: var(--ui-reorder-inner-radius);
+  border-end-end-radius: var(--ui-reorder-inner-radius);
+}
+.ui-reorder-row[data-variant='list']:not([data-reordering]) {
+  transition: border-radius var(--motion-duration-base) var(--motion-ease-out);
+}
+.ui-reorder-row[data-variant='list'][data-dragging='true'] {
+  --ui-reorder-inner-radius: min(
+    var(--radius-control),
+    var(--ui-reorder-outer-radius)
+  );
+}
+.ui-reorder-row[data-variant='list'][data-first] {
+  border-start-start-radius: var(--ui-reorder-outer-radius);
+  border-start-end-radius: var(--ui-reorder-outer-radius);
+}
+.ui-reorder-row[data-variant='list'][data-last] {
+  border-end-start-radius: var(--ui-reorder-outer-radius);
+  border-end-end-radius: var(--ui-reorder-outer-radius);
+}
+@media (prefers-reduced-motion: reduce) {
+  .ui-reorder-row {
+    transition: none;
+  }
+}
+
+html[data-motion='reduced'] {
+  :where([class*='ui-'], [class*='ui-'] *),
+  .ui-choice-frame::after,
+  .ui-switch-frame::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .ui-button:is(:active, [data-pressed]),
+  .ui-select-trigger:is(:active, [data-pressed]),
+  .ui-selection-tile:active,
+  .ui-segment:active,
+  .ui-select-option:active,
+  .ui-choice-frame,
+  .ui-switch-frame,
+  .ui-switch-thumb,
+  .ui-tile-icon,
+  .ui-drop-zone {
+    scale: 1 !important;
+  }
+  .ui-section-chevron {
+    translate: none !important;
+  }
+  .ui-segment:active {
+    transform: none !important;
+  }
+  .ui-progress-line::after {
+    width: 100%;
+  }
+}
+
+.ui-popover[data-entering] {
+  animation-duration: var(
+    --presentation-menu-duration,
+    var(--motion-menu-duration)
+  );
+  animation-timing-function: var(
+    --presentation-menu-ease,
+    var(--motion-menu-ease)
+  );
+}
+.ui-popover[data-exiting] {
+  animation-duration: var(
+    --presentation-menu-exit-duration,
+    var(--motion-menu-exit-duration)
+  );
+  animation-timing-function: var(
+    --presentation-menu-ease,
+    var(--motion-menu-ease)
+  );
+}
+.ui-sheet-handle {
+  touch-action: none;
+  cursor: grab;
+}
+.ui-sheet-handle:active {
+  cursor: grabbing;
+}

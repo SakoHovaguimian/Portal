@@ -1,0 +1,115 @@
+.scrubber {
+  display: grid;
+  gap: var(--space-field);
+  padding: calc(var(--spacing) * 3);
+  min-width: 0;
+}
+.time {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  min-height: 1.12em;
+  color: var(--color-text-primary);
+  font-size: clamp(1.8rem, 6vw, 3rem);
+  font-weight: 650;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  white-space: pre;
+}
+.part {
+  display: inline-flex;
+}
+.period {
+  align-self: center;
+  color: var(--color-text-tertiary);
+  font-size: 0.34em;
+}
+.digit {
+  display: inline-block;
+  height: 1em;
+  overflow: hidden;
+  mask-image: linear-gradient(transparent, black 13%, black 87%, transparent);
+}
+.strip {
+  display: grid;
+  transition: translate var(--motion-duration-base) var(--motion-ease-out);
+}
+.strip > span {
+  display: block;
+  height: 1em;
+}
+.ruler {
+  position: relative;
+  height: 3.5rem;
+  min-width: 0;
+  touch-action: pan-y;
+  user-select: none;
+}
+.ruler:not([aria-disabled='true']) {
+  cursor: ew-resize;
+}
+.track {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 20%,
+    black 80%,
+    transparent
+  );
+}
+.tick {
+  position: absolute;
+  inset-inline-start: 50%;
+  top: 20%;
+  translate: var(--tick-x) 0;
+  opacity: var(--tick-opacity);
+  pointer-events: none;
+}
+.tick::before {
+  display: block;
+  width: 1px;
+  height: 0.72rem;
+  background: var(--color-fg-tertiary);
+  transform: scaleY(var(--tick-scale));
+  transform-origin: top;
+  content: '';
+}
+.tick[data-quarter]::before {
+  height: 1.05rem;
+}
+.tick[data-hour]::before {
+  width: 2px;
+  height: 1.28rem;
+}
+.hour {
+  position: absolute;
+  inset-inline-start: 50%;
+  top: 1.45rem;
+  translate: -50% 0;
+  color: var(--color-text-tertiary);
+  font-size: 0.68rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.marker {
+  position: absolute;
+  top: 8%;
+  left: 50%;
+  width: 2px;
+  height: 58%;
+  translate: -50% 0;
+  border-radius: var(--radius-control);
+  background: var(--color-fg-brand-primary);
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .strip {
+    transition: none;
+  }
+}
+:global([data-motion='reduced']) .strip {
+  transition: none;
+}

@@ -1,0 +1,57 @@
+.portal-account-deletion.ui-card {
+  padding: 0;
+  gap: 0;
+  overflow: hidden;
+  border-color: color-mix(
+    in srgb,
+    var(--color-text-error-primary) 22%,
+    var(--color-border-secondary)
+  );
+  background: var(--color-bg-primary);
+}
+.portal-account-deletion__heading {
+  display: flex;
+  align-items: flex-start;
+  gap: calc(var(--spacing) * 4);
+  padding: calc(var(--spacing) * 6);
+}
+.portal-account-deletion__icon {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-control);
+  background: color-mix(
+    in srgb,
+    var(--color-text-error-primary) 8%,
+    transparent
+  );
+  color: var(--color-text-error-primary);
+}
+.portal-account-deletion__actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: calc(var(--spacing) * 4) calc(var(--spacing) * 6);
+  border-top: var(--border-width-control) solid var(--color-border-secondary);
+  background: var(--color-bg-secondary_subtle);
+}
+.portal-account-deletion .ui-button[data-variant='destructive'] {
+  background: color-mix(
+    in srgb,
+    var(--color-text-error-primary) 15%,
+    transparent
+  );
+}
+.portal-account-deletion .ui-button[data-variant='destructive']:hover {
+  background: color-mix(
+    in srgb,
+    var(--color-text-error-primary) 20%,
+    transparent
+  );
+}
+@media (max-width: 599px) {
+  .portal-account-deletion__heading {
+    flex-direction: column;
+  }
+}

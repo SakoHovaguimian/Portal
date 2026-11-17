@@ -1,0 +1,269 @@
+@import 'tailwindcss';
+@import './theme.css';
+@import '../components/ui/styles/states.css';
+@import '../components/ui/styles/motion.css';
+@import '../components/ui/styles/layout.css';
+@import '../components/ui/styles/stepper.css';
+@import '../components/ui/styles/choices.css';
+@import '../components/ui/styles/navigation.css';
+@import '../components/ui/styles/imageMosaic.css';
+
+@plugin "tailwindcss-react-aria-components";
+@plugin "tailwindcss-animate";
+
+@custom-variant dark (&:where(.dark-mode, .dark-mode *));
+
+@layer base {
+  *,
+  ::before,
+  ::after {
+    --tw-border-style: var(--border-style-control);
+  }
+}
+
+html,
+body {
+  background: var(--color-bg-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-variant-ligatures: contextual;
+  font-variant-ligatures: contextual;
+  -webkit-font-kerning: normal;
+  font-kerning: normal;
+}
+
+body {
+  min-height: 100dvh;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+@keyframes experience-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.experience-reveal {
+  opacity: 0;
+  transform: translateY(24px) scale(0.99);
+  transition:
+    opacity calc(var(--motion-duration-enter) * 2) var(--motion-ease-out),
+    transform calc(var(--motion-duration-enter) * 2) var(--motion-ease-out);
+}
+
+.experience-reveal[data-visible='true'] {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  animation: experience-fade-up calc(var(--motion-duration-enter) * 2)
+    var(--motion-ease-out) both;
+}
+
+.hero-panel {
+  opacity: 0;
+  transform: translateY(26px) scale(0.985);
+  transition:
+    opacity calc(var(--motion-duration-enter) * 2) var(--motion-ease-out),
+    transform calc(var(--motion-duration-enter) * 2) var(--motion-ease-out);
+}
+
+.hero-panel[data-visible='true'] {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.hero-panel-delay {
+  transition-delay: var(--motion-duration-fast);
+}
+
+.bouncy-button {
+  transition:
+    transform var(--motion-duration-base) var(--motion-ease-spring),
+    opacity var(--motion-duration-base) var(--motion-ease-out),
+    box-shadow var(--motion-duration-base) var(--motion-ease-out),
+    filter var(--motion-duration-base) var(--motion-ease-out);
+  transform-origin: center;
+}
+
+.bouncy-button:hover {
+  transform: translateY(-1px);
+}
+
+.bouncy-button:active {
+  transform: scale(var(--motion-button-press-scale));
+  opacity: 0.88;
+}
+
+.bouncy-button:focus-visible {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .experience-reveal,
+  .experience-reveal[data-visible='true'] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .hero-panel,
+  .hero-panel[data-visible='true'] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .bouncy-button,
+  .bouncy-button:hover,
+  .bouncy-button:active {
+    transform: none !important;
+    opacity: 1 !important;
+    transition: none !important;
+  }
+}
+
+html {
+  scrollbar-gutter: stable;
+}
+
+/* The root gutter already reserves scrollbar space. Radix's body margin would
+   reserve it a second time; retain its scroll lock and focus isolation. */
+@supports (scrollbar-gutter: stable) {
+  html body[data-scroll-locked] {
+    margin-right: 0 !important;
+    --removed-body-scroll-bar-size: 0px;
+  }
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-primary) var(--color-bg-secondary);
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--color-border-primary);
+  border: 2px solid var(--color-bg-secondary);
+  border-radius: var(--radius-control);
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-tertiary);
+}
+@media (forced-colors: active) {
+  * {
+    scrollbar-color: auto;
+  }
+}
+
+@layer components {
+  .ui-section-accent {
+    background:
+      radial-gradient(
+        ellipse 3rem 4rem at 82% 110%,
+        var(--color-section-decoration) 98%,
+        var(--color-transparent)
+      ),
+      radial-gradient(
+        ellipse 6rem 9rem at 95% 110%,
+        var(--color-section-decoration) 98%,
+        var(--color-transparent)
+      ),
+      linear-gradient(
+        120deg,
+        var(--color-section-accent-start),
+        var(--color-section-accent-end)
+      );
+  }
+
+  .ui-input {
+    scroll-margin-block: 8rem;
+  }
+
+  .ui-button[data-preview-state='focused'],
+  .ui-input[data-preview-state='focused'] {
+    outline: var(--control-focus-outline-width) solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  .ui-button[data-preview-state='hover'][data-variant='primary'] {
+    background: var(--color-bg-brand-solid_hover);
+  }
+
+  .ui-button[data-preview-state='hover'][data-variant='secondary'],
+  .ui-button[data-preview-state='hover'][data-variant='ghost'] {
+    background: var(--color-bg-secondary_hover);
+  }
+
+  .ui-button[data-preview-state='hover'][data-variant='destructive'] {
+    background: var(--color-bg-error-secondary);
+  }
+
+  .ui-choice {
+    margin: 0;
+  }
+}
+
+main [id] {
+  scroll-margin-top: 12rem;
+}
+
+@media (forced-colors: active) {
+  .ui-switch {
+    appearance: auto;
+  }
+
+  .ui-switch + span {
+    display: none;
+  }
+}
+
+html[data-motion='reduced'] {
+  scroll-behavior: auto;
+}
+html[data-motion='reduced'] *,
+html[data-motion='reduced'] *::before,
+html[data-motion='reduced'] *::after {
+  animation: none !important;
+  transition: none !important;
+}
+html[data-motion='reduced'] :is(.experience-reveal, .hero-panel) {
+  opacity: 1 !important;
+  transform: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+*::-webkit-scrollbar-thumb:active {
+  background: var(--color-text-secondary);
+}
