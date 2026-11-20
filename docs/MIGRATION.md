@@ -34,3 +34,7 @@ Portal adopts the reusable LeafLaunch controls and patterns in the existing npm 
 The runtime palette is consolidated into theme.css; semantic-tokens.css is retired. Aqua remains the default and Leaf green is optional. Selection opacity now uses the active accent and distinct light/dark alpha rather than a fixed mint base. Shared motion, persistent segmented panels, full-screen mobile navigation, responsive records, Markdown, media previews, and horizontal/vertical steppers form the base for future projects.
 
 The Button content wrapper was corrected to preserve composed grid/flex layouts such as Stepper and SectionCardView; loading still retains geometry and accessible text. Models stay separate, copy stays centralized, and the repository now enforces shared controls and theme-owned colors. See [UI system](UI_SYSTEM.md).
+
+## Opaque sessions
+
+The first deployment requires a new sign-in for existing sessions. Portal now uses an opaque cookie and a revocable session record with a fixed 30-day deadline. Live deployments on Node 22.13+ must preserve the SQLite file and session secret across app restarts. See [authentication and sessions](AUTH.md) for the storage path and rollout details.

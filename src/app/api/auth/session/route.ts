@@ -115,11 +115,9 @@ export async function PUT(request: Request) {
     const container = await getContainer();
     const session = await container.sessionService.valid();
     if (!session) { throw new AuthError(strings.errors.sessionExpired); }
-    const updated = {
-      ...session,
-      user: await getProfileSession(session.auth, session.demo),
-    };
-    await container.sessionService.create(updated);
+    const user = await getProfileSession(session.auth, session.demo);
+    const updated = await container.sessionService.updateProfile(session, user);
+    if (!updated) { throw new AuthError(strings.errors.sessionExpired); }
     return Response.json(container.sessionService.toPublic(updated), {
       headers: { 'cache-control': 'no-store' },
     });

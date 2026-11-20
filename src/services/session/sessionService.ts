@@ -1,41 +1,64 @@
 import 'server-only';
+import { setTimeout as delay } from 'node:timers/promises';
 import { cookies } from 'next/headers';
-import { createHash } from 'node:crypto';
 
 import { environment } from '@/config/environment';
-import { AuthError } from '@/errors/domainErrors';
+import { ApiError, AuthError } from '@/errors/domainErrors';
 import type { AppSession } from '@/models/auth';
+import type { SessionUser } from '@/models/sessionUser';
 import type { FirebaseAuthServiceInterface } from '@/services/auth/firebaseAuthServiceInterface';
 import type { FirebaseAuthSession } from '@/services/auth/models/firebaseAuthSession';
 import { getDemoState } from '@/services/demo/demoState';
 import { resolveDemoSession } from '@/services/demo/resolveDemoSession';
 import { strings } from '@/strings';
 
-import type { ServerSession } from './models/serverSession';
+import type { ActiveSession } from './models/activeSession';
+import { ServerSessionSchema, type ServerSession } from './models/serverSession';
 import {
+  createSessionToken,
   decodeSession,
   encodeSession,
+  readSessionKey,
   sessionCookieName,
   sessionDuration,
 } from './sessionCodec';
+import { SessionStore } from './sessionStore';
+
+const refreshLeaseDuration = 20000;
+const refreshWaitDuration = 16000;
 
 export class SessionService {
 
-  private readonly refreshes = new Map<string, Promise<FirebaseAuthSession>>();
+  private readonly refreshes = new Map<string, Promise<ActiveSession | null>>();
+  private readonly store: SessionStore;
+
   constructor(
     private readonly auth: FirebaseAuthServiceInterface,
     private readonly demoMode = environment.demoMode
-  ) {}
+  ) { this.store = new SessionStore(demoMode); }
 
   // **************************************
   // MARK: - READ SERVER SESSION
   // **************************************
 
-  async read(): Promise<ServerSession | null> {
+  async read(token?: string): Promise<ActiveSession | null> {
 
-    const token = (await cookies()).get(sessionCookieName)?.value;
-    const session = token ? await decodeSession(token, this.demoMode) : null;
-    return session?.demo ? resolveDemoSession(session) : session;
+    const key = readSessionKey(token ?? (await cookies()).get(sessionCookieName)?.value);
+    return key ? this.readByKey(key) : null;
+
+  }
+
+  // **************************************
+  // MARK: - READ STORED SESSION BY KEY
+  // **************************************
+
+  private async readByKey(key: string): Promise<ActiveSession | null> {
+
+    const record = this.store.read(key);
+    if (!record) { return null; }
+    const decoded = await decodeSession(record.payload, key, this.demoMode);
+    const session = decoded?.demo ? resolveDemoSession(decoded) : decoded;
+    return session ? { ...session, key, record } : null;
 
   }
 
@@ -69,21 +92,21 @@ export class SessionService {
 
   async create(session: ServerSession) {
 
-    const token = await encodeSession(
-      session.demo
-        ? {
-          ...session,
-          demoGeneration: session.demoGeneration ?? getDemoState().generation,
-        }
-        : session,
-    );
-    if (Buffer.byteLength(token) > 3800) { throw new AuthError(strings.auth.sessionTooLargeHint, 500); }
-    (await cookies()).set(sessionCookieName, token, {
+    const { token, key } = createSessionToken();
+    const expiresAt = Date.now() + sessionDuration * 1000;
+    const data = session.demo
+      ? { ...session, demoGeneration: session.demoGeneration ?? getDemoState().generation }
+      : session;
+    const payload = await encodeSession(data, key, expiresAt);
+    const cookieStore = await cookies();
+    const previousKey = readSessionKey(cookieStore.get(sessionCookieName)?.value);
+    this.store.create(key, { expiresAt, payload }, previousKey);
+    cookieStore.set(sessionCookieName, token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
-      maxAge: sessionDuration,
+      expires: new Date(expiresAt),
       priority: 'high',
     });
 
@@ -94,15 +117,19 @@ export class SessionService {
   // **************************************
 
   async delete() {
-    (await cookies()).delete(sessionCookieName);
+
+    const cookieStore = await cookies();
+    const key = readSessionKey(cookieStore.get(sessionCookieName)?.value);
+    if (key) { this.store.delete(key); }
+    cookieStore.delete(sessionCookieName);
+
   }
-  // Only call from Route Handlers or Server Actions: refresh writes Set-Cookie.
 
   // **************************************
   // MARK: - READ VALID SESSION
   // **************************************
 
-  async valid(): Promise<ServerSession | null> {
+  async valid(): Promise<ActiveSession | null> {
 
     const session = await this.read();
     return session && session.auth.expiresAt - Date.now() <= 300000
@@ -112,43 +139,104 @@ export class SessionService {
   }
 
   // **************************************
+  // MARK: - UPDATE SESSION PROFILE
+  // **************************************
+
+  async updateProfile(session: ActiveSession, user: SessionUser) {
+    return this.updateSession(session.key, { user });
+  }
+
+  // **************************************
   // MARK: - REFRESH SERVER SESSION
   // **************************************
 
-  async refresh(session: ServerSession): Promise<ServerSession | null> {
+  async refresh(session: ActiveSession): Promise<ActiveSession | null> {
 
-    const key = createHash('sha256')
-      .update(session.auth.refreshToken)
-      .digest('hex');
-    let pending = this.refreshes.get(key);
-    if (!pending) {
-
-      pending = this.auth.refresh(session.auth);
-      this.refreshes.set(key, pending);
-      void pending
-        .finally(() => {
-          setTimeout(() => this.refreshes.delete(key), 5000).unref();
-        })
-        .catch(() => undefined);
-
-    }
+    const current = this.refreshes.get(session.key);
+    if (current) { return current; }
+    const pending = this.refreshStoredSession(session);
+    this.refreshes.set(session.key, pending);
     try {
+      return await pending;
+    } finally {
+      this.refreshes.delete(session.key);
+    }
 
-      const updated = { ...session, auth: await pending };
-      await this.create(updated);
-      return updated;
+  }
 
-    } catch (error) {
+  // **************************************
+  // MARK: - COORDINATE REFRESH WITH SESSION STORE
+  // **************************************
 
-      if (error instanceof AuthError && error.status === 401) {
+  private async refreshStoredSession(session: ActiveSession): Promise<ActiveSession | null> {
 
-        await this.delete();
-        return null;
+    const deadline = Date.now() + refreshWaitDuration;
+    while (Date.now() < deadline) {
+
+      const current = await this.readByKey(session.key);
+      if (!current || current.auth.expiresAt !== session.auth.expiresAt ||
+        current.auth.idToken !== session.auth.idToken ||
+        current.auth.refreshToken !== session.auth.refreshToken) { return current; }
+
+      const now = Date.now();
+      const lease = now + refreshLeaseDuration;
+      if (this.store.claimRefresh(current.key, current.record.payload, now, lease)) {
+
+        try {
+          return await this.refreshWithLease(current, lease);
+        } finally {
+          this.store.releaseRefresh(current.key, lease);
+        }
 
       }
-      throw error;
+      await delay(100);
 
     }
+    throw new ApiError(strings.errors.unavailable, 503);
+
+  }
+
+  // **************************************
+  // MARK: - REPLACE FIREBASE CREDENTIALS OR REVOKE SESSION
+  // **************************************
+
+  private async refreshWithLease(session: ActiveSession, lease: number) {
+
+    let auth: FirebaseAuthSession;
+    try {
+      auth = await this.auth.refresh(session.auth);
+    } catch (error) {
+
+      if (!(error instanceof AuthError) || error.status !== 401) { throw error; }
+      if (this.store.delete(session.key, lease)) { return null; }
+      return this.readByKey(session.key);
+
+    }
+    return this.updateSession(session.key, { auth }, lease);
+
+  }
+
+  // **************************************
+  // MARK: - MERGE SESSION UPDATE WITHOUT RECREATING REVOKED RECORDS
+  // **************************************
+
+  private async updateSession(
+    key: string,
+    changes: Partial<Pick<ServerSession, 'auth' | 'user'>>,
+    lease?: number,
+  ): Promise<ActiveSession | null> {
+
+    for (let attempt = 0; attempt < 4; attempt += 1) {
+
+      const current = await this.readByKey(key);
+      if (!current) { return null; }
+      const { expiresAt, payload: previousPayload } = current.record;
+      const updated = { ...current, ...changes };
+      const payload = await encodeSession(ServerSessionSchema.parse(updated), key, expiresAt);
+      if (this.store.update(key, previousPayload, payload, lease)) { return { ...updated, record: { expiresAt, payload } }; }
+
+    }
+    throw new ApiError(strings.errors.unavailable, 503);
 
   }
 

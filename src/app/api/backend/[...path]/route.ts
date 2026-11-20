@@ -3,6 +3,7 @@ import { NextRequest } from 'next/server';
 import { portalModules } from '@/config/portalModules';
 import { getContainer } from '@/container';
 import {
+  ApiError,
   AuthError,
   DomainError,
   OwnershipError,
@@ -32,10 +33,10 @@ async function handle(
   context: BackendRouteContext,
 ) {
 
-  const container = await getContainer();
   try {
 
     if (!trustedMutation(request)) { throw new OwnershipError(strings.errors.untrusted); }
+    const container = await getContainer();
     const { path } = await context.params;
     if (
       path.some(
@@ -101,18 +102,24 @@ async function handle(
         target,
         activeSession.auth.idToken,
       );
-      if (response.status !== 401 || refreshedOnce) { return response; }
+      if (response.status !== 401) { return response; }
+      await response.body?.cancel();
+      if (refreshedOnce) { throw new ApiError(strings.errors.unavailable, 503); }
       refreshedOnce = true;
       const refreshed = await container.sessionService.refresh(activeSession);
-      if (!refreshed) { return response; }
+      if (!refreshed) { throw new AuthError(strings.errors.sessionExpired); }
       activeSession = refreshed;
-      await response.body?.cancel();
       const result = await container.apiClient.proxy(
         retry,
         target,
         refreshed.auth.idToken,
       );
-      if (result.status === 401) { await container.sessionService.delete(); }
+      if (result.status === 401) {
+
+        await result.body?.cancel();
+        throw new ApiError(strings.errors.unavailable, 503);
+
+      }
       return result;
 
     };
@@ -128,10 +135,7 @@ async function handle(
     return response;
 
   } catch (error) {
-
-    if (error instanceof AuthError && error.status === 401) { await container.sessionService.delete(); }
     return errorResponse(error);
-
   }
 
 }

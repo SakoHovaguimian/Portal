@@ -39,9 +39,9 @@ const containers = new Map<boolean, ServiceContainer>();
 // MARK: - GET SERVICE CONTAINER
 // **************************************
 
-export async function getContainer() {
+export async function getContainer(mode?: boolean) {
 
-  const { demoMode } = await getEffectiveRuntime();
+  const demoMode = mode ?? (await getEffectiveRuntime()).demoMode;
   let container = containers.get(demoMode);
   if (!container) {
 

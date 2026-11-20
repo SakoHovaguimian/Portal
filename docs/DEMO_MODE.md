@@ -42,7 +42,7 @@ Demo mode enables setup by default. Live setup is opt-in with `PORTAL_ONBOARDING
 
 Firebase authentication REST is replaced with `DemoFirebaseAuthService`. Realtime sockets, Firebase Messaging, and Amplitude are disabled. Requests still pass through the authenticated Next.js backend proxy. Chat uses local server records and polling, and local alert simulation exercises presentation without sending a notification. Push controls save a separate per-user simulated opt-in without requesting browser permission; the choice survives sign-out.
 
-Demo sessions record their mode. Switching to live invalidates them. A demo-only secret is allowed only for a demo-selected session; live sessions require a valid `SESSION_SECRET`. Tokens stay in encrypted HTTP-only cookies and never reach React.
+Demo credentials are encrypted in an in-memory session database. The HTTP-only cookie carries an opaque identifier. Mode changes revoke the previous session, and a demo reset clears the demo session database. Live sessions require a valid `SESSION_SECRET` and use a separate database.
 
 ## Extending The Demo
 

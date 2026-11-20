@@ -2,12 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { getProjectRouting } from '@/config/getProjectRouting';
 import { getDefaultProjectRoute } from '@/config/projectRoutes';
+import { getContainer } from '@/container';
 import { getEffectiveRuntime } from '@/services/demo/demoRuntime';
-import { resolveDemoSession } from '@/services/demo/resolveDemoSession';
-import {
-  decodeSession,
-  sessionCookieName,
-} from '@/services/session/sessionCodec';
+import { sessionCookieName } from '@/services/session/sessionCodec';
 
 // **************************************
 // MARK: - PROXY PROTECTED ROUTE
@@ -17,8 +14,7 @@ export async function proxy(request: NextRequest) {
 
   const token = request.cookies.get(sessionCookieName)?.value;
   const runtime = await getEffectiveRuntime(request.cookies);
-  const decoded = token ? await decodeSession(token, runtime.demoMode) : null;
-  const session = decoded?.demo ? resolveDemoSession(decoded) : decoded;
+  const session = token ? await (await getContainer(runtime.demoMode)).sessionService.read(token) : null;
   const authRoute = ['/login', '/signup'].includes(request.nextUrl.pathname);
   if (!session && !authRoute) {
 

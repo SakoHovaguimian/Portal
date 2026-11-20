@@ -98,6 +98,7 @@ export function environmentContent(settings, version) {
     APP_VERSION: /^[A-Za-z0-9.+-]+$/.test(version) ? version : '1.0.0',
     PORTAL_APP_ORIGIN: settings.appOrigin,
     SESSION_SECRET: settings.environment === 'live' ? randomBytes(48).toString('base64') : '',
+    PORTAL_SESSION_DB_PATH: '',
     FIREBASE_WEB_API_KEY: settings.environment === 'live' ? settings.firebaseApiKey : '',
     PORTAL_ONBOARDING_ENABLED: 'false',
     PORTAL_SOCKET_URL: '',

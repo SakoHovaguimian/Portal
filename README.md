@@ -4,7 +4,7 @@ A single npm application built with Next.js **16.4.5**, React **19.2.4**, strict
 
 ## Start with the demo
 
-Requires Node 22.
+Requires Node 22.13 or newer in the Node 22 release line.
 
 ```sh
 npm ci
@@ -51,7 +51,9 @@ Set `DEMO_MODE=false`, provide `PORTAL_API_URL`, `FIREBASE_WEB_API_KEY`, and a r
 
 The backend must implement the [documented contract](docs/BACKEND_CONTRACT.md). This frontend does not create backend chat, ticket, device, or business endpoints. Missing live integrations are not silently replaced with demo data.
 
-Authentication uses Firebase REST on the server. Access and refresh tokens live in an encrypted HTTP-only session cookie. Browser calls use `/api/backend/*`; the proxy refreshes tokens and forwards the bearer and app-version headers. Socket.IO uses short-lived tickets. Firebase Messaging is explicitly opt-in. Amplitude loads only after consent; no Sentry frontend integration is included.
+Authentication uses Firebase REST on the server. The browser holds an opaque HTTP-only cookie. Portal keeps encrypted Firebase credentials in SQLite on persistent local disk and revokes the corresponding record on sign-out. Set `PORTAL_SESSION_DB_PATH` to place it on a persistent volume if the app directory is replaced at deployment. See [authentication and sessions](docs/AUTH.md) for rollout and hosting requirements.
+
+Browser calls use `/api/backend/*`. The proxy refreshes tokens and forwards the bearer and app-version headers. Socket.IO uses short-lived tickets. Firebase Messaging is explicitly opt-in. Amplitude loads only after consent; no Sentry frontend integration is included.
 
 ## Commands
 

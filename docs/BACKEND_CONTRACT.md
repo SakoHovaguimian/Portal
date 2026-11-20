@@ -2,6 +2,8 @@
 
 `PORTAL_API_URL` is the server-only API base URL, including any prefix (for example `http://localhost:3000/api`). Browser paths are relative to `/api/backend`. The proxy adds `Authorization: Bearer <Firebase ID token>` and `app-version: <APP_VERSION>`. Requests/responses are uncached. Only a fixed set of request/response headers is forwarded. Incoming browser bearer/cookie/host headers are never copied upstream.
 
+Use `401` for unaccepted credentials, `403` for a valid identity that lacks permission, and `503` for temporary unavailability. Portal refreshes Firebase credentials and retries once after an upstream `401`. If the backend still responds with `401` and the Portal session is valid, the browser receives `503` and keeps its session. Upstream mutations should authenticate before applying side effects so this retry can safely resubmit a rejected request.
+
 Portal preserves its existing snake_case user/feature/dashboard transports and maps them to camelCase domain models in [domainMappers](../src/services/api/domainMappers.ts). Transport definitions live in independent files under [models](../src/services/api/models/). They are maintained source, not generated OpenAPI output.
 
 | Method and path relative to API base                   | Contract                                                                                            |

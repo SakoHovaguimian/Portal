@@ -36,7 +36,6 @@ export const strings = {
     tooManyHint: 'Too many attempts. Please wait before trying again.',
     failedHint: 'Unable to sign in. Please try again.',
     signupFailedHint: 'Unable to create your account. Please try again.',
-    sessionTooLargeHint: 'Unable to save this session. Contact your administrator.',
     loggedOut: 'Signed Out',
     logoutFailedHint: 'Unable to sign out. Please try again.',
   },

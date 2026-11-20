@@ -67,6 +67,8 @@ unset PORTAL_INITIALIZER_FIREBASE_API_KEY
 
 Optional onboarding, sockets, Firebase Messaging, and Amplitude settings remain disabled until explicitly configured afterward. The initializer does not provision infrastructure or verify live integrations. Follow the [backend contract](BACKEND_CONTRACT.md) and [authentication guide](AUTH.md) before deployment.
 
+`PORTAL_SESSION_DB_PATH` is left empty to use the default local SQLite path. Set it to a location on persistent storage if your live deployment replaces the app directory.
+
 ## Managed Files And Reruns
 
 The generated [typed configuration](../src/config/projectConfiguration.ts) owns the profile, slug, asset paths, default appearance, capability flags, navigation order, and starter data policy. Runtime adapters consume it for shared navigation, route/API availability, appearance, branding, and demo behavior. Its independent type lives in [the configuration model](../src/config/models/projectConfiguration.ts).

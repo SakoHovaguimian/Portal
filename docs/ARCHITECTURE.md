@@ -24,7 +24,7 @@ The browser calls Firebase only for opt-in Messaging. It never receives access/r
 
 ## Server composition
 
-Root layout passes public runtime configuration and serializable project navigation/redirect rules to `RuntimeProvider`. Protected layouts read the encrypted cookie and pass a token-free `AppSession` to `AppProviders`. They never write cookies. Query loading occurs through the browser proxy, which can safely refresh cookies in a Route Handler. `proxy.ts` provides navigation gating; API routes independently verify sessions.
+Root layout passes public runtime configuration and serializable project navigation/redirect rules to `RuntimeProvider`. Protected layouts use the opaque cookie to look up the server session and pass a token-free `AppSession` to `AppProviders`. Query loading occurs through the browser proxy, which refreshes the stored Firebase credentials when needed. `proxy.ts` provides navigation gating. API routes independently verify sessions. See [authentication and sessions](AUTH.md) for persistence, expiry, and revocation.
 
 `getContainer()` caches separate live/demo services and selects them from the effective request runtime. The HTTP-only developer preference cookie can override `DEMO_MODE` only on an allowed development/demo server; production live ignores it. Auth, session decoding, root runtime configuration, public article reads, and proxying use that same decision. Mode changes clear the previous session. No client build flag selects mock behavior.
 

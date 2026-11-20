@@ -134,7 +134,7 @@ export async function handleLiveAccountToolsRequest(
         if (userId && account.id !== userId) { throw new OwnershipError(); }
         if (account.email !== input.confirmationEmail) { throw new ValidationError(copy.validation.emailMismatch); }
         await call(`/users/${encodeURIComponent(account.id)}`, 'DELETE');
-        // The caller clears the encrypted session cookie only after success.
+        // The caller revokes the Portal session only after success.
         return noContent();
 
       }

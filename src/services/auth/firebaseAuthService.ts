@@ -11,6 +11,13 @@ import { AuthResponseSchema } from './models/authResponse';
 import type { FirebaseAuthSession } from './models/firebaseAuthSession';
 import { RefreshResponseSchema } from './models/refreshResponse';
 
+const invalidRefreshCredentials = new Set([
+  'INVALID_REFRESH_TOKEN',
+  'TOKEN_EXPIRED',
+  'USER_DISABLED',
+  'USER_NOT_FOUND',
+]);
+
 export class FirebaseAuthService implements FirebaseAuthServiceInterface {
 
   // **************************************
@@ -91,13 +98,23 @@ export class FirebaseAuthService implements FirebaseAuthServiceInterface {
         signal: AbortSignal.timeout(15000),
       },
     );
-    const result = RefreshResponseSchema.parse(await this.parse(response));
+    const payload: unknown = await response.json().catch(() => null);
+    if (!response.ok) {
+
+      const error = AuthErrorResponseSchema.safeParse(payload);
+      const code = error.success ? error.data.error.message.split(' : ')[0] : '';
+      if ([400, 401, 403].includes(response.status) &&
+        invalidRefreshCredentials.has(code)) { throw new AuthError(strings.errors.sessionExpired); }
+      throw new ApiError(strings.errors.unavailable, 503);
+
+    }
+    const result = RefreshResponseSchema.safeParse(payload);
+    if (!result.success || result.data.user_id !== session.externalId) { throw new ApiError(strings.errors.unavailable, 503); }
     return {
       ...session,
-      idToken: result.id_token,
-      refreshToken: result.refresh_token,
-      externalId: result.user_id,
-      expiresAt: Date.now() + result.expires_in * 1000,
+      idToken: result.data.id_token,
+      refreshToken: result.data.refresh_token,
+      expiresAt: Date.now() + result.data.expires_in * 1000,
     };
 
   }
