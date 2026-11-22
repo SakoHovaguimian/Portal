@@ -1,0 +1,168 @@
+.player {
+  --step-player-hit: max(
+    2.75rem,
+    var(--step-player-size, var(--control-height-md))
+  );
+  --step-player-active-size: max(4.5rem, var(--step-player-hit));
+  --step-player-motion-base: var(--motion-duration-base);
+  --step-player-motion-fast: var(--motion-duration-fast);
+  --step-player-fill-scale: 1;
+  display: inline-flex;
+  max-width: 100%;
+  min-width: 0;
+  align-items: center;
+  gap: calc(var(--spacing) * 2);
+  vertical-align: middle;
+}
+
+.control {
+  inline-size: var(--step-player-hit);
+  block-size: var(--step-player-hit);
+}
+
+.track {
+  display: flex;
+  min-inline-size: 0;
+  min-block-size: var(--step-player-hit);
+  align-items: center;
+  overflow-x: auto;
+  padding: calc(var(--spacing) * 1);
+}
+
+.step {
+  display: grid;
+  place-items: center;
+  flex: 0 0 2.75rem;
+  min-block-size: 2.75rem;
+  transition:
+    flex-basis var(--step-player-motion-base) var(--motion-ease-out),
+    background-color var(--step-player-motion-fast) var(--motion-ease-out),
+    scale var(--step-player-motion-fast) var(--motion-ease-spring);
+}
+
+.step[data-state='active'] {
+  flex-basis: var(--step-player-active-size);
+}
+
+.mark {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  inline-size: max(0.3125rem, calc(var(--step-player-hit) / 9));
+  block-size: max(0.3125rem, calc(var(--step-player-hit) / 9));
+  border-radius: var(--radius-track);
+  background: var(--color-fg-tertiary);
+  transition: inline-size var(--step-player-motion-base) var(--motion-ease-out);
+}
+
+.step[data-state='past'] .mark {
+  background: var(--color-fg-brand-primary);
+}
+
+.step[data-state='active'] .mark {
+  inline-size: calc(var(--step-player-active-size) - var(--spacing) * 4);
+  background: var(--color-control-track);
+  box-shadow: var(--shadow-skeumorphic);
+}
+
+.fill {
+  display: block;
+  inline-size: calc(
+    var(--step-player-progress, 0) * var(--step-player-fill-scale) * 100%
+  );
+  block-size: 100%;
+  border-radius: inherit;
+  background: var(--color-fg-brand-primary);
+}
+
+.icon {
+  position: relative;
+  display: grid;
+  inline-size: max(1.25rem, calc(var(--step-player-hit) / 2.4));
+  aspect-ratio: 1;
+  place-items: center;
+}
+
+.transportGlyph,
+.replayGlyph {
+  position: absolute;
+  inset: 0;
+  transition:
+    opacity var(--step-player-motion-fast) var(--motion-ease-out),
+    scale var(--step-player-motion-fast) var(--motion-ease-out);
+}
+
+.replayGlyph {
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.transportGlyph::before,
+.transportGlyph::after {
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  transition: clip-path var(--step-player-motion-base) var(--motion-ease-spring);
+  content: '';
+}
+
+.transportGlyph::before {
+  clip-path: polygon(29% 19%, 49% 32%, 49% 68%, 29% 81%);
+}
+
+.transportGlyph::after {
+  clip-path: polygon(48% 31%, 79% 50%, 79% 50%, 48% 69%);
+}
+
+.control[data-transport='pause'] .transportGlyph::before {
+  clip-path: polygon(28% 19%, 43% 19%, 43% 81%, 28% 81%);
+}
+
+.control[data-transport='pause'] .transportGlyph::after {
+  clip-path: polygon(57% 19%, 72% 19%, 72% 81%, 57% 81%);
+}
+
+.control:not([data-transport='replay']) .replayGlyph,
+.control[data-transport='replay'] .transportGlyph {
+  opacity: 0;
+  scale: 0.82;
+}
+
+@media (forced-colors: active) {
+  .mark,
+  .transportGlyph {
+    forced-color-adjust: none;
+  }
+
+  .mark {
+    background: GrayText;
+  }
+
+  .step[data-state='active'] .mark {
+    background: Canvas;
+    outline: 1px solid Highlight;
+  }
+
+  .step[data-state='past'] .mark,
+  .fill {
+    background: Highlight;
+  }
+}
+
+.player[data-finished] .fill {
+  inline-size: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .player {
+    --step-player-motion-base: 0ms;
+    --step-player-motion-fast: 0ms;
+    --step-player-fill-scale: 0;
+  }
+}
+
+:global([data-motion='reduced']) .player {
+  --step-player-motion-base: 0ms;
+  --step-player-motion-fast: 0ms;
+  --step-player-fill-scale: 0;
+}

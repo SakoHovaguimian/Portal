@@ -1,0 +1,19 @@
+.digit {
+  display: inline-grid;
+  position: relative;
+  overflow: hidden;
+  line-height: 1.4em;
+  mask-image: linear-gradient(transparent, black 16%, black 84%, transparent);
+}
+
+.sizer {
+  grid-area: 1 / 1;
+  visibility: hidden;
+}
+
+.wheel {
+  position: absolute;
+  inset: 0 0 auto;
+  display: grid;
+  text-align: center;
+}

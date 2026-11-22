@@ -304,6 +304,8 @@ export * from './models/dateRangePickerProps';
 
 export type { DataTableProps } from './models/dataTableProps';
 
+export * from './components/AnimatedCounter';
+
 export * from './components/AssigneePicker';
 
 export * from './components/CardSwap';
@@ -314,9 +316,13 @@ export * from './components/ImageCompare';
 
 export * from './components/OrbitCarousel';
 
+export * from './components/StepPlayer';
+
 export * from './components/TimeScrubber';
 
 export * from './components/VoiceNote';
+
+export type { AnimatedCounterProps } from './models/animatedCounterProps';
 
 export type { AssigneePickerOption } from './models/assigneePickerOption';
 
@@ -335,6 +341,10 @@ export type { ImageCompareProps } from './models/imageCompareProps';
 export type { MediaCardItem } from './models/mediaCardItem';
 
 export type { OrbitCarouselProps } from './models/orbitCarouselProps';
+
+export type { StepPlayerProps } from './models/stepPlayerProps';
+
+export type { StepPlayerStep } from './models/stepPlayerStep';
 
 export type { TimeScrubberProps } from './models/timeScrubberProps';
 

@@ -3067,6 +3067,45 @@ export const shareCommandCopy = {
 
 // Interactive components and their library examples
 export const interactiveComponentStrings = {
+  animatedCounter: {
+    title: 'Animated Counter',
+    description: 'Roll digits as a number changes, with configurable precision and grouping.',
+    keywords: 'animated counter number odometer rolling digits currency decimal',
+    currencyCode: 'USD',
+    decreaseAction: 'Decrease Value',
+    increaseAction: 'Increase Value',
+    reverseAction: 'Reverse Sign',
+    decimalsLabel: 'Decimal Places',
+    groupingLabel: 'Digit Grouping',
+    groupingOptions: [
+      { value: 'western', label: 'Western' },
+      { value: 'indian', label: 'Indian' },
+    ] as const,
+  },
+  stepPlayer: {
+    title: 'Step Player',
+    description: 'Play a timed sequence with pause, replay, and optional step selection.',
+    keywords: 'step player pagination playback progress pause replay tour seek loop',
+    playAction: 'Play',
+    pauseAction: 'Pause',
+    replayAction: 'Replay',
+    stepLabel: (step: number) => `Step ${step}`,
+    position: (step: number, count: number) => `Step ${step} Of ${count}`,
+    durationLabel: 'Step Duration',
+    positionLabel: 'Control Position',
+    positionOptions: [
+      { value: 'left', label: 'Left' },
+      { value: 'right', label: 'Right' },
+    ] as const,
+    seekableLabel: 'Allow Step Selection',
+    loopLabel: 'Repeat Sequence',
+    sample: [
+      { label: 'Welcome' },
+      { label: 'Workspace' },
+      { label: 'Shortcuts' },
+      { label: 'Summary' },
+    ],
+  },
   cardSwap: {
     title: 'Card Swap',
     description: 'Tap or fling the front card to send it to the back of the stack.',

@@ -47,7 +47,7 @@ The shared like and bookmark animation emits a ring and particles on activation.
 
 SegmentedTabs is a native radio choice group. Two choices stay as a capsule on mobile; longer groups use the authored Select below 600px. The indicator measures actual labels and responds to resizing and font changes. SegmentedPanels keeps inactive drafts mounted with hidden/inert semantics.
 
-See [interactive components](INTERACTIVE_COMPONENTS.md) for the Card Swap, Orbit Carousel, Assignee Picker, Time Scrubber, Image Compare, Voice Note, and Create Menu APIs. Each has a configurable Component Library preview.
+See [interactive components](INTERACTIVE_COMPONENTS.md) for the Animated Counter, Step Player, Card Swap, Orbit Carousel, Assignee Picker, Time Scrubber, Image Compare, Voice Note, and Create Menu APIs. Each has a configurable Component Library preview.
 
 Stepper uses the LeafLaunch horizontal bars by default. Pass `orientation="vertical"` for connected stacked stages or `orientation="responsive"` for container-driven switching at 34rem. The library shows horizontal and vertical examples together. Completed/current/upcoming state and disabled eligibility come from the caller. Stages are real buttons with `aria-current="step"`, numbered/check markers, full descriptions, visible focus, and 44px targets.
 

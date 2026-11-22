@@ -6,6 +6,7 @@ import {
   componentBrowserStrings as browser,
 } from '@/strings';
 
+import { AnimatedCounterShowcase } from './components/AnimatedCounterShowcase';
 import { AssigneePickerShowcase } from './components/AssigneePickerShowcase';
 import { AvatarsShowcase } from './components/AvatarsShowcase';
 import { BulkSelectionShowcase } from './components/BulkSelectionShowcase';
@@ -29,6 +30,7 @@ import { OrbitCarouselShowcase } from './components/OrbitCarouselShowcase';
 import { PatternsShowcase } from './components/PatternsShowcase';
 import { SectionsShowcase } from './components/SectionsShowcase';
 import { SelectionShowcase } from './components/SelectionShowcase';
+import { StepPlayerShowcase } from './components/StepPlayerShowcase';
 import { TableShowcase } from './components/TableShowcase';
 import { TilesShowcase } from './components/TilesShowcase';
 import { TimeScrubberShowcase } from './components/TimeScrubberShowcase';
@@ -291,6 +293,24 @@ export const componentSpecimens: readonly ComponentSpecimen[] = [
     icon: 'clock',
     keywords: interactive.time.keywords,
     Preview: TimeScrubberShowcase,
+  },
+  {
+    id: 'animated-counter',
+    title: interactive.animatedCounter.title,
+    description: interactive.animatedCounter.description,
+    category: 'data',
+    icon: 'chart',
+    keywords: interactive.animatedCounter.keywords,
+    Preview: AnimatedCounterShowcase,
+  },
+  {
+    id: 'step-player',
+    title: interactive.stepPlayer.title,
+    description: interactive.stepPlayer.description,
+    category: 'media',
+    icon: 'play',
+    keywords: interactive.stepPlayer.keywords,
+    Preview: StepPlayerShowcase,
   },
   {
     id: 'image-compare',

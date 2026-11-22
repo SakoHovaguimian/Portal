@@ -1,5 +1,11 @@
 # Migration verification
 
+## Animated Counter And Step Player — November 21, 2026
+
+- Passed `npm run check`, `DEMO_MODE=true npm run build`, and `git diff --check`. The supplemental strict design audit reported the same 57 findings against the starting revision and the updated tree.
+- In the local production demo, found both previews in the catalog. Exercised digit rolling across a grouping boundary, Western and Indian grouping, sign reversal, and precision changes. Checked keyboard playback, visibly advancing progress, preserved progress while paused, selection, replay, looping, transport placement, and passive steps.
+- Verified both previews at 390px with no document overflow in the macOS / iOS dark theme. Saved Reduced Motion snapped the digits and hid the continuous playback fill while steps still advanced on schedule. Restored the browser's original appearance settings. Verification used local demo data.
+
 ## Interactive Component Library — November 15, 2026
 
 - Verified that all seven new components appear in the catalog. In the local demo, exercised Card Swap by click and fling, Orbit Carousel by swipe and keyboard, Assignee Picker by selection and layout change, and Time Scrubber by dragging and crossing midnight with the keyboard.
