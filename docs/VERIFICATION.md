@@ -312,3 +312,11 @@ Added Avatar/AvatarGroup, UploadField/FileList, DataTable selection/BulkActionBa
 - The supplemental generic frontend auditor exceeded its bounded run and was stopped without a completed report. No clean generic-auditor result is claimed. Repository-owned checks and observed manual flows are the evidence.
 
 Live chat storage/events/private media, durable backend job workers, Firebase authentication, realtime/push delivery, and analytics were not exercised. Demo records and uploads remain process-local and reset when the development server restarts. The stopped development server was restarted during this work; seeded fixtures were reloaded.
+
+## Feature Module Generator — November 22, 2026
+
+- `npm run check`, `DEMO_MODE=true npm run build`, and `git diff --check` passed for Portal. Disposable clones with generated collection routes also passed the project checks and production build.
+- Generated `projects` and `purchase-orders` together, including in an initialized project with empty navigation. A later initializer run selected only Projects. Its pages and API returned 200. The disabled collection was absent from the menu and returned 404 for list, create, detail, and API reads.
+- Dry runs preserved the registration files and created no module directory. Duplicate names, existing public and protected routes, invalid slugs, and conflicting navigation IDs stopped before writing. Two simultaneous runs for the same name produced one complete module.
+- Browser checks covered sign-in with a preserved destination, creation by keyboard, invalid-field focus, editing, reload persistence, search, no matches, clearing search, and both outcomes of the unsaved-draft dialog. At a 390px viewport, the directory used mobile rows and its document width was 390px.
+- Demo API checks covered search, paging, validation, response simulations, and account isolation. A different account received 404 for both reading and editing a private record. Resetting one account kept another account's records. A global reset cleared the new records and invalidated the previous session. Live storage and authorization require the backend implementation described in the [generated contract](MODULES.md#generated-live-api).

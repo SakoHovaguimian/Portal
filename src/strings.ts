@@ -614,6 +614,7 @@ export const strings = {
   },
   directory: {
     status: 'Status',
+    allStatuses: 'All Statuses',
     firstPage: 'First Page',
     previousPage: 'Previous',
     nextPage: 'Next',
@@ -3047,6 +3048,34 @@ export const projectInitializerCopy = {
 };
 
 // PROJECT_INITIALIZER_COPY_END
+export const moduleGeneratorCopy = {
+  helpBody: 'Usage: npm run generate:module -- <collection-name> [--dry-run]\nExample: npm run generate:module -- projects\nUse a lowercase kebab-case collection name. Preview the file changes with --dry-run.',
+  usageHint: 'Provide one collection name. Use --help to see the supported options.',
+  nameHint: 'Use up to 64 lowercase letters, digits, and single hyphens. Start each word with a letter and choose a name available to the project.',
+  conflictHint: 'The name or destination is already in use in {path}. Choose a different collection name.',
+  wiringHint: 'Could not safely extend {path}. Compare its registration declarations with the Portal module guide.',
+  rootHint: 'Run the generator from a Portal project root with its dependencies installed.',
+  previewBody: 'Files for /{slug}',
+  dryRunBody: 'Preview complete. No files were written.',
+  completeBody: 'Generated /{slug}. Restart Portal to open the module. For live mode, implement the account-owned API in docs/MODULES.md.',
+  recordCopy: {
+    createAction: 'Create Record',
+    detailTitle: 'Record Details',
+    nameLabel: 'Name',
+    updatedColumn: 'Updated',
+    searchLabel: 'Search Records',
+    searchPlaceholder: 'Search by name',
+    emptyTitle: 'No Records Yet',
+    emptyHint: 'Create your first record to get started.',
+    noResultsTitle: 'No Matching Records',
+    noResultsHint: 'Try a different name or clear your search.',
+    paginationLabel: 'Record Pages',
+    savedTitle: 'Record Saved',
+    nameHint: 'Enter a name between 1 and 120 characters.',
+    sampleNameData: 'Planning Notes',
+  },
+};
+
 export const shareCommandCopy = {
   helpBody: 'Usage: npm run share -- [--port 3001] [--help]\nStarts Portal and a temporary Cloudflare tunnel. Control + C stops both.\nSHARE_PORT changes the local port. SHARE_ALLOWED_EMAILS restricts visitors to comma-separated emails.\nInstall cloudflared first: brew install cloudflared\nUses the usual development .env files; PORTAL_APP_ORIGIN is set for this process only.',
   startingBody: 'Starting a temporary Cloudflare link…',

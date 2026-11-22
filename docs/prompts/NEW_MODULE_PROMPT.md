@@ -4,6 +4,8 @@ Follow the permanent [Portal code standards](../PORTAL_STANDARDS.md) for exact f
 
 Read [architecture](../ARCHITECTURE.md), [conventions](../CONVENTIONS.md), [strings](../STRINGS.md), and the closest module.
 
+For an account-owned collection, start with `npm run generate:module -- <collection-name> --dry-run`. Applying the [feature generator](../MODULES.md#add-a-feature) wires the routes, model, service, hooks, copy, navigation, and demo handlers described below.
+
 Create `src/modules/<domain>/` with screens/components, query hooks, a domain service, and feature-only models as needed. Keep independent schemas/models in separate files. Reuse shared models in `src/models` and shared primitives in `src/components/ui`.
 
 The service accepts `ApiClientInterface`, validates inputs, encodes route/query values, and maps transport responses to domain schemas. Register it in `ClientServiceContainer`. Routes only compose screens. Do not add repositories, controller adapters, or workspace packages.

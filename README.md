@@ -28,6 +28,8 @@ npm run initialize -- --yes --profile internal-tool --name "My Workspace" --slug
 
 The initializer configures identity, local brand assets, theme defaults, capabilities, ordered navigation, environment, and starter data. It validates before writing, protects existing settings, and supports an explicit `--force` after review. Product copy stays in `src/strings.ts`; runtime settings live in `src/config/projectConfiguration.ts`. See [project initialization](docs/PROJECT_INITIALIZER.md).
 
+Add your first account-owned collection with `npm run generate:module -- projects`. Append `--dry-run` to preview every file. The generated pages support search, pagination, creation, and editing with a local demo and an explicit [live API contract](docs/MODULES.md#generated-live-api).
+
 ## Reusable Modules
 
 Choose project capabilities in [project configuration](src/config/projectConfiguration.ts), exposed through [portalModules](src/config/portalModules.ts); disabled modules are removed from navigation and rejected at the API boundary. [Portal navigation](src/config/portalNavigation.tsx) composes destinations from those capabilities and the trusted role. Each feature declares navigation and demo/live wiring in its own module file. See [adding and removing features](docs/MODULES.md) when trimming a clone. The core remains one npm application.

@@ -22,6 +22,7 @@
     "format:docs": "prettier --write \"**/*.{md,json,css,yml,yaml}\"",
     "format": "npm run format:code && npm run format:docs",
     "initialize": "node scripts/initialize-project.mjs",
+    "generate:module": "node scripts/generate-module.mjs",
     "check:dependencies": "npm audit --audit-level=high"
   },
   "dependencies": {

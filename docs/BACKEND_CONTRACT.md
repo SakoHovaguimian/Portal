@@ -32,6 +32,8 @@ Core starter pages use `{ data, total, limit, offset }`. Optional inbox and acco
 
 ## Optional Module Contracts
 
+Collections created with `npm run generate:module` use `/portal/resources/<slug>` for account-scoped list, create, detail, and edit operations. See the [generated live API contract](MODULES.md#generated-live-api) for payloads, status codes, and ownership.
+
 Choose capabilities in `src/config/portalModules.ts` and implement their backend endpoints before using them live. Disabled capabilities return 404 at their route/API boundary; missing live integrations return an error without fixture fallback.
 
 - **Publishing, public images, and engagement:** [Publishing](BLOG.md) owns exact block, revision, upload, visibility, and account-action contracts. Public reads cannot reveal drafts. Staff uploads use the authenticated multipart proxy and force public IMAGE visibility.
