@@ -55,7 +55,7 @@ export const profiles = {
   content: ['dashboard', 'users', 'publishing', 'media', 'accountTools', 'engagement'],
 };
 
-export const themeIds = ['portal', 'studio', 'atelier', 'blueprint', 'arcade', 'dusk', 'cupertino'];
+export const themeIds = ['portal', 'studio', 'atelier', 'blueprint', 'arcade', 'dusk', 'cupertino', 'carbon'];
 
 export function createModules(enabled) {
 

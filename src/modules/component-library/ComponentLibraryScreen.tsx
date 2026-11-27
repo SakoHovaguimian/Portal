@@ -48,12 +48,12 @@ export function ComponentLibraryScreen() {
         .toLocaleLowerCase('en-US')
         .includes(normalized),
   );
+  // History traversal can open a specimen without going through a catalog button.
+  if (!visited.includes(selected)) { setVisited([...visited, selected]); }
+
   const open = async (id: string) => {
 
-    setVisited((current) =>
-      current.includes(id) ? current : [...current, id],
-    );
-    await setSelected(id);
+    if (!(await setSelected(id))) { return; }
     requestAnimationFrame(() => {
 
       previewHeading.current?.focus();
@@ -70,12 +70,6 @@ export function ComponentLibraryScreen() {
       <PageHeader
         title={copy.title}
         description={copy.description}
-        meta={
-          <>
-            <Badge intent="brand">{copy.eyebrow}</Badge>
-            <span>{copy.results(componentSpecimens.length)}</span>
-          </>
-        }
       />
     );
 
@@ -103,12 +97,7 @@ export function ComponentLibraryScreen() {
           variant="ghost"
           aria-pressed={category === key}
           className="min-h-11 justify-between gap-3 px-3 text-left aria-pressed:bg-brand-primary aria-pressed:text-brand-secondary"
-          onClick={async () => {
-
-            await setCategory(key);
-            await setSelected('catalog');
-
-          }}
+          onClick={() => void setCategory(key, { clearParams: ['component'] })}
         >
           <span>{copy.categories[key]}</span>
           <span className="text-xs tabular-nums text-tertiary">
@@ -130,15 +119,10 @@ export function ComponentLibraryScreen() {
           <Select
             aria-label={copy.navigation}
             value={category}
-            onValueChange={async (next) => {
+            onValueChange={(next) => {
 
               const key = componentCategories.find((item) => item === next);
-              if (key) {
-
-                await setCategory(key);
-                await setSelected('catalog');
-
-              }
+              if (key) { void setCategory(key, { clearParams: ['component'] }); }
 
             }}
           >
@@ -151,15 +135,6 @@ export function ComponentLibraryScreen() {
         >
           {categoryButtons}
         </nav>
-        <div className="mt-6 hidden border-t-control border-secondary px-3 pt-5 xl:block">
-          <UiIcon name="code" className="mb-3 size-5 text-tertiary" />
-          <p className="m-0 text-xs font-medium text-secondary">
-            {copy.localTitle}
-          </p>
-          <p className="m-0 mt-2 text-xs leading-relaxed text-tertiary">
-            {copy.localDescription}
-          </p>
-        </div>
       </aside>
     );
 
@@ -240,7 +215,7 @@ export function ComponentLibraryScreen() {
               variant="ghost"
               onClick={async () => {
 
-                await setSelected('catalog');
+                if (!(await setSelected('catalog'))) { return; }
                 requestAnimationFrame(() => search.current?.focus());
 
               }}

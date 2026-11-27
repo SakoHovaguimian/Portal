@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { flattenError } from 'zod';
 
 import {
   Button,
@@ -11,12 +12,14 @@ import {
   PasswordInput,
   UiIcon,
 } from '@/components/ui';
+import { SignupInputSchema, type SignupInput } from '@/models/signupInput';
 import { useProjectRouting, useRuntimeConfig } from '@/providers/RuntimeProvider';
 import { strings, portalDemoStrings } from '@/strings';
 
 import { AuthCardShell } from './AuthCardShell';
 import type { AuthRedirectProps } from './models/authRedirectProps';
 import { createSession, resolveSessionRedirect } from './sessionClient';
+import { useAuthFormErrors } from './useAuthFormErrors';
 
 export function SignupScreen({ redirectTo }: AuthRedirectProps) {
 
@@ -27,26 +30,35 @@ export function SignupScreen({ redirectTo }: AuthRedirectProps) {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const {
+    formRef,
+    errors,
+    formError,
+    setFormError,
+    showFieldErrors,
+    clearFieldError,
+    clearFieldErrors,
+  } = useAuthFormErrors<keyof SignupInput>();
   const [pending, setPending] = useState(false);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 
     event.preventDefault();
-    const form = event.currentTarget;
     if (pending) { return; }
+    setFormError(null);
+    const input = SignupInputSchema.safeParse({ firstName, lastName, email, password });
+    if (!input.success) {
+
+      showFieldErrors(flattenError(input.error).fieldErrors);
+      return;
+
+    }
+    clearFieldErrors();
     setPending(true);
-    setError(null);
 
     try {
 
-      const result = await createSession({
-        action: 'signup',
-        firstName,
-        lastName,
-        email,
-        password,
-      });
+      const result = await createSession({ action: 'signup', ...input.data });
 
       router.push(
         resolveSessionRedirect(routing, redirectTo, result.onboardingRequired, result.user.role),
@@ -55,8 +67,7 @@ export function SignupScreen({ redirectTo }: AuthRedirectProps) {
 
     } catch (caughtError) {
 
-      form.querySelector('input')?.focus();
-      setError(
+      setFormError(
         caughtError instanceof Error
           ? caughtError.message
           : strings.ui.signupScreen.unableToCreateAccount,
@@ -72,26 +83,36 @@ export function SignupScreen({ redirectTo }: AuthRedirectProps) {
 
     return (
       <div className="grid gap-(--space-field) sm:grid-cols-2">
-        <Field labelText={strings.ui.signupScreen.firstName}>
+        <Field labelText={strings.ui.signupScreen.firstName} error={errors.firstName?.[0]}>
           <Input
+            name="firstName"
+            required
             autoComplete="given-name"
             placeholder={strings.ui.signupScreen.sako}
             value={firstName}
-            aria-invalid={Boolean(error)}
-            aria-describedby={error ? 'SignupScreen-error' : undefined}
             disabled={pending}
-            onChange={(event) => setFirstName(event.target.value)}
+            onChange={(event) => {
+
+              setFirstName(event.target.value);
+              clearFieldError('firstName');
+
+            }}
           />
         </Field>
-        <Field labelText={strings.ui.signupScreen.lastName}>
+        <Field labelText={strings.ui.signupScreen.lastName} error={errors.lastName?.[0]}>
           <Input
+            name="lastName"
+            required
             autoComplete="family-name"
             placeholder={strings.ui.signupScreen.hovaguimian}
             value={lastName}
-            aria-invalid={Boolean(error)}
-            aria-describedby={error ? 'SignupScreen-error' : undefined}
             disabled={pending}
-            onChange={(event) => setLastName(event.target.value)}
+            onChange={(event) => {
+
+              setLastName(event.target.value);
+              clearFieldError('lastName');
+
+            }}
           />
         </Field>
       </div>
@@ -101,14 +122,13 @@ export function SignupScreen({ redirectTo }: AuthRedirectProps) {
 
   function renderSignupError() {
 
-    if (!error) {
+    if (!formError) {
       return null;
     }
     return (
       <Message
-        id="SignupScreen-error"
         intent="danger"
-        title={error}
+        title={formError}
       />
     );
 
@@ -117,46 +137,53 @@ export function SignupScreen({ redirectTo }: AuthRedirectProps) {
   function renderSignupForm() {
 
     return (
-      <form noValidate onSubmit={handleSubmit} className="grid gap-(--space-field)">
+      <form ref={formRef} noValidate onSubmit={handleSubmit} className="grid gap-(--space-field)">
         {renderNameFields()}
-        <Field labelText={strings.ui.signupScreen.email}>
+        <Field labelText={strings.ui.signupScreen.email} error={errors.email?.[0]}>
           <Input
+            name="email"
+            required
             type="email"
             autoComplete="email"
             placeholder={strings.ui.signupScreen.youCompanyComData}
             leadingIcon={<UiIcon name="mail" className="size-5" />}
             value={email}
-            aria-invalid={Boolean(error)}
-            aria-describedby={error ? 'SignupScreen-error' : undefined}
             disabled={pending}
-            onChange={(event) => setEmail(event.target.value)}
+            onChange={(event) => {
+
+              setEmail(event.target.value);
+              clearFieldError('email');
+
+            }}
           />
         </Field>
         <div className="grid gap-2">
-          <Field labelText={strings.ui.signupScreen.password}>
+          <Field labelText={strings.ui.signupScreen.password} error={errors.password?.[0]}>
             <PasswordInput
+              name="password"
+              required
               autoComplete="new-password"
               leadingIcon={<UiIcon name="lock" className="size-5" />}
               value={password}
-              aria-invalid={Boolean(error)}
-              aria-describedby={
-                error
-                  ? 'SignupScreen-password-hint SignupScreen-error'
-                  : 'SignupScreen-password-hint'
-              }
+              aria-describedby={errors.password ? undefined : 'SignupScreen-password-hint'}
               disabled={pending}
-              onChange={(event) => setPassword(event.target.value)}
+              onChange={(event) => {
+
+                setPassword(event.target.value);
+                clearFieldError('password');
+
+              }}
             />
           </Field>
-          <p id="SignupScreen-password-hint" className="m-0 text-xs text-secondary">
-            {strings.auth.passwordHint}
-          </p>
+          {!errors.password && (
+            <p id="SignupScreen-password-hint" className="m-0 text-xs text-secondary">
+              {strings.auth.passwordHint}
+            </p>
+          )}
         </div>
         {renderSignupError()}
         <Button
           type="submit"
-          aria-invalid={Boolean(error)}
-          aria-describedby={error ? 'SignupScreen-error' : undefined}
           disabled={pending}
           loading={pending}
           className="mt-1 min-h-(--control-height-lg) w-full"
@@ -164,6 +191,9 @@ export function SignupScreen({ redirectTo }: AuthRedirectProps) {
           {strings.ui.signupScreen.createAccount}
           <UiIcon name="arrowRight" className="size-4" />
         </Button>
+        <span role="status" className="sr-only">
+          {pending ? strings.ui.signupScreen.creatingAccount : ''}
+        </span>
       </form>
     );
 

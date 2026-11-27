@@ -10,6 +10,8 @@ import type { MessageAttachmentsProps } from '../models/messageAttachmentsProps'
 
 export function MessageAttachments({ attachments }: MessageAttachmentsProps) {
 
+  if (attachments.length === 0) { return null; }
+
   function renderFile(file: ChatAttachment) {
 
     const url = `/api/backend/chat/attachments/${encodeURIComponent(file.id)}`;

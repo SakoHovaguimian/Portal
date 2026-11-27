@@ -137,7 +137,7 @@ export function SheetPanel({
     }
 
     return (
-      <div className="flex h-full w-full flex-col gap-5 p-6">
+      <div className="ui-safe-area-content flex h-full w-full flex-col gap-5 [--ui-content-gutter:--spacing(6)]">
         {side === 'bottom' && (
           <Button variant="ghost" className="ui-sheet-handle -my-3 w-full shrink-0 self-center" aria-label={strings.ui.sheetPanel.dismissSheet} {...handleProps}>
             <span aria-hidden="true" className="h-1 w-10 rounded-full bg-text-tertiary" />

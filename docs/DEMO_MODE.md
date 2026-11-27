@@ -10,6 +10,8 @@ Set `DEMO_MODE=true` in `.env.local`, or run `DEMO_MODE=true npm run dev`. Resta
 
 All developer mutations enforce same-origin browser requests. Reset and account switching also require an authenticated demo session. `POST /api/dev-settings/demo` enables local demo mode from sign-in only when developer controls are available. No environment or cookie can enable it on a production live deployment.
 
+The dashboard and Appearance offer the Component Library link when the effective runtime enables developer settings. The dashboard uses workspace queries for its counts, registered models, and record table. In demo mode, an account with visible feature requests also sees Sample Analytics beneath the records. Channel visits, sales, revenue, and country shares are fixed examples. Conversion is sales divided by visitors.
+
 ## Accounts And Signup
 
 All seeded accounts use `password123`. The sign-in screen offers these presets:

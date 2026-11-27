@@ -33,6 +33,9 @@ export function Meter({
         data-size={size}
         data-tone={tone}
         className={cn('ui-value-control ui-meter', className)}
+        render={(domProps) => (
+          <div {...domProps} role="meter" aria-valuenow={domProps['aria-valuenow']} />
+        )}
       >
         {({ percentage, valueText }) => (
           <>

@@ -7,6 +7,7 @@ import { motionDuration } from '@/components/ui/lib/motionPreferences';
 import { portalChatStrings as copy } from '@/strings';
 
 import { ChatReactionPicker } from './ChatReactionPicker';
+import styles from './MessageActions.module.css';
 import { MessageAttachments } from './MessageAttachments';
 import type { MessageRowProps } from '../models/messageRowProps';
 
@@ -70,7 +71,7 @@ export function MessageRow({ message, reply, own, read, userId, busy, failed, on
 
       </div>
 
-      {!message.deletedAt && <><div ref={reactionElement} className={`mt-1.5 flex flex-wrap items-center gap-1 ${own ? 'justify-end' : ''}`}>
+      {!message.deletedAt && <><div ref={reactionElement} className={`${styles.actions} mt-1.5 flex flex-wrap items-center gap-1 ${own ? 'justify-end' : ''}`}>
         {reactions}
         <Button variant="ghost" className="min-h-8 px-2 py-1 text-[11px]" onClick={onReply}>{copy.reply}</Button>
         <Button variant="ghost" className="min-h-8 px-2 py-1 text-[11px]" onClick={onPin}>{message.pinned ? copy.unpin : copy.pin}</Button>

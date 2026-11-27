@@ -1,96 +1,83 @@
 'use client';
-import type { Types } from '@amplitude/analytics-browser';
-
 import { getConsent } from '@/services/privacy/cookieConsentStore';
+
+import { getAnalyticsScreen } from './analyticsScreen';
 
 class AnalyticsService {
 
-  private client: Types.BrowserClient | null = null;
-  private initializing: Promise<void> | null = null;
-  private enabled = false;
-
-  // **************************************
-  // MARK: - CONFIGURE ANALYTICS
-  // **************************************
-
-  async configure(apiKey: string | null, accepted: boolean) {
-
-    this.enabled = Boolean(apiKey && accepted);
-    if (!this.enabled) {
-
-      this.client?.setOptOut(true);
-      this.client?.reset();
-      this.clearStorage();
-      return;
-
-    }
-    if (!this.initializing && !this.client) {
-
-      this.initializing = this.initialize(apiKey!).finally(() => {
-        this.initializing = null;
-      });
-
-    }
-    await this.initializing;
-    this.client?.setOptOut(!this.enabled || getConsent() !== 'accepted');
-
-  }
-
-  // **************************************
-  // MARK: - INITIALIZE ANALYTICS
-  // **************************************
-
-  private async initialize(apiKey: string) {
-
-    const amplitude = await import('@amplitude/analytics-browser');
-    if (!this.enabled || getConsent() !== 'accepted') { return; }
-    const client = amplitude.createInstance();
-    this.client = client;
-    await client.init(apiKey, undefined, {
-      autocapture: false,
-      defaultTracking: false,
-      identityStorage: 'localStorage',
-    }).promise;
-    if (!this.enabled || getConsent() !== 'accepted') {
-
-      client.setOptOut(true);
-      client.reset();
-      this.clearStorage();
-
-    }
-
-  }
+  private deviceId?: string;
+  private requests?: AbortController;
 
   // **************************************
   // MARK: - TRACK SCREEN
   // **************************************
 
-  trackScreen(route: string) {
+  async trackScreen(apiKey: string, endpoint: string, pathname: string) {
 
-    if (this.enabled && getConsent() === 'accepted') { this.client?.track('screen_view', { screen: route }); }
+    const screen = getAnalyticsScreen(pathname);
+    if (!screen || getConsent() !== 'accepted' || !globalThis.crypto?.randomUUID) { return; }
+
+    this.deviceId ??= crypto.randomUUID();
+    this.requests ??= new AbortController();
+    try {
+
+      await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'omit',
+        referrerPolicy: 'no-referrer',
+        redirect: 'error',
+        cache: 'no-store',
+        signal: this.requests.signal,
+        body: JSON.stringify({
+          api_key: apiKey,
+          events: [{
+            event_type: 'screen_view',
+            event_properties: { screen },
+            device_id: this.deviceId,
+            insert_id: crypto.randomUUID(),
+          }],
+        }),
+      });
+
+    } catch {
+      // Screen counts are best effort. Offline, aborted, and failed requests expire here.
+    }
 
   }
 
   // **************************************
-  // MARK: - CLEAR ANALYTICS STORAGE
+  // MARK: - WITHDRAW ANALYTICS
   // **************************************
 
-  private clearStorage() {
+  stop() {
 
+    this.requests?.abort();
+    this.requests = undefined;
+    this.deviceId = undefined;
+
+  }
+
+  // **************************************
+  // MARK: - REMOVE LEGACY SDK STORAGE
+  // **************************************
+
+  removeLegacyStorage(apiKey: string) {
+
+    const prefix = apiKey.slice(0, 10);
     try {
 
-      for (const storage of [localStorage, sessionStorage]) {
-
-        for (const key of Object.keys(storage)) {
-
-          if (/^(AMP_|amplitude_)/i.test(key)) { storage.removeItem(key); }
-
-        }
-
-      }
+      localStorage.removeItem(`AMP_${prefix}`);
+      localStorage.removeItem(`AMP_unsent_${prefix}`);
+      localStorage.removeItem(`AMP_remote_config_${prefix}`);
 
     } catch {
-      /* Storage may be unavailable; the SDK is still opted out. */
+      // Storage may be unavailable.
+    }
+    try {
+      window.indexedDB?.deleteDatabase(`AMP_diagnostics_${prefix}`);
+    } catch {
+      // IndexedDB access may be blocked independently of local storage.
     }
 
   }

@@ -54,6 +54,7 @@
   height: calc(var(--switch-height) - var(--switch-inset) * 2);
 }
 .ui-switch:checked + .ui-switch-thumb {
+  background-color: var(--color-switch-thumb-on);
   translate: calc(var(--switch-width) - var(--switch-height)) 0;
 }
 [dir='rtl'] .ui-switch:checked + .ui-switch-thumb {

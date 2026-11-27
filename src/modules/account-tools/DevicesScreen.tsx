@@ -185,7 +185,6 @@ export function DevicesScreen() {
         action={
           filtered && (
             <Button
-              variant="secondary"
               onClick={() =>
                 directory.update({
                   query: undefined,

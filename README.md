@@ -45,7 +45,7 @@ Committed tabs, filters, and paging create real browser history entries. The app
 
 ## Component foundation
 
-Open `/dev-settings/components` after signing in. Portal includes the LeafLaunch shared component foundation and editable HEX color picker, date-only calendars, disclosures, ratings/reactions/bookmarks, card carousels, mobile navigation and record layouts, animated segmented controls, steppers, persistent panels, Markdown editing, and media previews. Seven complete themes drive shared colors, corners, borders, shadows, typography, spacing, and motion throughout. See [loadable themes](docs/THEMING.md). Previews stay local. Read [UI system](docs/UI_SYSTEM.md) before extending a screen.
+Open `/dev-settings/components` after signing in. Portal includes the LeafLaunch shared component foundation and editable HEX color picker, date-only calendars, disclosures, ratings/reactions/bookmarks, card carousels, mobile navigation and record layouts, animated segmented controls, steppers, persistent panels, Markdown editing, and media previews. Eight complete themes drive shared colors, corners, borders, shadows, typography, spacing, and motion throughout. See [loadable themes](docs/THEMING.md). Previews stay local. Read [UI system](docs/UI_SYSTEM.md) before extending a screen.
 
 ## Live mode
 
@@ -55,7 +55,7 @@ The backend must implement the [documented contract](docs/BACKEND_CONTRACT.md). 
 
 Authentication uses Firebase REST on the server. The browser holds an opaque HTTP-only cookie. Portal keeps encrypted Firebase credentials in SQLite on persistent local disk and revokes the corresponding record on sign-out. Set `PORTAL_SESSION_DB_PATH` to place it on a persistent volume if the app directory is replaced at deployment. See [authentication and sessions](docs/AUTH.md) for rollout and hosting requirements.
 
-Browser calls use `/api/backend/*`. The proxy refreshes tokens and forwards the bearer and app-version headers. Socket.IO uses short-lived tickets. Firebase Messaging is explicitly opt-in. Amplitude loads only after consent; no Sentry frontend integration is included.
+Browser calls use `/api/backend/*`. The proxy refreshes tokens and forwards the bearer and app-version headers. Socket.IO uses short-lived tickets. Firebase Messaging is explicitly opt-in. Optional Amplitude screen views are sent only after consent. The public `/privacy` page links the configured privacy notice and lets visitors change their analytics choice.
 
 ## Commands
 

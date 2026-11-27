@@ -87,7 +87,6 @@ export function PublicBlogScreen({
         />
         {filtered && (
           <Button
-            variant="secondary"
             onClick={() => navigate({ query: '', limit: 6, offset: 0 })}
           >
             {copy.resetFilters}

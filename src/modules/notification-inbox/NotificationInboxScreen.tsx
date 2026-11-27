@@ -135,7 +135,7 @@ export function NotificationInboxScreen() {
           description={filtered ? copy.noResultsHint : copy.emptyHint}
           action={
             filtered && (
-              <Button variant="secondary" onClick={directory.clearFilters}>
+              <Button onClick={directory.clearFilters}>
                 {copy.clearFiltersAction}
               </Button>
             )

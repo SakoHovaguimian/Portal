@@ -9,7 +9,7 @@ import { strings } from '@/strings';
 
 export function ThemeToggle() {
 
-  const { mode, setPreference } = useThemePreference();
+  const { mode, ready, setPreference } = useThemePreference();
   const presentation = usePresentationService();
   const [pending, setPending] = useState(false);
   const dark = mode === 'dark';
@@ -36,16 +36,18 @@ export function ThemeToggle() {
   return (
     <Button
       variant="ghost"
-      className="h-11 w-11 shrink-0 px-0"
+      className="size-11 min-h-11 shrink-0 px-0"
       aria-label={strings.ui.shellActions.darkMode}
-      aria-pressed={dark}
-      aria-busy={pending}
+      aria-pressed={ready ? dark : undefined}
+      aria-busy={!ready || pending}
       title={
-        dark
-          ? strings.ui.shellActions.switchToLight
-          : strings.ui.shellActions.switchToDark
+        ready
+          ? dark
+            ? strings.ui.shellActions.switchToLight
+            : strings.ui.shellActions.switchToDark
+          : undefined
       }
-      disabled={pending}
+      disabled={!ready || pending}
       onClick={() => void toggleTheme()}
     >
       <svg
@@ -58,14 +60,14 @@ export function ThemeToggle() {
         strokeLinejoin="round"
         aria-hidden="true"
       >
-        {dark ? (
-          <>
-            <circle cx="10" cy="10" r="3" />
-            <path d="M10 2v2m0 12v2M2 10h2m12 0h2M4.3 4.3l1.4 1.4m8.6 8.6 1.4 1.4M4.3 15.7l1.4-1.4m8.6-8.6 1.4-1.4" />
-          </>
-        ) : (
-          <path d="M17 11.8A7.3 7.3 0 0 1 8.2 3a7.3 7.3 0 1 0 8.8 8.8Z" />
-        )}
+        <g className="hidden dark:block">
+          <circle cx="10" cy="10" r="3" />
+          <path d="M10 2v2m0 12v2M2 10h2m12 0h2M4.3 4.3l1.4 1.4m8.6 8.6 1.4 1.4M4.3 15.7l1.4-1.4m8.6-8.6 1.4-1.4" />
+        </g>
+        <path
+          className="dark:hidden"
+          d="M17 11.8A7.3 7.3 0 0 1 8.2 3a7.3 7.3 0 1 0 8.8 8.8Z"
+        />
       </svg>
     </Button>
   );

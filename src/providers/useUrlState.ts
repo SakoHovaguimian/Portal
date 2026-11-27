@@ -21,13 +21,18 @@ export function useUrlState<Key extends string>(
   const setValue = useCallback(
     async (next: Key, options: UrlStateOptions = {}) => {
 
-      if (!allowedValues.includes(next)) { return; }
-      const url = new URL(window.location.href);
-      if ((url.searchParams.get(key) ?? fallback) === next) { return; }
-      if (!(await confirmNavigation())) { return; }
+      if (!allowedValues.includes(next)) { return false; }
+      const previous = window.location.href;
+      const url = new URL(previous);
+      const clearParams = options.clearParams ?? [];
+      const resetsDependentState = clearParams.some((name) => url.searchParams.has(name));
+      if ((url.searchParams.get(key) ?? fallback) === next && !resetsDependentState) { return true; }
+      if (!(await confirmNavigation()) || window.location.href !== previous) { return false; }
+      for (const name of clearParams) { url.searchParams.delete(name); }
       if (next === fallback) { url.searchParams.delete(key); } else { url.searchParams.set(key, next); }
       const href = url.pathname + url.search + url.hash;
       if (options.replace) { window.history.replaceState(null, '', href); } else { window.history.pushState(null, '', href); }
+      return true;
 
     },
     [allowedValues, confirmNavigation, fallback, key],

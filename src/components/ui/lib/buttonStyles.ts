@@ -19,7 +19,7 @@ export function buttonClassName(
 ) {
 
   return cn(
-    'ui-button group relative isolate inline-flex min-h-(--control-height-md) h-max cursor-pointer items-center justify-center gap-2 rounded-control px-4 py-2.5 text-center text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-not-allowed',
+    'ui-button group relative isolate inline-flex min-h-(--control-height-md) h-max cursor-pointer items-center justify-center gap-2 rounded-button px-(--button-padding-inline) py-2.5 text-center text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-not-allowed',
     buttonVariants[variant],
     className,
   );

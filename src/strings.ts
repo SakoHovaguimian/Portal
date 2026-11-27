@@ -32,6 +32,7 @@ export const strings = {
     invalidEmailHint: 'Enter a valid email address.',
     passwordHint: 'Use at least eight characters for your password.',
     nameHint: 'Enter your name.',
+    nameLengthHint: 'Use at most 80 characters.',
     disabledHint: 'This account is disabled. Contact your administrator.',
     tooManyHint: 'Too many attempts. Please wait before trying again.',
     failedHint: 'Unable to sign in. Please try again.',
@@ -54,13 +55,21 @@ export const strings = {
     },
   },
   privacy: {
+    noticeTitle: 'Privacy Notice',
+    noticeAction: 'Read The Full Privacy Notice',
+    noticeMissingHint: 'A privacy notice from the site operator is not available here yet.',
+    storageTitle: 'Browser Storage',
+    storageDescription: 'A session cookie keeps you signed in. This browser also stores appearance settings and any analytics choice you save.',
     title: 'Analytics Preferences',
     description:
-      'Essential cookies keep you signed in. Optional Amplitude analytics helps us understand which screens are useful. It stays off until you accept.',
+      'If you accept, this site sends screen views to Amplitude. You can change your choice here at any time.',
     accept: 'Accept Analytics',
     decline: 'Essential Only',
-    savedHint: 'Your analytics preference has been saved.',
-    settings: 'Analytics Preferences',
+    acceptedHint: 'Analytics is on in this browser.',
+    declinedHint: 'Analytics is off. Your choice is essential only.',
+    undecidedHint: 'Analytics is off until you choose to accept it.',
+    unavailableHint: 'Analytics is disabled for this site.',
+    saveFailedHint: 'This browser couldn’t save your choice. Analytics is off in this tab. Check your preference again after reloading.',
     demoHint: 'Analytics is disabled in this demo.',
   },
   notifications: {
@@ -237,6 +246,11 @@ export const strings = {
           name: 'Dusk',
           description:
             'Plum and slate, refined type, and softly elevated panels.',
+        },
+        carbon: {
+          name: 'Carbon',
+          description:
+            'Neutral surfaces, jade accents, and generously rounded controls and cards.',
         },
       },
     },
@@ -922,106 +936,37 @@ export const strings = {
     // Dashboard
     dashboardScreen: {
       dateRange: (from: string, to: string) => `${from} – ${to}`,
-      githubComData: 'Github.com',
-      facebook: 'Facebook',
-      googleOrganic: 'Google (Organic)',
-      vimeoComData: 'Vimeo.com',
-      indiehackersComData: 'Indiehackers.com',
-      havingDifficultiesUsingTheProduct:
-        'Having Difficulties Using The Product',
-      missingFeaturesINeed: 'Missing Features I Need',
-      notSatisfiedAboutTheQualityOfTheProduct:
-        'Not Satisfied About The Quality Of The Product',
-      theProductDoesnTLookAsAdvertised:
-        "The Product Doesn't Look As Advertised",
-      other: 'Other',
-      value17k: '$1.7K',
-      direct: ' Direct',
-      value24k: '$2.4K',
-      indirect: ' Indirect',
-      unitedStates: 'United States',
-      italy: 'Italy',
-      source: 'Source',
-      visitors: 'Visitors',
-      revenue: 'Revenue',
-      sales: 'Sales',
-      conversion: 'Conversion',
-      breakdown: 'Breakdown',
-      reasonForRefunds: 'Reason For Refunds',
-      text: '%',
-      overview: 'Overview',
       dashboard: 'Dashboard',
-      openShowcase: 'Open Showcase',
-      reviewYourWorkspaceActivityBrowseRecordsAndManageIncomingHint:
-        'Review your workspace activity, browse records, and manage incoming requests.',
+      description: 'Review workspace activity and browse records by model.',
       loadingWorkspaceData: 'Loading Workspace Data…',
       workspaceDataUnavailable: 'Workspace Data Unavailable',
       pleaseTryLoadingYourWorkspaceAgainHint:
         'Please try loading your workspace again.',
       newInRange: (count: number) => `${count} New In Range`,
-      density: 'Density',
-      modelExplorer: 'Model Explorer',
-      chooseHowMuchSpaceToUseForEachRecordHint:
-        'Choose how much space to use for each record.',
+      density: 'Row Density',
       comfortable: 'Comfortable',
       compact: 'Compact',
-      selectedModel: 'Selected Model',
-      visibleRecordsInTheCurrentQueryHint: ' visible records in the current query.',
-      sampleAnalyticsDemoData: 'Sample analytics · demo data',
-      directVsIndirect: 'Direct VS Indirect',
-      orderValue: 'Order Value',
-      avgOrderValue: 'AVG Order Value',
-      current: 'Current',
-      previous: 'Previous',
-      audience: 'Audience',
-      topCountries: 'Top Countries',
-      acquisition: 'Acquisition',
-      topChannels: 'Top Channels',
-      stores: 'Stores',
-      salesOverTime: 'Sales Over Time',
-      forecast: 'Forecast',
-      finance: 'Finance',
-      salesVsRefunds: 'Sales VS Refunds',
       records: 'Records',
-      primaryDataTable: 'Primary Data Table',
-      rows: ' Rows',
+      visibleRecordCountSummary: (count: number) => `${count} visible ${count === 1 ? 'record' : 'records'}`,
       noRecordsAvailableHint: 'No records available.',
-      registry: 'Registry',
       registeredModels: 'Registered Models',
-      recordsAvailableForOperationalViewsHint:
-        'Records available for operational views.',
-      dec20: 'Dec 20',
-      jan21: 'Jan 21',
-      feb21: 'Feb 21',
-      mar21: 'Mar 21',
-      apr21: 'Apr 21',
-      may21: 'May 21',
-      value24k2: '2.4K',
-      value3877: '$3,877',
-      value267: '267',
-      value47: '4.7%',
-      value22k: '2.2K',
-      value3426: '$3,426',
-      value249: '249',
-      value44: '4.4%',
-      value20k: '2.0K',
-      value2444: '$2,444',
-      value224: '224',
-      value42: '4.2%',
-      value19k: '1.9K',
-      value2236: '$2,236',
-      value220: '220',
-      value17k2: '1.7K',
-      value2034: '$2,034',
-      value204: '204',
-      value39: '3.9%',
-      value17k3: '$1.7K',
-      value72: '$72',
-      value34: '+34%',
-      value1482: '1,482',
-      value22: '-22%',
-      value6796: '+$6,796',
-      value342: '-34%',
+      recordCount: (count: number) => `${count} ${count === 1 ? 'Record' : 'Records'}`,
+      sampleAnalytics: 'Sample Analytics',
+      topChannels: 'Top Channels',
+      source: 'Source',
+      visitors: 'Visitors',
+      revenue: 'Revenue',
+      sales: 'Sales',
+      conversion: 'Conversion',
+      githubComData: 'github.com',
+      facebook: 'Facebook',
+      googleOrganic: 'Google (Organic)',
+      vimeoComData: 'vimeo.com',
+      indiehackersComData: 'indiehackers.com',
+      countryShareTitle: 'Visitor Share By Country',
+      unitedStates: 'United States',
+      italy: 'Italy',
+      other: 'Other',
     },
 
     // Feature Requests
@@ -1049,7 +994,6 @@ export const strings = {
       missingFeatureRequest: 'Missing Feature Request',
       thisFeatureRequestCouldNotBeFoundHint:
         'This feature request could not be found.',
-      requestDetail: 'Request Detail',
       featureRequestDetail: 'Feature Request Detail',
       requestUpdated: 'Request Updated',
       message: 'Message',
@@ -1140,8 +1084,8 @@ export const strings = {
       yesTheNewSystemDeliberatelyLimitsAccentUsageToHint:
         'Yes. The new system deliberately limits accent usage to active states and emphasis points.',
       areTheChartsRealYet: 'Are The Charts Real Yet?',
-      theAnalyticsWidgetsInTheRedesignedDashboardUseMockHint:
-        'The analytics widgets in the redesigned dashboard use mock data for now while the existing records and registry panels still use live app data.',
+      sampleAnalyticsHint:
+        'The Sample Analytics section uses synthetic data and appears only in demo mode. Workspace records come from the current environment.',
       doesDarkModeKeepTheSameStructure:
         'Does Dark Mode Keep The Same Structure?',
       yesTheSameCardAndShellHierarchyCarriesThroughHint:
@@ -1159,12 +1103,12 @@ export const strings = {
         'Yes. The sidebar is still driven from one shared shell component and can be extended centrally.',
       canWeAddMoreDashboardWidgetsLater:
         'Can We Add More Dashboard Widgets Later?',
-      yesTheCurrentMockedCardsAreIntentionallyBuiltFromHint:
-        'Yes. The current mocked cards are intentionally built from simple primitives so we can swap in real charts incrementally.',
+      dashboardComponentsHint:
+        'Yes. New dashboard widgets can reuse the shared cards, tables, and meters.',
       willRecordsAndRegistryStayInTheDashboard:
         'Will Records And Registry Stay In The Dashboard?',
-      yesThoseExistingOperationalPanelsRemainInPlaceAndHint:
-        'Yes. Those existing operational panels remain in place and now sit beneath the mocked analytics surface.',
+      dashboardRecordsHint:
+        'Yes. Records and registered models appear before any sample analytics.',
       doOverlayAnimationsStillWork: 'Do Overlay Animations Still Work?',
       yesAlertToastAndSheetTimingControlsAreUntouchedHint:
         'Yes. Alert, toast, and sheet timing controls are untouched and still configurable through the presentation service.',
@@ -2765,8 +2709,7 @@ export const componentExpansionStrings = {
 
 export const componentBrowserStrings = {
   title: 'Component Library',
-  description: 'Find a building block. Explore its behavior. Make it your own.',
-  eyebrow: 'THE PORTAL TOOLKIT',
+  description: 'Browse and try components using local sample data.',
   catalog: 'All Components',
   back: 'Back To Catalog',
   search: 'Search Components',
@@ -2782,9 +2725,6 @@ export const componentBrowserStrings = {
   emptyTitle: 'No Components Found',
   emptyDescription: 'Try another term or browse all categories.',
   reset: 'Clear Search And Filters',
-  localTitle: 'A Local Playground',
-  localDescription:
-    'Examples use local state. Change values, open menus, and explore states without affecting workspace data.',
   categories: {
     all: 'All Components',
     foundations: 'Foundations',
@@ -2984,7 +2924,7 @@ export const portalDemoStrings = {
 
 // PROJECT_INITIALIZER_COPY_START
 export const projectInitializerCopy = {
-  helpBody: 'Portal Project Initializer\n\nUsage: npm run initialize -- [options]\n\nWithout flags, a terminal opens the guided setup. Use --yes for defaults.\n\n  --profile minimal|internal-tool|saas|content\n  --name <name>                 Product name\n  --slug <slug>                 Lowercase product identifier\n  --description <text>          Product description\n  --theme portal|studio|atelier|blueprint|arcade|dusk|cupertino\n  --mode light|dark\n  --modules <comma-separated>   Enabled capability IDs; use none for no modules\n  --navigation <IDs>            Ordered visible destinations; use none to hide all\n  --starter-data populated|empty\n  --environment demo|live       Defaults to demo\n  --api-url <url>               Required for live; no credentials/query/hash\n  --app-origin <url>            Optional canonical public origin\n  --firebase-api-key <key>      Required for live; never printed\n  --logo <local-file>           SVG, PNG, WebP, JPEG, or GIF\n  --icon <local-file>           PNG, WebP, JPEG, GIF, or ICO\n  --dry-run, --preview          Validate and preview without writing\n  --yes, --non-interactive      Accept defaults without prompts\n  --force                      Explicitly replace owned settings and .env.local\n  --help\n\nCapability IDs: dashboard, users, featureRequests, chat, backgroundJobs, publishing, media, notifications, accountTools, onboarding, engagement.\nNavigation IDs: dashboard, users, featureRequests, chat, backgroundJobs, publishing, notifications, saved, profile, appearance, account, help.\nLive credentials can instead be passed through PORTAL_INITIALIZER_FIREBASE_API_KEY. Existing environment files are never read.\n',
+  helpBody: 'Portal Project Initializer\n\nUsage: npm run initialize -- [options]\n\nWithout flags, a terminal opens the guided setup. Use --yes for defaults.\n\n  --profile minimal|internal-tool|saas|content\n  --name <name>                 Product name\n  --slug <slug>                 Lowercase product identifier\n  --description <text>          Product description\n  --theme portal|studio|atelier|blueprint|arcade|dusk|cupertino|carbon\n  --mode light|dark\n  --modules <comma-separated>   Enabled capability IDs; use none for no modules\n  --navigation <IDs>            Ordered visible destinations; use none to hide all\n  --starter-data populated|empty\n  --environment demo|live       Defaults to demo\n  --api-url <url>               Required for live; no credentials/query/hash\n  --app-origin <url>            Optional canonical public origin\n  --firebase-api-key <key>      Required for live; never printed\n  --logo <local-file>           SVG, PNG, WebP, JPEG, or GIF\n  --icon <local-file>           PNG, WebP, JPEG, GIF, or ICO\n  --dry-run, --preview          Validate and preview without writing\n  --yes, --non-interactive      Accept defaults without prompts\n  --force                      Explicitly replace owned settings and .env.local\n  --help\n\nCapability IDs: dashboard, users, featureRequests, chat, backgroundJobs, publishing, media, notifications, accountTools, onboarding, engagement.\nNavigation IDs: dashboard, users, featureRequests, chat, backgroundJobs, publishing, notifications, saved, profile, appearance, account, help.\nLive credentials can instead be passed through PORTAL_INITIALIZER_FIREBASE_API_KEY. Existing environment files are never read.\n',
   prompts: {
     profile: 'Profile',
     name: 'Product Name',

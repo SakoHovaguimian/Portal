@@ -183,7 +183,6 @@ export function CollectionShowcase() {
             description={strings.ui.usersScreen.tryADifferentSearchHint}
             action={
               <Button
-                variant="secondary"
                 onClick={() => setFilters({ query: '' })}
               >
                 {copy.clearFilters}

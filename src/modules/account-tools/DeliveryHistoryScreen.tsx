@@ -215,7 +215,7 @@ export function DeliveryHistoryScreen() {
         }
         action={
           filtered && (
-            <Button variant="secondary" onClick={clear}>
+            <Button onClick={clear}>
               {copy.common.clearFiltersAction}
             </Button>
           )

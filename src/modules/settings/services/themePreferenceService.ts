@@ -10,7 +10,7 @@ export class ThemePreferenceService {
   // MARK: - GET THEME PREFERENCE
   // **************************************
 
-  async getPreference(): Promise<AppearancePreference> {
+  getPreference(): AppearancePreference {
 
     try {
 

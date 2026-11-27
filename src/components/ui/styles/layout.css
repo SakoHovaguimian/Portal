@@ -4,6 +4,13 @@
   padding-bottom: env(safe-area-inset-bottom);
 }
 
+.ui-safe-area-content {
+  padding: max(var(--ui-content-gutter), env(safe-area-inset-top))
+    max(var(--ui-content-gutter), env(safe-area-inset-right))
+    max(var(--ui-content-gutter), env(safe-area-inset-bottom))
+    max(var(--ui-content-gutter), env(safe-area-inset-left));
+}
+
 .ui-floating-assistant {
   inset-inline-end: max(1rem, env(safe-area-inset-right));
   bottom: max(

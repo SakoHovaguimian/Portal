@@ -17,7 +17,7 @@ export function ComponentCatalog({
         title={copy.emptyTitle}
         description={copy.emptyDescription}
         action={
-          <Button variant="secondary" onClick={onReset}>
+          <Button onClick={onReset}>
             {copy.reset}
           </Button>
         }

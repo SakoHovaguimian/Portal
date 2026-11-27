@@ -908,6 +908,7 @@
   --color-border: var(--portal-color-border);
   --color-control-border: var(--portal-color-control-border);
   --color-switch-thumb: var(--portal-color-switch-thumb);
+  --color-switch-thumb-on: var(--portal-color-switch-thumb-on);
   --color-switch-on: var(--portal-color-switch-on);
   --color-control-track: var(--portal-color-control-track);
   --color-control-thumb: var(--portal-color-control-thumb);
@@ -1048,6 +1049,7 @@
   --font-weight-bold: var(--portal-font-weight-bold);
   --heading-letter-spacing: var(--portal-heading-letter-spacing);
   --radius-control: var(--portal-radius-control);
+  --radius-button: var(--portal-radius-button);
   --radius-avatar: var(--portal-radius-avatar);
   --radius-card: var(--portal-radius-card);
   --radius-overlay: var(--portal-radius-overlay);
@@ -1060,6 +1062,7 @@
   --space-panel: var(--portal-space-panel);
   --space-section: var(--portal-space-section);
   --space-field: var(--portal-space-field);
+  --button-padding-inline: var(--portal-button-padding-inline);
   --control-height-sm: var(--portal-control-height-sm);
   --control-height-md: var(--portal-control-height-md);
   --control-height-lg: var(--portal-control-height-lg);

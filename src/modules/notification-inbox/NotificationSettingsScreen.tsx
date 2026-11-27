@@ -64,7 +64,6 @@ export function NotificationSettingsScreen() {
         description={copy.noPreferencesHint}
         action={
           <Button
-            variant="secondary"
             loading={preferences.isFetching}
             onClick={refreshPreferences}
           >

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ProjectBrand } from '@/components/ProjectBrand';
 import { portalModules } from '@/config/portalModules';
 import type { ChildrenProps } from '@/models/childrenProps';
+import { PrivacyNoticeLink } from '@/services/privacy/components/PrivacyNoticeLink';
 import { portalPublishingStrings } from '@/strings';
 
 import styles from '@/modules/blog/Blog.module.css';
@@ -30,6 +31,9 @@ export default function BlogLayout({ children }: ChildrenProps) {
         </div>
       </nav>
       {children}
+      <footer className="border-t-control border-secondary py-6">
+        <PrivacyNoticeLink />
+      </footer>
     </div>
   );
 

@@ -207,12 +207,17 @@ export function ThemeControls() {
     return (
       <div
         className={`${styles.studio} grid min-w-0 gap-6`}
-        aria-busy={pending}
+        aria-busy={!theme.ready || pending}
       >
-        {renderThemeChoices()}
-        {renderPreferenceSummary()}
-        {renderPreferenceControls()}
-        {renderPreferenceFeedback()}
+        <div
+          className={theme.ready ? 'contents' : 'invisible contents'}
+          inert={!theme.ready}
+        >
+          {renderThemeChoices()}
+          {renderPreferenceSummary()}
+          {renderPreferenceControls()}
+          {renderPreferenceFeedback()}
+        </div>
         <ThemeLivePreview />
       </div>
     );

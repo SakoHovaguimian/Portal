@@ -2,6 +2,8 @@
 
 The browser submits email/password to `POST /api/auth/session` with `action: login` or `action: signup`. Effective demo runtime also accepts the validated `action: preset` account selection; live runtime rejects that action. The server validates input and calls Firebase Identity Toolkit REST. Signup also provisions the application user on the backend. Login obtains the authoritative application profile from `GET /users/profile`. A Firebase account alone is insufficient without its backend profile; provisioning failures must be resolved before that account can sign in.
 
+Sign-in and signup reuse the server's input schemas for immediate field feedback. Invalid inputs display their own error and the first invalid input receives focus. Credential or service failures appear as form-level alerts. The auth screens link to the public privacy page.
+
 The `portal_session` cookie contains a random 256-bit identifier. Portal hashes the identifier for the lookup key and stores the Firebase ID token, refresh token, and minimal user profile in a session record. `jose` encrypts the record using AES-256-GCM with a key derived from `SESSION_SECRET`. Cookie flags are HTTP-only, same-site lax, path `/`, and secure in production. Sessions expire 30 days after sign-in. Refresh and profile updates preserve that deadline and cookie identifier.
 
 `AppSession` contains user display data and the ID token expiry only. Keep private session records and credentials out of React props, JSON responses, browser storage, logs, URLs, and analytics.

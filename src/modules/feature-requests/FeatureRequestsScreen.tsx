@@ -136,7 +136,7 @@ export function FeatureRequestsScreen({ query = '' }: FeatureRequestsScreenProps
   function renderLoadingState() {
 
     return isPending ? (
-      <Card>{strings.ui.featureRequestsScreen.loadingFeatureRequests}</Card>
+      <Card role="status">{strings.ui.featureRequestsScreen.loadingFeatureRequests}</Card>
     ) : null;
 
   }

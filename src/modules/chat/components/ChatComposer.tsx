@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useId, useState, type KeyboardEvent } from 'react';
 
 import { Button, Field, TextArea, UploadField, UiIcon } from '@/components/ui';
 import { portalChatStrings as copy } from '@/strings';
@@ -10,6 +10,7 @@ import type { ChatComposerProps } from '../models/chatComposerProps';
 
 export function ChatComposer({ draft, reply, onDraft, onSend }: ChatComposerProps) {
 
+  const shortcutHintId = useId();
   const [showFiles, setShowFiles] = useState(false);
   const [uploadError, setUploadError] = useState(false);
 
@@ -33,9 +34,7 @@ export function ChatComposer({ draft, reply, onDraft, onSend }: ChatComposerProp
   function submit(event: React.FormEvent<HTMLFormElement>) {
 
     event.preventDefault();
-    if ((draft.body.trim() || draft.files.length)) {
-      send();
-    }
+    send();
 
   }
 
@@ -56,24 +55,34 @@ export function ChatComposer({ draft, reply, onDraft, onSend }: ChatComposerProp
 
   }
 
+  function handleMessageKey(event: KeyboardEvent<HTMLTextAreaElement>) {
+
+    if (
+      event.key !== 'Enter' || !event.shiftKey || event.metaKey || event.ctrlKey || event.altKey ||
+      event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229
+    ) { return; }
+    event.preventDefault();
+    send();
+
+  }
+
   function renderMessageField() {
 
     return (
-      <Field labelText={copy.composeLabel}><TextArea rows={1} autoGrow className="min-h-11 max-h-40 overflow-y-auto" placeholder={copy.composePlaceholder} maxLength={4000} value={draft.body} onChange={(event) => onDraft({
-        ...draft,
-        body: event.target.value,
-      })} onKeyDown={(event) => {
-
-        if (event.key === 'Enter' && event.shiftKey && !event.metaKey && !event.ctrlKey && !event.altKey && !event.nativeEvent.isComposing) {
-
-          event.preventDefault();
-          if ((draft.body.trim() || draft.files.length)) {
-            send();
-          }
-
-        }
-
-      }}/></Field>
+      <Field labelText={copy.composeLabel}>
+        <TextArea
+          rows={1}
+          autoGrow
+          className="min-h-11 max-h-40 overflow-y-auto"
+          placeholder={copy.composePlaceholder}
+          maxLength={4000}
+          value={draft.body}
+          aria-describedby={shortcutHintId}
+          aria-keyshortcuts="Shift+Enter"
+          onChange={(event) => onDraft({ ...draft, body: event.target.value })}
+          onKeyDown={handleMessageKey}
+        />
+      </Field>
     );
 
   }
@@ -125,7 +134,8 @@ export function ChatComposer({ draft, reply, onDraft, onSend }: ChatComposerProp
         <Button variant="ghost" aria-expanded={showFiles} onClick={() => setShowFiles(!showFiles)}><UiIcon name="upload" className="size-4"/>{copy.attach}</Button>
         <div className="grid justify-items-end gap-1.5">
           <Button type="submit" disabled={!draft.body.trim() && draft.files.length === 0}>{copy.send}<UiIcon name="arrowRight" className="size-4"/></Button>
-          <span className="flex items-center gap-1 text-[10px] text-tertiary" aria-label={copy.sendShortcutLabel}>
+          <span className="flex items-center gap-1 text-[10px] text-tertiary" id={shortcutHintId}>
+            <span className="sr-only">{copy.sendShortcutLabel}</span>
             <UiIcon name="shift" className="size-3" aria-hidden="true"/>
             <span aria-hidden="true">{copy.sendShortcutHint}</span>
           </span>

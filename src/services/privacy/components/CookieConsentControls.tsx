@@ -6,57 +6,58 @@ import { useRuntimeConfig } from '@/providers/RuntimeProvider';
 import { strings } from '@/strings';
 
 import {
-  getConsent,
+  getConsentState,
   saveConsent,
   subscribeConsent,
 } from '../cookieConsentStore';
 import type { CookieConsentControlsProps } from '../models/cookieConsentControlsProps';
 
+import { PrivacyNoticeLink } from './PrivacyNoticeLink';
+
 export function CookieConsentControls({
   settings = false,
+  noticePage = false,
 }: CookieConsentControlsProps) {
 
   const config = useRuntimeConfig();
-  const consent = useSyncExternalStore(
+  const consent = useSyncExternalStore<ReturnType<typeof getConsentState> | undefined>(
     subscribeConsent,
-    getConsent,
-    () => null,
+    getConsentState,
+    () => undefined,
   );
-  const [message, setMessage] = useState('');
-  if (config.demoMode || !config.amplitudeApiKey) {
+  const [engaged, setEngaged] = useState(false);
+  const banner = !settings && !noticePage;
+  const Container = banner ? 'section' : 'div';
+  const trackingAvailable = !config.demoMode && Boolean(config.amplitudeApiKey);
+  const hasChoice = consent === 'accepted' || consent === 'declined';
+  if (banner && (!trackingAvailable || consent === undefined || (hasChoice && !engaged))) { return null; }
 
-    return settings ? (
-      <p className="text-sm text-secondary">
-        {config.demoMode ? strings.privacy.demoHint : strings.privacy.description}
-      </p>
-    ) : null;
+  function getStatus() {
+
+    if (config.demoMode) { return strings.privacy.demoHint; }
+    if (!trackingAvailable) { return strings.privacy.unavailableHint; }
+    if (consent === undefined) { return null; }
+    if (consent === 'storage-error') { return strings.privacy.saveFailedHint; }
+    if (consent === 'accepted') { return strings.privacy.acceptedHint; }
+    if (consent === 'declined') { return strings.privacy.declinedHint; }
+    return strings.privacy.undecidedHint;
 
   }
-  if (!settings && consent) { return null; }
 
   function renderConsentActions() {
 
     return (
-      <div className="flex flex-wrap gap-2">
+      <div className="grid w-fit max-w-full gap-2 sm:grid-cols-2">
         <Button
           variant="secondary"
-          onClick={() => {
-
-            saveConsent('declined');
-            setMessage(strings.privacy.savedHint);
-
-          }}
+          onClick={() => saveConsent('declined')}
           aria-pressed={consent === 'declined'}
         >
           {strings.privacy.decline}
         </Button>
         <Button
-          onClick={() => {
-
-            saveConsent('accepted');
-            setMessage(strings.privacy.savedHint);
-
-          }}
+          variant="secondary"
+          onClick={() => saveConsent('accepted')}
           aria-pressed={consent === 'accepted'}
         >
           {strings.privacy.accept}
@@ -67,21 +68,19 @@ export function CookieConsentControls({
   }
 
   return (
-    <section
-      aria-label={strings.privacy.title}
-      className={
-        settings
-          ? 'grid gap-3'
-          : 'fixed bottom-4 left-4 right-4 z-50 mx-auto grid max-w-xl gap-3 rounded-xl border-control border-secondary bg-primary p-5 shadow-lg'
-      }
+    <Container
+      aria-label={banner ? strings.privacy.title : undefined}
+      onFocusCapture={banner ? () => setEngaged(true) : undefined}
+      className={banner ? 'ui-safe-area-content border-t-control border-secondary bg-primary [--ui-content-gutter:var(--space-page)]' : undefined}
     >
-      <h2 className="font-semibold text-primary">{strings.privacy.title}</h2>
-      <p className="text-sm text-secondary">{strings.privacy.description}</p>
-      {renderConsentActions()}
-      <p role="status" className="text-sm text-secondary">
-        {message}
-      </p>
-    </section>
+      <div className={banner ? 'mx-auto grid max-w-3xl gap-3' : 'grid gap-3'}>
+        {banner && <h2 className="font-semibold text-primary">{strings.privacy.title}</h2>}
+        {trackingAvailable && <p className="text-sm text-secondary">{strings.privacy.description}</p>}
+        {trackingAvailable && consent !== undefined && renderConsentActions()}
+        <p role="status" className="text-sm text-secondary">{getStatus()}</p>
+        {!noticePage && <PrivacyNoticeLink />}
+      </div>
+    </Container>
   );
 
 }

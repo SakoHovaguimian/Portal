@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, EmptyState, ErrorState } from '@/components/ui';
+import { Card, EmptyState, ErrorState, Skeleton } from '@/components/ui';
 import type { User } from '@/models';
 import { strings } from '@/strings';
 
@@ -11,49 +11,75 @@ export function UserDetailScreen({ userId }: UserDetailScreenProps) {
 
   const { data, isPending, isError, refetch } = useUser(userId);
 
-  function renderUserHeader(user: User) {
+  function renderUserHeader(user?: User) {
 
     return (
       <div className="grid gap-2">
-        <p className="m-0 text-xs font-semibold uppercase tracking-[0.16em] text-brand-secondary">
-          {strings.ui.userDetailScreen.userDetail}
+        <p
+          role={isPending ? 'status' : undefined}
+          className="m-0 text-xs font-semibold uppercase tracking-[0.16em] text-brand-secondary"
+        >
+          {isPending ? strings.ui.userDetailScreen.loadingUserProfile : strings.ui.userDetailScreen.userDetail}
         </p>
         <h1 className="m-0 text-2xl font-semibold tracking-tight text-primary">
-          {user.firstName} {user.lastName}
+          {user ? (
+            <>{user.firstName} {user.lastName}</>
+          ) : (
+            <span className="flex h-lh items-center">
+              <span className="sr-only">{strings.ui.userDetailScreen.userDetail}</span>
+              <Skeleton width="min(100%, 12rem)" height="0.8em" />
+            </span>
+          )}
         </h1>
       </div>
     );
 
   }
 
-  function renderUserFields(user: User) {
+  function renderFieldValue(value?: string) {
+
+    if (!isPending) { return value; }
 
     return (
-      <div className="grid gap-3 rounded-xl border-control border-secondary bg-secondary_subtle p-4 text-sm text-secondary">
+      <span className="inline-block w-1/2 max-w-52 align-middle">
+        <Skeleton />
+      </span>
+    );
+
+  }
+
+  function renderUserFields(user?: User) {
+
+    return (
+      <div
+        aria-busy={isPending}
+        aria-hidden={isPending || undefined}
+        className="grid gap-3 rounded-xl border-control border-secondary bg-secondary_subtle p-4 text-sm text-secondary"
+      >
         <p className="m-0">
           <span className="font-semibold text-primary">
             {strings.ui.userDetailScreen.email}
           </span>{' '}
-          {user.email}
+          {renderFieldValue(user?.email)}
         </p>
         <p className="m-0">
           <span className="font-semibold text-primary">
             {strings.ui.userDetailScreen.externalId}
           </span>{' '}
-          {user.externalId}
+          {renderFieldValue(user?.externalId)}
         </p>
         <p className="m-0">
           <span className="font-semibold text-primary">
             {strings.ui.userDetailScreen.created}
           </span>{' '}
-          {new Date(user.createdAt).toLocaleString()}
+          {renderFieldValue(user && new Date(user.createdAt).toLocaleString())}
         </p>
       </div>
     );
 
   }
 
-  function renderUserDetails(user: User) {
+  function renderUserDetails(user?: User) {
 
     return (
       <Card className="grid gap-4">
@@ -67,7 +93,7 @@ export function UserDetailScreen({ userId }: UserDetailScreenProps) {
   function renderContent() {
 
     if (isPending) {
-      return <Card>{strings.ui.userDetailScreen.loadingUserProfile}</Card>;
+      return renderUserDetails();
     }
     if (isError) {
 

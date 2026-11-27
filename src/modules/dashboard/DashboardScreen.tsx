@@ -5,12 +5,14 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
 import {
+  ActivityIndicator,
   Button,
   Card,
   DataTable,
   MetricCard,
   ErrorState,
   PageHeader,
+  SegmentedTabs,
 } from '@/components/ui';
 import { portalModules } from '@/config/portalModules';
 import type { DashboardModelSummary } from '@/models/dashboardModelSummary';
@@ -25,500 +27,17 @@ import {
   useDashboardRecords,
   useDashboardModelDetail,
 } from './hooks';
-import type { DashboardPanelProps } from './models/dashboardPanelProps';
-import type { LineChartProps } from './models/lineChartProps';
+import { SampleAnalytics } from './SampleAnalytics';
 
-const comparisonMonths = [
-  strings.ui.dashboardScreen.dec20,
-  strings.ui.dashboardScreen.jan21,
-  strings.ui.dashboardScreen.feb21,
-  strings.ui.dashboardScreen.mar21,
-  strings.ui.dashboardScreen.apr21,
-  strings.ui.dashboardScreen.may21,
-];
-const directRevenue = [700, 3900, 3200, 5100, 2100, 1800];
-const indirectRevenue = [1600, 2600, 1900, 3800, 4700, 3900];
-const avgOrderValueCurrent = [52, 24, 18, 28, 20, 25, 17, 31, 19, 23, 21, 26];
-const avgOrderValuePrevious = [34, 12, 38, 10, 27, 15, 23, 19, 17, 29, 13, 16];
-const salesOverTimeCurrent = [180, 260, 340, 420, 390, 560, 610, 720, 860, 940];
-const salesOverTimePrevious = [
-  420, 360, 330, 300, 350, 390, 410, 430, 470, 520,
-];
-const salesOverTimeForecast = [
-  120, 140, 180, 160, 210, 240, 220, 260, 300, 340,
-];
-const salesVsRefundsSales = [5600, 7200, 6100, 6800, 5300, 7000];
-const salesVsRefundsRefunds = [-1800, -1200, -2500, -1700, -3200, -1400];
-
-const topChannels = [
-  {
-    source: strings.ui.dashboardScreen.githubComData,
-    visitors: strings.ui.dashboardScreen.value24k2,
-    revenue: strings.ui.dashboardScreen.value3877,
-    sales: strings.ui.dashboardScreen.value267,
-    conversion: strings.ui.dashboardScreen.value47,
-  },
-  {
-    source: strings.ui.dashboardScreen.facebook,
-    visitors: strings.ui.dashboardScreen.value22k,
-    revenue: strings.ui.dashboardScreen.value3426,
-    sales: strings.ui.dashboardScreen.value249,
-    conversion: strings.ui.dashboardScreen.value44,
-  },
-  {
-    source: strings.ui.dashboardScreen.googleOrganic,
-    visitors: strings.ui.dashboardScreen.value20k,
-    revenue: strings.ui.dashboardScreen.value2444,
-    sales: strings.ui.dashboardScreen.value224,
-    conversion: strings.ui.dashboardScreen.value42,
-  },
-  {
-    source: strings.ui.dashboardScreen.vimeoComData,
-    visitors: strings.ui.dashboardScreen.value19k,
-    revenue: strings.ui.dashboardScreen.value2236,
-    sales: strings.ui.dashboardScreen.value220,
-    conversion: strings.ui.dashboardScreen.value42,
-  },
-  {
-    source: strings.ui.dashboardScreen.indiehackersComData,
-    visitors: strings.ui.dashboardScreen.value17k2,
-    revenue: strings.ui.dashboardScreen.value2034,
-    sales: strings.ui.dashboardScreen.value204,
-    conversion: strings.ui.dashboardScreen.value39,
-  },
-] as const;
-
-const refundReasons = [
-  {
-    label: strings.ui.dashboardScreen.havingDifficultiesUsingTheProduct,
-    value: 48.7,
-    color: 'var(--color-brand-500)',
-  },
-  {
-    label: strings.ui.dashboardScreen.missingFeaturesINeed,
-    value: 24.9,
-    color: 'var(--color-chart-tertiary)',
-  },
-  {
-    label: strings.ui.dashboardScreen.notSatisfiedAboutTheQualityOfTheProduct,
-    value: 19.3,
-    color: 'var(--color-chart-secondary)',
-  },
-  {
-    label: strings.ui.dashboardScreen.theProductDoesnTLookAsAdvertised,
-    value: 9.6,
-    color: 'var(--color-chart-success)',
-  },
-  {
-    label: strings.ui.dashboardScreen.other,
-    value: 9.3,
-    color: 'var(--color-chart-neutral)',
-  },
-] as const;
-
-function buildLinePath(
-  values: number[],
-  width: number,
-  height: number,
-  padding = 10,
-) {
-
-  if (values.length === 0) {
-    return '';
-  }
-
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  const range = Math.max(max - min, 1);
-
-  const pathSegments = values.map((value, index) => {
-
-    const x =
-      padding +
-      (index * (width - padding * 2)) / Math.max(values.length - 1, 1);
-    const y =
-      height - padding - ((value - min) / range) * (height - padding * 2);
-    const pathSegment = `${index === 0 ? 'M' : 'L'} ${x} ${y}`;
-    return pathSegment;
-
-  });
-
-  const linePath = pathSegments.join(' ');
-  return linePath;
-
-}
-
-function DashboardPanel({
-  eyebrow,
-  title,
+const densityOptions = (['comfortable', 'compact'] as const).map((value) => ({
   value,
-  delta,
-  children,
-  legend,
-}: DashboardPanelProps) {
-
-  return (
-    <Card className="grid gap-4 p-5">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="m-0 text-xs font-semibold uppercase tracking-[0.16em] text-tertiary">
-            {eyebrow}
-          </p>
-          <h3 className="mt-2 text-base font-semibold text-primary">{title}</h3>
-        </div>
-        {legend}
-      </div>
-      {value ? (
-        <div className="flex items-center gap-2">
-          <div className="text-3xl font-semibold tracking-tight text-primary">
-            {value}
-          </div>
-          {delta ? (
-            <span className="inline-flex rounded-full bg-brand-primary px-2 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-brand-secondary">
-              {delta}
-            </span>
-          ) : null}
-        </div>
-      ) : null}
-      {children}
-    </Card>
-  );
-
-}
-
-function LineChart({
-  primary,
-  secondary,
-  tertiary,
-}: LineChartProps) {
-
-  function renderGridLine(y: number) {
-
-    return (
-      <line
-        key={y}
-        x1="0"
-        y1={y}
-        x2="320"
-        y2={y}
-        stroke="var(--color-border-tertiary)"
-        strokeWidth="1"
-      />
-    );
-
-  }
-
-  const gridLines = [24, 62, 100, 138].map(renderGridLine);
-
-  return (
-    <svg
-      viewBox="0 0 320 150"
-      className="h-44 w-full"
-      preserveAspectRatio="none"
-      aria-hidden="true"
-    >
-      {gridLines}
-      {secondary ? (
-        <path
-          d={buildLinePath(secondary, 320, 150, 12)}
-          fill="none"
-          stroke="var(--color-chart-previous)"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-      ) : null}
-      {tertiary ? (
-        <path
-          d={buildLinePath(tertiary, 320, 150, 12)}
-          fill="none"
-          stroke="var(--color-chart-forecast)"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-      ) : null}
-      <path
-        d={buildLinePath(primary, 320, 150, 12)}
-        fill="none"
-        stroke="var(--color-brand-500)"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-
-}
-
-function ComparisonBars() {
-
-  const maxValue = Math.max(...directRevenue, ...indirectRevenue);
-
-  function renderRevenueColumn(month: string, index: number) {
-
-    return (
-      <div
-        key={month}
-        className="flex min-w-0 flex-1 items-end justify-center gap-1.5"
-      >
-        <span
-          className="w-4 rounded-t-md bg-brand-solid/85"
-          style={{
-            height: `${(directRevenue[index] / maxValue) * 100}%`,
-          }}
-        />
-        <span
-          className="w-4 rounded-t-md bg-chart-secondary"
-          style={{
-            height: `${(indirectRevenue[index] / maxValue) * 100}%`,
-          }}
-        />
-      </div>
-    );
-
-  }
-
-  function renderMonthLabel(month: string) {
-    return <span key={month}>{month}</span>;
-  }
-
-  const revenueColumns = comparisonMonths.map(renderRevenueColumn);
-  const monthLabels = comparisonMonths.map(renderMonthLabel);
-
-  return (
-    <div className="grid gap-4">
-      <div className="flex flex-wrap gap-4 text-sm">
-        <span className="inline-flex items-center gap-2 text-primary">
-          <span className="h-2.5 w-2.5 rounded-full bg-brand-solid" />
-          <strong>{strings.ui.dashboardScreen.value17k}</strong>{' '}
-          {strings.ui.dashboardScreen.direct}
-        </span>
-        <span className="inline-flex items-center gap-2 text-primary">
-          <span className="h-2.5 w-2.5 rounded-full bg-chart-secondary" />
-          <strong>{strings.ui.dashboardScreen.value24k}</strong>{' '}
-          {strings.ui.dashboardScreen.indirect}
-        </span>
-      </div>
-      <div className="grid gap-3">
-        <div className="flex h-40 items-end gap-4">
-          {revenueColumns}
-        </div>
-        <div className="grid grid-cols-6 gap-4 text-center text-xs font-medium uppercase tracking-[0.12em] text-tertiary">
-          {monthLabels}
-        </div>
-      </div>
-    </div>
-  );
-
-}
-
-function CountriesDonut() {
-
-  const countryLegendItems = [
-    [strings.ui.dashboardScreen.unitedStates, 'var(--color-brand-500)'],
-    [strings.ui.dashboardScreen.italy, 'var(--color-chart-secondary)'],
-    [strings.ui.dashboardScreen.other, 'var(--color-chart-tertiary)'],
-  ] as const;
-
-  function renderCountryLegend(
-    [label, color]: (typeof countryLegendItems)[number],
-  ) {
-
-    return (
-      <span key={label} className="inline-flex items-center gap-2">
-        <span
-          className="h-2.5 w-2.5 rounded-full"
-          style={{ backgroundColor: color }}
-        />
-        {label}
-      </span>
-    );
-
-  }
-
-  const countryLegend = countryLegendItems.map(renderCountryLegend);
-
-  return (
-    <div className="grid place-items-center gap-6 py-2">
-      <div
-        className="relative h-52 w-52 rounded-full"
-        style={{
-          background:
-            'conic-gradient(var(--color-brand-500) 0 38%, var(--color-chart-secondary) 38% 66%, var(--color-chart-tertiary) 66% 100%)',
-        }}
-      >
-        <div className="absolute inset-5 rounded-full bg-primary" />
-      </div>
-      <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-secondary">
-        {countryLegend}
-      </div>
-    </div>
-  );
-
-}
-
-function TopChannelsTable() {
-
-  function renderChannelRow(channel: (typeof topChannels)[number]) {
-
-    return (
-      <div
-        key={channel.source}
-        className="grid grid-cols-[1.5fr_repeat(4,minmax(0,1fr))] gap-3 px-4 py-3 text-sm text-secondary"
-      >
-        <span className="font-medium text-primary">{channel.source}</span>
-        <span>{channel.visitors}</span>
-        <span className="text-success-primary">{channel.revenue}</span>
-        <span>{channel.sales}</span>
-        <span className="text-chart-secondary">{channel.conversion}</span>
-      </div>
-    );
-
-  }
-
-  const channelRows = topChannels.map(renderChannelRow);
-
-  return (
-    <div className="overflow-hidden rounded-xl border-control border-secondary bg-primary">
-      <div className="grid grid-cols-[1.5fr_repeat(4,minmax(0,1fr))] gap-3 border-b border-secondary bg-secondary_subtle px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-tertiary">
-        <span>{strings.ui.dashboardScreen.source}</span>
-        <span>{strings.ui.dashboardScreen.visitors}</span>
-        <span>{strings.ui.dashboardScreen.revenue}</span>
-        <span>{strings.ui.dashboardScreen.sales}</span>
-        <span>{strings.ui.dashboardScreen.conversion}</span>
-      </div>
-      <div className="divide-y divide-secondary">
-        {channelRows}
-      </div>
-    </div>
-  );
-
-}
-
-function SalesVsRefundsBars() {
-
-  const refundMagnitudes = salesVsRefundsRefunds.map((value) => Math.abs(value));
-
-  const maxValue = Math.max(
-    ...salesVsRefundsSales,
-    ...refundMagnitudes,
-  );
-
-  function renderSalesRefundsColumn(month: string, index: number) {
-
-    return (
-      <div
-        key={month}
-        className="flex min-w-0 flex-1 flex-col items-center justify-center gap-1"
-      >
-        <div className="flex h-20 items-end">
-          <span
-            className="w-6 rounded-t-md bg-brand-solid/85"
-            style={{
-              height: `${(salesVsRefundsSales[index] / maxValue) * 100}%`,
-            }}
-          />
-        </div>
-        <div className="flex h-20 items-start">
-          <span
-            className="w-6 rounded-b-md bg-chart-refunds"
-            style={{
-              height: `${(refundMagnitudes[index] / maxValue) * 100}%`,
-            }}
-          />
-        </div>
-      </div>
-    );
-
-  }
-
-  function renderMonthLabel(month: string) {
-    return <span key={month}>{month}</span>;
-  }
-
-  const salesRefundsColumns = comparisonMonths.map(renderSalesRefundsColumn);
-  const monthLabels = comparisonMonths.map(renderMonthLabel);
-
-  return (
-    <div className="grid gap-4">
-      <div className="flex h-44 items-center gap-4">
-        {salesRefundsColumns}
-      </div>
-      <div className="grid grid-cols-6 gap-4 text-center text-xs font-medium uppercase tracking-[0.12em] text-tertiary">
-        {monthLabels}
-      </div>
-    </div>
-  );
-
-}
-
-function RefundReasonsCard() {
-
-  function renderReasonBar(reason: (typeof refundReasons)[number]) {
-
-    return (
-      <span
-        key={reason.label}
-        style={{
-          width: `${reason.value}%`,
-          backgroundColor: reason.color,
-        }}
-      />
-    );
-
-  }
-
-  function renderReasonRow(reason: (typeof refundReasons)[number]) {
-
-    return (
-      <div
-        key={reason.label}
-        className="flex items-start justify-between gap-3 text-sm"
-      >
-        <div className="flex items-start gap-2 text-secondary">
-          <span
-            className="mt-1 h-2.5 w-2.5 rounded-full"
-            style={{ backgroundColor: reason.color }}
-          />
-          <span>{reason.label}</span>
-        </div>
-        <span className="font-medium text-primary">
-          {reason.value}
-          {strings.ui.dashboardScreen.text}
-        </span>
-      </div>
-    );
-
-  }
-
-  const reasonBars = refundReasons.map(renderReasonBar);
-  const reasonRows = refundReasons.map(renderReasonRow);
-
-  return (
-    <Card className="grid gap-5">
-      <div>
-        <p className="m-0 text-xs font-semibold uppercase tracking-[0.16em] text-brand-secondary">
-          {strings.ui.dashboardScreen.breakdown}
-        </p>
-        <h3 className="mt-2 text-xl font-semibold text-primary">
-          {strings.ui.dashboardScreen.reasonForRefunds}
-        </h3>
-      </div>
-      <div className="rounded-xl border-control border-secondary bg-secondary_subtle p-4">
-        <div className="flex h-4 overflow-hidden rounded-full">
-          {reasonBars}
-        </div>
-        <div className="mt-4 space-y-3">
-          {reasonRows}
-        </div>
-      </div>
-    </Card>
-  );
-
-}
+  label: strings.ui.dashboardScreen[value],
+}));
 
 export function DashboardScreen() {
 
   const searchParams = useSearchParams();
-  const { demoMode } = useRuntimeConfig();
+  const { demoMode, devSettingsEnabled } = useRuntimeConfig();
   const fallbackModel = portalModules.featureRequests ? 'featureRequest' : portalModules.users ? 'user' : '';
   const requestedModel = searchParams.get('model') ?? fallbackModel;
   const model = (requestedModel === 'user' && !portalModules.users) || (requestedModel === 'featureRequest' && !portalModules.featureRequests) ? fallbackModel : requestedModel;
@@ -552,6 +71,7 @@ export function DashboardScreen() {
       const column = {
         key,
         header,
+        cellClassName: density === 'compact' ? 'py-1' : undefined,
         render: renderCellValue,
       };
 
@@ -561,9 +81,8 @@ export function DashboardScreen() {
 
     return tableColumns;
 
-  }, [records.data, modelDetail.data]);
+  }, [records.data, modelDetail.data, density]);
 
-  const visibleRows = records.data?.data.length ?? 0;
   const hasSampleAnalyticsData = overview.data?.models.some(
     (item) => item.model === 'featureRequest' && item.totalCount > 0,
   );
@@ -573,10 +92,7 @@ export function DashboardScreen() {
     return (
       <PageHeader
         title={strings.ui.dashboardScreen.dashboard}
-        description={
-          strings.ui.dashboardScreen
-            .reviewYourWorkspaceActivityBrowseRecordsAndManageIncomingHint
-        }
+        description={strings.ui.dashboardScreen.description}
         meta={
           overview.data && (
             <span>
@@ -591,13 +107,13 @@ export function DashboardScreen() {
             </span>
           )
         }
-        action={
+        action={devSettingsEnabled && (
           <Button asChild variant="secondary">
             <Link href="/dev-settings/components">
               {strings.designSystem.openLibrary}
             </Link>
           </Button>
-        }
+        )}
       />
     );
 
@@ -608,7 +124,9 @@ export function DashboardScreen() {
     return (
       <>
         {(overview.isPending || models.isPending || (Boolean(model) && records.isPending)) && (
-          <Card>{strings.ui.dashboardScreen.loadingWorkspaceData}</Card>
+          <Card>
+            <ActivityIndicator label={strings.ui.dashboardScreen.loadingWorkspaceData} showLabel />
+          </Card>
         )}
         {(overview.isError || models.isError || records.isError) && (
           <ErrorState
@@ -656,178 +174,35 @@ export function DashboardScreen() {
 
   }
 
-  function renderModelExplorer() {
-
-    return (
-      <Card className="grid gap-4">
-        <div>
-          <p className="m-0 text-xs font-semibold uppercase tracking-[0.16em] text-brand-secondary">
-            {strings.ui.dashboardScreen.density}
-          </p>
-          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-primary">
-            {strings.ui.dashboardScreen.modelExplorer}
-          </h2>
-          <p className="mt-2 text-sm leading-6 text-secondary">
-            {strings.ui.dashboardScreen.chooseHowMuchSpaceToUseForEachRecordHint}
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <Button
-            variant={density === 'comfortable' ? 'primary' : 'secondary'}
-            onClick={() => setDensity('comfortable')}
-          >
-            {strings.ui.dashboardScreen.comfortable}
-          </Button>
-          <Button
-            variant={density === 'compact' ? 'primary' : 'secondary'}
-            onClick={() => setDensity('compact')}
-          >
-            {strings.ui.dashboardScreen.compact}
-          </Button>
-        </div>
-        <div className="rounded-xl border-control border-secondary bg-secondary_subtle p-4">
-          <p className="m-0 text-xs font-semibold uppercase tracking-[0.16em] text-tertiary">
-            {strings.ui.dashboardScreen.selectedModel}
-          </p>
-          <p className="mt-2 text-sm font-semibold text-primary">
-            {modelDetail.data?.displayName || model || strings.ui.dashboardScreen.noRecordsAvailableHint}
-          </p>
-          <p className="mt-1 text-sm text-secondary">
-            {visibleRows}{' '}
-            {strings.ui.dashboardScreen.visibleRecordsInTheCurrentQueryHint}
-          </p>
-        </div>
-      </Card>
-    );
-
-  }
-
-  function renderDemoAnalytics() {
-
-    if (!demoMode || !hasSampleAnalyticsData) {
-      return null;
-    }
-
-    return (
-      <>
-        <p className="text-sm text-tertiary">
-          {strings.ui.dashboardScreen.sampleAnalyticsDemoData}
-        </p>
-        <div className="grid gap-4 xl:grid-cols-2">
-          <DashboardPanel
-            eyebrow={strings.ui.dashboardScreen.sales}
-            title={strings.ui.dashboardScreen.directVsIndirect}
-            value={strings.ui.dashboardScreen.value17k3}
-          >
-            <ComparisonBars />
-          </DashboardPanel>
-          <DashboardPanel
-            eyebrow={strings.ui.dashboardScreen.orderValue}
-            title={strings.ui.dashboardScreen.avgOrderValue}
-            value={strings.ui.dashboardScreen.value72}
-            delta={strings.ui.dashboardScreen.value34}
-            legend={
-              <div className="flex items-center gap-4 text-xs font-medium text-tertiary">
-                <span className="inline-flex items-center gap-2">
-                  <span className="h-2.5 w-2.5 rounded-full bg-brand-solid" />
-                  {strings.ui.dashboardScreen.current}
-                </span>
-                <span className="inline-flex items-center gap-2">
-                  <span className="h-2.5 w-2.5 rounded-full bg-chart-neutral" />
-                  {strings.ui.dashboardScreen.previous}
-                </span>
-              </div>
-            }
-          >
-            <LineChart
-              primary={avgOrderValueCurrent}
-              secondary={avgOrderValuePrevious}
-            />
-          </DashboardPanel>
-        </div>
-
-        <div className="grid gap-4 xl:grid-cols-[360px_minmax(0,1fr)]">
-          <DashboardPanel
-            eyebrow={strings.ui.dashboardScreen.audience}
-            title={strings.ui.dashboardScreen.topCountries}
-          >
-            <CountriesDonut />
-          </DashboardPanel>
-          <DashboardPanel
-            eyebrow={strings.ui.dashboardScreen.acquisition}
-            title={strings.ui.dashboardScreen.topChannels}
-          >
-            <TopChannelsTable />
-          </DashboardPanel>
-        </div>
-
-        <div className="grid gap-4 xl:grid-cols-2">
-          <DashboardPanel
-            eyebrow={strings.ui.dashboardScreen.stores}
-            title={strings.ui.dashboardScreen.salesOverTime}
-            value={strings.ui.dashboardScreen.value1482}
-            delta={strings.ui.dashboardScreen.value22}
-            legend={
-              <div className="flex items-center gap-4 text-xs font-medium text-tertiary">
-                <span className="inline-flex items-center gap-2">
-                  <span className="h-2.5 w-2.5 rounded-full bg-brand-solid" />
-                  {strings.ui.dashboardScreen.current}
-                </span>
-                <span className="inline-flex items-center gap-2">
-                  <span className="h-2.5 w-2.5 rounded-full bg-chart-neutral" />
-                  {strings.ui.dashboardScreen.previous}
-                </span>
-                <span className="inline-flex items-center gap-2">
-                  <span className="h-2.5 w-2.5 rounded-full bg-chart-forecast" />
-                  {strings.ui.dashboardScreen.forecast}
-                </span>
-              </div>
-            }
-          >
-            <LineChart
-              primary={salesOverTimeCurrent}
-              secondary={salesOverTimePrevious}
-              tertiary={salesOverTimeForecast}
-            />
-          </DashboardPanel>
-          <DashboardPanel
-            eyebrow={strings.ui.dashboardScreen.finance}
-            title={strings.ui.dashboardScreen.salesVsRefunds}
-            value={strings.ui.dashboardScreen.value6796}
-            delta={strings.ui.dashboardScreen.value342}
-          >
-            <SalesVsRefundsBars />
-          </DashboardPanel>
-        </div>
-
-        <RefundReasonsCard />
-      </>
-    );
-
-  }
-
   function renderRecordsPanel() {
 
     const rows = records.data?.data ?? [];
+    const hasTable = columns.length > 0;
+    const title = modelDetail.data?.displayName ?? strings.ui.dashboardScreen.records;
 
     return (
-      <Card className="grid gap-4">
+      <Card className="grid content-start gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="m-0 text-xs font-semibold uppercase tracking-[0.16em] text-brand-secondary">
-              {strings.ui.dashboardScreen.records}
-            </p>
-            <h3 className="mt-2 text-xl font-semibold text-primary">
-              {strings.ui.dashboardScreen.primaryDataTable}
-            </h3>
+            <h2 className="m-0 text-xl font-semibold text-primary">{title}</h2>
+            {hasTable && (
+              <p className="m-0 mt-1 text-sm text-secondary">
+                {strings.ui.dashboardScreen.visibleRecordCountSummary(rows.length)}
+              </p>
+            )}
           </div>
-          <span className="inline-flex rounded-full bg-secondary_subtle px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-tertiary">
-            {visibleRows} {strings.ui.dashboardScreen.rows}
-          </span>
+          {hasTable && (
+            <SegmentedTabs
+              label={strings.ui.dashboardScreen.density}
+              value={density}
+              onValueChange={setDensity}
+              tabs={densityOptions}
+            />
+          )}
         </div>
-        {columns.length > 0 ? (
-          <DataTable columns={columns} rows={rows} />
-        ) : (
+        {hasTable ? (
+          <DataTable columns={columns} rows={rows} caption={title} />
+        ) : (!model || records.isSuccess) && (
           <p className="m-0 text-sm text-secondary">
             {strings.ui.dashboardScreen.noRecordsAvailableHint}
           </p>
@@ -840,25 +215,18 @@ export function DashboardScreen() {
   function renderModelEntry(entry: DashboardModelSummary) {
 
     return (
-      <div
-        key={entry.key}
-        className="rounded-xl border-control border-secondary bg-secondary_subtle p-4"
-      >
-        <div className="flex items-center justify-between gap-3">
-          <Link
-            className="font-semibold text-primary underline"
-            href={`/dashboard?model=${encodeURIComponent(entry.key)}`}
-          >
-            {entry.displayName}
-          </Link>
-          <span className="inline-flex rounded-full bg-brand-primary px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-brand-secondary">
-            {entry.recordCount}
+      <li key={entry.key}>
+        <Link
+          className="flex min-h-11 items-center justify-between gap-3 py-2 font-medium text-primary hover:underline aria-[current=page]:underline"
+          href={`/dashboard?model=${encodeURIComponent(entry.key)}`}
+          aria-current={entry.key === model ? 'page' : undefined}
+        >
+          <span>{entry.displayName}</span>
+          <span className="text-sm text-secondary tabular-nums">
+            {strings.ui.dashboardScreen.recordCount(entry.recordCount)}
           </span>
-        </div>
-        <div className="mt-2 text-sm text-secondary">
-          {strings.ui.dashboardScreen.recordsAvailableForOperationalViewsHint}
-        </div>
-      </div>
+        </Link>
+      </li>
     );
 
   }
@@ -868,16 +236,11 @@ export function DashboardScreen() {
     const modelEntries = models.data?.map(renderModelEntry);
 
     return (
-      <Card className="grid gap-4">
-        <div>
-          <p className="m-0 text-xs font-semibold uppercase tracking-[0.16em] text-brand-secondary">
-            {strings.ui.dashboardScreen.registry}
-          </p>
-          <h3 className="mt-2 text-xl font-semibold text-primary">
-            {strings.ui.dashboardScreen.registeredModels}
-          </h3>
-        </div>
-        <div className="grid gap-3">{modelEntries}</div>
+      <Card className="grid content-start gap-4">
+        <h2 className="m-0 text-xl font-semibold text-primary">
+          {strings.ui.dashboardScreen.registeredModels}
+        </h2>
+        <ul className="m-0 list-none divide-y-control divide-secondary p-0">{modelEntries}</ul>
       </Card>
     );
 
@@ -901,9 +264,8 @@ export function DashboardScreen() {
         {renderHeader()}
         {renderQueryStatus()}
         {renderMetrics()}
-        {renderModelExplorer()}
-        {renderDemoAnalytics()}
         {renderRecordDirectory()}
+        {demoMode && hasSampleAnalyticsData && <SampleAnalytics />}
       </div>
     );
 

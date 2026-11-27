@@ -1,7 +1,7 @@
 import {
   createContext,
   useContext,
-  useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -26,25 +26,16 @@ export function ThemePreferenceProvider({
   service,
 }: ThemePreferenceProviderProps) {
 
-  const [preference, setPreferenceState] = useState(
-    defaultAppearancePreference,
-  );
-  const currentPreference = useRef(preference);
-  useEffect(() => {
+  const [preference, setPreferenceState] = useState<AppearancePreference | null>(null);
+  const currentPreference = useRef(defaultAppearancePreference);
+  useLayoutEffect(() => {
 
-    let active = true;
-    let revision = 0;
     const restore = () => {
 
-      const restoringRevision = ++revision;
-      void service.getPreference().then((value) => {
-
-        if (!active || restoringRevision !== revision) { return; }
-        currentPreference.current = value;
-        setPreferenceState(value);
-        applyTheme(value);
-
-      });
+      const value = service.getPreference();
+      currentPreference.current = value;
+      setPreferenceState(value);
+      applyTheme(value);
 
     };
     restore();
@@ -54,13 +45,7 @@ export function ThemePreferenceProvider({
 
     };
     window.addEventListener('storage', onStorage);
-    const cleanup = () => {
-
-      active = false;
-      window.removeEventListener('storage', onStorage);
-
-    };
-
+    const cleanup = () => window.removeEventListener('storage', onStorage);
     return cleanup;
 
   }, [service]);
@@ -80,7 +65,8 @@ export function ThemePreferenceProvider({
 
     };
     const themeContext: ThemePreferenceContext = {
-      ...preference,
+      ...(preference ?? defaultAppearancePreference),
+      ready: preference !== null,
       setPreference,
       setThemeId: (themeId: ThemeId) => setPreference({ themeId }),
     };

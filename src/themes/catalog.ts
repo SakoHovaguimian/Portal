@@ -4,6 +4,7 @@ import type { ThemeDefinition } from './models/themeDefinition';
 import { arcadeTheme } from './presets/arcade';
 import { atelierTheme } from './presets/atelier';
 import { blueprintTheme } from './presets/blueprint';
+import { carbonTheme } from './presets/carbon';
 import { cupertinoTheme } from './presets/cupertino';
 import { duskTheme } from './presets/dusk';
 import { portalTheme } from './presets/portal';
@@ -17,6 +18,7 @@ export const themesById = {
   arcade: arcadeTheme,
   dusk: duskTheme,
   cupertino: cupertinoTheme,
+  carbon: carbonTheme,
 } satisfies Record<ThemeId, ThemeDefinition>;
 
 export const themeCatalog: readonly ThemeDefinition[] =

@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+import { PrivacyNoticeLink } from '@/services/privacy/components/PrivacyNoticeLink';
+
 import type { AuthCardShellProps } from './models/authCardShellProps';
 
 export function AuthCardShell({
@@ -52,6 +54,7 @@ export function AuthCardShell({
         {renderHeader()}
         {children}
         {renderFooter()}
+        <PrivacyNoticeLink />
       </div>
       {supportingContent}
     </section>

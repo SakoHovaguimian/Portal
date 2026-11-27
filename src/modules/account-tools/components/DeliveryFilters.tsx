@@ -119,7 +119,6 @@ export function DeliveryFilters({
           <Input
             name="notification"
             value={input.notification}
-            maxLength={36}
             placeholder={copy.deliveries.notificationPlaceholder}
             aria-invalid={Boolean(validation.notification)}
             aria-describedby={

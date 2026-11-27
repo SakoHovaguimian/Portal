@@ -10,6 +10,7 @@ import {
   SplitSection,
   UiIcon,
 } from '@/components/ui';
+import { useRuntimeConfig } from '@/providers/RuntimeProvider';
 import { NotificationControls } from '@/services/notifications/components/NotificationControls';
 import { CookieConsentControls } from '@/services/privacy/components/CookieConsentControls';
 import { strings, portalOverlayMotionStrings } from '@/strings';
@@ -19,19 +20,21 @@ import { ThemeControls } from './components/ThemeControls';
 
 export function AppearanceScreen() {
 
+  const { devSettingsEnabled } = useRuntimeConfig();
+
   return (
     <Page>
       <PageHeader
         title={strings.ui.appearanceScreen.appearance}
         description={strings.designSystem.themeStudio.description}
-        action={
+        action={devSettingsEnabled && (
           <Button asChild variant="secondary">
             <Link href="/dev-settings/components">
               <UiIcon name="code" />
               {strings.designSystem.openLibrary}
             </Link>
           </Button>
-        }
+        )}
       />
       <PageSection
         id="theme"
@@ -57,7 +60,6 @@ export function AppearanceScreen() {
       <SplitSection
         id="privacy"
         title={strings.privacy.title}
-        description={strings.privacy.description}
       >
         <CookieConsentControls settings />
       </SplitSection>

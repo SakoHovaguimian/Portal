@@ -22,4 +22,8 @@ Use the [theme profile API](THEMING.md#overlay-motion-profiles), [UI system](UI_
 
 Identify the main task and make its action clearly dominant. Check the loaded spacing rhythm and grouping. Build type hierarchy with weight/foreground before size. Use accent and semantic status colors purposefully. Replace generic placeholder copy with honest domain content. Compare corners, inset geometry, borders, shadows, icon alignment, and focus states with shared components. Confirm that movement starts from the relevant trigger/edge, responds to interruption, closes promptly, and becomes still under Reduced Motion.
 
+Use concrete action labels and name the consequence when an action commits a cost or removes data. Place hints beside the control and use each heading or count once per group. Keep the workspace’s real task ahead of illustrative content.
+
+Use a shared native table for comparisons and a labeled responsive treatment at narrow widths. End-align comparable numbers and their headers, and use tabular digits. When a loading placeholder protects a predictable layout, match its shape to the content and announce the wait through the shared status pattern.
+
 Check at a small laptop and a narrow phone width, in light/dark mode, with keyboard and reduced motion. Critical errors stay inline; transient feedback supplements them. See [verification evidence](VERIFICATION.md) for actual checks and known limits.

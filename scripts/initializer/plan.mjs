@@ -97,6 +97,7 @@ export function environmentContent(settings, version) {
     PORTAL_API_URL: settings.apiUrl || 'http://localhost:3000/api',
     APP_VERSION: /^[A-Za-z0-9.+-]+$/.test(version) ? version : '1.0.0',
     PORTAL_APP_ORIGIN: settings.appOrigin,
+    PORTAL_PRIVACY_NOTICE_URL: '',
     SESSION_SECRET: settings.environment === 'live' ? randomBytes(48).toString('base64') : '',
     PORTAL_SESSION_DB_PATH: '',
     FIREBASE_WEB_API_KEY: settings.environment === 'live' ? settings.firebaseApiKey : '',
@@ -108,6 +109,7 @@ export function environmentContent(settings, version) {
     FIREBASE_APP_ID: '',
     FIREBASE_VAPID_PUBLIC_KEY: '',
     AMPLITUDE_API_KEY: '',
+    AMPLITUDE_SERVER_ZONE: 'US',
   };
   const lines = Object.entries(variables).map(([key, value]) => `${key}=${value.replace(/\$/g, '\\$')}`);
   return `${lines.join('\n')}\n`;

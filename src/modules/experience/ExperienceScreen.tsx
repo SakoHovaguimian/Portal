@@ -77,9 +77,7 @@ const faqItems = [
   },
   {
     question: strings.ui.experienceScreen.areTheChartsRealYet,
-    answer:
-      strings.ui.experienceScreen
-        .theAnalyticsWidgetsInTheRedesignedDashboardUseMockHint,
+    answer: strings.ui.experienceScreen.sampleAnalyticsHint,
   },
   {
     question: strings.ui.experienceScreen.doesDarkModeKeepTheSameStructure,
@@ -103,16 +101,12 @@ const faqItems = [
   },
   {
     question: strings.ui.experienceScreen.canWeAddMoreDashboardWidgetsLater,
-    answer:
-      strings.ui.experienceScreen
-        .yesTheCurrentMockedCardsAreIntentionallyBuiltFromHint,
+    answer: strings.ui.experienceScreen.dashboardComponentsHint,
   },
   {
     question:
       strings.ui.experienceScreen.willRecordsAndRegistryStayInTheDashboard,
-    answer:
-      strings.ui.experienceScreen
-        .yesThoseExistingOperationalPanelsRemainInPlaceAndHint,
+    answer: strings.ui.experienceScreen.dashboardRecordsHint,
   },
   {
     question: strings.ui.experienceScreen.doOverlayAnimationsStillWork,
@@ -366,7 +360,7 @@ export function ExperienceScreen() {
     const headerHeight = headerRef.current?.offsetHeight ?? 72;
     const top =
       window.scrollY + node.getBoundingClientRect().top - headerHeight - 16;
-    window.scrollTo({ top: Math.max(top, 0), behavior: 'smooth' });
+    window.scrollTo({ top: Math.max(top, 0) });
 
   }
 

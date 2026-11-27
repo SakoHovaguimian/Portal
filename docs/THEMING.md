@@ -2,6 +2,8 @@
 
 Portal follows Rune's semantic theme-object pattern. A complete `ThemeDefinition` owns backgrounds, foregrounds, palette, radii, shadows, typography, spacing, borders, selection treatment, and motion. A component consumes roles; it never branches on a theme ID.
 
+Themes style the same screens, content, and actions. Use shared role values for differences in shape, density, control materials, and motion. Keep label visibility, layout variants, and interaction decisions in the shared components and their product callers.
+
 Open **Appearance** to select a theme. The component library uses the same controls and includes local specimens. Selecting a theme loads its signature palette and keeps the current light/dark mode. Each theme owns its complete palette; color is not a separate preference. Reduced motion always takes precedence over a theme's animation.
 
 ## Presets
@@ -15,10 +17,11 @@ Open **Appearance** to select a theme. The component library uses the same contr
 | Arcade      | Cream/plum surfaces, strong outlines, hard offset shadows                               | Bold headings and expressive presses              |
 | Dusk        | Lavender/plum surfaces, rounded panels, tinted elevation                                | Balanced spacing and subdued movement             |
 | macOS / iOS | Grouped neutral surfaces, blue actions, green switches, rounded tracks and white thumbs | Apple system font stacks and native-style density |
+| Carbon      | Grayscale surfaces, jade actions, large control and panel corners                       | Instrument Sans, 16px body and controls           |
 
 Every preset supplies light and dark backgrounds, foregrounds, palette, shadows, borders, and state opacity. Shape, type, rhythm, and motion remain consistent between its modes.
 
-The `cupertino` preset adds the optional typed `controls` extension for slider/progress geometry, switch dimensions, thumb paint/elevation, and segmented selection colors. Existing presets derive those roles from their current semantic values. See [progress and value controls](VALUE_CONTROLS.md) for the API and runtime mapping. Themes never require a component to branch on their ID.
+Cupertino and Carbon use the optional typed `controls` extension for slider and progress geometry, switch dimensions, thumb color and elevation, and segmented selection colors. Other presets derive these roles from their semantic values. See [progress and value controls](VALUE_CONTROLS.md) for the API and runtime mapping. Themes never require a component to branch on their ID.
 
 ## Ownership
 
@@ -66,8 +69,10 @@ Start from a complete existing preset, give the new theme its own file, and use 
 1. Add the ID to `src/models/themeId.ts`.
 2. Create a complete object under `src/themes/presets/` and register it in `src/themes/catalog.ts`.
 3. Add the name and description to `strings.designSystem.themeStudio.themes` in `src/strings.ts`.
-4. Select it in Appearance. The picker, bootstrap, provider, and component library derive their options from the registry.
-5. Run the project checks/build and inspect real pages, popups, keyboard focus, and narrow layouts in both modes. Use local demo data.
+4. Register any new self-hosted font family in `src/themes/fonts.ts`. Presets can reuse loaded fonts or system stacks directly.
+5. Add the ID to `scripts/initializer/configuration.mjs` if it should also be available as an initializer default.
+6. Select it in Appearance. The picker, bootstrap, provider, and component library derive their options from the registry.
+7. Run the project checks/build and inspect real pages, popups, keyboard focus, and narrow layouts in both modes. Use local demo data.
 
 Responsive breakpoints remain build-time CSS constants because media queries cannot resolve runtime variables. The class-merging helper recognizes the registered `border-control` width and named radius roles, preserving strokes alongside border-color utilities.
 
@@ -92,6 +97,8 @@ Use `getThemePreviewStyle(id, mode)` for registered previews. These helpers repe
 
 Appearance stays in the existing `semantic-web-theme` storage key as `{themeId, mode}`. The bootstrap validates saved IDs and modes before content renders; the server fallback and provider use the same compiler. Invalid data falls back to Portal. Storage write failures leave the applied preference unchanged and produce the existing inline save error.
 
+The shell's toggle icon follows the document mode at first paint. The appearance picker reserves its layout while the provider restores the saved preference before showing the selected theme and mode.
+
 Old `{mode, accent}` records load as Portal and preserve light/dark mode. Obsolete accent overrides are ignored; the selected theme owns its colors. Changes synchronize across browser tabs through the existing storage event.
 
 The Next font variables use `--font-portal-*` on the document root. Theme-owned `--font-body/display/mono` can therefore change without a font-loader class on the body overriding them. Browser theme switching makes no font-service, backend, Firebase, analytics, or notification calls.
@@ -100,7 +107,13 @@ The Next font variables use `--font-portal-*` on the document root. Theme-owned 
 
 `ThemeDefinition.radius.avatar` owns avatar corners, including image clipping and group overflow controls. `compileTheme` maps it through the prefixed runtime adapter to `--radius-avatar` / `rounded-avatar`. Every preset supplies this role; Blueprint uses zero, while Cupertino explicitly keeps circular avatars. Presence markers retain their circular semantic shape.
 
+Optional `radius.button` and `radius.sidebarItem` use `radius.control` by default. Carbon supplies capsules for both. The top bar's labeled Back action uses the shared button geometry in every theme.
+
+`spacing.buttonInlinePadding` controls the shared button's horizontal inset. It defaults to four spacing units. Icon buttons use their own square geometry.
+
 Optional `controls.switchTrackRadius` and `controls.switchThumbRadius` fall back to the theme's control and small radii. The compiler maps them to `--radius-switch-track` and `--radius-switch-thumb` through `theme.css`. Switch frames, checkbox input geometry, thumb, and interaction halo use the same roles. Cupertino supplies explicit pill/circle values. Avoid screen-local theme ID checks or hardcoded rounding.
+
+`controls.colors[mode].switchThumbOn` optionally gives the checked thumb a contrasting color against the active track. Carbon uses the same action fill and foreground for checked switches and selected segments. Other presets inherit the standard thumb color unless they supply an override.
 
 ## Overlay Motion Profiles
 
@@ -135,5 +148,6 @@ Shipped entrance/exit timings (ms):
 | Arcade      | 240/120 | 240/120 | 300/160 | 260/140 | 340/160 |
 | Dusk        | 340/180 | 340/180 | 400/220 | 360/200 | 420/200 |
 | macOS / iOS | 320/180 | 320/180 | 420/240 | 380/220 | 440/200 |
+| Carbon      | 280/155 | 250/145 | 360/200 | 240/140 | 320/170 |
 
 Dialog travel is a small displacement. Sheet/menu/toast travel extends their edge runway; their own dimensions supply the offscreen starting position. Authored popovers use a quarter of the menu travel with its scale/easing and actual trigger origin. List reflow uses the shared theme entrance role on wrappers, independently of toast arrival. Bottom-sheet settling resolves its own entrance duration/easing. A duration of zero is supported, and reduced motion suppresses existing JavaScript movement as well as subsequent transitions.

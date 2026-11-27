@@ -187,7 +187,6 @@ export function AdminBlogScreen({ query }: AdminBlogScreenProps) {
             </Button>
           ) : (
             <Button
-              variant="secondary"
               onClick={() => navigate({ query: '', limit: 10, offset: 0 })}
             >
               {copy.resetFilters}

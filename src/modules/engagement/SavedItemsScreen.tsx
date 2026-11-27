@@ -174,7 +174,7 @@ export function SavedItemsScreen({ query }: SavedItemsScreenProps) {
               : copy.emptyDescription
           }
           action={
-            <Button asChild variant="secondary">
+            <Button asChild>
               <Link href="/blog">{copy.browse}</Link>
             </Button>
           }

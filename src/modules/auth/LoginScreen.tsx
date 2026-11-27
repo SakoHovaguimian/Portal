@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { flattenError } from 'zod';
 
 import {
   Button,
@@ -12,6 +13,7 @@ import {
   Select,
   UiIcon,
 } from '@/components/ui';
+import { LoginInputSchema, type LoginInput } from '@/models/loginInput';
 import { useProjectRouting, useRuntimeConfig } from '@/providers/RuntimeProvider';
 import {
   DemoPresetSchema,
@@ -22,6 +24,7 @@ import { strings, portalDemoStrings as demoCopy } from '@/strings';
 import { AuthCardShell } from './AuthCardShell';
 import type { AuthRedirectProps } from './models/authRedirectProps';
 import { createSession, resolveSessionRedirect } from './sessionClient';
+import { useAuthFormErrors } from './useAuthFormErrors';
 
 export function LoginScreen({ redirectTo }: AuthRedirectProps) {
 
@@ -35,7 +38,15 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
   const [password, setPassword] = useState(
     demoMode ? strings.ui.loginScreen.password123Data : '',
   );
-  const [error, setError] = useState<string | null>(null);
+  const {
+    formRef,
+    errors,
+    formError,
+    setFormError,
+    showFieldErrors,
+    clearFieldError,
+    clearFieldErrors,
+  } = useAuthFormErrors<keyof LoginInput>();
   const [demoError, setDemoError] = useState<string | null>(null);
   const [pendingAction, setPendingAction] = useState<'signIn' | 'demo' | null>(null);
   const pending = pendingAction !== null;
@@ -43,15 +54,22 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 
     event.preventDefault();
-    const form = event.currentTarget;
     if (pending) { return; }
-    setPendingAction('signIn');
-    setError(null);
+    setFormError(null);
     setDemoError(null);
+    const input = LoginInputSchema.safeParse({ email, password });
+    if (!input.success) {
+
+      showFieldErrors(flattenError(input.error).fieldErrors);
+      return;
+
+    }
+    clearFieldErrors();
+    setPendingAction('signIn');
 
     try {
 
-      const result = await createSession({ action: 'login', email, password });
+      const result = await createSession({ action: 'login', ...input.data });
 
       router.push(
         resolveSessionRedirect(routing, redirectTo, result.onboardingRequired, result.user.role),
@@ -60,8 +78,7 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
 
     } catch (caughtError) {
 
-      form.querySelector('input')?.focus();
-      setError(
+      setFormError(
         caughtError instanceof Error
           ? caughtError.message
           : strings.ui.loginScreen.loginFailed,
@@ -77,7 +94,7 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
 
     if (pending) { return; }
     setPendingAction('demo');
-    setError(null);
+    setFormError(null);
     setDemoError(null);
     try {
 
@@ -105,7 +122,7 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
 
     if (pending) { return; }
     setPendingAction('demo');
-    setError(null);
+    setFormError(null);
     setDemoError(null);
     try {
 
@@ -207,14 +224,13 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
 
   function renderLoginError() {
 
-    if (!error) {
+    if (!formError) {
       return null;
     }
     return (
       <Message
-        id="LoginScreen-error"
         intent="danger"
-        title={error}
+        title={formError}
       />
     );
 
@@ -223,36 +239,44 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
   function renderLoginForm() {
 
     return (
-      <form noValidate onSubmit={handleSubmit} className="grid gap-(--space-field)">
-        <Field labelText={strings.ui.loginScreen.email}>
+      <form ref={formRef} noValidate onSubmit={handleSubmit} className="grid gap-(--space-field)">
+        <Field labelText={strings.ui.loginScreen.email} error={errors.email?.[0]}>
           <Input
+            name="email"
+            required
             type="email"
             autoComplete="email"
             placeholder={strings.ui.loginScreen.youCompanyComData}
             leadingIcon={<UiIcon name="mail" className="size-5" />}
             value={email}
-            aria-invalid={Boolean(error)}
-            aria-describedby={error ? 'LoginScreen-error' : undefined}
             disabled={pending}
-            onChange={(event) => setEmail(event.target.value)}
+            onChange={(event) => {
+
+              setEmail(event.target.value);
+              clearFieldError('email');
+
+            }}
           />
         </Field>
-        <Field labelText={strings.ui.loginScreen.password}>
+        <Field labelText={strings.ui.loginScreen.password} error={errors.password?.[0]}>
           <PasswordInput
+            name="password"
+            required
             autoComplete="current-password"
             leadingIcon={<UiIcon name="lock" className="size-5" />}
             value={password}
-            aria-invalid={Boolean(error)}
-            aria-describedby={error ? 'LoginScreen-error' : undefined}
             disabled={pending}
-            onChange={(event) => setPassword(event.target.value)}
+            onChange={(event) => {
+
+              setPassword(event.target.value);
+              clearFieldError('password');
+
+            }}
           />
         </Field>
         {renderLoginError()}
         <Button
           type="submit"
-          aria-invalid={Boolean(error)}
-          aria-describedby={error ? 'LoginScreen-error' : undefined}
           disabled={pending}
           loading={pendingAction === 'signIn'}
           className="mt-1 min-h-(--control-height-lg) w-full"
@@ -260,6 +284,9 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
           {strings.ui.loginScreen.signIn}
           <UiIcon name="arrowRight" className="size-4" />
         </Button>
+        <span role="status" className="sr-only">
+          {pendingAction === 'signIn' ? strings.ui.loginScreen.signingIn : ''}
+        </span>
       </form>
     );
 

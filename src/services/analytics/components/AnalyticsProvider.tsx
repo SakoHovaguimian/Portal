@@ -10,37 +10,47 @@ import {
 
 import { analyticsService } from '../analyticsService';
 
+function subscribeToAnalyticsConsent(notify: () => void) {
+
+  const unsubscribe = subscribeConsent(() => {
+
+    // A background tab may observe withdrawal after a later opt-in was saved.
+    // End the previous identity on the notification itself.
+    analyticsService.stop();
+    notify();
+
+  });
+
+  return unsubscribe;
+
+}
+
 export function AnalyticsProvider() {
 
   const config = useRuntimeConfig();
   const pathname = usePathname();
-  const consent = useSyncExternalStore(
-    subscribeConsent,
-    getConsent,
-    () => null,
-  );
+  const apiKey = config.demoMode ? null : config.amplitudeApiKey;
+  const endpoint = config.amplitudeEndpoint;
+  const consent = useSyncExternalStore(subscribeToAnalyticsConsent, getConsent, () => null);
+
   useEffect(() => {
 
-    let cancelled = false;
-    const screen = pathname.replace(/\/[0-9a-f-]{36}(?=\/|$)/gi, '/:id');
-    void analyticsService
-      .configure(
-        config.demoMode ? null : config.amplitudeApiKey,
-        consent === 'accepted',
-      )
-      .then(() => {
-
-        if (!cancelled) { analyticsService.trackScreen(screen); }
-
-      })
-      .catch(() => undefined);
-    const cleanup = () => {
-      cancelled = true;
-    };
-
+    if (apiKey) { analyticsService.removeLegacyStorage(apiKey); }
+    const cleanup = () => analyticsService.stop();
     return cleanup;
 
-  }, [config.amplitudeApiKey, config.demoMode, consent, pathname]);
+  }, [apiKey, endpoint]);
+
+  useEffect(() => {
+
+    if (!apiKey || !endpoint || consent !== 'accepted') { return; }
+    const timer = window.setTimeout(() => {
+      void analyticsService.trackScreen(apiKey, endpoint, pathname);
+    }, 0);
+    const cleanup = () => window.clearTimeout(timer);
+    return cleanup;
+
+  }, [apiKey, consent, endpoint, pathname]);
   return null;
 
 }

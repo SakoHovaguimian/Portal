@@ -22,12 +22,12 @@ function LoadingState({
 
   return (
     <Card className="animate-pulse">
-      <div className="grid gap-3">
+      <div aria-hidden="true" className="grid gap-3">
         <div className="h-4 w-20 rounded bg-tertiary" />
         <div className="h-6 w-48 rounded bg-tertiary" />
         <div className="h-4 w-full rounded bg-tertiary" />
       </div>
-      <span className="sr-only">{message}</span>
+      <span role="status" className="sr-only">{message}</span>
     </Card>
   );
 
@@ -207,7 +207,7 @@ export function InlineLoading({
 }: LoadingMessageProps) {
 
   return (
-    <div className="flex items-center gap-2 text-secondary">
+    <div role="status" className="flex items-center gap-2 text-secondary">
       <Spinner className="size-4" />
       <span className="text-sm">{message}</span>
     </div>

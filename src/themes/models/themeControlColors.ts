@@ -3,6 +3,7 @@ export type ThemeControlColors = {
   thumb: string;
   thumbBorder: string;
   switchOn: string;
+  switchThumbOn?: string;
   segmentedFill: string;
   segmentedText: string;
 };

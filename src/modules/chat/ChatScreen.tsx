@@ -91,7 +91,17 @@ export function ChatScreen() {
   function renderConversationList() {
 
     return (
-      <div className={`min-h-0 min-w-0 border-r-control border-secondary ${selected ? 'hidden lg:block' : ''}`}><ConversationList conversations={conversations} selectedId={selectedId || null} search={search} archived={folder === 'archived'} onSearch={setSearch} onArchived={(value) => { void setFolder(value ? 'archived' : 'inbox'); }} onSelect={(id) => { void select(id); }} onCreate={() => setCreating(true)} /></div>
+      <div className={`min-h-0 min-w-0 border-r-control border-secondary ${selected ? 'hidden lg:block' : ''}`}>
+        <ConversationList
+          conversations={conversations}
+          selectedId={selectedId || null}
+          search={search}
+          archived={folder === 'archived'}
+          onSearch={setSearch}
+          onArchived={(value) => { void setFolder(value ? 'archived' : 'inbox'); }}
+          onSelect={(id) => { void select(id); }}
+        />
+      </div>
     );
 
   }
@@ -100,7 +110,33 @@ export function ChatScreen() {
 
     return (
       <div className={`min-h-0 min-w-0 ${selected ? '' : 'hidden lg:block'}`}>
-        {selected && activeDraft ? <ConversationThread actions={messageActions} key={selected.id} conversation={selected} messages={messages.data ?? []} userId={workspace.userId} draft={activeDraft} onDraft={changeDraft} onBack={() => { void select(''); }} onDetails={() => setDetails(true)} outbox={outbox.items.filter((item) => item.conversationId === selected.id)} onSend={(draft) => outbox.send(selected.id, draft)} demoMode={workspace.demoMode} loading={messages.isPending} failed={messages.isError} onRetry={() => { void messages.refetch(); }} /> : <div className="flex h-full flex-col items-center justify-center gap-3 bg-secondary_subtle px-8 text-center"><span className="mb-2 flex size-16 items-center justify-center rounded-full border-control border-secondary bg-primary"><UiIcon name="mail" className="size-7 text-brand-secondary" /></span><h2 className="m-0 max-w-xs text-2xl font-semibold tracking-tight">{copy.emptyTitle}</h2><p className="m-0 max-w-xs text-sm leading-relaxed text-tertiary">{copy.emptyHint}</p><Button variant="secondary" className="mt-3" onClick={() => setCreating(true)}>{copy.newConversation}</Button></div>}
+        {selected && activeDraft ? (
+          <ConversationThread
+            actions={messageActions}
+            key={selected.id}
+            conversation={selected}
+            messages={messages.data ?? []}
+            userId={workspace.userId}
+            draft={activeDraft}
+            onDraft={changeDraft}
+            onBack={() => { void select(''); }}
+            onDetails={() => setDetails(true)}
+            outbox={outbox.items.filter((item) => item.conversationId === selected.id)}
+            onSend={(draft) => outbox.send(selected.id, draft)}
+            demoMode={workspace.demoMode}
+            loading={messages.isPending}
+            failed={messages.isError}
+            onRetry={() => { void messages.refetch(); }}
+          />
+        ) : (
+          <div className="flex h-full flex-col items-center justify-center gap-3 bg-secondary_subtle px-8 text-center">
+            <span className="mb-2 flex size-16 items-center justify-center rounded-full border-control border-secondary bg-primary">
+              <UiIcon name="mail" className="size-7 text-brand-secondary" />
+            </span>
+            <h2 className="m-0 max-w-xs text-2xl font-semibold tracking-tight">{copy.emptyTitle}</h2>
+            <p className="m-0 max-w-xs text-sm leading-relaxed text-tertiary">{copy.emptyHint}</p>
+          </div>
+        )}
       </div>
     );
 

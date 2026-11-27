@@ -1,7 +1,13 @@
 import 'server-only';
 import { portalModules } from '@/config/portalModules';
 import type { RuntimeConfig } from '@/models/runtimeConfig';
+import { isPublicHttpsUrl } from '@/services/media/models/publicImageUrl';
 import { strings } from '@/strings';
+
+const amplitudeEndpoints = new Map([
+  ['US', 'https://api2.amplitude.com/2/httpapi'],
+  ['EU', 'https://api.eu.amplitude.com/2/httpapi'],
+]);
 
 function required(name: string): string {
 
@@ -12,6 +18,12 @@ function required(name: string): string {
 }
 
 export const environment = {
+  get privacyNoticeUrl() {
+
+    const url = process.env.PORTAL_PRIVACY_NOTICE_URL?.trim();
+    return url && isPublicHttpsUrl(url) ? url : null;
+
+  },
   get demoMode() {
     return process.env.DEMO_MODE === 'true';
   },
@@ -56,6 +68,7 @@ export function getRuntimeConfig(
       socketUrl: null,
       messaging: null,
       amplitudeApiKey: null,
+      amplitudeEndpoint: null,
     };
 
   }
@@ -67,6 +80,8 @@ export function getRuntimeConfig(
     appId: process.env.FIREBASE_APP_ID || '',
   };
   const vapidKey = process.env.FIREBASE_VAPID_PUBLIC_KEY || '';
+  const amplitudeZone = process.env.AMPLITUDE_SERVER_ZONE?.trim().toUpperCase() || 'US';
+  const amplitudeEndpoint = amplitudeEndpoints.get(amplitudeZone) ?? null;
   const runtimeConfig = {
     demoMode: false,
     onboardingEnabled:
@@ -77,7 +92,8 @@ export function getRuntimeConfig(
       Object.values(firebase).every(Boolean) && vapidKey
         ? { firebase, vapidKey }
         : null,
-    amplitudeApiKey: process.env.AMPLITUDE_API_KEY || null,
+    amplitudeApiKey: amplitudeEndpoint ? process.env.AMPLITUDE_API_KEY?.trim() || null : null,
+    amplitudeEndpoint,
   };
 
   return runtimeConfig;

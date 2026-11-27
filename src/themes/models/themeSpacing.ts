@@ -4,6 +4,7 @@ export type ThemeSpacing = {
   panel: string;
   section: string;
   field: string;
+  buttonInlinePadding?: string;
   controlSmall: string;
   controlMedium: string;
   controlLarge: string;

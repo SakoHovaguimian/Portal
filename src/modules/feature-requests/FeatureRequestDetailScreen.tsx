@@ -28,7 +28,7 @@ export function FeatureRequestDetailScreen({
       query={featureRequestQuery}
       retainDataOnError
       loadingFallback={
-        <Card>
+        <Card role="status">
           {strings.ui.featureRequestDetailScreen.loadingFeatureRequest}
         </Card>
       }
@@ -164,14 +164,9 @@ function FeatureRequestForm({ request }: FeatureRequestFormProps) {
   function renderHeader() {
 
     return (
-      <div className="grid gap-2">
-        <p className="m-0 text-xs font-semibold uppercase tracking-[0.16em] text-brand-secondary">
-          {strings.ui.featureRequestDetailScreen.requestDetail}
-        </p>
-        <h1 className="m-0 text-2xl font-semibold tracking-tight text-primary">
-          {strings.ui.featureRequestDetailScreen.featureRequestDetail}
-        </h1>
-      </div>
+      <h1 className="m-0 text-2xl font-semibold tracking-tight text-primary">
+        {strings.ui.featureRequestDetailScreen.featureRequestDetail}
+      </h1>
     );
 
   }

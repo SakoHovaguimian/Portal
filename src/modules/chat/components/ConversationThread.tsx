@@ -22,6 +22,7 @@ export function ConversationThread({ conversation, messages: serverMessages, act
   const queryClient = useQueryClient();
   const messages = serverMessages.map((message) => actions.projections[message.id] ?? message);
   const [search, setSearch] = useState('');
+  const normalizedSearch = search.trim().toLocaleLowerCase('en-US');
   const [editing, setEditing] = useState<ConversationMessage | null>(null);
   const [body, setBody] = useState('');
   const [deleting, setDeleting] = useState<ConversationMessage | null>(null);
@@ -97,7 +98,7 @@ export function ConversationThread({ conversation, messages: serverMessages, act
   }, [chatService, conversation.id, failed, lastId, loading, queryClient, userId]);
   const matching = (failed ? [] : messages).filter((message) => {
 
-    const matches = !search || message.body.toLocaleLowerCase('en-US').includes(search.toLocaleLowerCase('en-US')) || message.author.toLocaleLowerCase('en-US').includes(search.toLocaleLowerCase('en-US')) || message.attachments.some((file) => file.name.toLocaleLowerCase('en-US').includes(search.toLocaleLowerCase('en-US')));
+    const matches = !normalizedSearch || message.body.toLocaleLowerCase('en-US').includes(normalizedSearch) || message.author.toLocaleLowerCase('en-US').includes(normalizedSearch) || message.attachments.some((file) => file.name.toLocaleLowerCase('en-US').includes(normalizedSearch));
     return matches;
 
   });
@@ -135,7 +136,7 @@ export function ConversationThread({ conversation, messages: serverMessages, act
   for (const item of outbox) {
 
     const authoritative = !failed && messages.some((message) => message.clientId === item.draft.clientId || message.id === item.message?.id);
-    if ((failed && item.status === 'sent') || authoritative || (search && !item.draft.body.toLocaleLowerCase('en-US').includes(search.toLocaleLowerCase('en-US')))) {
+    if ((failed && item.status === 'sent') || authoritative || (normalizedSearch && !item.draft.body.toLocaleLowerCase('en-US').includes(normalizedSearch))) {
       continue;
     }
     timeline.push({

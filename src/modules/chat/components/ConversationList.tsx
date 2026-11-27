@@ -1,19 +1,39 @@
 'use client';
 
+import { useRef } from 'react';
+
 import { Button, InitialsAvatar, Input, UiIcon } from '@/components/ui';
 import { portalChatStrings as copy } from '@/strings';
 
 import type { ChatConversation } from '../models/chatConversation';
 import type { ConversationListProps } from '../models/conversationListProps';
 
-export function ConversationList({ conversations, selectedId, search, archived, onSearch, onArchived, onSelect, onCreate }: ConversationListProps) {
+export function ConversationList({ conversations, selectedId, search, archived, onSearch, onArchived, onSelect }: ConversationListProps) {
 
+  const searchInput = useRef<HTMLInputElement>(null);
+  const normalizedSearch = search.trim().toLocaleLowerCase('en-US');
   const matching = conversations.filter((conversation) => {
 
-    const matchesConversation = conversation.archived === archived && `${conversation.name} ${conversation.members.map((member) => member.name).join(' ')}`.toLocaleLowerCase('en-US').includes(search.toLocaleLowerCase('en-US'));
+    const matchesConversation = conversation.archived === archived && `${conversation.name} ${conversation.members.map((member) => member.name).join(' ')}`.toLocaleLowerCase('en-US').includes(normalizedSearch);
     return matchesConversation;
 
   });
+
+  function renderFolderButton(label: string, showArchived: boolean) {
+
+    const selected = archived === showArchived;
+    return (
+      <Button
+        variant={selected ? 'primary' : 'secondary'}
+        className={selected ? undefined : 'text-brand-secondary ring-brand hover:text-brand-secondary'}
+        aria-pressed={selected}
+        onClick={() => onArchived(showArchived)}
+      >
+        {label}
+      </Button>
+    );
+
+  }
 
   function renderConversation(conversation: ChatConversation) {
 
@@ -48,23 +68,29 @@ export function ConversationList({ conversations, selectedId, search, archived, 
   }
 
   const rows = matching.map(renderConversation);
-  return (<aside aria-label={copy.inbox} className="flex h-full min-h-0 flex-col bg-primary">
+  return (<aside aria-labelledby="chat-conversations" className="flex h-full min-h-0 flex-col bg-primary">
 
     <div className="grid gap-5 px-5 pt-6 pb-4">
 
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <p className="m-0 text-xs font-medium tracking-widest text-tertiary">{copy.inbox}</p>
-          <h2 className="m-0 mt-1 text-2xl font-semibold tracking-tight">{copy.title}</h2>
-        </div>
-        <Button variant="secondary" aria-label={copy.newConversation} title={copy.newConversation} onClick={onCreate}><UiIcon name="plus"/></Button>
+      <h2 id="chat-conversations" className="m-0 text-lg font-semibold">{copy.all}</h2>
+
+      <div className="flex items-center gap-1">
+        <Input ref={searchInput} aria-label={copy.searchPlaceholder} placeholder={copy.searchPlaceholder} value={search} onChange={(event) => onSearch(event.target.value)}/>
+        {search && (
+          <Button variant="ghost" aria-label={copy.clear} onClick={() => {
+
+            onSearch('');
+            searchInput.current?.focus();
+
+          }}>
+            <UiIcon name="close"/>
+          </Button>
+        )}
       </div>
 
-      <div className="flex items-center gap-1"><Input aria-label={copy.searchPlaceholder} placeholder={copy.searchPlaceholder} value={search} onChange={(event) => onSearch(event.target.value)}/>{search && <Button variant="ghost" aria-label={copy.clear} onClick={() => onSearch('')}><UiIcon name="close"/></Button>}</div>
-
-      <div className="flex gap-2">
-        <Button variant={archived ? 'ghost' : 'secondary'} aria-pressed={!archived} onClick={() => onArchived(false)}>{copy.inbox}</Button>
-        <Button variant={archived ? 'secondary' : 'ghost'} aria-pressed={archived} onClick={() => onArchived(true)}>{copy.archived}</Button>
+      <div className="flex flex-wrap gap-2">
+        {renderFolderButton(copy.inbox, false)}
+        {renderFolderButton(copy.archived, true)}
       </div>
 
     </div>
@@ -72,11 +98,9 @@ export function ConversationList({ conversations, selectedId, search, archived, 
     <ul className="m-0 min-h-0 flex-1 list-none overflow-y-auto p-0">{rows}</ul>
 
     {matching.length === 0 && <div className="px-5 py-10">
-      <p className="font-semibold">{search ? copy.noResultsTitle : copy.noConversationsTitle}</p>
-      <p className="text-sm text-tertiary">{search ? copy.noResultsHint : copy.noConversationsHint}</p>
+      <p className="font-semibold">{normalizedSearch ? copy.noResultsTitle : copy.noConversationsTitle}</p>
+      <p className="text-sm text-tertiary">{normalizedSearch ? copy.noResultsHint : copy.noConversationsHint}</p>
     </div>}
-
-    <p className="m-0 border-t-control border-secondary px-5 py-4 text-xs text-tertiary">{copy.description}</p>
 
   </aside>);
 

@@ -1,0 +1,6 @@
+@media (any-pointer: coarse) {
+  .actions > button {
+    min-inline-size: var(--control-height-sm);
+    min-block-size: var(--control-height-sm);
+  }
+}

@@ -8,5 +8,4 @@ export interface ConversationListProps {
   onSearch: (value: string) => void;
   onArchived: (value: boolean) => void;
   onSelect: (id: string) => void;
-  onCreate: () => void;
 }

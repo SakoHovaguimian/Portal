@@ -7,4 +7,5 @@ export interface RuntimeConfig {
   socketUrl: string | null;
   messaging: MessagingConfig | null;
   amplitudeApiKey: string | null;
+  amplitudeEndpoint: string | null;
 }

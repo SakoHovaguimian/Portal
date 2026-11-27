@@ -1,5 +1,11 @@
 # Migration verification
 
+## Shared Theme Roles — November 27, 2026
+
+- Removed the Carbon-only Back label setting and moved font registration into the theme system. The shell uses its shared labeled button in every preset. A source audit found theme identity used for registration, application, persisted selection, previews, and motion resolution.
+- In the local production demo, switched all eight presets in light and dark mode. Checked the visible Back label, computed button and field radii, body font, accent, and sheet timing. At 390px, Carbon dark survived reload with no horizontal overflow, its shared toast respected reduced motion, and Enter on Back returned to Dashboard. The public article index also picked up the selected font and mode.
+- `npm run check`, `DEMO_MODE=true npm run build`, and `git diff --check` passed. The supplemental strict design audit returned the same 57 findings as the prior Carbon audit. Browser verification used local demo data.
+
 ## Animated Counter And Step Player — November 21, 2026
 
 - Passed `npm run check`, `DEMO_MODE=true npm run build`, and `git diff --check`. The supplemental strict design audit reported the same 57 findings against the starting revision and the updated tree.
@@ -320,3 +326,19 @@ Live chat storage/events/private media, durable backend job workers, Firebase au
 - Dry runs preserved the registration files and created no module directory. Duplicate names, existing public and protected routes, invalid slugs, and conflicting navigation IDs stopped before writing. Two simultaneous runs for the same name produced one complete module.
 - Browser checks covered sign-in with a preserved destination, creation by keyboard, invalid-field focus, editing, reload persistence, search, no matches, clearing search, and both outcomes of the unsaved-draft dialog. At a 390px viewport, the directory used mobile rows and its document width was 390px.
 - Demo API checks covered search, paging, validation, response simulations, and account isolation. A different account received 404 for both reading and editing a private record. Resetting one account kept another account's records. A global reset cleared the new records and invalidated the previous session. Live storage and authorization require the backend implementation described in the [generated contract](MODULES.md#generated-live-api).
+
+## Template Design, Accessibility, And Privacy — November 27, 2026
+
+- `npm run check`, `DEMO_MODE=true npm run build`, and `git diff --check` passed.
+- Chromium showed field-specific auth errors and first-invalid-field focus. A credential failure produced a form alert, preserved entries, and returned focus to Sign In. At 320px the consent surface stayed in flow and preserved focus on the chosen action. Verified public notice links, versioned consent, cross-tab updates, storage failure, and demo isolation.
+- The dashboard passed sampled axe checks in light and dark and used labeled mobile rows at 390px. Its country percentages exposed single meter roles. Compact changed record-cell padding from 12px to 4px. Under a delayed demo response, the User Detail card stayed 260px high and announced loading while showing four placeholders.
+- Component library Back and Forward restored the previous specimen and category in one step. The delivery filter accepted a padded UUID and applied its canonical value. Chat search accepted surrounding spaces and returned focus after clearing. Synthetic IME composition preserved the draft. Shift+Enter sent the same draft to the local demo after composition. Touch targets and sheet dismissal, regrabbing, Escape, reduced motion, and safe areas were checked in Chromium with emulated input and insets.
+- A local production build with a fake key and intercepted vendor requests confirmed zero analytics before consent or after withdrawal. Accepted events used allowlisted screen names and the configured EU endpoint. The identifier rotated on document reload. Vendor delivery, hosting and backend data handling, physical-device safe areas, and a full screen-reader and theme matrix remain deployment checks.
+
+## Carbon And Primary Empty-State Actions — November 27, 2026
+
+- `npm run check`, `DEMO_MODE=true npm run build`, and `git diff --check` passed. The initializer dry run accepted `--theme carbon --mode dark`.
+- Local demo Chromium confirmed Carbon's grayscale surfaces, jade switches and selected segments, circular top bar buttons, capsule sidebar selections, and 26px horizontal and 10px vertical button padding. Blueprint retained square buttons and its labeled Back action. The Carbon preview toast respected device reduced motion.
+- With hydration scripts blocked on a saved Dark refresh, the component library used the dark shell and hid the pending picker. After hydration, Dark appeared selected. At 320px, the category popup fit within the viewport and Escape restored focus to its trigger. The catalog's primary Clear Search And Filters action restored the results.
+- The Saved Items empty-state action used Carbon's accent and opened the journal. Chat Inbox and Archived exchanged the active fill and inactive outline when switched. The text-only message from the reported screenshot measured 13px above and below its text, including the border. The chat page also fit a 320px viewport.
+- The full-diff review repeated the project checks and production demo build. Chromium confirmed one empty Dashboard message, a `role="status"` message during delayed Feature Request Detail loading, and specimen input retention across reload, Back, edit, Forward, and Back. In two tabs, a consent change preserved focus in the open banner. A failed save stayed visible after navigation, and selecting the same choice twice produced one write. With JavaScript delayed by 2.2 seconds, a returning visitor's saved choice kept the banner hidden and focus on Email. A stubbed transport verified that queued withdrawal and reacceptance abort old analytics requests and rotate the temporary identifier even when the final stored preference is already accepted. The supplemental pattern scan repeated its 57 baseline findings.

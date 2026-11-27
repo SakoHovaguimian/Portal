@@ -17,7 +17,7 @@ export function useSheetDrag(open: boolean, onDismiss: () => void) {
     const current = drag.current;
     drag.current = null;
     if (!panel || !current) { return; }
-    suppressClick.current = current.distance > 4;
+    suppressClick.current = current.moved;
     if (!cancelled && (current.distance > Math.min(160, panel.offsetHeight * 0.25) || (current.distance > 24 && current.velocity > 0.6))) {
 
       onDismiss();
@@ -53,7 +53,16 @@ export function useSheetDrag(open: boolean, onDismiss: () => void) {
     settling.current?.cancel();
     panel.style.setProperty('--ui-sheet-drag', `${offset}px`);
     suppressClick.current = false;
-    drag.current = { pointerId: event.pointerId, startY: event.clientY - offset, lastY: event.clientY, lastTime: event.timeStamp, distance: 0, velocity: 0 };
+    drag.current = {
+      pointerId: event.pointerId,
+      startY: event.clientY,
+      startOffset: offset,
+      moved: false,
+      lastY: event.clientY,
+      lastTime: event.timeStamp,
+      distance: offset,
+      velocity: 0,
+    };
 
   }
 
@@ -61,7 +70,9 @@ export function useSheetDrag(open: boolean, onDismiss: () => void) {
 
     const current = drag.current;
     if (!current || current.pointerId !== event.pointerId) { return; }
-    current.distance = Math.max(0, event.clientY - current.startY);
+    const travel = event.clientY - current.startY;
+    if (Math.abs(travel) > 4) { current.moved = true; }
+    current.distance = Math.max(0, current.startOffset + travel);
     current.velocity = (event.clientY - current.lastY) / Math.max(1, event.timeStamp - current.lastTime);
     current.lastY = event.clientY;
     current.lastTime = event.timeStamp;

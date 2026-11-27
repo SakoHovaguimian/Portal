@@ -1,7 +1,7 @@
 ---
 version: alpha
 name: Portal
-description: A readable operational workbench with seven loadable semantic theme objects and shared accessible controls.
+description: A readable operational workbench with eight loadable semantic theme objects and shared accessible controls.
 colors:
   surface: '#ffffff'
   background: '#f3f7f7'
@@ -42,6 +42,8 @@ Portal is an English-language starter for operators managing people, requests, a
 Portal's baseline is a readable Aqua operational workbench. The application also supports complete Studio, Atelier, Blueprint, Arcade, and Dusk identities: rounded elevated surfaces, warm serif paper, square technical density, outlined offset depth, and plum-tinted elevation respectively. Selecting a theme changes shape, depth, type, rhythm, color, and motion through the same components. Preserve the existing route and interaction system; theme selection changes visual roles. Existing saved modes remain valid; themes now own their complete palette. Avoid decorative nested cards and marketing effects in routine data entry.
 
 The seventh identity, macOS / iOS (`cupertino`), brings familiar Apple control styling: grouped gray surfaces, system typography, blue actions, green switches, raised white slider thumbs, and neutral segmented selection. It is a selectable theme; the existing Portal default is retained. Native operating-system proportions guide the details while shared keyboard, focus, and target-size contracts remain intact.
+
+Carbon uses grayscale surfaces and jade actions, with Instrument Sans at 16px for body and controls and Geist Mono for technical values. Buttons, switches, segmented choices, chips, and sidebar selections use capsules. Text buttons, including Back in the top bar, have 26px horizontal and 10px vertical padding. Fields, cards, and overlays use 18px, 24px, and 32px corners respectively. Thin neutral strokes define surfaces, with stronger elevation reserved for overlays.
 
 Typed runtime theme objects are canonical (ownership model B). `src/themes/presets/*.ts` implements the complete `ThemeDefinition` contract, with independent role models under `src/themes/models`. `compileTheme` adapts each object into semantic values; ThemeScript and ThemePreferenceProvider apply them through the `--portal-*` variables registered in `src/app/theme.css`. The CSS file registers Tailwind utilities and shared behavior; it does not maintain a second palette. `globals.css` imports focused behavior styles. This document mirrors the Portal preset and describes the system. See [loadable themes](docs/THEMING.md) for the full ownership path and extension workflow.
 

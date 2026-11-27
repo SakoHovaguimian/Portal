@@ -40,7 +40,7 @@ English-language workspace for operators managing people, requests, and conversa
 - Profile save keeps entries on failure and updates the public session after success. Email is read-only pending a dedicated identity flow.
 - Chat places outgoing messages immediately in an in-memory outbox and clears the composer for the next message. Pending/failed items retain text, attachments, reply scope, and an idempotent retry key. Server responses reconcile without duplicate rows; failed work remains retryable. Reactions and reversible message actions project immediately and serialize per message with rollback on failure. Socket/push events refresh authoritative queries. Shift+Enter sends outside IME composition; Enter inserts a newline.
 - Notifications require an explicit click before requesting permission. Denied/unsupported/unconfigured/demo states explain availability. Sign-out revokes browser push and clears query data.
-- Consent choices have equally reachable actions and remain editable in Appearance. Changing consent never grants notification permission.
+- Consent choices have the same visual emphasis, stay in document flow, and remain editable on the public privacy page and in Appearance. Changing consent never grants notification permission.
 
 ## State and navigation
 
@@ -50,7 +50,7 @@ Tables preserve horizontal access on narrow screens. Mobile navigation opens a f
 
 ## Forms, overlays, and feedback
 
-Use noValidate and schema-based messages. Associate labels with their input, surface errors in an alert, and prevent duplicate submissions. Passwords are masked and use password-manager autocomplete. Native date input is permitted for profile date of birth. Shared date/time/datetime-local schedule fields intentionally accept OS popup geometry and language. Authored Select/MultiSelect use matching trigger/popup borders, corners, width, bounded scrolling, typeahead, and keyboard selection. Textareas auto-grow within their layout and may opt into a fixed footprint. ColorInput keeps incomplete HEX drafts local and exposes copy success/failure. MultiSelect can enforce a maximum selection count without preventing deselection.
+Use noValidate and schema-based messages. Associate labels and field errors with their input, focus the first invalid auth field, and announce form-level failures in an alert. Prevent duplicate submissions. Passwords are masked and use password-manager autocomplete. Native date input is permitted for profile date of birth. Shared date/time/datetime-local schedule fields intentionally accept OS popup geometry and language. Authored Select/MultiSelect use matching trigger/popup borders, corners, width, bounded scrolling, typeahead, and keyboard selection. Textareas auto-grow within their layout and may opt into a fixed footprint. ColorInput keeps incomplete HEX drafts local and exposes copy success/failure. MultiSelect can enforce a maximum selection count without preventing deselection.
 
 Destructive actions use the shared modal, focus the safe action first, and restore focus on cancellation. Long content scrolls inside the viewport. Shared toasts supplement inline errors; critical errors must not exist only in a transient toast. New toasts sit nearest their selected edge, with older items moving inward and closing gaps after exit. Arrival and layout motion use independent elements, so repeated notifications can interrupt movement without resetting their content or focus. Hover or keyboard focus pauses expiration. Toasts remain within viewport/safe-area bounds; overflowing stacks scroll.
 

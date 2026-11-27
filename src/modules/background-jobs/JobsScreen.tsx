@@ -77,7 +77,7 @@ export function JobsScreen() {
     if (query.isPending) { return <div className="grid min-h-72 place-items-center p-6"><ActivityIndicator label={copy.loadingLabel} showLabel /></div>; }
     if (query.isError) { return <div className="p-4 sm:p-6"><ErrorState title={copy.unavailableTitle} description={copy.unavailableHint} onRetry={() => void query.refetch()} /></div>; }
     if (!query.data.data.length) {
-      return <EmptyState variant="plain" icon="layers" title={filtered ? copy.noResultsTitle : copy.emptyTitle} description={filtered ? copy.noResultsHint : copy.emptyHint} action={!filtered ? <Button variant="secondary" onClick={() => setCreating(true)}>{copy.createAction}</Button> : undefined} />;
+      return <EmptyState variant="plain" icon="layers" title={filtered ? copy.noResultsTitle : copy.emptyTitle} description={filtered ? copy.noResultsHint : copy.emptyHint} action={!filtered ? <Button onClick={() => setCreating(true)}>{copy.createAction}</Button> : undefined} />;
     }
     return (
       <DataTable
