@@ -10,10 +10,12 @@ import {
   DescriptionList,
   DirectoryFilters,
   EmptyState,
+  IconTile,
   MobileRecordRow,
   Page,
   PageHeader,
   QueryBoundary,
+  UiIcon,
 } from '@/components/ui';
 import { usePresentationService } from '@/presentation/PresentationProvider';
 import { useDirectoryState } from '@/queries/useDirectoryState';
@@ -83,7 +85,10 @@ export function DevicesScreen() {
       <PageHeader
         title={copy.devices.title}
         description={copy.devices.description}
-        eyebrow={copy.common.accountEyebrow}
+        breadcrumbs={[
+          { label: copy.account.title, href: '/settings/account' },
+          { label: copy.devices.title },
+        ]}
       />
     );
 
@@ -121,14 +126,27 @@ export function DevicesScreen() {
   function renderDeviceType(device: AccountDevice) {
 
     return (
-      <span className="grid gap-1">
-        <span className="font-medium text-primary">
-          {copy.devices.types[device.deviceType]}
-        </span>
-        <span className="font-mono text-xs text-tertiary wrap-anywhere">
-          {device.id}
+      <span className="flex min-w-0 items-center gap-3">
+        {renderDeviceIcon()}
+        <span className="grid min-w-0 gap-1">
+          <span className="font-semibold text-primary">
+            {copy.devices.types[device.deviceType]}
+          </span>
+          <span className="font-mono text-xs text-tertiary wrap-anywhere">
+            {device.id}
+          </span>
         </span>
       </span>
+    );
+
+  }
+
+  function renderDeviceIcon() {
+
+    return (
+      <IconTile className="size-10 shrink-0">
+        <UiIcon name="bell" className="size-4" />
+      </IconTile>
     );
 
   }
@@ -138,6 +156,7 @@ export function DevicesScreen() {
     return (
       <Button
         variant="destructive"
+        loading={remove.isPending && remove.variables === device.id}
         disabled={remove.isPending}
         onClick={() => void removeDevice(device)}
       >
@@ -151,6 +170,7 @@ export function DevicesScreen() {
 
     return (
       <MobileRecordRow
+        leading={renderDeviceIcon()}
         title={copy.devices.types[device.deviceType]}
         description={device.id}
         summary={
@@ -220,12 +240,20 @@ export function DevicesScreen() {
           {
             key: 'registered',
             header: copy.devices.registeredColumn,
-            render: (device) => formatAccountToolsDate(device.createdAt),
+            render: (device) => device.createdAt ? (
+              <time className="tabular-nums" dateTime={device.createdAt}>
+                {formatAccountToolsDate(device.createdAt)}
+              </time>
+            ) : copy.common.notRecorded,
           },
           {
             key: 'updated',
             header: copy.common.updatedColumn,
-            render: (device) => formatAccountToolsDate(device.updatedAt),
+            render: (device) => device.updatedAt ? (
+              <time className="tabular-nums" dateTime={device.updatedAt}>
+                {formatAccountToolsDate(device.updatedAt)}
+              </time>
+            ) : copy.common.notRecorded,
           },
           {
             key: 'actions',

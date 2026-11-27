@@ -1,3 +1,21 @@
+.ui-page-title:is(h1) {
+  text-wrap: balance;
+}
+
+.ui-page-title:not(h1) {
+  font-size: var(--text-2xl);
+  line-height: var(--text-2xl--line-height);
+}
+
+.ui-page > .ui-page-header {
+  padding-block: 0.25rem 0.5rem;
+}
+
+::selection {
+  background: var(--color-bg-brand-secondary);
+  color: var(--color-text-primary);
+}
+
 /* Full-screen navigation stays clear of device cutouts and the home indicator. */
 .ui-mobile-navigation {
   padding-top: env(safe-area-inset-top);

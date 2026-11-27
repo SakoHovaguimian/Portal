@@ -1,2 +1,2 @@
 export type ComponentCategory =
-  'all' | 'foundations' | 'inputs' | 'data' | 'feedback' | 'media';
+  'foundations' | 'inputs' | 'data' | 'feedback' | 'media';

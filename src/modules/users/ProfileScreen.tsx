@@ -174,7 +174,7 @@ function ProfileForm({ user }: ProfileFormProps) {
   function renderNameFields() {
 
     return (
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid min-w-0 gap-(--space-field) sm:grid-cols-2">
         <Field labelText={strings.ui.profileScreen.firstName}>
           <Input
             name="firstName"
@@ -208,34 +208,62 @@ function ProfileForm({ user }: ProfileFormProps) {
 
   }
 
-  function renderContactFields() {
+  function renderPersonalSection() {
 
     return (
-      <>
-        <Field labelText={strings.ui.profileScreen.phoneNumber}>
-          <Input
-            name="phoneNumber"
-            type="tel"
-            value={current.phoneNumber}
-            autoComplete="tel"
+      <section aria-labelledby="profile-personal-title" className="grid gap-5 p-(--space-panel) md:grid-cols-[minmax(8rem,1fr)_minmax(0,2.5fr)]">
+        <h2 id="profile-personal-title" className="m-0 text-base font-semibold text-primary">
+          {strings.ui.profileScreen.personalInformation}
+        </h2>
+        <div className="grid min-w-0 gap-(--space-field)">
+          {renderNameFields()}
+          <DatePicker
+            label={strings.ui.profileScreen.dateOfBirth}
+            name="dateOfBirth"
+            value={current.dateOfBirth}
             disabled={mutation.isPending}
-            aria-invalid={Boolean(errors.phoneNumber)}
-            aria-describedby={
-              errors.phoneNumber ? 'profile-edit-error' : undefined
-            }
-            onChange={(event) => change('phoneNumber', event.target.value)}
+            invalid={Boolean(errors.dateOfBirth)}
+            describedBy={errors.dateOfBirth ? 'profile-edit-error' : undefined}
+            onValueChange={(value) => change('dateOfBirth', value)}
           />
-        </Field>
-        <DatePicker
-          label={strings.ui.profileScreen.dateOfBirth}
-          name="dateOfBirth"
-          value={current.dateOfBirth}
-          disabled={mutation.isPending}
-          invalid={Boolean(errors.dateOfBirth)}
-          describedBy={errors.dateOfBirth ? 'profile-edit-error' : undefined}
-          onValueChange={(value) => change('dateOfBirth', value)}
-        />
-      </>
+        </div>
+      </section>
+    );
+
+  }
+
+  function renderContactSection() {
+
+    return (
+      <section aria-labelledby="profile-contact-title" className="grid gap-5 p-(--space-panel) md:grid-cols-[minmax(8rem,1fr)_minmax(0,2.5fr)]">
+        <h2 id="profile-contact-title" className="m-0 text-base font-semibold text-primary">
+          {strings.ui.profileScreen.contactInformation}
+        </h2>
+        <div className="grid min-w-0 gap-(--space-field)">
+          <Field labelText={strings.ui.profileScreen.email}>
+            <Input
+              type="email"
+              value={user.email}
+              readOnly
+              autoComplete="email"
+            />
+          </Field>
+          <Field labelText={strings.ui.profileScreen.phoneNumber}>
+            <Input
+              name="phoneNumber"
+              type="tel"
+              value={current.phoneNumber}
+              autoComplete="tel"
+              disabled={mutation.isPending}
+              aria-invalid={Boolean(errors.phoneNumber)}
+              aria-describedby={
+                errors.phoneNumber ? 'profile-edit-error' : undefined
+              }
+              onChange={(event) => change('phoneNumber', event.target.value)}
+            />
+          </Field>
+        </div>
+      </section>
     );
 
   }
@@ -246,7 +274,7 @@ function ProfileForm({ user }: ProfileFormProps) {
       <p
         id="profile-edit-error"
         role="alert"
-        className="text-sm text-error-primary"
+        className="m-0 text-sm text-error-primary"
       >
         {error}
       </p>
@@ -273,20 +301,14 @@ function ProfileForm({ user }: ProfileFormProps) {
   function renderForm() {
 
     return (
-      <Card className="grid gap-5">
-        <form ref={formRef} noValidate className="grid gap-4" onSubmit={submit}>
-          {renderNameFields()}
-          <Field labelText={strings.ui.profileScreen.email}>
-            <Input
-              type="email"
-              value={user.email}
-              readOnly
-              autoComplete="email"
-            />
-          </Field>
-          {renderContactFields()}
-          {renderFeedback()}
-          {renderActions()}
+      <Card className="max-w-5xl overflow-hidden p-0 shadow-none">
+        <form ref={formRef} noValidate className="divide-y-control divide-secondary" onSubmit={submit}>
+          {renderPersonalSection()}
+          {renderContactSection()}
+          <div className="grid gap-4 bg-secondary_subtle px-(--space-panel) py-4">
+            {renderFeedback()}
+            {renderActions()}
+          </div>
         </form>
       </Card>
     );

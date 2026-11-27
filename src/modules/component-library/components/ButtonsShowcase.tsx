@@ -44,12 +44,12 @@ export function ButtonsShowcase() {
   function renderVariantHeading(variant: (typeof variants)[number]) {
 
     return (
-      <h4
+      <h5
         key={variant}
         className="m-0 text-xs font-semibold text-primary"
       >
         {copy.variants[variant]}
-      </h4>
+      </h5>
     );
 
   }

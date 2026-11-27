@@ -12,7 +12,7 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Open http://localhost:3001. The sample environment sets `DEMO_MODE=true`. Choose New User, Populated User, Onboarding, Admin, or SuperAdmin on the sign-in screen, or create an account. All sample accounts use `password123`; the original `sako@example.com` login remains available. New User has completed setup and no private activity; Onboarding restarts only its own setup and activity. Demo mutations remain in server memory across navigation and reloads.
+Open http://localhost:3001 and choose **Explore The Demo**. The sample environment sets `DEMO_MODE=true`. Choose New User, Populated User, Onboarding, Admin, or SuperAdmin on the sign-in screen, or create an account. All sample accounts use `password123`; the original `sako@example.com` login remains available. New User has completed setup and no private activity; Onboarding restarts only its own setup and activity. Demo mutations remain in server memory across navigation and reloads.
 
 Demo mode includes users, profile updates, feature requests, dashboard counts, conversation-scoped chat, background jobs, resumable onboarding, publishing, uploads, saved content, a notification inbox, and account tools. `/dev-settings` controls populated/loading/empty/error responses, finite latency, account switching, and a full fixture reset. It makes no Firebase, backend, Socket.IO, Messaging, or Amplitude calls. Browser notification opt-in is simulated per account.
 
@@ -41,11 +41,11 @@ Choose project capabilities in [project configuration](src/config/projectConfigu
 - `/settings/account`, `/settings/devices`, and `/help` provide account, device, FAQ, and illustrative demo legal screens. Delivery diagnostics require the platform role and independent backend authorization.
 - `/onboarding` resumes saved profile/preferences steps. Configure its descriptors in `src/modules/onboarding/onboardingConfiguration.ts`; opt into its live API with `PORTAL_ONBOARDING_ENABLED=true`.
 
-Committed tabs, filters, and paging create real browser history entries. The app's Back action returns to a tracked internal entry or the owning fallback. Unsaved forms use the shared guard, including same-document browser Back. Developer Settings and Component Library share one adjacent utility group in the sidebar.
+Committed tabs, filters, and paging create real browser history entries. The app's Back action returns to a tracked internal entry or the owning fallback. Unsaved forms use the shared guard, including same-document browser Back. Developer Settings in the sidebar opens the demo controls and the component library on one page.
 
 ## Component foundation
 
-Open `/dev-settings/components` after signing in. Portal includes the LeafLaunch shared component foundation and editable HEX color picker, date-only calendars, disclosures, ratings/reactions/bookmarks, card carousels, mobile navigation and record layouts, animated segmented controls, steppers, persistent panels, Markdown editing, and media previews. Eight complete themes drive shared colors, corners, borders, shadows, typography, spacing, and motion throughout. See [loadable themes](docs/THEMING.md). Previews stay local. Read [UI system](docs/UI_SYSTEM.md) before extending a screen.
+Open `/dev-settings#component-library` after signing in. Use the section index or search to jump to an example, then scroll through the complete library. Portal includes the LeafLaunch shared component foundation and editable HEX color picker, date-only calendars, disclosures, ratings/reactions/bookmarks, card carousels, mobile navigation and record layouts, animated segmented controls, steppers, persistent panels, Markdown editing, and media previews. Eight complete themes drive shared colors, corners, borders, shadows, typography, spacing, and motion throughout. See [loadable themes](docs/THEMING.md). Previews stay local. Read [UI system](docs/UI_SYSTEM.md) before extending a screen.
 
 ## Live mode
 

@@ -166,7 +166,8 @@ export function LoginScreen({ redirectTo }: AuthRedirectProps) {
 
     return (
       <section
-        className="grid gap-3 rounded-card border-control border-secondary bg-secondary_subtle p-4"
+        id="demo-accounts"
+        className="grid gap-3 border-t-control border-secondary pt-(--space-panel)"
         aria-labelledby="auth-demo-title"
       >
         <h2 id="auth-demo-title" className="m-0 text-sm font-semibold text-primary">

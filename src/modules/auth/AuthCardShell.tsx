@@ -49,12 +49,14 @@ export function AuthCardShell({
   }
 
   return (
-    <section className="grid w-full max-w-md gap-(--space-section)" aria-labelledby="auth-title">
+    <section className="grid w-full max-w-[29rem] gap-(--space-section)" aria-labelledby="auth-title">
       <div className="grid gap-(--space-panel)">
         {renderHeader()}
         {children}
-        {renderFooter()}
-        <PrivacyNoticeLink />
+        <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-2">
+          {renderFooter()}
+          <PrivacyNoticeLink />
+        </div>
       </div>
       {supportingContent}
     </section>

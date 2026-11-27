@@ -1,90 +1,80 @@
 'use client';
 
-import { Card, EmptyState, ErrorState, Skeleton } from '@/components/ui';
+import {
+  Avatar,
+  Button,
+  Card,
+  DescriptionList,
+  EmptyState,
+  ErrorState,
+  Page,
+  PageHeader,
+  Skeleton,
+  UiIcon,
+} from '@/components/ui';
 import type { User } from '@/models';
+import { useGuardedBack } from '@/providers/useGuardedBack';
 import { strings } from '@/strings';
 
 import { useUser } from './hooks';
 import type { UserDetailScreenProps } from './models/userDetailScreenProps';
 
+const copy = strings.ui.userDetailScreen;
+
 export function UserDetailScreen({ userId }: UserDetailScreenProps) {
 
   const { data, isPending, isError, refetch } = useUser(userId);
+  const back = useGuardedBack('/users');
+  const user = isError ? undefined : data;
+  const name = user ? `${user.firstName} ${user.lastName}` : copy.userDetail;
 
-  function renderUserHeader(user?: User) {
+  function renderHeader() {
 
     return (
-      <div className="grid gap-2">
-        <p
-          role={isPending ? 'status' : undefined}
-          className="m-0 text-xs font-semibold uppercase tracking-[0.16em] text-brand-secondary"
-        >
-          {isPending ? strings.ui.userDetailScreen.loadingUserProfile : strings.ui.userDetailScreen.userDetail}
-        </p>
-        <h1 className="m-0 text-2xl font-semibold tracking-tight text-primary">
-          {user ? (
-            <>{user.firstName} {user.lastName}</>
-          ) : (
-            <span className="flex h-lh items-center">
-              <span className="sr-only">{strings.ui.userDetailScreen.userDetail}</span>
-              <Skeleton width="min(100%, 12rem)" height="0.8em" />
-            </span>
-          )}
-        </h1>
-      </div>
+      <PageHeader
+        title={name}
+        icon={user && (
+          <div aria-hidden="true">
+            <Avatar name={name} size="lg" />
+          </div>
+        )}
+      />
     );
 
   }
 
-  function renderFieldValue(value?: string) {
-
-    if (!isPending) { return value; }
+  function renderLoadingValue() {
 
     return (
-      <span className="inline-block w-1/2 max-w-52 align-middle">
+      <span className="inline-block w-32 align-middle">
         <Skeleton />
       </span>
     );
 
   }
 
-  function renderUserFields(user?: User) {
+  function renderUserDetails(record?: User) {
 
     return (
-      <div
-        aria-busy={isPending}
-        aria-hidden={isPending || undefined}
-        className="grid gap-3 rounded-xl border-control border-secondary bg-secondary_subtle p-4 text-sm text-secondary"
-      >
-        <p className="m-0">
-          <span className="font-semibold text-primary">
-            {strings.ui.userDetailScreen.email}
-          </span>{' '}
-          {renderFieldValue(user?.email)}
-        </p>
-        <p className="m-0">
-          <span className="font-semibold text-primary">
-            {strings.ui.userDetailScreen.externalId}
-          </span>{' '}
-          {renderFieldValue(user?.externalId)}
-        </p>
-        <p className="m-0">
-          <span className="font-semibold text-primary">
-            {strings.ui.userDetailScreen.created}
-          </span>{' '}
-          {renderFieldValue(user && new Date(user.createdAt).toLocaleString())}
-        </p>
-      </div>
-    );
-
-  }
-
-  function renderUserDetails(user?: User) {
-
-    return (
-      <Card className="grid gap-4">
-        {renderUserHeader(user)}
-        {renderUserFields(user)}
+      <Card className="grid max-w-3xl gap-5 shadow-none">
+        <h2 className="m-0 text-lg font-semibold text-primary">{copy.userDetail}</h2>
+        {isPending && <span role="status" className="sr-only">{copy.loadingUserProfile}</span>}
+        <div aria-hidden={isPending || undefined} className="border-t-control border-secondary pt-4">
+          <DescriptionList
+            layout="rows"
+            items={[
+              { label: copy.email, value: record?.email ?? renderLoadingValue() },
+              {
+                label: copy.externalId,
+                value: record ? <code className="font-mono text-xs">{record.externalId}</code> : renderLoadingValue(),
+              },
+              {
+                label: copy.created,
+                value: record ? <time dateTime={record.createdAt} className="tabular-nums">{new Date(record.createdAt).toLocaleString()}</time> : renderLoadingValue(),
+              },
+            ]}
+          />
+        </div>
       </Card>
     );
 
@@ -92,35 +82,43 @@ export function UserDetailScreen({ userId }: UserDetailScreenProps) {
 
   function renderContent() {
 
-    if (isPending) {
-      return renderUserDetails();
-    }
+    if (isPending) { return renderUserDetails(); }
     if (isError) {
 
       return (
         <ErrorState
-          title={strings.ui.userDetailScreen.userUnavailable}
-          description={strings.ui.userDetailScreen.weCouldNotLoadThisUserProfileHint}
+          title={copy.userUnavailable}
+          description={copy.weCouldNotLoadThisUserProfileHint}
           onRetry={() => void refetch()}
         />
       );
 
     }
-    if (!data) {
+    if (!user) {
 
       return (
         <EmptyState
-          title={strings.ui.userDetailScreen.missingUser}
-          description={strings.ui.userDetailScreen.thisUserRecordCouldNotBeFoundHint}
+          title={copy.missingUser}
+          description={copy.thisUserRecordCouldNotBeFoundHint}
         />
       );
 
     }
-
-    return renderUserDetails(data);
+    return renderUserDetails(user);
 
   }
 
-  return renderContent();
+  return (
+    <Page>
+      <div>
+        <Button variant="ghost" onClick={() => void back()}>
+          <UiIcon name="chevronLeft" />
+          {copy.backToUsers}
+        </Button>
+      </div>
+      {renderHeader()}
+      {renderContent()}
+    </Page>
+  );
 
 }

@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { Button, Field, InitialsAvatar, Input, Modal, TextArea, UiIcon } from '@/components/ui';
+import { Button, Field, IconButton, InitialsAvatar, Input, Modal, TextArea, UiIcon } from '@/components/ui';
+import { cn } from '@/components/ui/lib/cn';
 import { useListMotion } from '@/components/ui/lib/useListMotion';
 import { useServiceContainer } from '@/providers/AppProviders';
 import { portalChatStrings as copy } from '@/strings';
@@ -22,6 +23,10 @@ export function ConversationThread({ conversation, messages: serverMessages, act
   const queryClient = useQueryClient();
   const messages = serverMessages.map((message) => actions.projections[message.id] ?? message);
   const [search, setSearch] = useState('');
+  const [searchOpen, setSearchOpen] = useState(false);
+  const searchVisible = searchOpen || Boolean(search);
+  const searchRegionId = useId();
+  const searchInput = useRef<HTMLInputElement>(null);
   const normalizedSearch = search.trim().toLocaleLowerCase('en-US');
   const [editing, setEditing] = useState<ConversationMessage | null>(null);
   const [body, setBody] = useState('');
@@ -49,9 +54,33 @@ export function ConversationThread({ conversation, messages: serverMessages, act
   useEffect(() => {
 
     const element = scroll.current;
-    if (element) {
-      element.scrollTop = element.scrollHeight;
+    if (!element) { return; }
+    const log = element;
+    let automaticOffset = log.scrollTop;
+
+    function revealLatestMessage() {
+
+      const body = log.querySelector('li:last-child [data-chat-message-body]');
+      const bottom = log.scrollHeight - log.clientHeight;
+      const bodyStart = body
+        ? body.getBoundingClientRect().top - log.getBoundingClientRect().top + log.scrollTop - 8
+        : bottom;
+      log.scrollTop = Math.max(0, Math.min(bottom, bodyStart));
+      automaticOffset = log.scrollTop;
+
     }
+
+    revealLatestMessage();
+    const observer = new ResizeObserver(() => {
+
+      if (Math.abs(log.scrollTop - automaticOffset) <= 1) {
+        revealLatestMessage();
+      }
+
+    });
+    observer.observe(log);
+    const cleanup = () => observer.disconnect();
+    return cleanup;
 
   }, [conversation.id, lastId, newestPendingId]);
   useEffect(() => {
@@ -156,17 +185,46 @@ export function ConversationThread({ conversation, messages: serverMessages, act
 
   const rows = timeline.map(renderTimelineItem);
 
+  function toggleSearch() {
+
+    if (searchVisible) {
+
+      skipMotion.current = true;
+      setSearch('');
+      setSearchOpen(false);
+      return;
+
+    }
+    setSearchOpen(true);
+    window.requestAnimationFrame(() => {
+      searchInput.current?.focus({ preventScroll: true });
+    });
+
+  }
+
   function renderHeader() {
 
     return (
-      <header className="flex shrink-0 items-center gap-3 border-b-control border-secondary bg-primary px-4 py-4 sm:px-6">
+      <header className="flex min-w-0 items-center gap-2 px-3 py-2 max-[23rem]:gap-1 max-[23rem]:px-1.5 sm:gap-3 sm:px-5">
         <Button variant="ghost" className="px-2 lg:hidden" aria-label={copy.back} onClick={onBack}><UiIcon name="chevronLeft"/></Button>
-        <InitialsAvatar name={conversation.name}/>
+        <span className="max-[25rem]:hidden">
+          <InitialsAvatar name={conversation.name} />
+        </span>
         <div className="min-w-0 flex-1">
-          <h2 className="m-0 truncate text-base font-semibold tracking-tight">{conversation.name}</h2>
-          <p className="m-0 mt-1 text-[11px] text-tertiary">{conversation.kind === 'group' ? copy.membersCount(conversation.members.length) : copy.direct}</p>
+          <h2 className="m-0 line-clamp-2 text-base font-semibold tracking-tight wrap-anywhere sm:truncate">{conversation.name}</h2>
+          <p className="m-0 text-xs text-tertiary">{conversation.kind === 'group' ? copy.membersCount(conversation.members.length) : copy.direct}</p>
         </div>
-        <Button variant="ghost" aria-label={copy.details} onClick={onDetails}><UiIcon name="info"/></Button>
+        <IconButton
+          label={copy.searchConversationAction}
+          variant="ghost"
+          className="shrink-0 sm:hidden"
+          aria-expanded={searchVisible}
+          aria-controls={searchRegionId}
+          onClick={toggleSearch}
+        >
+          <UiIcon name="search" />
+        </IconButton>
+        <IconButton label={copy.details} variant="ghost" className="shrink-0" onClick={onDetails}><UiIcon name="info"/></IconButton>
       </header>
     );
 
@@ -175,17 +233,20 @@ export function ConversationThread({ conversation, messages: serverMessages, act
   function renderSearch() {
 
     return (
-      <div className="flex shrink-0 items-center gap-2 border-b-control border-secondary bg-primary px-4 py-2 sm:px-6"><UiIcon name="search" className="size-4 text-tertiary"/><Input className="border-0 bg-transparent shadow-none" aria-label={copy.messageSearchPlaceholder} placeholder={copy.messageSearchPlaceholder} value={search} onChange={(event) => {
+      <div
+        id={searchRegionId}
+        className={cn('grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-x-1 px-3 pb-2 sm:px-5 @2xl:py-2', !searchVisible && 'max-sm:hidden')}
+      ><Input ref={searchInput} className="max-sm:min-h-11 max-sm:py-2" leadingIcon={<UiIcon name="search" className="size-4" />} aria-label={copy.searchConversationAction} placeholder={copy.messageSearchPlaceholder} value={search} onChange={(event) => {
 
-        skipMotion.current = true;
-        setSearch(event.target.value);
+          skipMotion.current = true;
+          setSearch(event.target.value);
 
-      }}/>{search && <Button variant="ghost" aria-label={copy.clear} onClick={() => {
+        }}/>{search && <Button variant="ghost" aria-label={copy.clear} onClick={() => {
 
-        skipMotion.current = true;
-        setSearch('');
+          skipMotion.current = true;
+          setSearch('');
 
-      }}><UiIcon name="close" className="size-4"/></Button>}</div>
+        }}><UiIcon name="close" className="size-4"/></Button>}</div>
     );
 
   }
@@ -281,17 +342,18 @@ export function ConversationThread({ conversation, messages: serverMessages, act
 
   }
 
-  return (<section aria-label={conversation.name} className="flex h-full min-h-0 min-w-0 flex-col bg-secondary_subtle">
+  return (<section aria-label={conversation.name} className="@container flex h-full min-h-0 min-w-0 flex-col bg-secondary_subtle">
 
-    {renderHeader()}
-
-    {renderSearch()}
+    <div className="grid shrink-0 items-center border-b-control border-secondary bg-primary @2xl:grid-cols-[minmax(0,1fr)_minmax(13rem,0.7fr)]">
+      {renderHeader()}
+      {renderSearch()}
+    </div>
 
     {renderMessageLog()}
 
     {renderComposer()}
 
-    <p className="m-0 shrink-0 bg-primary px-6 pb-3 text-[10px] leading-relaxed text-tertiary">{demoMode ? copy.demoHint : copy.liveHint}</p>
+    <p className="m-0 shrink-0 bg-primary px-3 pb-2 text-[10px] leading-relaxed text-tertiary sm:px-6 sm:pb-3">{demoMode ? copy.demoHint : copy.liveHint}</p>
 
     {renderEditDialog()}
 

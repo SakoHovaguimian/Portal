@@ -1,13 +1,14 @@
 import {
-  Card,
   EmptyState,
   Message,
-  PageSection,
   QueryBoundary,
+  SectionStack,
+  SplitSection,
 } from '@/components/ui';
 import { portalAccountToolsStrings as copy } from '@/strings';
 
 import { AccountToolsLoading } from './AccountToolsLoading';
+import styles from '../Help.module.css';
 import { useLegalInformation } from '../hooks';
 import type { LegalInformationPanelProps } from '../models/legalInformationPanelProps';
 
@@ -25,19 +26,20 @@ export function LegalInformationPanel({
     const paragraphs = item.sections.map((paragraph, paragraphIndex) => (
       <p
         key={paragraphIndex}
-        className="m-0 whitespace-pre-line text-sm text-secondary wrap-anywhere"
+        className={styles.legalParagraph}
       >
         {paragraph}
       </p>
     ));
     return (
-      <PageSection
+      <SplitSection
+        bare
         key={`${item.title}-${index}`}
         id={`${context}-${index}`}
         title={item.title}
       >
-        <Card className="grid gap-4">{paragraphs}</Card>
-      </PageSection>
+        <div className={styles.legalText}>{paragraphs}</div>
+      </SplitSection>
     );
 
   }
@@ -48,6 +50,7 @@ export function LegalInformationPanel({
 
       return (
         <EmptyState
+          variant="plain"
           title={copy.help.emptyTitle}
           description={copy.help.emptyHint}
         />
@@ -55,7 +58,7 @@ export function LegalInformationPanel({
 
     }
     const pageSections = result.items.map(renderItem);
-    return pageSections;
+    return <SectionStack>{pageSections}</SectionStack>;
 
   }
 

@@ -33,6 +33,7 @@ import { OnboardingProfileSchema } from './models/onboardingProfile';
 import type { OnboardingScreenProps } from './models/onboardingScreenProps';
 import type { OnboardingStep } from './models/onboardingStep';
 import { onboardingSteps } from './onboardingConfiguration';
+import styles from './OnboardingScreen.module.css';
 
 export function OnboardingScreen({ redirectTo }: OnboardingScreenProps) {
 
@@ -40,7 +41,7 @@ export function OnboardingScreen({ redirectTo }: OnboardingScreenProps) {
   return (
     <Page>
       <PageHeader title={copy.title} description={copy.description} />
-      <QueryBoundary query={query} loadingFallback={<InlineLoading />}>
+      <QueryBoundary query={query} loadingFallback={<Card className="max-w-6xl shadow-none"><InlineLoading /></Card>}>
         {(progress) => (
           <OnboardingForm
             key={progress.completedAt ?? 'incomplete'}
@@ -334,7 +335,7 @@ function OnboardingForm({
   function renderFormActions() {
 
     return (
-      <FormActions sticky={false} variant="inline">
+      <FormActions sticky={false} variant="plain">
         {selectedStepIndex > 0 && (
           <Button
             variant="secondary"
@@ -352,33 +353,37 @@ function OnboardingForm({
 
   }
 
-  function renderFormCard() {
+  function renderForm() {
 
     return (
-      <Card>
-        <form
-          ref={formRef}
-          noValidate
-          className="grid gap-5"
-          onSubmit={(event) => {
+      <form
+        ref={formRef}
+        aria-labelledby="onboarding-step-title"
+        noValidate
+        className="grid min-w-0 content-start"
+        onSubmit={(event) => {
 
-            event.preventDefault();
-            void save();
+          event.preventDefault();
+          void save();
 
-          }}
+        }}
+      >
+        <h2
+          id="onboarding-step-title"
+          ref={headingRef}
+          tabIndex={-1}
+          className="m-0 border-b-control border-secondary px-(--space-panel) py-4 text-xl font-semibold tracking-tight text-primary"
         >
-          <h2
-            ref={headingRef}
-            tabIndex={-1}
-            className="m-0 text-lg font-semibold text-primary"
-          >
-            {onboardingSteps[selectedStepIndex].title}
-          </h2>
+          {onboardingSteps[selectedStepIndex].title}
+        </h2>
+        <div className="grid min-w-0 gap-5 p-(--space-panel)">
           {renderStepFields()}
           {renderFeedback()}
+        </div>
+        <div className="border-t-control border-secondary px-(--space-panel) py-4">
           {renderFormActions()}
-        </form>
-      </Card>
+        </div>
+      </form>
     );
 
   }
@@ -387,10 +392,12 @@ function OnboardingForm({
     return renderCompleted();
   }
   return (
-    <div className="grid w-full gap-6">
-      {renderStepper()}
-      {renderFormCard()}
-    </div>
+    <Card className="grid w-full max-w-6xl overflow-hidden p-0 shadow-none xl:grid-cols-[minmax(14rem,0.44fr)_minmax(0,1fr)]">
+      <div className={`${styles.rail} min-w-0 border-b-control border-secondary bg-secondary_subtle p-3 sm:p-(--space-panel) xl:border-e-control xl:border-b-0`}>
+        {renderStepper()}
+      </div>
+      {renderForm()}
+    </Card>
   );
 
 }

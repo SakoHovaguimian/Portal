@@ -1,4 +1,4 @@
-import styles from '../../Blog.module.css';
+import styles from './BlogBuilder.module.css';
 import type { BlogBlockPreviewProps } from '../../models/blogBlockPreviewProps';
 
 export function BlogBlockPreview({ type }: BlogBlockPreviewProps) {

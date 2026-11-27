@@ -510,7 +510,7 @@ export const semanticAliases = {
   '--color-text-error-primary': 'var(--color-error)',
   '--color-text-error-primary_hover':
     'color-mix( in srgb, var(--color-error) 86%, black )',
-  '--color-text-placeholder': 'var(--color-gray-500)',
+  '--color-text-placeholder': 'var(--color-text-secondary)',
   '--color-text-placeholder_subtle': 'var(--color-gray-300)',
   '--color-text-brand-primary': 'var(--color-accent)',
   '--color-text-brand-secondary': 'var(--color-accent)',

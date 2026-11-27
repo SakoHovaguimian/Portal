@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { connection } from 'next/server';
 
 import { ProjectBrand } from '@/components/ProjectBrand';
-import { Page, PageHeader, PageSection } from '@/components/ui';
+import { Button, Page, PageHeader, SectionStack, SplitSection, UiIcon } from '@/components/ui';
 import { environment } from '@/config/environment';
 import { CookieConsentControls } from '@/services/privacy/components/CookieConsentControls';
 import { strings } from '@/strings';
@@ -15,35 +15,42 @@ export default async function PrivacyPage() {
   await connection();
   const noticeUrl = environment.privacyNoticeUrl;
   return (
-    <main className="mx-auto grid w-full max-w-3xl gap-(--space-section) px-(--space-page) py-(--space-section)">
-      <Link
-        href="/"
-        className="w-fit rounded-sm font-semibold text-brand-secondary hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
-      >
-        <ProjectBrand />
-      </Link>
-      <Page>
-        <PageHeader
-          title={strings.privacy.noticeTitle}
-          description={noticeUrl ? undefined : strings.privacy.noticeMissingHint}
-        />
-        {noticeUrl && (
-          <a
-            href={noticeUrl}
-            rel="noreferrer"
-            className="w-fit rounded-sm font-semibold text-brand-secondary underline underline-offset-4 hover:text-brand-secondary_hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
+    <>
+      <header className="border-b-control border-secondary bg-secondary_subtle">
+        <div className="mx-auto flex min-h-18 w-full max-w-6xl items-center px-(--space-page)">
+          <Link
+            href="/"
+            className="inline-flex min-h-11 items-center rounded-control font-display text-xl font-semibold tracking-tight text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
           >
-            {strings.privacy.noticeAction}
-          </a>
-        )}
-        <PageSection id="browser-storage" title={strings.privacy.storageTitle}>
-          <p className="text-sm text-secondary">{strings.privacy.storageDescription}</p>
-        </PageSection>
-        <PageSection id="analytics-preferences" title={strings.privacy.title}>
-          <CookieConsentControls noticePage />
-        </PageSection>
-      </Page>
-    </main>
+            <ProjectBrand showMark />
+          </Link>
+        </div>
+      </header>
+      <main className="mx-auto w-full max-w-6xl px-(--space-page) py-10 sm:py-16">
+        <Page>
+          <PageHeader
+            title={strings.privacy.noticeTitle}
+            description={noticeUrl ? undefined : strings.privacy.noticeMissingHint}
+            action={noticeUrl && (
+              <Button asChild variant="secondary">
+                <a href={noticeUrl} rel="noreferrer">
+                  {strings.privacy.noticeAction}
+                  <UiIcon name="arrowRight" className="size-4" />
+                </a>
+              </Button>
+            )}
+          />
+          <SectionStack className="border-t-control border-secondary pt-(--space-section)">
+            <SplitSection id="browser-storage" title={strings.privacy.storageTitle} bare>
+              <p className="m-0 max-w-[68ch] text-sm text-secondary">{strings.privacy.storageDescription}</p>
+            </SplitSection>
+            <SplitSection id="analytics-preferences" title={strings.privacy.title} bare>
+              <CookieConsentControls noticePage />
+            </SplitSection>
+          </SectionStack>
+        </Page>
+      </main>
+    </>
   );
 
 }

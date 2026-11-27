@@ -70,9 +70,9 @@ function BlogEngagementContent({
   function renderSignIn() {
 
     return (
-      <div className="grid gap-2">
+      <div className="grid gap-3">
         <p className="m-0 text-sm text-secondary">{copy.signInHint}</p>
-        <Button asChild variant="secondary" className="justify-self-start">
+        <Button asChild variant="secondary" className="justify-self-start whitespace-normal text-start">
           <Link
             href={{
               pathname: '/login',
@@ -183,7 +183,7 @@ function BlogEngagementContent({
       <section
         aria-label={copy.actionsLabel}
         aria-busy={actions.loading || actions.pending}
-        className="mx-auto mb-8 grid max-w-3xl gap-3 rounded-xl border-control border-secondary bg-primary p-4"
+        className="grid min-w-0 gap-4"
       >
         {renderEngagementState()}
         {renderFailure()}

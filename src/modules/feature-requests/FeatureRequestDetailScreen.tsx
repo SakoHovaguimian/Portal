@@ -3,9 +3,10 @@
 import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { Button, Card, Field, Input, QueryBoundary } from '@/components/ui';
+import { Button, Card, DescriptionList, Field, FormActions, InlineLoading, Page, PageHeader, QueryBoundary, TextArea, UiIcon } from '@/components/ui';
 import { FeatureRequestMutationInputSchema } from '@/models/featureRequest';
 import { usePresentationService } from '@/presentation/PresentationProvider';
+import { useGuardedBack } from '@/providers/useGuardedBack';
 import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
 import { strings } from '@/strings';
 
@@ -17,24 +18,32 @@ import {
 import type { FeatureRequestDetailScreenProps } from './models/featureRequestDetailScreenProps';
 import type { FeatureRequestFormProps } from './models/featureRequestFormProps';
 
+const copy = strings.ui.featureRequestDetailScreen;
+
 export function FeatureRequestDetailScreen({
   featureRequestId,
 }: FeatureRequestDetailScreenProps) {
 
   const featureRequestQuery = useFeatureRequest(featureRequestId);
+  const back = useGuardedBack('/feature-requests');
 
   return (
-    <QueryBoundary
-      query={featureRequestQuery}
-      retainDataOnError
-      loadingFallback={
-        <Card role="status">
-          {strings.ui.featureRequestDetailScreen.loadingFeatureRequest}
-        </Card>
-      }
-    >
-      {(request) => <FeatureRequestForm key={request.id} request={request} />}
-    </QueryBoundary>
+    <Page>
+      <div>
+        <Button variant="ghost" onClick={() => void back()}>
+          <UiIcon name="chevronLeft" />
+          {copy.backToRequests}
+        </Button>
+      </div>
+      <PageHeader title={copy.featureRequestDetail} />
+      <QueryBoundary
+        query={featureRequestQuery}
+        retainDataOnError
+        loadingFallback={<Card><InlineLoading message={copy.loadingFeatureRequest} /></Card>}
+      >
+        {(request) => <FeatureRequestForm key={request.id} request={request} />}
+      </QueryBoundary>
+    </Page>
   );
 
 }
@@ -52,7 +61,7 @@ function FeatureRequestForm({ request }: FeatureRequestFormProps) {
   const dirtyRef = useRef(false);
   const busyRef = useRef(false);
   const confirmingRef = useRef(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   useUnsavedFormGuard(dirtyRef, busyRef);
   const message = draft ?? request.message;
   const busy =
@@ -100,7 +109,7 @@ function FeatureRequestForm({ request }: FeatureRequestFormProps) {
         busyRef.current = false;
         setDraft(null);
         void presentation.showToast({
-          title: strings.ui.featureRequestDetailScreen.requestUpdated,
+          title: copy.requestUpdated,
           intent: 'success',
         });
 
@@ -125,12 +134,10 @@ function FeatureRequestForm({ request }: FeatureRequestFormProps) {
     try {
 
       const confirmed = await presentation.showAlert({
-        title: strings.ui.featureRequestDetailScreen.deleteThisRequest,
-        description:
-          strings.ui.featureRequestDetailScreen
-            .thisRequestWillBeRemovedFromYourQueueHint,
-        confirmLabel: strings.ui.featureRequestDetailScreen.deleteRequest,
-        cancelLabel: strings.ui.featureRequestDetailScreen.keepRequest,
+        title: copy.deleteThisRequest,
+        description: copy.thisRequestWillBeRemovedFromYourQueueHint,
+        confirmLabel: copy.deleteRequest,
+        cancelLabel: copy.keepRequest,
         tone: 'danger',
       });
 
@@ -161,39 +168,58 @@ function FeatureRequestForm({ request }: FeatureRequestFormProps) {
     updateMutation.error?.message ??
     deleteMutation.error?.message;
 
-  function renderHeader() {
-
-    return (
-      <h1 className="m-0 text-2xl font-semibold tracking-tight text-primary">
-        {strings.ui.featureRequestDetailScreen.featureRequestDetail}
-      </h1>
-    );
-
-  }
-
   function renderForm() {
 
     return (
-      <form noValidate onSubmit={handleSubmit} className="grid gap-3">
-        <Field labelText={strings.ui.featureRequestDetailScreen.message}>
-          <Input
+      <form noValidate onSubmit={handleSubmit} className="grid min-w-0 content-start gap-5 p-(--space-panel)">
+        <Field labelText={copy.message}>
+          <TextArea
             ref={inputRef}
             value={message}
             maxLength={1000}
+            rows={4}
             disabled={busy}
             aria-invalid={Boolean(validation)}
             aria-describedby={error ? 'feature-detail-error' : undefined}
             onChange={(event) => handleMessageChange(event.target.value)}
           />
         </Field>
-        <div className="flex flex-wrap gap-3">
+        {error && (
+          <p
+            id="feature-detail-error"
+            role="alert"
+            className="m-0 text-sm text-error-primary"
+          >
+            {error}
+          </p>
+        )}
+        <FormActions variant="inline">
           <Button
             type="submit"
             disabled={busy || draft === null}
             loading={updateMutation.isPending}
           >
-            {strings.ui.featureRequestDetailScreen.saveChanges}
+            {copy.saveChanges}
           </Button>
+        </FormActions>
+      </form>
+    );
+
+  }
+
+  function renderRequestDetails() {
+
+    return (
+      <aside aria-labelledby="request-details-title" className="grid min-w-0 content-start gap-4 border-t-control border-secondary bg-secondary_subtle p-(--space-panel) xl:border-s-control xl:border-t-0">
+        <h2 id="request-details-title" className="m-0 text-base font-semibold text-primary">{copy.requestDetails}</h2>
+        <DescriptionList
+          layout="rows"
+          items={[
+            { label: copy.created, value: <time dateTime={request.createdAt} className="tabular-nums">{new Date(request.createdAt).toLocaleString()}</time> },
+            { label: copy.updated, value: <time dateTime={request.updatedAt} className="tabular-nums">{new Date(request.updatedAt).toLocaleString()}</time> },
+          ]}
+        />
+        <div className="border-t-control border-secondary pt-4">
           <Button
             type="button"
             variant="destructive"
@@ -201,19 +227,10 @@ function FeatureRequestForm({ request }: FeatureRequestFormProps) {
             loading={deleteMutation.isPending}
             onClick={() => void handleDeleteRequest()}
           >
-            {strings.ui.featureRequestDetailScreen.deleteRequest}
+            {copy.deleteRequest}
           </Button>
         </div>
-        {error && (
-          <p
-            id="feature-detail-error"
-            role="alert"
-            className="text-sm text-error-primary"
-          >
-            {error}
-          </p>
-        )}
-      </form>
+      </aside>
     );
 
   }
@@ -221,9 +238,9 @@ function FeatureRequestForm({ request }: FeatureRequestFormProps) {
   function renderContent() {
 
     return (
-      <Card className="grid gap-5">
-        {renderHeader()}
+      <Card className="grid max-w-6xl overflow-hidden p-0 shadow-none xl:grid-cols-[minmax(0,1fr)_minmax(18rem,0.5fr)]">
         {renderForm()}
+        {renderRequestDetails()}
       </Card>
     );
 

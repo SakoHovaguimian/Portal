@@ -310,32 +310,29 @@ export function BlogEditor({ initialArticle }: BlogEditorProps) {
   function renderHeader() {
 
     return (
-      <div className={adminStyles.intro} data-tone="lilac">
-        <PageHeader
-          title={article ? copy.editTitle : copy.newTitle}
-          description={copy.formDescription}
-          onNavigate={(href) => void navigate(href)}
-          breadcrumbs={[
-            { label: copy.adminTitle, href: '/admin/blog' },
-            { label: article ? copy.editTitle : copy.newTitle },
-          ]}
-          meta={
-            <Badge
-              intent={article?.status === 'published' ? 'success' : 'neutral'}
-              dot
-            >
-              {copy.statuses[article?.status || 'draft']}
-            </Badge>
-          }
-          action={
-            <Button disabled={busy} onClick={() => setPreviewOpen(true)}>
-              <UiIcon name="file" />
-              {copy.preview}
-            </Button>
-          }
-        />
-      </div>
-
+      <PageHeader
+        title={article ? copy.editTitle : copy.newTitle}
+        description={copy.formDescription}
+        onNavigate={(href) => void navigate(href)}
+        breadcrumbs={[
+          { label: copy.adminTitle, href: '/admin/blog' },
+          { label: article ? copy.editTitle : copy.newTitle },
+        ]}
+        meta={
+          <Badge
+            intent={article?.status === 'published' ? 'success' : 'neutral'}
+            dot
+          >
+            {copy.statuses[article?.status || 'draft']}
+          </Badge>
+        }
+        action={
+          <Button variant="secondary" disabled={busy} onClick={() => setPreviewOpen(true)}>
+            <UiIcon name="file" />
+            {copy.preview}
+          </Button>
+        }
+      />
     );
 
   }
@@ -406,6 +403,7 @@ export function BlogEditor({ initialArticle }: BlogEditorProps) {
 
     return (
       <SplitSection
+        bare
         id="blog-story"
         title={builderCopy.title}
         description={builderCopy.description}
@@ -496,21 +494,16 @@ export function BlogEditor({ initialArticle }: BlogEditorProps) {
         live
       >
         <Button
-          variant="secondary"
+          variant="ghost"
           disabled={busy}
           onClick={() => void navigate('/admin/blog')}
         >
           {copy.backToArticles}
         </Button>
-        <BookmarkButton
-          saved={Boolean(notice) && !dirty}
-          type="submit"
-          variant="secondary"
-          loading={mutations.save.isPending}
-          disabled={busy}
-        >
-          {article?.status === 'published' ? copy.saveChanges : copy.saveDraft}
-        </BookmarkButton>
+        <Button variant="ghost" disabled={busy} onClick={() => setPreviewOpen(true)}>
+          <UiIcon name="file" />
+          {copy.preview}
+        </Button>
         <Button
           variant={
             article?.status === 'published' ? 'destructive' : 'secondary'
@@ -521,10 +514,15 @@ export function BlogEditor({ initialArticle }: BlogEditorProps) {
         >
           {article?.status === 'published' ? copy.unpublish : copy.publish}
         </Button>
-        <Button disabled={busy} onClick={() => setPreviewOpen(true)}>
-          <UiIcon name="file" />
-          {copy.preview}
-        </Button>
+        <BookmarkButton
+          saved={Boolean(notice) && !dirty}
+          savedLabel={article?.status === 'published' ? copy.saveChanges : copy.saveDraft}
+          type="submit"
+          loading={mutations.save.isPending}
+          disabled={busy}
+        >
+          {article?.status === 'published' ? copy.saveChanges : copy.saveDraft}
+        </BookmarkButton>
       </FormActions>
     );
 
@@ -534,7 +532,7 @@ export function BlogEditor({ initialArticle }: BlogEditorProps) {
 
     if (!article) { return null; }
     return (
-      <div className="flex flex-wrap items-center justify-between gap-4 border-t border-secondary pt-5">
+      <div className={adminStyles.editorManagement}>
         <Button
           variant="destructive"
           loading={mutations.remove.isPending}
@@ -564,7 +562,7 @@ export function BlogEditor({ initialArticle }: BlogEditorProps) {
     return (
       <form
         noValidate
-        className="grid min-w-0 gap-8"
+        className={adminStyles.editorForm}
         onSubmit={(event) => {
 
           event.preventDefault();
@@ -589,6 +587,7 @@ export function BlogEditor({ initialArticle }: BlogEditorProps) {
     return (
       <Modal
         open={previewOpen}
+        size="wide"
         title={copy.previewTitle}
         description={copy.previewDescription}
         onDismiss={() => setPreviewOpen(false)}

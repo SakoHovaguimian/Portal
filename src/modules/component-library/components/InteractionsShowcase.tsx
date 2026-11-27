@@ -108,7 +108,7 @@ export function InteractionsShowcase() {
                   id: 'open',
                   icon: 'layers',
                   label: copy.menuOpen,
-                  href: '/dev-settings/components',
+                  href: '/dev-settings#component-library',
                 },
                 {
                   id: 'remove',
@@ -206,9 +206,9 @@ export function InteractionsShowcase() {
 
       return (
         <Card key={title} className="grid content-start gap-3">
-          <h3 className="m-0 text-base font-semibold text-primary">
+          <h5 className="m-0 text-base font-semibold text-primary">
             {title}
-          </h3>
+          </h5>
           <p className="m-0 text-sm text-secondary">{copy.carouselBody}</p>
         </Card>
       );

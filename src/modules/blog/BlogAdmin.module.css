@@ -1,40 +1,133 @@
-.intro {
-  padding-block: calc(var(--spacing) * 2);
-}
 .editor {
-  max-width: 78rem;
+  max-inline-size: 78rem;
 }
+
 .directoryPanel {
-  min-width: 0;
+  min-inline-size: 0;
 }
+
 .articleIdentity {
   display: flex;
   align-items: center;
-  gap: calc(var(--spacing) * 4);
+  gap: calc(var(--spacing) * 3);
+  min-inline-size: 0;
 }
+
 .articleThumbnail {
-  width: 3.5rem;
-  flex-shrink: 0;
+  display: flex;
+  flex: none;
 }
+
+.articleThumbnail > span {
+  inline-size: 3rem;
+  block-size: 3rem;
+}
+
+.articleTitle {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+  overflow-wrap: anywhere;
+  text-underline-offset: 0.2em;
+}
+
+.articleTitle:hover {
+  text-decoration: underline;
+}
+
+.articleTitle:focus-visible {
+  outline: 2px solid var(--color-border-brand);
+  outline-offset: 3px;
+}
+
+.editorForm,
+.articleDetails,
+.articleFieldGroups,
+.articleWritingFields,
+.articleMetadataFields {
+  display: grid;
+  min-inline-size: 0;
+}
+
+.editorForm,
+.articleDetails {
+  gap: var(--space-section);
+}
+
+.articleDetails {
+  container-type: inline-size;
+  gap: calc(var(--spacing) * 5);
+  border-block-start: var(--border-width-control) solid
+    var(--color-border-secondary);
+  padding-block-start: var(--space-section);
+}
+
+.articleFieldGroups {
+  gap: var(--space-section);
+}
+
+.articleWritingFields,
+.articleMetadataFields {
+  align-content: start;
+  gap: var(--space-field);
+}
+
+.introductionField {
+  min-block-size: 8rem;
+}
+
+.editorManagement {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: calc(var(--spacing) * 3);
+  border-block-start: var(--border-width-control) solid
+    var(--color-border-secondary);
+  padding-block-start: calc(var(--spacing) * 5);
+}
+
 .editorCover {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: calc(var(--spacing) * 4);
   padding: calc(var(--spacing) * 4);
   border: var(--border-width-control) solid var(--color-border-secondary);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-card);
 }
+
 .editorCover img {
-  width: 7.5rem;
-  height: 6rem;
+  inline-size: 6rem;
+  block-size: 4.5rem;
   object-fit: contain;
 }
+
 .editorCover p {
   display: grid;
-  gap: calc(var(--spacing) * 1);
+  min-inline-size: 0;
+  gap: var(--spacing);
+  margin: 0;
   color: var(--color-text-secondary);
+  overflow-wrap: anywhere;
 }
+
 .editorCover span {
   font-size: var(--text-xs);
   color: var(--color-text-tertiary);
+}
+
+@container (min-width: 47rem) {
+  .articleFieldGroups {
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .articleMetadataFields {
+    border-inline-start: var(--border-width-control) solid
+      var(--color-border-secondary);
+    padding-inline-start: var(--space-section);
+  }
+
+  .introductionField {
+    min-block-size: 11rem;
+  }
 }

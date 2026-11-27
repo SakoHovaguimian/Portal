@@ -123,7 +123,7 @@ export function OverlayMotionControls() {
   function renderControls() {
 
     return (
-      <div className="grid min-w-0 items-start gap-x-8 gap-y-6 md:grid-cols-2">
+      <div className="grid min-w-0 items-start gap-x-8 gap-y-6 @lg:grid-cols-2">
         <Slider
           label={copy.durationLabel}
           description={copy.durationHint}
@@ -242,7 +242,7 @@ export function OverlayMotionControls() {
   }
 
   return (
-    <div className="grid min-w-0 gap-6" aria-busy={pending || undefined}>
+    <div className="@container grid min-w-0 gap-6" aria-busy={pending || undefined}>
       {renderPreferenceSummary()}
       {renderControls()}
       {renderFeedback()}

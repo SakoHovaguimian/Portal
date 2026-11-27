@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
 
-import { Button, Field, Input, Select } from '@/components/ui';
+import { Button, Field, Input, Select, UiIcon } from '@/components/ui';
 import { portalAccountToolsStrings as copy } from '@/strings';
 
 import type { DeliveryFilterValues } from '../models/deliveryFilterValues';
@@ -104,7 +104,7 @@ export function DeliveryFilters({
       ),
     );
     return (
-      <div className="grid min-w-0 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid min-w-0 gap-3 @lg:grid-cols-2 @4xl:grid-cols-4">
         <Field labelText={copy.deliveries.statusLabel}>
           <Select
             name="status"
@@ -178,8 +178,9 @@ export function DeliveryFilters({
 
     const hasActiveFilters = Object.values(input).some(Boolean);
     return (
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-wrap gap-2">
         <Button type="submit" variant="secondary">
+          <UiIcon name="search" className="size-4" />
           {copy.deliveries.applyAction}
         </Button>
         {hasActiveFilters && (
@@ -210,7 +211,7 @@ export function DeliveryFilters({
   function renderContent() {
 
     return (
-      <form noValidate onSubmit={submit} className="grid gap-4">
+      <form noValidate onSubmit={submit} className="@container grid min-w-0 gap-4">
         {renderFields()}
         {renderValidationMessage()}
         {renderActions()}

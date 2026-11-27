@@ -6,9 +6,10 @@ import type { ComponentCategory } from './componentCategory';
 
 export interface ComponentSpecimen {
   id: string;
+  anchor?: string;
   title: string;
   description: string;
-  category: Exclude<ComponentCategory, 'all'>;
+  category: ComponentCategory;
   icon: IconName;
   keywords: string;
   Preview: ComponentType;

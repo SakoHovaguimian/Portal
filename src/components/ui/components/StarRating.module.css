@@ -7,6 +7,8 @@
 
 .choices {
   display: inline-flex;
+  max-inline-size: 100%;
+  flex-wrap: wrap;
   gap: calc(var(--spacing) * 1);
 }
 

@@ -130,11 +130,14 @@ export function ChatComposer({ draft, reply, onDraft, onSend }: ChatComposerProp
   function renderActions() {
 
     return (
-      <div className="mt-3 flex items-center justify-between gap-3">
-        <Button variant="ghost" aria-expanded={showFiles} onClick={() => setShowFiles(!showFiles)}><UiIcon name="upload" className="size-4"/>{copy.attach}</Button>
+      <div className="mt-2 flex flex-wrap items-start justify-between gap-1.5">
+        <Button variant="ghost" className="max-sm:min-h-11 max-sm:px-2 max-sm:py-1.5 max-[23rem]:min-w-11" aria-expanded={showFiles} title={copy.attach} onClick={() => setShowFiles(!showFiles)}>
+          <UiIcon name="upload" className="size-4" />
+          <span className="max-[23rem]:sr-only">{copy.attach}</span>
+        </Button>
         <div className="grid justify-items-end gap-1.5">
-          <Button type="submit" disabled={!draft.body.trim() && draft.files.length === 0}>{copy.send}<UiIcon name="arrowRight" className="size-4"/></Button>
-          <span className="flex items-center gap-1 text-[10px] text-tertiary" id={shortcutHintId}>
+          <Button type="submit" className="max-sm:min-h-11 max-sm:px-2.5 max-sm:py-1.5" disabled={!draft.body.trim() && draft.files.length === 0}>{copy.send}<UiIcon name="arrowRight" className="hidden size-4 sm:block"/></Button>
+          <span className="flex items-center gap-1 text-[10px] text-tertiary max-sm:sr-only" id={shortcutHintId}>
             <span className="sr-only">{copy.sendShortcutLabel}</span>
             <UiIcon name="shift" className="size-3" aria-hidden="true"/>
             <span aria-hidden="true">{copy.sendShortcutHint}</span>
@@ -145,7 +148,7 @@ export function ChatComposer({ draft, reply, onDraft, onSend }: ChatComposerProp
 
   }
 
-  return (<form noValidate onSubmit={submit} className="shrink-0 border-t-control border-secondary bg-primary p-4 sm:px-6">
+  return (<form noValidate onSubmit={submit} className="shrink-0 border-t-control border-secondary bg-primary p-3 sm:px-6 sm:py-4">
 
     {renderReply()}
 

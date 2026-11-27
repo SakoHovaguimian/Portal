@@ -79,6 +79,7 @@ export function NotificationSettingsScreen() {
 
     return (
       <SplitSection
+        bare
         id="notification-preferences"
         title={copy.deliveryTitle}
         description={copy.deliveryDescription}
@@ -99,6 +100,7 @@ export function NotificationSettingsScreen() {
 
     return (
       <SplitSection
+        bare
         id="notification-timezone-settings"
         title={copy.timezoneTitle}
         description={copy.timezoneDescription}
@@ -121,6 +123,7 @@ export function NotificationSettingsScreen() {
 
     return (
       <SplitSection
+        bare
         id="notification-browser"
         title={copy.browserTitle}
         description={copy.browserDescription}
@@ -128,7 +131,7 @@ export function NotificationSettingsScreen() {
         <NavigationLink
           href="/settings/appearance"
           beforeNavigate={confirmNavigation}
-          className={buttonClassName('secondary')}
+          className={buttonClassName('secondary', 'justify-self-start')}
         >
           {copy.browserAction}
         </NavigationLink>

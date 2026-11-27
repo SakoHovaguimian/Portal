@@ -1,0 +1,24 @@
+@media (max-width: 39.999rem) {
+  .threadOpen :global(.ui-page-header) > div {
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+  }
+
+  .threadOpen :global(.ui-page-header) > div > :first-child {
+    flex-basis: 0;
+  }
+
+  .threadOpen :global(.ui-page-header) p {
+    display: none;
+  }
+
+  .threadOpen :global(.ui-page-title) {
+    font-size: var(--text-xl);
+    line-height: var(--text-xl--line-height);
+  }
+
+  .threadOpen :global(.ui-page-actions) {
+    inline-size: auto;
+  }
+}

@@ -5,7 +5,7 @@ import type { IconName } from '@/components/ui';
 export interface ShowcaseSectionProps {
   id: string;
   title: string;
-  description: string;
+  description?: string;
   icon: IconName;
   children: ReactNode;
 }

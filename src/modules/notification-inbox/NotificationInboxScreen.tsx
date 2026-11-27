@@ -6,7 +6,8 @@ import { useEffect } from 'react';
 import { MutationError } from '@/components/MutationError';
 import {
   Button,
-  Card,
+  DataPanel,
+  DataPanelState,
   DirectoryPagination,
   EmptyState,
   InlineLoading,
@@ -24,6 +25,7 @@ import { NotificationControls } from '@/services/notifications/components/Notifi
 import { portalNotificationInboxStrings as copy } from '@/strings';
 
 // Inbox Components
+import styles from './NotificationInbox.module.css';
 import { NotificationInboxSummary } from './components/NotificationInboxSummary';
 import { NotificationInboxToolbar } from './components/NotificationInboxToolbar';
 import { NotificationRecord } from './components/NotificationRecord';
@@ -118,7 +120,7 @@ export function NotificationInboxScreen() {
 
     const notificationRows = items.map(renderNotificationRow);
     return (
-      <ul className="m-0 grid min-w-0 list-none gap-4 p-0">
+      <ul role="list" className={styles.records}>
         {notificationRows}
       </ul>
     );
@@ -128,20 +130,18 @@ export function NotificationInboxScreen() {
   function renderEmptyState() {
 
     return (
-      <Card>
-        <EmptyState
-          variant="plain"
-          title={filtered ? copy.noResultsTitle : copy.emptyTitle}
-          description={filtered ? copy.noResultsHint : copy.emptyHint}
-          action={
-            filtered && (
-              <Button onClick={directory.clearFilters}>
-                {copy.clearFiltersAction}
-              </Button>
-            )
-          }
-        />
-      </Card>
+      <EmptyState
+        variant="plain"
+        title={filtered ? copy.noResultsTitle : copy.emptyTitle}
+        description={filtered ? copy.noResultsHint : copy.emptyHint}
+        action={
+          filtered && (
+            <Button onClick={directory.clearFilters}>
+              {copy.clearFiltersAction}
+            </Button>
+          )
+        }
+      />
     );
 
   }
@@ -152,23 +152,15 @@ export function NotificationInboxScreen() {
       <section
         id="notification-results"
         aria-label={copy.resultsLabel}
-        aria-busy={query.isFetching || actions.busy}
-        className="relative grid min-w-0 gap-4"
+        className="min-w-0"
       >
-        <span
-          aria-hidden="true"
-          data-active={query.isFetching || actions.busy || undefined}
-          className="ui-progress-line"
-        />
-        <span role="status" aria-live="polite" className="sr-only">
-          {query.isFetching || actions.busy ? copy.loadingTitle : ''}
-        </span>
         <QueryBoundary
           query={query}
+          inset
           loadingFallback={
-            <Card className="grid min-h-64 place-items-center">
+            <DataPanelState>
               <InlineLoading message={copy.loadingTitle} />
-            </Card>
+            </DataPanelState>
           }
         >
           {(result) =>
@@ -182,37 +174,55 @@ export function NotificationInboxScreen() {
 
   }
 
+  function renderToolbar() {
+
+    return (
+      <NotificationInboxToolbar
+        query={directory.query}
+        counts={counts.isError ? undefined : counts.data}
+        filtered={filtered}
+        busy={actions.busy}
+        hasNotifications={!query.isFetching && Boolean(query.data?.data.length)}
+        update={directory.update}
+        onReadAll={actions.readAll}
+        onArchiveAll={actions.archiveAll}
+      />
+    );
+
+  }
+
+  function renderPagination() {
+
+    if (!query.data || (!query.data.data.length && !query.data.page.offset)) { return null; }
+    return (
+      <DirectoryPagination
+        page={query.data.page}
+        count={query.data.data.length}
+        busy={query.isFetching || actions.busy}
+        label={copy.paginationLabel}
+        range={copy.rangeLabel}
+        onNavigate={directory.setOffset}
+      />
+    );
+
+  }
+
   function renderInboxContent() {
 
     return (
-      <div className="grid min-w-0 gap-6">
-        <NotificationInboxToolbar
-          query={directory.query}
-          counts={counts.isError ? undefined : counts.data}
-          filtered={filtered}
-          busy={actions.busy}
-          hasNotifications={
-            !query.isFetching && Boolean(query.data?.data.length)
-          }
-          update={directory.update}
-          onReadAll={actions.readAll}
-          onArchiveAll={actions.archiveAll}
-        />
-        <MutationError error={actions.error} />
-        {renderResults()}
-        {query.data && (
-          <div className="min-w-0 border-t border-secondary pt-4">
-            <DirectoryPagination
-              page={query.data.page}
-              count={query.data.data.length}
-              busy={query.isFetching || actions.busy}
-              label={copy.paginationLabel}
-              range={copy.rangeLabel}
-              onNavigate={directory.setOffset}
-            />
+      <DataPanel
+        busy={query.isFetching || actions.busy}
+        busyLabel={copy.loadingTitle}
+        toolbar={renderToolbar()}
+        footer={renderPagination()}
+      >
+        {actions.error && (
+          <div className="px-4 pt-4 sm:px-6">
+            <MutationError error={actions.error} />
           </div>
         )}
-      </div>
+        {renderResults()}
+      </DataPanel>
     );
 
   }
@@ -220,8 +230,10 @@ export function NotificationInboxScreen() {
   return (
     <Page>
       {renderHeader()}
-      <NotificationControls />
       {renderInboxContent()}
+      <div className={styles.browserControls}>
+        <NotificationControls />
+      </div>
     </Page>
   );
 

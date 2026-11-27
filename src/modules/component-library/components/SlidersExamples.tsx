@@ -22,9 +22,9 @@ export function SlidersExamples() {
   const [selection, setSelection] = useState(15);
   return (
     <div className="grid min-w-0 gap-6">
-      <h3 className="m-0 text-base font-semibold text-primary">
+      <h5 className="m-0 text-base font-semibold text-primary">
         {copy.slidersTitle}
-      </h3>
+      </h5>
       <div className="grid min-w-0 items-start gap-x-10 gap-y-8 lg:grid-cols-2">
         <Slider
           label={copy.brightness}

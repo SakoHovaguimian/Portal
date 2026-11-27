@@ -2,12 +2,14 @@ import {
   Accordion,
   EmptyState,
   Message,
-  PageSection,
   QueryBoundary,
+  SectionStack,
+  SplitSection,
 } from '@/components/ui';
 import { portalAccountToolsStrings as copy } from '@/strings';
 
 import { AccountToolsLoading } from './AccountToolsLoading';
+import styles from '../Help.module.css';
 import { useFrequentlyAskedQuestions } from '../hooks';
 
 export function FrequentlyAskedQuestionsPanel() {
@@ -29,13 +31,18 @@ export function FrequentlyAskedQuestionsPanel() {
       ),
     }));
     return (
-      <PageSection
+      <SplitSection
+        bare
         key={`${section.title}-${index}`}
         id={`faq-${index}`}
         title={section.title}
       >
-        <Accordion items={faqItems} />
-      </PageSection>
+        <Accordion
+          items={faqItems}
+          className={styles.questions}
+          itemClassName="rounded-none border-0 border-b-control border-secondary bg-transparent"
+        />
+      </SplitSection>
     );
 
   }
@@ -46,6 +53,7 @@ export function FrequentlyAskedQuestionsPanel() {
 
       return (
         <EmptyState
+          variant="plain"
           title={copy.help.emptyTitle}
           description={copy.help.emptyHint}
         />
@@ -53,7 +61,7 @@ export function FrequentlyAskedQuestionsPanel() {
 
     }
     const pageSections = result.sections.map(renderSection);
-    return pageSections;
+    return <SectionStack>{pageSections}</SectionStack>;
 
   }
 

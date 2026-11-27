@@ -1,0 +1,54 @@
+.record {
+  padding: calc(var(--spacing) * 5) calc(var(--spacing) * 4);
+}
+
+.recordIcon {
+  display: grid;
+  place-items: center;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  align-self: start;
+  border-radius: var(--radius-control);
+  background: var(--color-bg-secondary_subtle);
+  color: var(--color-text-secondary);
+}
+
+.recordTitle {
+  margin: 0;
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.35;
+}
+
+.recordTitle a {
+  text-underline-offset: 0.2em;
+}
+
+.recordTitle a:hover {
+  color: var(--color-text-brand-secondary);
+  text-decoration: underline;
+}
+
+.recordTitle a:focus-visible {
+  outline: 2px solid var(--color-border-brand);
+  outline-offset: 3px;
+}
+
+.recordDescription {
+  max-inline-size: 68ch;
+  margin: 0;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: calc(var(--spacing) * 3);
+}
+
+@media (min-width: 40rem) {
+  .record {
+    padding-inline: calc(var(--spacing) * 6);
+  }
+}

@@ -12,6 +12,7 @@ import {
   Page,
   PageHeader,
   QueryBoundary,
+  UiIcon,
 } from '@/components/ui';
 import { useDirectoryState } from '@/queries/useDirectoryState';
 import { portalAccountToolsStrings as copy } from '@/strings';
@@ -64,14 +65,17 @@ export function DeliveryHistoryScreen() {
   function renderHeader() {
 
     return (
-      <>
-        <PageHeader
-          title={copy.deliveries.title}
-          description={copy.deliveries.description}
-          eyebrow={copy.common.operationsEyebrow}
-        />
-        <p className="m-0 text-sm text-secondary">{copy.deliveries.accessHint}</p>
-      </>
+      <PageHeader
+        title={copy.deliveries.title}
+        description={copy.deliveries.description}
+        breadcrumbs={[
+          { label: copy.account.title, href: '/settings/account' },
+          { label: copy.deliveries.title },
+        ]}
+        meta={
+          <p className="m-0 max-w-prose">{copy.deliveries.accessHint}</p>
+        }
+      />
     );
 
   }
@@ -117,6 +121,7 @@ export function DeliveryHistoryScreen() {
         }
       >
         {copy.deliveries.inspectAction}
+        <UiIcon name="chevronRight" className="size-4" />
       </Button>
     );
 
@@ -183,12 +188,18 @@ export function DeliveryHistoryScreen() {
           {
             key: 'attempts',
             header: copy.deliveries.attemptsColumn,
-            render: (delivery) => delivery.attemptCount,
+            render: (delivery) => (
+              <span className="tabular-nums">{delivery.attemptCount}</span>
+            ),
           },
           {
             key: 'created',
             header: copy.common.createdColumn,
-            render: (delivery) => formatAccountToolsDate(delivery.createdAt),
+            render: (delivery) => delivery.createdAt ? (
+              <time className="tabular-nums" dateTime={delivery.createdAt}>
+                {formatAccountToolsDate(delivery.createdAt)}
+              </time>
+            ) : copy.common.notRecorded,
           },
           {
             key: 'actions',

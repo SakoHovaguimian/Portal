@@ -23,8 +23,8 @@ export function PageHeader({
       {breadcrumbs && breadcrumbs.length > 1 && (
         <Breadcrumbs items={breadcrumbs} onNavigate={onNavigate} />
       )}
-      <div className="flex min-w-0 flex-wrap items-start justify-between gap-x-8 gap-y-4">
-        <div className="flex min-w-0 flex-1 basis-88 items-start gap-4">
+      <div className="flex min-w-0 flex-wrap items-end justify-between gap-x-8 gap-y-4">
+        <div className="flex min-w-0 flex-1 basis-80 items-start gap-4">
           {icon}
           <div className="grid min-w-0 gap-2">
             {eyebrow && (
@@ -35,12 +35,12 @@ export function PageHeader({
             <Heading
               ref={headingRef}
               tabIndex={headingRef ? -1 : undefined}
-              className="m-0 text-2xl font-semibold tracking-tight text-primary wrap-anywhere focus:outline-none"
+              className="ui-page-title m-0 font-display text-3xl font-semibold tracking-tight text-primary wrap-anywhere focus:outline-none"
             >
               {title}
             </Heading>
             {description && (
-              <p className="m-0 max-w-3xl text-sm text-secondary">
+              <p className="m-0 max-w-[68ch] text-sm leading-relaxed text-secondary">
                 {description}
               </p>
             )}

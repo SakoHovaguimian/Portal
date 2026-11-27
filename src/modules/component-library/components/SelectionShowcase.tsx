@@ -95,9 +95,9 @@ export function SelectionShowcase() {
 
     return (
       <div className="grid gap-3">
-        <h4 className="m-0 text-sm font-medium text-primary">
+        <h5 className="m-0 text-sm font-medium text-primary">
           {copy.segmented}
-        </h4>
+        </h5>
         <SegmentedTabs
           label={copy.segmentedLabel}
           value={status}

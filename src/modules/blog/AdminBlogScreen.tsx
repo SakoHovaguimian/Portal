@@ -46,21 +46,26 @@ export function AdminBlogScreen({ query }: AdminBlogScreenProps) {
   function renderHeader() {
 
     return (
-      <div className={styles.intro} data-tone="lilac">
-        <PageHeader
-          title={copy.adminTitle}
-          description={copy.adminDescription}
-          action={
-            <Button asChild>
-              <Link href="/admin/blog/new">
-                <UiIcon name="plus" />
-                {copy.newArticle}
-              </Link>
-            </Button>
-          }
-        />
-      </div>
-
+      <PageHeader
+        title={copy.adminTitle}
+        description={copy.adminDescription}
+        descriptionAction={
+          <Button asChild variant="secondary">
+            <Link href="/blog">
+              {copy.publicMetadataTitle}
+              <UiIcon name="arrowRight" />
+            </Link>
+          </Button>
+        }
+        action={
+          <Button asChild>
+            <Link href="/admin/blog/new">
+              <UiIcon name="plus" />
+              {copy.newArticle}
+            </Link>
+          </Button>
+        }
+      />
     );
 
   }
@@ -156,10 +161,7 @@ export function AdminBlogScreen({ query }: AdminBlogScreenProps) {
       <div className={styles.articleIdentity}>
         {renderThumbnail(article)}
         <div className="grid gap-1">
-          <Link
-            className="font-medium text-primary hover:text-brand-secondary"
-            href={`/admin/blog/${article.id}`}
-          >
+          <Link className={styles.articleTitle} href={`/admin/blog/${article.id}`}>
             {article.title}
           </Link>
           <span className="text-xs text-tertiary">{article.author}</span>
@@ -229,7 +231,7 @@ export function AdminBlogScreen({ query }: AdminBlogScreenProps) {
             key: 'updatedAt',
             header: copy.updatedColumn,
             render: (article) => (
-              <time dateTime={article.updatedAt}>
+              <time className="tabular-nums" dateTime={article.updatedAt}>
                 {formatBlogDate(article.updatedAt)}
               </time>
             ),

@@ -1,7 +1,7 @@
 import { MarkdownContent } from '@/components/ui';
 import { portalPublishingStrings } from '@/strings';
 
-import styles from '../Blog.module.css';
+import styles from '../BlogContent.module.css';
 import { BlogContentImage } from './BlogContentImage';
 import { BlogEmbeddedMedia } from './BlogEmbeddedMedia';
 import { canRenderBlogContent } from '../content/canRenderBlogContent';

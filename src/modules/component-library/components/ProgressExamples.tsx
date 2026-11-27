@@ -131,9 +131,9 @@ export function ProgressExamples() {
 
     return (
       <div className="grid min-w-0 gap-5 border-t border-secondary pt-8">
-        <h3 className="m-0 text-base font-semibold text-primary">
+        <h5 className="m-0 text-base font-semibold text-primary">
           {copy.loadingTitle}
-        </h3>
+        </h5>
         <div className="flex flex-wrap items-center gap-6">
           <ActivityIndicator label={copy.activity} size="sm" />
           <ActivityIndicator label={copy.activity} showLabel />
@@ -159,9 +159,9 @@ export function ProgressExamples() {
 
   return (
     <div className="grid min-w-0 gap-6 border-t border-secondary pt-8">
-      <h3 className="m-0 text-base font-semibold text-primary">
+      <h5 className="m-0 text-base font-semibold text-primary">
         {copy.progressTitle}
-      </h3>
+      </h5>
       {renderProgressIndicators()}
       {renderLoadingIndicators()}
     </div>

@@ -13,7 +13,7 @@ import {
 import { usePresentationService } from '@/presentation/PresentationProvider';
 import { portalPublishingStrings } from '@/strings';
 
-import styles from '../../Blog.module.css';
+import styles from './BlogBuilder.module.css';
 import { BlogBlockFields } from './BlogBlockFields';
 import { BlogBlockPreview } from './BlogBlockPreview';
 import { createBlogContent } from '../../content/createBlogContent';
@@ -200,7 +200,6 @@ export function BlogContentBuilder({
 
       return (
         <div className={styles.builderEmpty}>
-          <UiIcon name="layers" className="size-8 text-brand-secondary" />
           <h3>{copy.emptyTitle}</h3>
           <p>{copy.emptyDescription}</p>
         </div>
@@ -285,13 +284,14 @@ export function BlogContentBuilder({
       {renderBlockList()}
       <Button
         variant="secondary"
+        className="justify-self-start"
         disabled={disabled || content.length >= 100}
         aria-expanded={paletteOpen}
         aria-controls="blog-block-palette"
         onClick={() => setPaletteOpen(!paletteOpen)}
       >
         <UiIcon name="plus" />
-        {copy.addBlock}
+        {paletteOpen ? copy.closePalette : copy.addBlock}
       </Button>
       {content.length >= 100 && (
         <p className="m-0 text-sm text-tertiary">{copy.tooManyBlocksHint}</p>

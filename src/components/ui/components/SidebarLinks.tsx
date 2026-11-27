@@ -16,7 +16,7 @@ export function SidebarLinks({ items, onNavigate }: SidebarLinksProps) {
         aria-current={item.active ? 'page' : undefined}
         navigate={onNavigate}
         className={cn(
-          'ui-sidebar-link relative flex min-h-(--control-height-lg) w-full cursor-pointer items-center justify-start rounded-control px-4 py-3 text-left text-sm hover:bg-brand-primary focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand',
+          'ui-sidebar-link relative flex min-h-11 w-full cursor-pointer items-center justify-start rounded-control px-3 py-2 text-left text-sm hover:bg-brand-primary focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand',
           item.active
             ? 'font-semibold text-brand-secondary'
             : 'font-medium text-secondary',

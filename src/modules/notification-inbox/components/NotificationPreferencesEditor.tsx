@@ -142,7 +142,7 @@ export function NotificationPreferencesEditor({
       renderChannel,
     );
     return (
-      <div className="flex flex-wrap gap-x-6 gap-y-2">
+      <div className="grid min-w-0 grid-cols-[repeat(auto-fit,minmax(min(7rem,100%),1fr))] gap-3">
         {channelSwitches}
       </div>
     );
@@ -154,7 +154,7 @@ export function NotificationPreferencesEditor({
     return (
       <fieldset
         key={category}
-        className="grid min-w-0 gap-3 border-0 px-0 py-5 first:pt-0"
+        className="grid min-w-0 gap-3 border-0 px-0 py-4 first:pt-0"
       >
         <legend className="float-left w-full text-base font-semibold text-primary">
           {copy.categories[category]}
@@ -174,7 +174,7 @@ export function NotificationPreferencesEditor({
       renderCategoryFieldset,
     );
     return (
-      <div className="grid divide-y divide-secondary">
+      <div className="grid divide-y-control divide-secondary">
         {preferenceSections}
       </div>
     );
@@ -192,7 +192,7 @@ export function NotificationPreferencesEditor({
         live
       >
         <Button
-          variant="destructive"
+          variant="ghost"
           onClick={handleDiscard}
           disabled={!isDirty || mutation.isPending}
         >

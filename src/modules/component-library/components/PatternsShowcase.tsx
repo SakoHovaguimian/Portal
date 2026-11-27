@@ -43,7 +43,7 @@ function Specimen({
   return (
     <div className="grid min-w-0 gap-3">
       <div className="grid gap-0.5">
-        <h3 className="m-0 text-sm font-semibold text-primary">{title}</h3>
+        <h5 className="m-0 text-sm font-semibold text-primary">{title}</h5>
         <p className="m-0 text-sm text-secondary">{description}</p>
       </div>
       <div className="min-w-0 rounded-xl border-control border-dashed border-secondary bg-secondary_subtle p-4 sm:p-6">
@@ -277,9 +277,9 @@ export function PatternsShowcase() {
         >
           <div className="grid min-w-0 gap-8">
             <div className="grid min-w-0 gap-3">
-              <h4 className="m-0 text-sm font-medium text-secondary">
+              <h6 className="m-0 text-sm font-medium text-secondary">
                 {strings.ui.stepper.horizontal}
-              </h4>
+              </h6>
               <Stepper
                 label={copy.patternLabels.stepper}
                 onSelect={setStep}
@@ -287,9 +287,9 @@ export function PatternsShowcase() {
               />
             </div>
             <div className="grid min-w-0 gap-3">
-              <h4 className="m-0 text-sm font-medium text-secondary">
+              <h6 className="m-0 text-sm font-medium text-secondary">
                 {strings.ui.stepper.vertical}
-              </h4>
+              </h6>
               <Stepper
                 orientation="vertical"
                 label={copy.patternLabels.stepper}

@@ -75,9 +75,9 @@ export function JobDetailScreen({ jobId }: JobDetailScreenProps) {
     if (!job) { return null; }
     const hints = { queued: copy.queuedHint, running: copy.workingHint, succeeded: copy.succeededHint, failed: copy.retryHint, canceled: copy.canceledHint };
     return (
-      <Card className="grid gap-5">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="m-0 text-lg font-semibold text-primary">{copy.progressColumn}</h2>
+      <Card role="region" aria-labelledby="job-progress-title" className="grid gap-4 border-brand/20 bg-brand-primary shadow-none">
+        <div className="flex flex-wrap items-center justify-between gap-3 pb-1">
+          <h2 id="job-progress-title" className="m-0 text-lg font-semibold text-primary">{copy.progressColumn}</h2>
           <JobStatus job={job} />
         </div>
         <JobProgress job={job} />
@@ -93,17 +93,17 @@ export function JobDetailScreen({ jobId }: JobDetailScreenProps) {
 
     if (!job) { return null; }
     return (
-      <Card className="grid content-start gap-5">
-        <h2 className="m-0 text-lg font-semibold text-primary">{copy.detailsTitle}</h2>
+      <aside aria-labelledby="job-details-title" className="grid min-w-0 content-start gap-4 border-t-control border-secondary bg-secondary_subtle p-(--space-panel) xl:border-s-control xl:border-t-0">
+        <h2 id="job-details-title" className="m-0 text-base font-semibold text-primary">{copy.detailsTitle}</h2>
         <DescriptionList layout="rows" items={[
-          { label: copy.identifierLabel, value: <span className="font-mono text-xs">{job.id}</span> },
+          { label: copy.identifierLabel, value: <code className="font-mono text-xs">{job.id}</code> },
           { label: copy.typeLabel, value: job.type === 'sample-report' ? copy.reportLabel : job.type === 'sample-export' ? copy.exportLabel : job.type },
           { label: copy.attemptLabel, value: copy.progress(job.attempt, job.maxAttempts) },
           { label: copy.createdLabel, value: <time dateTime={job.createdAt}>{formatJobDate(job.createdAt)}</time> },
           { label: copy.updatedColumn, value: <time dateTime={job.updatedAt}>{formatJobDate(job.updatedAt)}</time> },
           ...(job.finishedAt ? [{ label: copy.finishedLabel, value: <time dateTime={job.finishedAt}>{formatJobDate(job.finishedAt)}</time> }] : []),
         ]} />
-      </Card>
+      </aside>
     );
 
   }
@@ -114,14 +114,16 @@ export function JobDetailScreen({ jobId }: JobDetailScreenProps) {
     if (query.isError) { return <ErrorState title={copy.detailUnavailableTitle} description={copy.detailUnavailableHint} onRetry={() => void query.refetch()} />; }
     if (!job) { return null; }
     return (
-      <div className="grid min-w-0 items-start gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(18rem,0.6fr)]">
-        <div className="grid min-w-0 gap-6">
-          {renderProgress()}
-          <JobResult job={job} />
-          <JobAttemptHistory job={job} />
-        </div>
-        {renderInspector()}
-      </div>
+      <>
+        {renderProgress()}
+        <Card className="grid overflow-hidden p-0 shadow-none xl:grid-cols-[minmax(0,1fr)_minmax(18rem,0.55fr)]">
+          <div className="grid min-w-0 content-start divide-y-control divide-secondary">
+            <JobResult job={job} />
+            <JobAttemptHistory job={job} />
+          </div>
+          {renderInspector()}
+        </Card>
+      </>
     );
 
   }
@@ -129,7 +131,7 @@ export function JobDetailScreen({ jobId }: JobDetailScreenProps) {
   return (
     <Page>
       <div><Button variant="ghost" onClick={() => void back()}><UiIcon name="chevronLeft" />{copy.backAction}</Button></div>
-      <PageHeader title={job?.name ?? copy.detailsTitle} eyebrow={copy.eyebrow} action={query.isError ? undefined : renderActions()} />
+      <PageHeader title={job?.name ?? copy.detailsTitle} action={query.isError ? undefined : renderActions()} />
       {renderBody()}
     </Page>
   );

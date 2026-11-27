@@ -12,7 +12,27 @@
 }
 
 .brandPanel {
-  background: var(--color-selection-fill);
+  border-block-end: var(--border-width-control) var(--border-style-control)
+    var(--color-border-secondary);
+  background: var(--dashboard-shell-bg-emphasis);
+}
+
+.brandLink {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 2.75rem;
+  inline-size: fit-content;
+  border-radius: var(--radius-control);
+  text-underline-offset: 0.25em;
+}
+
+.brandLink:hover {
+  text-decoration: underline;
+}
+
+.brandLink:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 3px;
 }
 
 .story {
@@ -23,37 +43,36 @@
   display: grid;
   align-items: start;
   justify-items: center;
-  padding-block: clamp(2.5rem, 6vw, 5rem);
+  padding-block: clamp(1.75rem, 5vw, 4rem);
 }
 
 @media (min-width: 56rem) {
   .layout {
-    grid-template-columns: minmax(0, 46fr) minmax(0, 54fr);
+    grid-template-columns: minmax(0, 49fr) minmax(0, 51fr);
     grid-template-rows: 1fr;
   }
 
   .brandPanel {
     display: grid;
     grid-template-rows: auto 1fr;
-    justify-items: center;
-    gap: var(--space-section);
-    padding: clamp(2rem, 4.5vw, 5rem);
-  }
-
-  .brandPanel > * {
-    inline-size: min(100%, 35rem);
+    gap: clamp(2rem, 5vh, 5rem);
+    padding: clamp(1.75rem, 4.5vw, 4.5rem);
+    border-block-end: 0;
+    border-inline-end: var(--border-width-control) var(--border-style-control)
+      var(--color-border-secondary);
   }
 
   .story {
     display: grid;
-    align-self: center;
-    gap: var(--space-section);
+    align-self: stretch;
+    grid-template-rows: auto minmax(16rem, 1fr);
+    gap: clamp(1.75rem, 4vw, 4rem);
   }
 
   .artwork {
     position: relative;
     overflow: hidden;
-    aspect-ratio: 5 / 4;
+    min-block-size: min(37vh, 28rem);
     border-radius: var(--radius-overlay);
     background: var(--color-bg-brand-secondary);
   }

@@ -1,0 +1,16 @@
+.deletion {
+  display: grid;
+  gap: calc(var(--spacing) * 3);
+  min-inline-size: 0;
+  padding: var(--space-panel);
+  border: var(--border-width-control) solid var(--color-border-error_subtle);
+  border-radius: var(--radius-card);
+  background: var(--color-bg-primary);
+}
+
+.deletionHeading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(var(--spacing) * 3);
+}

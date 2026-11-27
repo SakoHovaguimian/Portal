@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 import { NavigationLink } from '@/components/ui/components/NavigationLink';
-import { Button, SectionStack, SplitSection, UiIcon } from '@/components/ui';
+import { Button, IconTile, SectionStack, SplitSection, UiIcon } from '@/components/ui';
 import { useSessionState } from '@/providers/AppProviders';
 import { useNavigationGuard } from '@/providers/NavigationGuardProvider';
 import { useRuntimeConfig } from '@/providers/RuntimeProvider';
@@ -11,7 +11,7 @@ import { canManagePlatform } from '@/services/auth/permissions';
 import { portalAccountToolsStrings as copy } from '@/strings';
 
 import { AccountDeletionDialog } from './AccountDeletionDialog';
-import './accountSettings.css';
+import styles from './AccountSettings.module.css';
 
 export function AccountSettings() {
 
@@ -26,6 +26,7 @@ export function AccountSettings() {
 
     return (
       <SplitSection
+        bare
         id="account-devices"
         title={copy.account.devicesTitle}
         description={copy.account.devicesHint}
@@ -37,6 +38,7 @@ export function AccountSettings() {
               href="/settings/devices"
             >
               {copy.account.devicesAction}
+              <UiIcon name="chevronRight" className="size-4" />
             </NavigationLink>
           </Button>
           <Button asChild variant="ghost">
@@ -55,6 +57,7 @@ export function AccountSettings() {
     if (!canManagePlatform(accountSession.user.role)) { return null; }
     return (
       <SplitSection
+        bare
         id="account-operations"
         title={copy.account.operationsTitle}
         description={copy.account.operationsHint}
@@ -66,6 +69,7 @@ export function AccountSettings() {
               href="/settings/delivery-history"
             >
               {copy.deliveries.title}
+              <UiIcon name="chevronRight" className="size-4" />
             </NavigationLink>
           </Button>
         </div>
@@ -78,28 +82,24 @@ export function AccountSettings() {
 
     return (
       <SplitSection
-        className="portal-account-deletion"
+        bare
         id="account-deletion"
         title={copy.account.deleteTitle}
         description={copy.account.deleteHint}
       >
-        <div className="portal-account-deletion__heading">
-          <span className="portal-account-deletion__icon" aria-hidden="true">
-            <UiIcon name="warning" className="size-6" />
-          </span>
-          <div className="grid gap-2">
+        <div className={styles.deletion}>
+          <div className={styles.deletionHeading}>
+            <IconTile intent="danger">
+              <UiIcon name="warning" className="size-5" />
+            </IconTile>
             <h3 className="m-0 text-base font-semibold text-primary">
               {copy.account.deleteCardTitle}
             </h3>
-            <p className="m-0 text-sm text-secondary">
-              {runtime.demoMode
-                ? copy.account.demoHint
-                : copy.account.deleteCardHint}
-            </p>
           </div>
-        </div>
-        <div className="portal-account-deletion__actions">
-          <Button variant="destructive" onClick={() => setDeleting(true)}>
+          <p className="m-0 max-w-prose text-sm text-secondary">
+            {runtime.demoMode ? copy.account.demoHint : copy.account.deleteCardHint}
+          </p>
+          <Button variant="destructive" className="justify-self-start" onClick={() => setDeleting(true)}>
             <UiIcon name="trash" />
             {copy.account.deleteAction}
           </Button>

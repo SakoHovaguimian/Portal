@@ -65,7 +65,7 @@ export function MessageRow({ message, reply, own, read, userId, busy, failed, on
           <span className="line-clamp-2">{reply.deletedAt ? copy.deleted : reply.body}</span>
         </a>}
 
-        <p className={`m-0 whitespace-pre-wrap wrap-anywhere text-sm leading-relaxed ${message.deletedAt ? 'italic text-tertiary' : ''}`}>{message.deletedAt ? copy.deleted : message.body}</p>
+        <p data-chat-message-body className={`m-0 whitespace-pre-wrap wrap-anywhere text-sm leading-relaxed ${message.deletedAt ? 'italic text-tertiary' : ''}`}>{message.deletedAt ? copy.deleted : message.body}</p>
 
         <MessageAttachments attachments={message.attachments}/>
 

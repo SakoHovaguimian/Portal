@@ -63,7 +63,7 @@ export default async function BlogArticlePage({
     function renderRelatedArticle(item: (typeof nextArticles)[number]) {
 
       return (
-        <BlogArticleCard key={item.id} article={item} headingLevel="h3" />
+        <BlogArticleCard key={item.id} article={item} headingLevel="h3" variant="related" />
       );
 
     }
@@ -84,7 +84,7 @@ export default async function BlogArticlePage({
   }
 
   return (
-    <main id="main-content" className={styles.articleContainer}>
+    <main id="main-content" tabIndex={-1} className={styles.articleContainer}>
       <div className={styles.readerNavigation}>
         <Button asChild variant="ghost">
           <Link href="/blog">

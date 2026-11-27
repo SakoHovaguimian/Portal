@@ -40,11 +40,8 @@ export function PublicBlogScreen({
 
     return (
       <header className={styles.journalHeader}>
-        <div>
-          <p className={styles.eyebrow}>{copy.publicEyebrow}</p>
-          <h1>{copy.publicTitle}</h1>
-          <p className={styles.heroDescription}>{copy.publicDescription}</p>
-        </div>
+        <h1>{copy.publicTitle}</h1>
+        <p className={styles.heroDescription}>{copy.publicDescription}</p>
       </header>
 
     );
@@ -73,6 +70,27 @@ export function PublicBlogScreen({
 
     if (page.data.length) {
 
+      const isJournalIndex = !filtered && page.offset === 0;
+      if (isJournalIndex) {
+
+        const [leadArticle, ...otherArticles] = page.data;
+        const topStories = otherArticles.slice(0, 2).map(renderArticleCard);
+        const moreStories = otherArticles.slice(2).map(renderArticleCard);
+        return (
+          <div className={styles.journalStories}>
+            <div className={styles.leadGrid}>
+              <BlogArticleCard article={leadArticle} variant="lead" />
+              {topStories.length > 0 && (
+                <div className={styles.storyRail}>{topStories}</div>
+              )}
+            </div>
+            {moreStories.length > 0 && (
+              <div className={styles.articleGrid}>{moreStories}</div>
+            )}
+          </div>
+        );
+
+      }
       const articleCards = page.data.map(renderArticleCard);
       return <div className={styles.articleGrid}>{articleCards}</div>;
 
@@ -80,6 +98,7 @@ export function PublicBlogScreen({
     return (
       <div className={styles.empty}>
         <EmptyState
+          variant="plain"
           title={filtered ? copy.noResultsTitle : copy.emptyTitle}
           description={
             filtered ? copy.noResultsDescription : copy.emptyDescription
@@ -99,12 +118,15 @@ export function PublicBlogScreen({
 
   function renderPagination() {
 
+    if (!page.data.length && !page.offset && !page.total) { return null; }
     return (
-      <BlogPagination
-        page={page}
-        busy={isPending}
-        onNavigateAction={(offset) => navigate({ ...query, offset })}
-      />
+      <div className={styles.pagination}>
+        <BlogPagination
+          page={page}
+          busy={isPending}
+          onNavigateAction={(offset) => navigate({ ...query, offset })}
+        />
+      </div>
     );
 
   }
@@ -126,7 +148,7 @@ export function PublicBlogScreen({
   }
 
   return (
-    <main id="main-content" className={styles.journal}>
+    <main id="main-content" tabIndex={-1} className={styles.journal}>
       {renderHeader()}
       {renderArticleSection()}
     </main>

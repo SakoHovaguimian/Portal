@@ -1,0 +1,35 @@
+.rail :global(.ui-step[aria-current='step']) {
+  background-color: var(--color-bg-brand-primary);
+}
+
+.rail :global(.ui-step:disabled) {
+  opacity: 1;
+}
+
+@media (max-width: 40rem) {
+  .rail :global(.ui-stepper[data-orientation='responsive'] .ui-stepper-list) {
+    gap: calc(var(--spacing) * 2);
+  }
+
+  .rail :global(.ui-stepper[data-orientation='responsive'] .ui-step) {
+    min-height: var(--control-height-md);
+    padding: calc(var(--spacing) * 1.5) calc(var(--spacing) * 2);
+  }
+
+  .rail :global(.ui-stepper[data-orientation='responsive'] .ui-step-marker) {
+    width: calc(var(--spacing) * 7);
+    height: calc(var(--spacing) * 7);
+  }
+
+  .rail
+    :global(.ui-stepper[data-orientation='responsive'] .ui-step-description) {
+    padding-inline-start: calc(var(--spacing) * 9.5);
+  }
+
+  .rail
+    :global(.ui-stepper[data-orientation='responsive'] .ui-stepper-connector) {
+    inset-inline-start: calc(var(--spacing) * 5.5);
+    top: calc(var(--spacing) * 9);
+    bottom: calc(var(--spacing) * -3);
+  }
+}

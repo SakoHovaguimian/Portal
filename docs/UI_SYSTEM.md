@@ -1,6 +1,6 @@
 # Reusable UI foundation
 
-Every Portal project starts with the LeafLaunch Web component foundation in `src/components/ui`. Open the authenticated `/dev-settings/components` route to inspect foundations, motion, page patterns, controls, states, tables, reordering, Markdown, and media. Examples use local state only. Appearance and the library share the same theme/motion controls. The component browser uses a searchable card catalog, six category choices (a shared Select on phones), and one focused family preview. Category and preview choices live in URL history; visited previews remain mounted to preserve local state.
+Every Portal project starts with the LeafLaunch Web component foundation in `src/components/ui`. Open `/dev-settings#component-library` after signing in to inspect foundations, motion, page patterns, controls, states, tables, reordering, Markdown, and media. The searchable index jumps to sections in a continuous page. Examples stay mounted and use local state. Appearance and the library share the same theme and motion controls.
 
 ## Ownership and inventory
 
@@ -119,7 +119,7 @@ SOFTWARE.
 - `Combobox` commits option IDs only, with separate editable text, disabled options, clearing, local filtering, and authored popup geometry. `onSearchChange` switches to caller-filtered results and debounces remote queries (300ms by default), waits for IME completion, and clears immediately. The caller must cancel superseded requests or reject stale results; `loading`, `error`, and `onRetry` expose recovery. Options, including the committed option while loading, must have stable IDs. The component never fetches. Autocomplete means a searchable entity choice here; arbitrary free text is not committed as an ID.
 - `DateRangePicker` exchanges `DateRangeValue | null`, with inclusive ISO date-only endpoints. It supports typed segments, ordered calendar selection, min/max, required/disabled/read-only/error states, optional native form field names, locale, and the same owned calendar-label pack as `DatePicker`. Complete selection commits immediately; Clear emits null. Domain-specific presets, filter Apply/Cancel semantics, timezone conversion, and unavailable-date policies stay with the consuming workflow.
 
-The catalog's `component` and `category` query parameters are shareable and restore with Back/Forward. Search is intentionally transient, local discovery state. Hidden visited examples use hidden/inert semantics; unvisited examples are not mounted. The Theme family retains the existing shared theme/motion controls. All catalog cards align their icon and copy to the same left edge.
+Share component and category fragments such as `/dev-settings#values` or `/dev-settings#components-media`. Native Back and Forward restore anchor navigation, and the legacy library route accepts its `component` and `category` query parameters. Search affects the jump index while all specimens remain available in document order. The Theme family uses the existing shared theme and motion controls.
 
 Switches now share the checkbox/radio pop and halo when a person enables the control. Initial checked values and disabled switches do not trigger it. The halo uses the switch's own theme color. Device and saved reduced-motion settings suppress both frame motion and halo.
 

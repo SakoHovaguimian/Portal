@@ -4,7 +4,9 @@ import Link from 'next/link';
 
 import {
   DataPanel,
+  DataPanelState,
   DataTable,
+  DirectoryFilters,
   EmptyState,
   ErrorState,
   InitialsAvatar,
@@ -14,23 +16,45 @@ import {
   PageHeader,
 } from '@/components/ui';
 import type { User } from '@/models';
+import { useDirectoryState } from '@/queries/useDirectoryState';
 import { strings } from '@/strings';
 
 import { useUsers } from './hooks';
-import type { UsersScreenProps } from './models/usersScreenProps';
 
-export function UsersScreen({ query = '' }: UsersScreenProps) {
+const copy = strings.ui.usersScreen;
 
-  const { data, isPending, isError, refetch } = useUsers(query);
+export function UsersScreen() {
+
+  const directory = useDirectoryState();
+  const { data, isPending, isFetching, isError, refetch } = useUsers(directory.query);
 
   function renderHeader() {
 
     return (
       <PageHeader
         title={strings.ui.appShell.users}
-        description={
-          strings.ui.usersScreen.findPeopleInYourWorkspaceAndViewTheirProfilesHint
-        }
+        description={copy.findPeopleInYourWorkspaceAndViewTheirProfilesHint}
+      />
+    );
+
+  }
+
+  function renderFilters() {
+
+    return (
+      <DirectoryFilters
+        id="users-search"
+        value={{ query: directory.query }}
+        statuses={[]}
+        showStatus={false}
+        onChange={(value) => directory.update({ query: value.query || undefined })}
+        copy={{
+          search: copy.searchLabel,
+          placeholder: copy.searchPlaceholder,
+          clear: copy.clearSearch,
+          status: '',
+          allStatuses: '',
+        }}
       />
     );
 
@@ -41,7 +65,7 @@ export function UsersScreen({ query = '' }: UsersScreenProps) {
     return (
       <DataTable
         embedded
-        caption={strings.ui.usersScreen.userRecords}
+        caption={copy.userRecords}
         getRowKey={(row) => row.id}
         getRowHref={(row) => `/users/${row.id}`}
         renderMobileRow={(row) => (
@@ -54,7 +78,7 @@ export function UsersScreen({ query = '' }: UsersScreenProps) {
             leading={<InitialsAvatar name={`${row.firstName} ${row.lastName}`} />}
             description={row.email}
             footer={
-              <time dateTime={row.createdAt}>
+              <time dateTime={row.createdAt} className="text-xs text-tertiary tabular-nums">
                 {new Date(row.createdAt).toLocaleDateString()}
               </time>
             }
@@ -63,25 +87,29 @@ export function UsersScreen({ query = '' }: UsersScreenProps) {
         columns={[
           {
             key: 'name',
-            header: strings.ui.usersScreen.name,
+            header: copy.name,
             render: (row) => (
               <Link
-                className="font-medium text-primary hover:text-brand-secondary"
+                className="inline-flex min-w-0 items-center gap-3 font-medium text-primary hover:text-brand-secondary"
                 href={`/users/${row.id}`}
               >
-                {row.firstName} {row.lastName}
+                <InitialsAvatar name={`${row.firstName} ${row.lastName}`} />
+                <span className="wrap-anywhere">{row.firstName} {row.lastName}</span>
               </Link>
             ),
           },
           {
             key: 'email',
-            header: strings.ui.usersScreen.email,
+            header: copy.email,
+            cellClassName: 'wrap-anywhere',
             render: (row) => row.email,
           },
           {
             key: 'createdAt',
-            header: strings.ui.usersScreen.created,
-            render: (row) => new Date(row.createdAt).toLocaleDateString(),
+            header: copy.created,
+            headerClassName: 'text-end',
+            cellClassName: 'text-end tabular-nums',
+            render: (row) => <time dateTime={row.createdAt}>{new Date(row.createdAt).toLocaleDateString()}</time>,
           },
         ]}
         rows={users}
@@ -93,22 +121,24 @@ export function UsersScreen({ query = '' }: UsersScreenProps) {
   function renderDirectoryResults() {
 
     return isPending ? (
-      <div className="p-6">
-        <InlineLoading message={strings.ui.usersScreen.loadingUsers} />
-      </div>
+      <DataPanelState>
+        <div className="grid place-items-center">
+          <InlineLoading message={copy.loadingUsers} />
+        </div>
+      </DataPanelState>
     ) : isError || !data ? (
-      <div className="p-4">
+      <DataPanelState>
         <ErrorState
-          title={strings.ui.usersScreen.usersUnavailable}
-          description={strings.ui.usersScreen.weCouldNotLoadUsersRightNowHint}
+          title={copy.usersUnavailable}
+          description={copy.weCouldNotLoadUsersRightNowHint}
           onRetry={() => void refetch()}
         />
-      </div>
+      </DataPanelState>
     ) : data.data.length === 0 ? (
       <EmptyState
         variant="plain"
-        title={strings.ui.usersScreen.noUsersFound}
-        description={strings.ui.usersScreen.tryADifferentSearchHint}
+        title={copy.noUsersFound}
+        description={copy.tryADifferentSearchHint}
       />
     ) : (
       renderUserTable(data.data)
@@ -121,7 +151,9 @@ export function UsersScreen({ query = '' }: UsersScreenProps) {
     return (
       <Page>
         {renderHeader()}
-        <DataPanel>{renderDirectoryResults()}</DataPanel>
+        <DataPanel toolbar={renderFilters()} busy={isFetching && !isPending} busyLabel={copy.loadingUsers}>
+          {renderDirectoryResults()}
+        </DataPanel>
       </Page>
     );
 

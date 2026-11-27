@@ -24,8 +24,8 @@ export function ConversationList({ conversations, selectedId, search, archived, 
     const selected = archived === showArchived;
     return (
       <Button
-        variant={selected ? 'primary' : 'secondary'}
-        className={selected ? undefined : 'text-brand-secondary ring-brand hover:text-brand-secondary'}
+        variant={selected ? 'secondary' : 'ghost'}
+        className={selected ? 'bg-primary font-semibold text-brand-secondary ring-secondary' : undefined}
         aria-pressed={selected}
         onClick={() => onArchived(showArchived)}
       >
@@ -39,7 +39,7 @@ export function ConversationList({ conversations, selectedId, search, archived, 
 
     return (<li key={conversation.id}>
 
-      <Button variant="ghost" onClick={() => onSelect(conversation.id)} aria-current={selectedId === conversation.id ? 'page' : undefined} className={`h-auto w-full justify-start gap-3 rounded-none border-l-2 px-4 py-4 text-left ${selectedId === conversation.id ? 'border-l-brand bg-active' : 'border-l-transparent'}`}>
+      <Button variant="ghost" onClick={() => onSelect(conversation.id)} aria-current={selectedId === conversation.id ? 'page' : undefined} className={`h-auto w-full justify-start gap-3 rounded-none border-s-2 border-b-control border-b-secondary px-4 py-3.5 text-left focus-visible:-outline-offset-2 ${selectedId === conversation.id ? 'border-s-brand bg-active' : 'border-s-transparent'}`}>
 
         <InitialsAvatar name={conversation.name}/>
 
@@ -47,7 +47,7 @@ export function ConversationList({ conversations, selectedId, search, archived, 
 
           <span className="flex items-center justify-between gap-2">
             <span className="truncate text-sm font-semibold text-primary">{conversation.name}</span>
-            <time dateTime={conversation.updatedAt} className="shrink-0 text-[10px] font-normal text-tertiary">{new Date(conversation.updatedAt).toLocaleTimeString('en-US', {
+            <time dateTime={conversation.updatedAt} className="shrink-0 text-xs font-normal text-tertiary tabular-nums">{new Date(conversation.updatedAt).toLocaleTimeString('en-US', {
               hour: 'numeric',
               minute: '2-digit',
             })}</time>
@@ -68,14 +68,14 @@ export function ConversationList({ conversations, selectedId, search, archived, 
   }
 
   const rows = matching.map(renderConversation);
-  return (<aside aria-labelledby="chat-conversations" className="flex h-full min-h-0 flex-col bg-primary">
+  return (<aside aria-labelledby="chat-conversations" className="flex h-full min-h-0 flex-col">
 
-    <div className="grid gap-5 px-5 pt-6 pb-4">
+    <div className="grid gap-3 border-b-control border-secondary p-4">
 
       <h2 id="chat-conversations" className="m-0 text-lg font-semibold">{copy.all}</h2>
 
-      <div className="flex items-center gap-1">
-        <Input ref={searchInput} aria-label={copy.searchPlaceholder} placeholder={copy.searchPlaceholder} value={search} onChange={(event) => onSearch(event.target.value)}/>
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-1">
+        <Input ref={searchInput} leadingIcon={<UiIcon name="search" className="size-4" />} aria-label={copy.searchPlaceholder} placeholder={copy.searchPlaceholder} value={search} onChange={(event) => onSearch(event.target.value)}/>
         {search && (
           <Button variant="ghost" aria-label={copy.clear} onClick={() => {
 
@@ -88,19 +88,20 @@ export function ConversationList({ conversations, selectedId, search, archived, 
         )}
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-1">
         {renderFolderButton(copy.inbox, false)}
         {renderFolderButton(copy.archived, true)}
       </div>
 
     </div>
 
-    <ul className="m-0 min-h-0 flex-1 list-none overflow-y-auto p-0">{rows}</ul>
-
-    {matching.length === 0 && <div className="px-5 py-10">
-      <p className="font-semibold">{normalizedSearch ? copy.noResultsTitle : copy.noConversationsTitle}</p>
-      <p className="text-sm text-tertiary">{normalizedSearch ? copy.noResultsHint : copy.noConversationsHint}</p>
-    </div>}
+    <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain bg-primary">
+      <ul className="m-0 list-none p-0">{rows}</ul>
+      {matching.length === 0 && <div className="grid gap-2 px-5 py-6">
+        <p className="m-0 font-semibold">{normalizedSearch ? copy.noResultsTitle : copy.noConversationsTitle}</p>
+        <p className="m-0 text-sm text-secondary">{normalizedSearch ? copy.noResultsHint : copy.noConversationsHint}</p>
+      </div>}
+    </div>
 
   </aside>);
 

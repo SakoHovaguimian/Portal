@@ -1,5 +1,12 @@
 # Migration verification
 
+## Portal Page Layout Overhaul — November 27, 2026
+
+- Reviewed the public landing, authentication, privacy, journal, workspace, administration, onboarding, Developer Settings, and Experience layouts in local demo Chromium. The route review used 1440px desktop and 390px phone viewports, with additional 320px checks for narrow controls. The public demo action opened the sign-in presets and the selected preset reached Dashboard.
+- Developer Settings rendered 32 component families on one page. Search and keyboard jumps reached the correct examples, legacy component and category links focused their targets, and an edited counter value survived a jump away and back. All eight themes switched at 390px. Carbon dark persisted across navigation. The combined library hydrated without console errors after stabilizing the time scrubber’s browser and server formatting. Computed search placeholder contrast ranged from 5.99:1 to 9.87:1 across the sixteen theme and mode combinations.
+- Exercised directory search and browser Back, profile validation, feature request creation/edit/deletion, failed job retry and attempt history, onboarding resume and return path, chat send and details, publishing search and unsaved previews, notification bulk and delivery controls, and legal disclosures. Verified the demo empty and error states and restored normal responses from the shell. The mobile navigation menu restored focus after Escape. Chat search focused the input when opened by keyboard. The latest message text and Send remained visible at 320 × 600 and at a simulated 390 × 500 viewport with the composer focused.
+- `npm run check`, `DEMO_MODE=true npm run build`, and `git diff --check` passed. The supplementary Impeccable scan reported typography advisories and a warning for the existing theme-owned star-rating easing. `designmd lint DESIGN.md` reported zero errors and three existing mirrored-token warnings. Browser verification used local demo data. Live backend, Firebase, realtime, push, and analytics integrations were outside this check.
+
 ## Shared Theme Roles — November 27, 2026
 
 - Removed the Carbon-only Back label setting and moved font registration into the theme system. The shell uses its shared labeled button in every preset. A source audit found theme identity used for registration, application, persisted selection, previews, and motion resolution.

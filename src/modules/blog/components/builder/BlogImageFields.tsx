@@ -10,7 +10,7 @@ import {
 } from '@/components/ui';
 import { portalPublishingStrings } from '@/strings';
 
-import styles from '../../Blog.module.css';
+import styles from './BlogBuilder.module.css';
 import { BlogContentImage } from '../BlogContentImage';
 import type { BlogImageFieldsProps } from '../../models/blogImageFieldsProps';
 import { isBlogImageUrl } from '../../models/blogImageUrl';

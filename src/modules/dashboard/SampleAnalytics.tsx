@@ -1,5 +1,5 @@
 import {
-  Card,
+  DataPanel,
   DataTable,
   DescriptionList,
   Meter,
@@ -106,25 +106,27 @@ export function SampleAnalytics() {
 
   return (
     <PageSection id="sample-analytics" title={copy.sampleAnalytics}>
-      <div className="grid items-start gap-4 2xl:grid-cols-[minmax(0,1fr)_19rem]">
-        <Card className="overflow-hidden p-0">
-          <h3 className="m-0 border-b-control border-secondary p-4 text-base font-semibold text-primary">
-            {copy.topChannels}
-          </h3>
-          <DataTable
-            caption={copy.topChannels}
-            rows={channels}
-            columns={channelColumns}
-            getRowKey={(row) => row.source}
-            renderMobileRow={renderMobileChannel}
-            embedded
-          />
-        </Card>
-        <Card className="grid gap-4">
-          <h3 className="m-0 text-base font-semibold text-primary">{copy.countryShareTitle}</h3>
-          {countryMeters}
-        </Card>
-      </div>
+      <DataPanel>
+        <div className="grid min-w-0 xl:grid-cols-[minmax(0,1fr)_minmax(15rem,0.38fr)]">
+          <section aria-labelledby="dashboard-channels-title" className="min-w-0">
+            <h3 id="dashboard-channels-title" className="m-0 border-b-control border-secondary p-(--space-panel) text-base font-semibold text-primary">
+              {copy.topChannels}
+            </h3>
+            <DataTable
+              caption={copy.topChannels}
+              rows={channels}
+              columns={channelColumns}
+              getRowKey={(row) => row.source}
+              renderMobileRow={renderMobileChannel}
+              embedded
+            />
+          </section>
+          <section aria-labelledby="dashboard-country-title" className="grid min-w-0 content-start gap-4 border-t-control border-secondary bg-secondary_subtle p-(--space-panel) xl:border-s-control xl:border-t-0">
+            <h3 id="dashboard-country-title" className="m-0 text-base font-semibold text-primary">{copy.countryShareTitle}</h3>
+            {countryMeters}
+          </section>
+        </div>
+      </DataPanel>
     </PageSection>
   );
 

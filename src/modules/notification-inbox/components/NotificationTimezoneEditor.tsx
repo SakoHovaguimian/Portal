@@ -111,8 +111,8 @@ export function NotificationTimezoneEditor({
   function renderTimezoneContext() {
 
     return (
-      <div className="grid gap-2">
-        <p className="m-0 text-sm font-medium text-primary">
+      <div className="grid gap-1 rounded-card bg-secondary_subtle p-4 wrap-anywhere">
+        <p className="m-0 text-sm font-semibold text-primary">
           {copy.effectiveTimezoneHint(saved.effectiveTimezone)}
         </p>
         {browserTimezone && (
@@ -180,7 +180,7 @@ export function NotificationTimezoneEditor({
         live
       >
         <Button
-          variant="destructive"
+          variant="ghost"
           onClick={handleDiscard}
           disabled={!isDirty || mutation.isPending}
         >

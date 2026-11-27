@@ -55,97 +55,6 @@ input[type='number'] {
   -moz-appearance: textfield;
 }
 
-@keyframes experience-fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(28px) scale(0.985);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.experience-reveal {
-  opacity: 0;
-  transform: translateY(24px) scale(0.99);
-  transition:
-    opacity calc(var(--motion-duration-enter) * 2) var(--motion-ease-out),
-    transform calc(var(--motion-duration-enter) * 2) var(--motion-ease-out);
-}
-
-.experience-reveal[data-visible='true'] {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  animation: experience-fade-up calc(var(--motion-duration-enter) * 2)
-    var(--motion-ease-out) both;
-}
-
-.hero-panel {
-  opacity: 0;
-  transform: translateY(26px) scale(0.985);
-  transition:
-    opacity calc(var(--motion-duration-enter) * 2) var(--motion-ease-out),
-    transform calc(var(--motion-duration-enter) * 2) var(--motion-ease-out);
-}
-
-.hero-panel[data-visible='true'] {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-
-.hero-panel-delay {
-  transition-delay: var(--motion-duration-fast);
-}
-
-.bouncy-button {
-  transition:
-    transform var(--motion-duration-base) var(--motion-ease-spring),
-    opacity var(--motion-duration-base) var(--motion-ease-out),
-    box-shadow var(--motion-duration-base) var(--motion-ease-out),
-    filter var(--motion-duration-base) var(--motion-ease-out);
-  transform-origin: center;
-}
-
-.bouncy-button:hover {
-  transform: translateY(-1px);
-}
-
-.bouncy-button:active {
-  transform: scale(var(--motion-button-press-scale));
-  opacity: 0.88;
-}
-
-.bouncy-button:focus-visible {
-  opacity: 1;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .experience-reveal,
-  .experience-reveal[data-visible='true'] {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-    animation: none !important;
-  }
-
-  .hero-panel,
-  .hero-panel[data-visible='true'] {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-  }
-
-  .bouncy-button,
-  .bouncy-button:hover,
-  .bouncy-button:active {
-    transform: none !important;
-    opacity: 1 !important;
-    transition: none !important;
-  }
-}
-
 html {
   scrollbar-gutter: stable;
 }
@@ -254,10 +163,6 @@ html[data-motion='reduced'] *::before,
 html[data-motion='reduced'] *::after {
   animation: none !important;
   transition: none !important;
-}
-html[data-motion='reduced'] :is(.experience-reveal, .hero-panel) {
-  opacity: 1 !important;
-  transform: none !important;
 }
 @media (prefers-reduced-motion: reduce) {
   html {

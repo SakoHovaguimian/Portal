@@ -31,17 +31,17 @@ export function AppSidebarContent({
       return (
         <div
           className={cn(
-            'flex items-center justify-between gap-3 px-8',
+            'flex min-h-16 items-center justify-between gap-3 border-b-control border-(--dashboard-shell-border) px-5',
             headerAction &&
               'sticky top-0 z-10 bg-(--dashboard-shell-panel-solid)',
           )}
         >
           <NavigationLink
             href={homeHref}
-            className="inline-flex min-h-(--control-height-md) cursor-pointer items-center font-display text-2xl font-semibold tracking-tight text-brand-secondary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand"
+            className="inline-flex min-h-(--control-height-md) min-w-0 cursor-pointer items-center rounded-control font-display text-xl font-semibold tracking-tight text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand"
             navigate={onNavigate}
           >
-            <ProjectBrand />
+            <ProjectBrand showMark />
           </NavigationLink>
           {headerAction}
         </div>
@@ -54,12 +54,12 @@ export function AppSidebarContent({
       return (
         <nav
           aria-label={strings.ui.appShell.navigation}
-          className="mx-4 flex flex-1 flex-col gap-2"
+          className="mx-3 flex flex-1 flex-col gap-0.5 px-1"
         >
           <SidebarLinks items={primaryItems} onNavigate={onNavigate} />
           {contextSlot && <div className="w-full min-w-0">{contextSlot}</div>}
           {utilityItems.length > 0 && (
-            <div className="mt-auto grid gap-2 pt-4">
+            <div className="mt-auto grid gap-1 pt-6">
               <SidebarLinks items={utilityItems} onNavigate={onNavigate} />
             </div>
           )}
@@ -69,7 +69,7 @@ export function AppSidebarContent({
     }
 
     return (
-      <div className="flex flex-1 flex-col items-stretch gap-8 pt-10 pb-6">
+      <div className="flex flex-1 flex-col items-stretch gap-4 pb-4">
         {renderBrand()}
         {renderLinks()}
       </div>
@@ -80,11 +80,11 @@ export function AppSidebarContent({
   function renderAccount() {
 
     return (
-      <div className="mt-auto border-t-control border-secondary px-8 pt-3 pb-6">
+      <div className="mt-auto border-t-control border-(--dashboard-shell-border) px-5 py-3">
         <NavigationLink
           href="/profile"
           navigate={onNavigate}
-          className="ui-button inline-flex min-h-(--control-height-md) cursor-pointer items-center gap-2 rounded-control hover:bg-brand-primary focus-visible:outline-2 focus-visible:outline-brand -mx-4 h-auto w-[calc(100%+2rem)] min-w-0 justify-start px-4 py-3 text-left whitespace-nowrap"
+          className="ui-button -mx-2 inline-flex h-auto min-h-(--control-height-md) w-[calc(100%+1rem)] min-w-0 cursor-pointer items-center justify-start gap-2 rounded-control px-2 py-2 text-left whitespace-nowrap hover:bg-brand-primary focus-visible:outline-2 focus-visible:outline-brand"
           aria-label={strings.designSystem.profileLink}
           aria-current={activePath === '/profile' ? 'page' : undefined}
         >
@@ -104,7 +104,7 @@ export function AppSidebarContent({
             </span>
           </span>
         </NavigationLink>
-        {accountSlot && <div className="mt-3">{accountSlot}</div>}
+        {accountSlot && <div className="mt-2">{accountSlot}</div>}
       </div>
     );
 

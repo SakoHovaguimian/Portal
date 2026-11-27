@@ -1,6 +1,5 @@
 import {
   Button,
-  Card,
   DescriptionList,
   EmptyState,
   Modal,
@@ -73,7 +72,7 @@ export function DeliveryAttemptsDialog({
   function renderAttempt(attempt: NotificationDeliveryAttempt) {
 
     return (
-      <Card key={attempt.id} className="grid gap-4 p-4">
+      <li key={attempt.id} className="grid gap-4 border-t-control border-secondary py-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h3 className="m-0 text-base font-semibold">
             {copy.deliveries.attemptLabel(attempt.attemptNumber)}
@@ -110,7 +109,7 @@ export function DeliveryAttemptsDialog({
               : []),
           ]}
         />
-      </Card>
+      </li>
     );
 
   }
@@ -118,7 +117,7 @@ export function DeliveryAttemptsDialog({
   function renderAttemptRows(result: NonNullable<typeof query.data>) {
 
     const attempts = result.data.map(renderAttempt);
-    return <div className="grid gap-3">{attempts}</div>;
+    return <ol role="list" className="m-0 grid list-none p-0">{attempts}</ol>;
 
   }
 
@@ -126,6 +125,7 @@ export function DeliveryAttemptsDialog({
 
     return (
       <EmptyState
+        variant="plain"
         title={copy.deliveries.noAttemptsTitle}
         description={copy.deliveries.noAttemptsHint}
       />

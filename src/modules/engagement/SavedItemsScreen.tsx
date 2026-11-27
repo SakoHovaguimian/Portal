@@ -7,18 +7,21 @@ import { useRouter } from 'next/navigation';
 
 import {
   Button,
-  Card,
   DataPanel,
   DirectoryFilters,
   EmptyState,
+  ListGroup,
+  ListRow,
   Message,
   Page,
   PageHeader,
   QueryBoundary,
+  UiIcon,
 } from '@/components/ui';
 import { usePresentationService } from '@/presentation/PresentationProvider';
 import { portalEngagementStrings as copy } from '@/strings';
 
+import styles from './SavedItems.module.css';
 import { useSavedItems, useRemoveSavedItem } from './hooks';
 import type { EngagementRecord } from './models/engagementRecord';
 import type { SavedItemsScreenProps } from './models/savedItemsScreenProps';
@@ -115,48 +118,49 @@ export function SavedItemsScreen({ query }: SavedItemsScreenProps) {
 
   function renderSavedItem(record: EngagementRecord) {
 
+    const titleId = `saved-item-${record.type}-${record.id}`;
     return (
-      <Card
-        key={`${record.type}/${record.id}`}
-        className="flex flex-wrap items-start justify-between gap-4"
-      >
-        <div className="grid min-w-0 flex-1 gap-2">
-          {record.target ? (
-            <>
-              <Link
-                className="font-semibold text-primary hover:text-brand-secondary"
-                href={record.target.href as Route}
-              >
-                {record.target.title}
-              </Link>
-              <p className="m-0 text-sm text-secondary">
-                {record.target.description}
-              </p>
-            </>
-          ) : (
-            <>
-              <h2 className="m-0 text-lg font-semibold">
-                {copy.unavailableTitle}
-              </h2>
-              <p className="m-0 text-sm text-secondary">
-                {copy.unavailableDescription}
-              </p>
-            </>
-          )}
-        </div>
-        <Button
-          variant="destructive"
-          loading={
-            remove.isPending &&
-            remove.variables?.id === record.id &&
-            remove.variables.type === record.type
+      <li key={`${record.type}/${record.id}`}>
+        <ListRow
+          className={styles.record}
+          leading={
+            <span aria-hidden="true" className={styles.recordIcon}>
+              <UiIcon name="bookmark" className="size-5" />
+            </span>
           }
-          disabled={confirming || remove.isPending}
-          onClick={() => void removeItem(record)}
-        >
-          {copy.remove}
-        </Button>
-      </Card>
+          title={
+            <h2 id={titleId} className={styles.recordTitle}>
+              {record.target ? (
+                <Link href={record.target.href as Route}>
+                  {record.target.title}
+                </Link>
+              ) : (
+                copy.unavailableTitle
+              )}
+            </h2>
+          }
+          description={
+            <p className={styles.recordDescription}>
+              {record.target?.description ?? copy.unavailableDescription}
+            </p>
+          }
+          trailing={
+            <Button
+              variant="destructive"
+              aria-describedby={titleId}
+              loading={
+                remove.isPending &&
+                remove.variables?.id === record.id &&
+                remove.variables.type === record.type
+              }
+              disabled={confirming || remove.isPending}
+              onClick={() => void removeItem(record)}
+            >
+              {copy.remove}
+            </Button>
+          }
+        />
+      </li>
     );
 
   }
@@ -167,6 +171,7 @@ export function SavedItemsScreen({ query }: SavedItemsScreenProps) {
 
       return (
         <EmptyState
+          variant="plain"
           title={query.query ? copy.noResultsTitle : copy.emptyTitle}
           description={
             query.query
@@ -183,7 +188,7 @@ export function SavedItemsScreen({ query }: SavedItemsScreenProps) {
 
     }
     const savedItems = page.data.map(renderSavedItem);
-    return <div className="grid gap-4 p-4">{savedItems}</div>;
+    return <ListGroup className="rounded-none border-0">{savedItems}</ListGroup>;
 
   }
 
@@ -204,16 +209,16 @@ export function SavedItemsScreen({ query }: SavedItemsScreenProps) {
     return (
       <nav
         aria-label={copy.paginationLabel}
-        className="flex flex-wrap items-center justify-between gap-3 border-t border-secondary p-4"
+        className={styles.pagination}
       >
-        <span className="text-sm text-secondary">
+        <span className="text-sm text-secondary tabular-nums">
           {copy.rangeHint(
             page.total ? page.offset + 1 : 0,
             Math.min(page.total, page.offset + page.limit),
             page.total,
           )}
         </span>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button
             variant="secondary"
             disabled={records.isFetching || page.offset === 0}
@@ -256,9 +261,9 @@ export function SavedItemsScreen({ query }: SavedItemsScreenProps) {
           busy={records.isFetching}
           busyLabel={copy.loading}
           toolbar={renderFilters()}
+          footer={renderPagination()}
         >
           {renderSavedResults()}
-          {renderPagination()}
         </DataPanel>
       </Page>
     );

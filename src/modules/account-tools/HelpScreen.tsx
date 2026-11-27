@@ -6,6 +6,7 @@ import { Page, PageHeader, SegmentedPanels } from '@/components/ui';
 import { useDirectoryState } from '@/queries/useDirectoryState';
 import { portalAccountToolsStrings as copy } from '@/strings';
 
+import styles from './Help.module.css';
 import { FrequentlyAskedQuestionsPanel } from './components/FrequentlyAskedQuestionsPanel';
 import { LegalInformationPanel } from './components/LegalInformationPanel';
 import type { HelpSection } from './models/helpSection';
@@ -35,30 +36,32 @@ export function HelpScreen() {
   function renderPanels() {
 
     return (
-      <SegmentedPanels<HelpSection>
-        label={copy.help.sectionLabel}
-        value={value}
-        onValueChange={(next) =>
-          directory.update({ section: next === 'faq' ? undefined : next })
-        }
-        panels={[
-          {
-            value: helpSections.faq,
-            label: copy.help.faqTab,
-            content: <FrequentlyAskedQuestionsPanel />,
-          },
-          {
-            value: helpSections.terms,
-            label: copy.help.termsTab,
-            content: <LegalInformationPanel context="terms_of_service" />,
-          },
-          {
-            value: helpSections.privacy,
-            label: copy.help.privacyTab,
-            content: <LegalInformationPanel context="privacy_policy" />,
-          },
-        ]}
-      />
+      <div className={styles.documents}>
+        <SegmentedPanels<HelpSection>
+          label={copy.help.sectionLabel}
+          value={value}
+          onValueChange={(next) =>
+            directory.update({ section: next === 'faq' ? undefined : next })
+          }
+          panels={[
+            {
+              value: helpSections.faq,
+              label: copy.help.faqTab,
+              content: <FrequentlyAskedQuestionsPanel />,
+            },
+            {
+              value: helpSections.terms,
+              label: copy.help.termsTab,
+              content: <LegalInformationPanel context="terms_of_service" />,
+            },
+            {
+              value: helpSections.privacy,
+              label: copy.help.privacyTab,
+              content: <LegalInformationPanel context="privacy_policy" />,
+            },
+          ]}
+        />
+      </div>
     );
 
   }
@@ -66,7 +69,7 @@ export function HelpScreen() {
   function renderContent() {
 
     return (
-      <Page>
+      <Page className={styles.help}>
         {renderHeader()}
         {renderPanels()}
       </Page>

@@ -5,7 +5,7 @@ import { useId, useState } from 'react';
 import { Button } from '@/components/ui';
 import { portalPublishingStrings } from '@/strings';
 
-import styles from '../Blog.module.css';
+import styles from '../BlogContent.module.css';
 import { resolveBlogEmbed } from '../content/resolveBlogEmbed';
 import type { BlogEmbeddedMediaProps } from '../models/blogEmbeddedMediaProps';
 

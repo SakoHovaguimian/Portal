@@ -21,7 +21,7 @@ export function PendingMessageRow({ item, author, reply, onRetry }: PendingMessa
           <span className="font-semibold">{reply.author}</span>
           <p className="m-0 mt-1 line-clamp-2">{reply.body}</p>
         </div>}
-        <p className="m-0 whitespace-pre-wrap wrap-anywhere text-sm leading-relaxed">{item.draft.body}</p>
+        <p data-chat-message-body className="m-0 whitespace-pre-wrap wrap-anywhere text-sm leading-relaxed">{item.draft.body}</p>
         {item.draft.files.length > 0 && <div className="mt-3 max-w-sm"><FileList files={files}/></div>}
       </div>
       <div role="status" className={`${styles.actions} mt-2 flex items-center justify-end gap-2 text-[11px] text-tertiary`}>{item.status === 'failed' ? <><span className="text-error-primary">{copy.sendFailed}</span><Button variant="secondary" className="min-h-8 px-2 py-1 text-xs" onClick={onRetry}>{copy.retrySend}</Button></> : <span>{copy.sending}</span>}</div>

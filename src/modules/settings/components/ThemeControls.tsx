@@ -108,7 +108,7 @@ export function ThemeControls() {
   function renderPreferenceSummary() {
 
     return (
-      <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
+      <div className="flex min-w-0 flex-wrap items-start justify-between gap-3">
         <div className="grid gap-1">
           <h3 className="m-0 text-base font-semibold text-primary">
             {copy.themeStudio.preferencesTitle}
@@ -159,7 +159,7 @@ export function ThemeControls() {
   function renderPreferenceControls() {
 
     return (
-      <div className="grid min-w-0 items-end gap-5 sm:grid-cols-2">
+      <div className="grid min-w-0 items-start gap-4 sm:grid-cols-2">
         <div className="grid min-w-0 gap-1.5">
           <span className="text-sm font-medium text-secondary">
             {copy.mode}
@@ -213,10 +213,14 @@ export function ThemeControls() {
           className={theme.ready ? 'contents' : 'invisible contents'}
           inert={!theme.ready}
         >
+          <div className={styles.preferenceStrip}>
+            {renderPreferenceSummary()}
+            <div className="grid min-w-0 gap-3">
+              {renderPreferenceControls()}
+              {renderPreferenceFeedback()}
+            </div>
+          </div>
           {renderThemeChoices()}
-          {renderPreferenceSummary()}
-          {renderPreferenceControls()}
-          {renderPreferenceFeedback()}
         </div>
         <ThemeLivePreview />
       </div>

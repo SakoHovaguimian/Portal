@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-import { ActivityIndicator, Button, DataPanel, DataTable, DirectoryFilters, DirectoryPagination, EmptyState, ErrorState, MobileRecordRow, Page, PageHeader, UiIcon } from '@/components/ui';
+import { Button, DataPanel, DataPanelState, DataTable, DirectoryFilters, DirectoryPagination, EmptyState, ErrorState, InlineLoading, MobileRecordRow, Page, PageHeader, UiIcon } from '@/components/ui';
 import { useDirectoryState } from '@/queries/useDirectoryState';
 import { portalJobStrings as copy } from '@/strings';
 
@@ -29,7 +29,6 @@ export function JobsScreen() {
     return (
       <PageHeader
         title={copy.title}
-        eyebrow={copy.eyebrow}
         description={copy.description}
         action={<Button onClick={() => setCreating(true)}><UiIcon name="plus" />{copy.createAction}</Button>}
       />
@@ -55,7 +54,7 @@ export function JobsScreen() {
 
     return (
       <div className="grid min-w-0 gap-1.5">
-        <Link href={`/jobs/${job.id}`} className="font-medium text-primary hover:text-brand-secondary">{job.name}</Link>
+        <Link href={`/jobs/${job.id}`} className="font-medium text-primary wrap-anywhere hover:text-brand-secondary">{job.name}</Link>
         <span className="text-xs text-tertiary">{copy.attempt(job.attempt, job.maxAttempts)}</span>
       </div>
     );
@@ -65,7 +64,7 @@ export function JobsScreen() {
   function renderMobileJob(job: BackgroundJob) {
 
     return (
-      <MobileRecordRow title={<Link href={`/jobs/${job.id}`}>{job.name}</Link>} summary={<JobStatus job={job} />} description={copy.attempt(job.attempt, job.maxAttempts)} footer={<time dateTime={job.updatedAt}>{formatJobDate(job.updatedAt)}</time>}>
+      <MobileRecordRow title={<Link href={`/jobs/${job.id}`}>{job.name}</Link>} summary={<JobStatus job={job} />} description={copy.attempt(job.attempt, job.maxAttempts)} footer={<time dateTime={job.updatedAt} className="text-xs text-tertiary tabular-nums">{formatJobDate(job.updatedAt)}</time>}>
         <JobProgress job={job} />
       </MobileRecordRow>
     );
@@ -74,8 +73,24 @@ export function JobsScreen() {
 
   function renderResults() {
 
-    if (query.isPending) { return <div className="grid min-h-72 place-items-center p-6"><ActivityIndicator label={copy.loadingLabel} showLabel /></div>; }
-    if (query.isError) { return <div className="p-4 sm:p-6"><ErrorState title={copy.unavailableTitle} description={copy.unavailableHint} onRetry={() => void query.refetch()} /></div>; }
+    if (query.isPending) {
+
+      return (
+        <DataPanelState>
+          <div className="grid place-items-center"><InlineLoading message={copy.loadingLabel} /></div>
+        </DataPanelState>
+      );
+
+    }
+    if (query.isError) {
+
+      return (
+        <DataPanelState>
+          <ErrorState title={copy.unavailableTitle} description={copy.unavailableHint} onRetry={() => void query.refetch()} />
+        </DataPanelState>
+      );
+
+    }
     if (!query.data.data.length) {
       return <EmptyState variant="plain" icon="layers" title={filtered ? copy.noResultsTitle : copy.emptyTitle} description={filtered ? copy.noResultsHint : copy.emptyHint} action={!filtered ? <Button onClick={() => setCreating(true)}>{copy.createAction}</Button> : undefined} />;
     }
@@ -91,7 +106,7 @@ export function JobsScreen() {
           { key: 'name', header: copy.nameColumn, render: renderJobName },
           { key: 'status', header: copy.statusLabel, render: (job) => <JobStatus job={job} /> },
           { key: 'progress', header: copy.progressColumn, render: (job) => <div className="min-w-40"><JobProgress job={job} /></div> },
-          { key: 'updatedAt', header: copy.updatedColumn, render: (job) => <time dateTime={job.updatedAt} className="text-sm text-tertiary">{formatJobDate(job.updatedAt)}</time> },
+          { key: 'updatedAt', header: copy.updatedColumn, headerClassName: 'text-end', cellClassName: 'text-end tabular-nums', render: (job) => <time dateTime={job.updatedAt} className="text-sm text-tertiary">{formatJobDate(job.updatedAt)}</time> },
         ]}
       />
     );

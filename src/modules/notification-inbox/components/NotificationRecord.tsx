@@ -1,5 +1,4 @@
 import {
-  Card,
   IconButton,
   IconTile,
   UiIcon,
@@ -41,22 +40,17 @@ export function NotificationRecord({
   const instant = item.publishedAt ?? item.createdAt;
   const headingId = `notification-${item.id}`;
   return (
-    <Card className={styles.record} data-unread={!item.readAt || undefined}>
+    <article
+      className={styles.record}
+      aria-labelledby={headingId}
+      data-unread={!item.readAt || undefined}
+    >
       <IconTile
         className={`${categoryTones[item.category]} ${styles.categoryIcon}`}
       >
         <UiIcon name={categoryIcons[item.category]} className="size-5" />
       </IconTile>
-      <article className={styles.content} aria-labelledby={headingId}>
-        <div className={styles.category}>
-          <span>{copy.categories[item.category]}</span>
-          {!item.readAt && (
-            <span className={styles.unread}>
-              <span aria-hidden="true" />
-              {copy.readStatuses.unread}
-            </span>
-          )}
-        </div>
+      <div className={styles.content}>
         <h2 id={headingId}>
           {href ? (
             <NavigationLink
@@ -71,7 +65,16 @@ export function NotificationRecord({
           )}
         </h2>
         <p>{item.body}</p>
-      </article>
+        <div className={styles.category}>
+          <span>{copy.categories[item.category]}</span>
+          {!item.readAt && (
+            <span className={styles.unread}>
+              <span aria-hidden="true" />
+              {copy.readStatuses.unread}
+            </span>
+          )}
+        </div>
+      </div>
       <div className={styles.aside}>
         <time dateTime={instant}>
           {new Intl.DateTimeFormat('en-US', {
@@ -98,7 +101,7 @@ export function NotificationRecord({
           </IconButton>
         </div>
       </div>
-    </Card>
+    </article>
   );
 
 }

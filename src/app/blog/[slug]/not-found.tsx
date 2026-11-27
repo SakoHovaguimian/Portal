@@ -1,17 +1,17 @@
 import Link from 'next/link';
 
-import { Button, EmptyState } from '@/components/ui';
+import { Button } from '@/components/ui';
 import { portalPublishingStrings } from '@/strings';
+
+import styles from '@/modules/blog/Blog.module.css';
 
 const copy = portalPublishingStrings.article;
 export default function ArticleNotFound() {
 
   return (
-    <main className="grid min-h-96 justify-items-center gap-6 py-24">
-      <EmptyState
-        title={copy.notFoundTitle}
-        description={copy.notFoundDescription}
-      />
+    <main id="main-content" tabIndex={-1} className={styles.routeState}>
+      <h1>{copy.notFoundTitle}</h1>
+      <p>{copy.notFoundDescription}</p>
       <Button asChild>
         <Link href="/blog">{copy.backToJournal}</Link>
       </Button>

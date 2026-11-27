@@ -1,6 +1,8 @@
+import { ProjectBrand } from '@/components/ProjectBrand';
+import { strings } from '@/strings';
+
 import { cn } from '../lib/cn';
 import type { AppShellProps } from '../models/appShellProps';
-import { strings } from '@/strings';
 
 import { AppSidebar } from './AppSidebar';
 import { MobileNavigationMenu } from './MobileNavigationMenu';
@@ -23,6 +25,7 @@ export function AppShell({
     ...item,
     active: activePath === item.href || activePath?.startsWith(`${item.href}/`),
   }));
+  const activeItem = items.find((item) => item.active);
   const sidebar = {
     session,
     homeHref,
@@ -36,23 +39,25 @@ export function AppShell({
   function renderHeader() {
 
     return (
-      <header className="ui-app-topbar top-0 z-30 shrink-0 border-b-control border-(--dashboard-shell-border) bg-(--dashboard-shell-topbar) backdrop-blur lg:sticky">
-        <div className="mx-auto flex min-h-16 w-full flex-wrap items-center justify-between gap-3 px-(--space-page) py-3">
-          <div className="flex min-w-0 items-center gap-3">
+      <header className="ui-app-topbar top-0 z-30 shrink-0 border-b-control border-(--dashboard-shell-border) bg-(--dashboard-shell-topbar) lg:sticky">
+        <div className="mx-auto flex min-h-16 w-full items-center justify-between gap-2 px-(--space-page) py-2 lg:gap-5">
+          <div className="flex min-w-0 items-center gap-2 lg:gap-4">
             <MobileNavigationMenu
               key={`${session.user.id}:${activePath}`}
               {...sidebar}
             />
-            <p className="m-0 flex min-w-0 items-center gap-2 text-sm font-medium text-tertiary">
-              <span
-                aria-hidden="true"
-                className="size-2 shrink-0 rounded-full bg-brand-solid"
-              />
-              {strings.ui.appShell.workspace}
-            </p>
+            <ProjectBrand className="max-h-8 min-w-0 truncate text-sm font-semibold text-primary max-[23rem]:hidden lg:hidden" />
+            <div className="hidden min-w-0 items-center gap-3 text-sm lg:flex">
+              <span className="text-secondary">{strings.ui.appShell.workspace}</span>
+              {activeItem && (
+                <span className="truncate font-semibold text-primary lg:border-s-control lg:border-secondary lg:ps-3">
+                  {activeItem.label}
+                </span>
+              )}
+            </div>
           </div>
           {utilitySlot && (
-            <div className="flex shrink-0 items-center gap-3">
+            <div className="flex shrink-0 items-center gap-1 lg:gap-2">
               {utilitySlot}
             </div>
           )}

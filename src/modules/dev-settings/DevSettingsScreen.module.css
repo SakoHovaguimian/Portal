@@ -1,0 +1,27 @@
+.page {
+  --dev-settings-anchor-offset: 1.25rem;
+}
+
+.page section[id][tabindex='-1'],
+.page [id='runtime-settings'] {
+  scroll-margin-block-start: var(--dev-settings-anchor-offset);
+  outline: none;
+}
+
+.page section[id][tabindex='-1']:focus-visible > header :is(h2, h3, h4),
+.page [id='runtime-settings']:focus-visible [id='demo-runtime-title'] {
+  inline-size: fit-content;
+  border-radius: var(--radius-control);
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 4px;
+}
+
+@media (min-width: 64rem) {
+  .page {
+    --dev-settings-anchor-offset: 6rem;
+  }
+
+  :global(.ui-app-topbar:has(.ui-message) + main) .page {
+    --dev-settings-anchor-offset: 12rem;
+  }
+}

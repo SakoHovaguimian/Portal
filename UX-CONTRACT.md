@@ -35,7 +35,7 @@ English-language workspace for operators managing people, requests, and conversa
 
 ## Workflow outcomes
 
-- Login/signup opens the allowed internal return path, default dashboard. Invalid credentials keep entries and show an error.
+- The public landing page links to credential entry and, in demo mode, the account presets. Signed-in visitors can enter their configured workspace. Login/signup opens the allowed internal return path, default dashboard. Invalid credentials keep entries and show an error.
 - Create request clears the field only on success and refreshes the list/counts. Edit stays on detail with a success toast. Delete confirms through the shared dialog, disables duplicate actions, and returns to the list after success.
 - Profile save keeps entries on failure and updates the public session after success. Email is read-only pending a dedicated identity flow.
 - Chat places outgoing messages immediately in an in-memory outbox and clears the composer for the next message. Pending/failed items retain text, attachments, reply scope, and an idempotent retry key. Server responses reconcile without duplicate rows; failed work remains retryable. Reactions and reversible message actions project immediately and serialize per message with rollback on failure. Socket/push events refresh authoritative queries. Shift+Enter sends outside IME composition; Enter inserts a newline.
@@ -46,7 +46,7 @@ English-language workspace for operators managing people, requests, and conversa
 
 Lists use server paging contracts (default 25), URL query filters, and stable domain query keys. Empty, loading, and failure states are visible; failure offers retry. Profile forms load only after their query succeeds. Protected routes independently require a session on the server and API. Route metadata uses the single `src/strings.ts` catalog.
 
-Tables preserve horizontal access on narrow screens. Mobile navigation opens a full-screen modal with the same links and account controls, safe areas, Escape, focus trap, and restoration. Desktop uses the fixed sidebar. Screens own their PageHeader h1. The library uses a searchable catalog with category filters and one focused preview; preview/category choices use URL history and visited examples preserve local state. Local catalog search is transient discovery state. Query and mutation errors preserve safe input. Do not persist passwords/tokens or private form drafts in browser storage.
+Tables preserve horizontal access on narrow screens. Mobile navigation opens a full-screen modal with the same links and account controls, safe areas, Escape, focus trap, and restoration. Desktop uses the fixed sidebar. Screens own their PageHeader h1. Developer Settings renders all component examples in one document. Section and example anchors use native history and preserve mounted state. Search filters the jump index. Legacy component and category links open the corresponding section. Query and mutation errors preserve safe input. Do not persist passwords/tokens or private form drafts in browser storage.
 
 ## Forms, overlays, and feedback
 

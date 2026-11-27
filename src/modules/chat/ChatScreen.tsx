@@ -3,10 +3,12 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { Button, Modal, Page, PageHeader, QueryBoundary, UiIcon } from '@/components/ui';
+import { cn } from '@/components/ui/lib/cn';
 import { useUnsavedFormGuard } from '@/providers/useUnsavedFormGuard';
 import { useUrlState } from '@/providers/useUrlState';
 import { portalChatStrings as copy } from '@/strings';
 
+import styles from './ChatScreen.module.css';
 import { ConversationDetails } from './components/ConversationDetails';
 import { ConversationList } from './components/ConversationList';
 import { ConversationThread } from './components/ConversationThread';
@@ -91,7 +93,7 @@ export function ChatScreen() {
   function renderConversationList() {
 
     return (
-      <div className={`min-h-0 min-w-0 border-r-control border-secondary ${selected ? 'hidden lg:block' : ''}`}>
+      <div className={cn('min-h-0 min-w-0 bg-secondary_subtle lg:border-e-control lg:border-secondary', selected && 'hidden lg:block')}>
         <ConversationList
           conversations={conversations}
           selectedId={selectedId || null}
@@ -129,12 +131,12 @@ export function ChatScreen() {
             onRetry={() => { void messages.refetch(); }}
           />
         ) : (
-          <div className="flex h-full flex-col items-center justify-center gap-3 bg-secondary_subtle px-8 text-center">
-            <span className="mb-2 flex size-16 items-center justify-center rounded-full border-control border-secondary bg-primary">
-              <UiIcon name="mail" className="size-7 text-brand-secondary" />
-            </span>
-            <h2 className="m-0 max-w-xs text-2xl font-semibold tracking-tight">{copy.emptyTitle}</h2>
-            <p className="m-0 max-w-xs text-sm leading-relaxed text-tertiary">{copy.emptyHint}</p>
+          <div className="grid h-full content-center justify-items-start overflow-y-auto bg-primary px-8 py-10 xl:px-16">
+            <div className="grid max-w-md gap-3">
+              <UiIcon name="mail" className="mb-2 size-7 text-brand-secondary" />
+              <h2 className="m-0 font-display text-2xl font-semibold tracking-tight text-balance">{copy.emptyTitle}</h2>
+              <p className="m-0 text-sm leading-relaxed text-secondary">{copy.emptyHint}</p>
+            </div>
           </div>
         )}
       </div>
@@ -144,8 +146,9 @@ export function ChatScreen() {
 
   function renderDetailsSidebar() {
 
+    if (!selected) { return null; }
     return (
-      <aside aria-label={copy.details} className="hidden min-h-0 min-w-0 overflow-y-auto border-l-control border-secondary bg-primary 2xl:block">{renderDetails()}</aside>
+      <aside aria-label={copy.details} className="hidden min-h-0 min-w-0 overflow-y-auto overscroll-y-contain border-s-control border-secondary bg-secondary_subtle 2xl:block">{renderDetails()}</aside>
     );
 
   }
@@ -153,7 +156,20 @@ export function ChatScreen() {
   function renderHeader() {
 
     return (
-      <PageHeader title={copy.title} description={copy.description} action={<Button onClick={() => setCreating(true)} disabled={workspace.people.isPending || workspace.people.isError}><UiIcon name="plus" className="size-4" />{copy.newConversation}</Button>} />
+      <PageHeader
+        title={copy.title}
+        description={copy.description}
+        action={(
+          <Button
+            className={selected ? 'max-sm:size-11 max-sm:min-h-11 max-sm:px-0 max-sm:py-0' : undefined}
+            onClick={() => setCreating(true)}
+            disabled={workspace.people.isPending || workspace.people.isError}
+          >
+            <UiIcon name="plus" className="size-4" />
+            <span className={selected ? 'max-sm:sr-only' : undefined}>{copy.newConversation}</span>
+          </Button>
+        )}
+      />
     );
 
   }
@@ -163,7 +179,10 @@ export function ChatScreen() {
     return (
       <QueryBoundary query={workspace.conversations} retainDataOnError>
         {() => (
-          <div className="grid min-h-0 min-w-0 flex-1 overflow-hidden rounded-card border-control border-secondary bg-primary shadow-(--shadow-control) lg:grid-cols-[280px_minmax(0,1fr)] 2xl:grid-cols-[280px_minmax(0,1fr)_320px]">
+          <div className={cn(
+            'grid min-h-0 min-w-0 flex-1 grid-rows-[minmax(0,1fr)] overflow-hidden rounded-card border-control border-secondary bg-primary lg:grid-cols-[minmax(16rem,0.65fr)_minmax(0,1.35fr)] xl:grid-cols-[minmax(16rem,19rem)_minmax(0,1fr)]',
+            selected && '2xl:grid-cols-[minmax(16rem,19rem)_minmax(0,1fr)_minmax(16rem,19rem)]',
+          )}>
             {renderConversationList()}
             {renderConversationPanel()}
             {renderDetailsSidebar()}
@@ -204,7 +223,7 @@ export function ChatScreen() {
   }
 
   return (
-    <Page className="flex h-full min-h-0 flex-1 flex-col gap-5 [&>.ui-page-header]:shrink-0">
+    <Page className={cn('flex h-full min-h-0 flex-1 flex-col gap-3 lg:gap-5 [&>.ui-page-header]:shrink-0 [&>.ui-page-header]:py-0', selected && styles.threadOpen)}>
       {renderHeader()}
       {renderWorkspace()}
       {renderPeopleError()}

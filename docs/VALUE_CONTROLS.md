@@ -1,6 +1,6 @@
 # Progress and value controls
 
-Import these shared components and their props from `@/components/ui`. Open `/dev-settings/components#values` to try them with local state. Select **macOS / iOS** in Appearance or in the library to apply the Cupertino preset. The preset changes existing controls as well as the new collection, and supports light and dark modes. Existing appearance defaults remain Portal.
+Import these shared components and their props from `@/components/ui`. Open `/dev-settings#values` to try them with local state. Select **macOS / iOS** in Appearance or in the library to apply the Cupertino preset. The preset changes existing controls as well as the new collection, and supports light and dark modes. Existing appearance defaults remain Portal.
 
 ## Collection
 

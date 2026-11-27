@@ -48,7 +48,7 @@ export function FoundationsShowcase() {
 
     return (
       <div className="grid gap-3">
-        <h4 className="m-0 text-sm font-medium text-primary">{copy.colors}</h4>
+        <h5 className="m-0 text-sm font-medium text-primary">{copy.colors}</h5>
         <div className="grid grid-cols-3 gap-x-2 gap-y-4 sm:grid-cols-5 xl:grid-cols-5 2xl:grid-cols-9">
           {colorSwatches}
         </div>
@@ -102,17 +102,17 @@ export function FoundationsShowcase() {
     return (
       <div className="grid gap-5 sm:grid-cols-2">
         <div className="grid content-start gap-3">
-          <h4 className="m-0 text-sm font-medium text-primary">
+          <h5 className="m-0 text-sm font-medium text-primary">
             {copy.radius}
-          </h4>
+          </h5>
           <div className="flex flex-wrap gap-3">
             {cornerSamples}
           </div>
         </div>
         <div className="grid content-start gap-3">
-          <h4 className="m-0 text-sm font-medium text-primary">
+          <h5 className="m-0 text-sm font-medium text-primary">
             {copy.spacing}
-          </h4>
+          </h5>
           <div className="flex min-h-16 flex-wrap items-end gap-3">
             {spacingSamples}
           </div>
@@ -153,9 +153,9 @@ export function FoundationsShowcase() {
 
     return (
       <div>
-        <h4 className="m-0 text-sm font-medium text-primary">
+        <h5 className="m-0 text-sm font-medium text-primary">
           {copy.typography}
-        </h4>
+        </h5>
         <p className="m-0 mt-1 text-xs text-tertiary">{copy.typographyHint}</p>
       </div>
     );
@@ -166,7 +166,7 @@ export function FoundationsShowcase() {
 
     return (
       <div>
-        <h4 className="m-0 text-sm font-medium text-primary">{copy.motion}</h4>
+        <h5 className="m-0 text-sm font-medium text-primary">{copy.motion}</h5>
         <p className="m-0 mt-1 text-xs text-tertiary">{copy.motionHint}</p>
         <p className="m-0 mt-1 text-xs text-tertiary">
           {copy.reducedMotionHint}

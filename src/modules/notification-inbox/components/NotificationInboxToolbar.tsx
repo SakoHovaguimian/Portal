@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Button, Card, SegmentedTabs, UiIcon } from '@/components/ui';
+import { Button, SegmentedTabs, UiIcon } from '@/components/ui';
 import { portalNotificationInboxStrings as copy } from '@/strings';
 
 import { NotificationDirectoryFilters } from './NotificationDirectoryFilters';
@@ -33,7 +33,7 @@ export function NotificationInboxToolbar({
 
   };
   return (
-    <Card className="grid gap-5">
+    <div className="grid min-w-0 gap-4">
       <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
         <SegmentedTabs<NotificationInboxView>
           value={view}
@@ -84,7 +84,7 @@ export function NotificationInboxToolbar({
       {expanded && (
         <div
           id="notification-bulk-actions"
-          className="grid gap-3 border-t border-secondary pt-5"
+          className="grid min-w-0 gap-3 border-t-control border-secondary pt-4"
         >
           <div className="grid gap-1">
             <h2 className="m-0 text-sm font-semibold text-primary">
@@ -124,7 +124,7 @@ export function NotificationInboxToolbar({
           </div>
         </div>
       )}
-    </Card>
+    </div>
   );
 
 }

@@ -37,9 +37,9 @@ export function CardsShowcase() {
     return (
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="grid gap-2">
-          <h4 className="m-0 text-xs font-medium text-secondary">
+          <h5 className="m-0 text-xs font-medium text-secondary">
             {copy.standardCard}
-          </h4>
+          </h5>
           <CardView
             title={copy.basicDetails}
             description={copy.basicDetailsHint}
@@ -47,9 +47,9 @@ export function CardsShowcase() {
           />
         </div>
         <div className="grid gap-2">
-          <h4 className="m-0 text-xs font-medium text-secondary">
+          <h5 className="m-0 text-xs font-medium text-secondary">
             {copy.sectionCard}
-          </h4>
+          </h5>
           <SectionCardView
             title={copy.productInformation}
             description={copy.productInformationHint}
@@ -68,9 +68,9 @@ export function CardsShowcase() {
     return (
       <div className="grid gap-4 sm:grid-cols-2 2xl:grid-cols-3">
         <div className="grid content-start gap-2">
-          <h4 className="m-0 text-xs font-medium text-secondary">
+          <h5 className="m-0 text-xs font-medium text-secondary">
             {copy.compactCard}
-          </h4>
+          </h5>
           <CardView
             title={copy.indica}
             description={copy.category}
@@ -84,9 +84,9 @@ export function CardsShowcase() {
           change={copy.sampleChange}
         />
         <div className="grid content-start gap-2">
-          <h4 className="m-0 text-xs font-medium text-secondary">
+          <h5 className="m-0 text-xs font-medium text-secondary">
             {copy.statusCard}
-          </h4>
+          </h5>
           <CardView
             title={copy.active}
             description={active ? copy.productLiveHint : copy.productInactiveHint}

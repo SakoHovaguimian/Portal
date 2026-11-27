@@ -1,6 +1,6 @@
 import { UiIcon, type AppSidebarItem } from '@/components/ui';
 import type { UserRole } from '@/models/userRole';
-import { portalModuleStrings, strings } from '@/strings';
+import { portalModuleStrings } from '@/strings';
 
 import type { ProjectRouting } from './models/projectRouting';
 import { getProjectDestinationHref } from './projectRoutes';
@@ -18,20 +18,12 @@ export function portalNavigation(
   }));
   if (devSettingsEnabled) {
 
-    items.push(
-      {
-        href: '/dev-settings',
-        label: portalModuleStrings.demo,
-        icon: <UiIcon name="flask" />,
-        placement: 'bottom',
-      },
-      {
-        href: '/dev-settings/components',
-        label: strings.componentLibrary.title,
-        icon: <UiIcon name="code" />,
-        placement: 'bottom',
-      },
-    );
+    items.push({
+      href: '/dev-settings',
+      label: portalModuleStrings.demo,
+      icon: <UiIcon name="flask" />,
+      placement: 'bottom',
+    });
 
   }
   return items;

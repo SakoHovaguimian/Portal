@@ -12,7 +12,7 @@ const copy = strings.orbit;
 
 export function OrbitCarouselShowcase() {
 
-  const [float, setFloat] = useState(15);
+  const [float, setFloat] = useState(0);
   const [sink, setSink] = useState(50);
   const [settle, setSettle] = useState(50);
   const [spread, setSpread] = useState(100);

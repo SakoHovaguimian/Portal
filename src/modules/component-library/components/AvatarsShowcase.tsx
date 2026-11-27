@@ -43,9 +43,9 @@ export function AvatarsShowcase() {
 
       return (
         <div className="grid content-start gap-4">
-          <h3 className="m-0 text-sm font-medium text-secondary">
+          <h5 className="m-0 text-sm font-medium text-secondary">
             {copy.examples.avatarSizes}
-          </h3>
+          </h5>
           <div className="flex items-center gap-5">
             {avatarSizes}
           </div>
@@ -58,9 +58,9 @@ export function AvatarsShowcase() {
 
       return (
         <div className="grid content-start gap-4">
-          <h3 className="m-0 text-sm font-medium text-secondary">
+          <h5 className="m-0 text-sm font-medium text-secondary">
             {copy.examples.avatarFallback}
-          </h3>
+          </h5>
           <div className="flex items-center gap-5">
             <Avatar name={people[1].name} src="/portal-preview.svg" size="lg" />
             <Avatar
@@ -79,9 +79,9 @@ export function AvatarsShowcase() {
 
       return (
         <div className="grid content-start gap-4">
-          <h3 className="m-0 text-sm font-medium text-secondary">
+          <h5 className="m-0 text-sm font-medium text-secondary">
             {copy.examples.avatarPresence}
-          </h3>
+          </h5>
           <div className="flex flex-wrap gap-5">
             {avatarStatuses}
           </div>
@@ -94,9 +94,9 @@ export function AvatarsShowcase() {
 
       return (
         <div className="grid content-start gap-4">
-          <h3 className="m-0 text-sm font-medium text-secondary">
+          <h5 className="m-0 text-sm font-medium text-secondary">
             {copy.examples.avatarGroup}
-          </h3>
+          </h5>
           <AvatarGroup
             label={copy.examples.avatarGroup}
             items={people}

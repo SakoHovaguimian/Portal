@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 
-import { Button, Field, Input, SplitSection, TextArea } from '@/components/ui';
+import { Button, Field, Input, TextArea } from '@/components/ui';
 import { portalPublishingStrings } from '@/strings';
 
 import styles from '../BlogAdmin.module.css';
@@ -50,6 +50,7 @@ export function BlogArticleFields({
         <Field labelText={copy.titleLabel}>
           <Input
             id="blog-title"
+            className="font-display text-xl"
             value={form.title}
             maxLength={140}
             disabled={disabled}
@@ -124,6 +125,7 @@ export function BlogArticleFields({
         <Field labelText={copy.descriptionLabel}>
           <TextArea
             id="blog-description"
+            className={styles.introductionField}
             value={form.description}
             maxLength={350}
             disabled={disabled}
@@ -187,7 +189,7 @@ export function BlogArticleFields({
   function renderReusableOptionsFields() {
 
     return (
-      <div className="grid items-start gap-5 sm:grid-cols-2">
+      <>
         <div className="grid min-w-0 gap-1.5">
           <BlogTopicField
             value={form.category}
@@ -209,7 +211,7 @@ export function BlogArticleFields({
           />
           {renderFieldError('cover')}
         </div>
-      </div>
+      </>
     );
 
   }
@@ -243,20 +245,28 @@ export function BlogArticleFields({
   }
 
   return (
-    <SplitSection
-      id="blog-details"
-      title={copy.articleDetails}
-      description={copy.articleDetailsDescription}
-    >
-      {renderTitleField()}
-      {renderSlugField()}
-      {renderDescriptionField()}
-      {renderAuthorField()}
-      {renderOptionsError()}
-      {renderReusableOptionsFields()}
-      <p className="m-0 text-xs text-tertiary">{copy.reusableOptionsHint}</p>
-      {renderCoverPreview()}
-    </SplitSection>
+    <section aria-labelledby="blog-details-title" className={styles.articleDetails}>
+      <header className="grid gap-1">
+        <h2 id="blog-details-title" className="m-0 text-base font-semibold text-primary">
+          {copy.articleDetails}
+        </h2>
+        <p className="m-0 max-w-prose text-sm text-secondary">{copy.articleDetailsDescription}</p>
+      </header>
+      <div className={styles.articleFieldGroups}>
+        <div className={styles.articleWritingFields}>
+          {renderTitleField()}
+          {renderDescriptionField()}
+        </div>
+        <div className={styles.articleMetadataFields}>
+          {renderSlugField()}
+          {renderAuthorField()}
+          {renderOptionsError()}
+          {renderReusableOptionsFields()}
+          <p className="m-0 text-xs text-tertiary">{copy.reusableOptionsHint}</p>
+          {renderCoverPreview()}
+        </div>
+      </div>
+    </section>
   );
 
 }

@@ -199,7 +199,9 @@ export function TimeScrubber({
     const time = parts.map(({ type, value: part }, index) => {
 
       if (type === 'dayPeriod') { return <span key={index} className={styles.period}>{part}</span>; }
-      const characters = Array.from(part).map((character, digitIndex) => {
+      // ICU versions differ on the space preceding a day period in formatToParts.
+      const separator = type === 'literal' && (part === '\u00a0' || part === '\u202f');
+      const characters = Array.from(separator ? ' ' : part).map((character, digitIndex) => {
 
         const digit = digits.indexOf(character);
         if (digit === -1) { return <span key={digitIndex}>{character}</span>; }
@@ -239,8 +241,8 @@ export function TimeScrubber({
           data-quarter={quarter || undefined}
           style={{
             '--tick-x': `${x}px`,
-            '--tick-scale': 0.55 + weight * 0.45,
-            '--tick-opacity': 0.28 + weight * 0.72,
+            '--tick-scale': (0.55 + weight * 0.45).toFixed(4),
+            '--tick-opacity': (0.28 + weight * 0.72).toFixed(4),
           } as CSSProperties}
         >
           {hour && <span className={styles.hour}>{hourFormat.format(dateAt(minute))}</span>}

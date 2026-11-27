@@ -21,19 +21,26 @@ export function BlogArticleReader({
 }: BlogArticleReaderProps) {
 
   const date = article.publishedAt || article.updatedAt;
+  const Heading = preview ? 'h2' : 'h1';
 
   function renderArticleHeader() {
 
     return (
       <header className={styles.readerHeader}>
-        <p className={styles.topic}>
-          {preview
-            ? copy.draftPreviewLabel
-            : blogCategoryLabel(article.category)}
-        </p>
-        <h1>{article.title || copy.unsavedPreviewTitle}</h1>
-        <p className={styles.readerDescription}>{article.description}</p>
+        <div className={styles.readerIntroduction}>
+          <Heading className={styles.readerTitle}>
+            {article.title || copy.unsavedPreviewTitle}
+          </Heading>
+          {article.description && (
+            <p className={styles.readerDescription}>{article.description}</p>
+          )}
+        </div>
         <div className={styles.readerByline}>
+          <span className={styles.topic}>
+            {preview
+              ? copy.draftPreviewLabel
+              : blogCategoryLabel(article.category)}
+          </span>
           <span>{copy.authorByline(article.author || copy.defaultAuthor)}</span>
           <BlogDate value={date} long />
           <span>
@@ -60,13 +67,13 @@ export function BlogArticleReader({
     return (
       <div className={styles.readerCover} data-cover={article.cover}>
         <Image
-          priority
           src={blogCoverSource(article.cover)}
           unoptimized
           width={1000}
           height={600}
           alt={copy.coverAlt(article.title)}
-          sizes="(max-width: 900px) 94vw, 900px"
+          loading={preview ? 'lazy' : 'eager'}
+          sizes="(max-width: 900px) 94vw, 1120px"
         />
       </div>
     );
@@ -91,11 +98,15 @@ export function BlogArticleReader({
   }
 
   return (
-    <article className={styles.reader}>
+    <article className={styles.reader} data-preview={preview || undefined}>
       {renderArticleHeader()}
-      {!preview && accountActions}
       {renderArticleCover()}
-      {renderArticleBody()}
+      <div className={styles.readerContent}>
+        {renderArticleBody()}
+        {!preview && accountActions && (
+          <div className={styles.readerAside}>{accountActions}</div>
+        )}
+      </div>
     </article>
   );
 

@@ -20,8 +20,31 @@ export const strings = {
   // Project, Authentication, And Integrations
   app: {
     backToWorkspace: 'Back To Workspace',
+    openWorkspace: 'Open Workspace',
     name: portalProjectStrings.name,
     description: portalProjectStrings.description,
+  },
+  landing: {
+    title: 'Bring Your Work Into Focus',
+    openDemo: 'Explore The Demo',
+    exploreWorkspace: 'See What’s Inside',
+    previewLabel: 'Sample Workspace',
+    previewTitle: 'Project Requests',
+    previewDescription: 'A request queue with sample records for a product team.',
+    selectedRequest: 'Export The Weekly Report',
+    otherRequests: ['Improve Workspace Search', 'Add A Team Activity View'],
+    previewDetailDescription: 'Give workspace leads a CSV export of the weekly report so they can share it with their teams.',
+    previewStatus: 'In Review',
+    previewQueue: 'Request Queue',
+    capabilitiesTitle: 'One Workspace For The Way You Work',
+    capabilities: {
+      dashboardDescription: 'Check activity and find the records you need to act on.',
+      requestsDescription: 'Create, review, and update requests in an account-owned queue.',
+      chatDescription: 'Keep direct messages, group conversations, and shared files together.',
+      themesDescription: 'Switch between eight complete themes, each with light and dark modes.',
+    },
+    closingTitle: 'Take The Workspace For A Spin',
+    closingDescription: 'Choose a demo account to explore populated, empty, onboarding, and admin workflows with sample data.',
   },
   auth: {
     decorativeAlt: '',
@@ -923,6 +946,8 @@ export const strings = {
     },
     profileScreen: {
       yourProfile: 'Your Profile',
+      personalInformation: 'Personal Information',
+      contactInformation: 'Contact Information',
       profileUpdated: 'Profile Updated',
       firstName: 'First Name',
       lastName: 'Last Name',
@@ -988,6 +1013,10 @@ export const strings = {
       updated: 'Updated',
     },
     featureRequestDetailScreen: {
+      backToRequests: 'Back To Feature Requests',
+      requestDetails: 'Request Details',
+      created: 'Created',
+      updated: 'Updated',
       loadingFeatureRequest: 'Loading Feature Request...',
       featureRequestUnavailable: 'Feature Request Unavailable',
       weCouldNotLoadThisRequestHint: 'We could not load this request.',
@@ -1007,6 +1036,9 @@ export const strings = {
 
     // User Directory
     usersScreen: {
+      searchLabel: 'Search Users',
+      searchPlaceholder: 'Search by name or email',
+      clearSearch: 'Clear Search',
       loadingUsers: 'Loading Users...',
       usersUnavailable: 'Users Unavailable',
       weCouldNotLoadUsersRightNowHint: 'We could not load users right now.',
@@ -1021,15 +1053,16 @@ export const strings = {
       created: 'Created',
     },
     userDetailScreen: {
+      backToUsers: 'Back To Users',
       loadingUserProfile: 'Loading User Profile...',
       userUnavailable: 'User Unavailable',
       weCouldNotLoadThisUserProfileHint: 'We could not load this user profile.',
       missingUser: 'Missing User',
       thisUserRecordCouldNotBeFoundHint: 'This user record could not be found.',
       userDetail: 'User Detail',
-      email: 'Email:',
-      externalId: 'External ID:',
-      created: 'Created:',
+      email: 'Email',
+      externalId: 'External ID',
+      created: 'Created',
     },
 
     // Appearance And Experience
@@ -1056,51 +1089,51 @@ export const strings = {
       motion: 'Motion',
       contact: 'Contact',
       faq: 'FAQ',
-      dashboardFirstSurfaces: 'Dashboard-First Surfaces',
+      dashboardFirstSurfaces: 'Workspace Surfaces',
       cardsListsFormsAndSideNavigationAllUseTheHint:
-        'Cards, lists, forms, and side navigation all use the same flatter treatment so the app feels cohesive instead of mixing visual languages.',
-      accentColorAsSupport: 'Accent Color As Support',
+        'See how shared surfaces give records, forms, and controls a consistent hierarchy.',
+      accentColorAsSupport: 'Theme Accents',
       selectedThemeColorsHighlightActiveStatesPillsAndKeyHint:
-        'Selected theme colors highlight active states, pills, and key actions while neutral grays and whites carry most of the layout.',
-      darkModeThatStaysReadable: 'Dark Mode That Stays Readable',
+        'The active theme highlights selection, focus, and primary actions.',
+      darkModeThatStaysReadable: 'Light And Dark Modes',
       theDarkThemeUsesLayeredSlatePanelsAndRestrainedHint:
-        'The dark theme uses layered slate panels and restrained contrast instead of glossy black surfaces and heavy blur.',
-      overlayControlsPreserved: 'Overlay Controls Preserved',
+        'Each theme provides a light and a dark palette with the same layout.',
+      overlayControlsPreserved: 'Presentation Layers',
       toastsAlertsAndSheetsStillRunThroughOnePresentationHint:
-        'Toasts, alerts, and sheets still run through one presentation service, but now inherit the same flat dashboard styling.',
+        'A shared presentation service coordinates toasts, alerts, and sheets.',
       selectedTheme: 'Selected Theme',
       accentAware: 'Accent Aware',
       surfaceLanguage: 'Surface Language',
       flatPanels: 'Flat Panels',
       navigationStyle: 'Navigation Style',
       dashboardShell: 'Dashboard Shell',
-      canWeStillLaunchHeroOnly: 'Can We Still Launch Hero-Only?',
+      canWeStillLaunchHeroOnly: 'Where Is The Public Landing Page?',
       yesThisShowcaseRouteIsOptionalAndCanStayHint:
-        'Yes. This showcase route is optional and can stay separate from the protected shell.',
-      canWeKeepAuthOptional: 'Can We Keep Auth Optional?',
+        'The public landing page is at the site root. The Experience showcase is available after sign-in.',
+      canWeKeepAuthOptional: 'Which Pages Require Sign-In?',
       yesTheVisualRestyleDoesNotChangeTheScaffoldHint:
-        'Yes. The visual restyle does not change the scaffold-time auth decisions.',
+        'The workspace and Experience require a session. The landing page and Privacy Notice are public.',
       canTheSelectedAccentStaySubtle: 'Can The Selected Accent Stay Subtle?',
       yesTheNewSystemDeliberatelyLimitsAccentUsageToHint:
-        'Yes. The new system deliberately limits accent usage to active states and emphasis points.',
-      areTheChartsRealYet: 'Are The Charts Real Yet?',
+        'Theme accents mark selected items and primary actions.',
+      areTheChartsRealYet: 'Where Does The Sample Data Come From?',
       sampleAnalyticsHint:
-        'The Sample Analytics section uses synthetic data and appears only in demo mode. Workspace records come from the current environment.',
+        'The charts here use synthetic data. Workspace records come from the current environment.',
       doesDarkModeKeepTheSameStructure:
         'Does Dark Mode Keep The Same Structure?',
       yesTheSameCardAndShellHierarchyCarriesThroughHint:
-        'Yes. The same card and shell hierarchy carries through; only the tonal palette changes.',
+        'Light and dark modes preserve the page structure and use the palette of the selected theme.',
       canWeSwapTheThemePerUser: 'Can We Swap The Theme Per User?',
       yesThemeChoiceLivesInAppearancePreferencesHint:
         'Yes. Choose a complete theme in Appearance. Its colors, type, corners, shadows, and spacing apply throughout the workspace.',
       willFormControlsMatchTheDashboard:
         'Will Form Controls Match The Dashboard?',
       yesInputsButtonsTabsAndOverlaysNowInheritTheHint:
-        'Yes. Inputs, buttons, tabs, and overlays now inherit the same flatter styling rules.',
+        'Shared inputs, tabs, buttons, and overlays use the active theme throughout the app.',
       areTheSideNavigationItemsReusable:
         'Are The Side Navigation Items Reusable?',
       yesTheSidebarIsStillDrivenFromOneSharedHint:
-        'Yes. The sidebar is still driven from one shared shell component and can be extended centrally.',
+        'The workspace shell builds its navigation from the project configuration.',
       canWeAddMoreDashboardWidgetsLater:
         'Can We Add More Dashboard Widgets Later?',
       dashboardComponentsHint:
@@ -1109,25 +1142,24 @@ export const strings = {
         'Will Records And Registry Stay In The Dashboard?',
       dashboardRecordsHint:
         'Yes. Records and registered models appear before any sample analytics.',
-      doOverlayAnimationsStillWork: 'Do Overlay Animations Still Work?',
+      doOverlayAnimationsStillWork: 'How Do Overlay Animations Work?',
       yesAlertToastAndSheetTimingControlsAreUntouchedHint:
-        'Yes. Alert, toast, and sheet timing controls are untouched and still configurable through the presentation service.',
+        'The presentation service controls each overlay. Your reduced motion preference takes precedence.',
       canTheFooterBeBrandSpecific: 'Can The Footer Be Brand-Specific?',
       yesTheFullWidthFooterIsJustContentAndHint:
-        'Yes. The full-width footer is just content and layout, so we can tailor links and messaging easily.',
+        'The footer can use your configured project brand and link to your own pages.',
       willTheAuthPagesKeepThisStyle: 'Will The Auth Pages Keep This Style?',
       yesLoginAndSignupNowUseTheSameFlatterHint:
-        'Yes. Login and signup now use the same flatter card and accent treatment as the protected app.',
+        'Sign-in and sign-up use the same theme and shared controls as the workspace.',
       canWeTurnSomeSectionsOff: 'Can We Turn Some Sections Off?',
       yesTheShowcaseRouteIsModularAndSectionsCanHint:
         'Yes. The showcase route is modular and sections can be removed without affecting the rest of the application shell.',
-      isThisMeantToReplaceTheOldGlossyLook:
-        'Is This Meant To Replace The Old Glossy Look Entirely?',
+      isThisMeantToReplaceTheOldGlossyLook: 'What Determines The Workspace Appearance?',
       yesTheGoalOfThisPassIsToMoveHint:
-        'Yes. The goal of this pass is to move the whole project to a more credible flat dashboard aesthetic.',
-      dashboardSurfacePreset: 'Dashboard Surface Preset',
+        'Appearance uses the selected theme’s colors, typography, spacing, corners, and motion.',
+      dashboardSurfacePreset: 'Workspace Surfaces',
       primaryCardsMutedPanelsAndFlatterDataRowsStayHint:
-        'Primary cards, muted panels, and flatter data rows stay aligned from shell to detail pages.',
+        'Shared surface roles distinguish page content, panels, and data rows across the workspace.',
       looksGood: 'Looks Good',
       close: 'Close',
       accentUsageGuardrails: 'Accent Usage Guardrails',
@@ -1139,29 +1171,29 @@ export const strings = {
         'Let brand color show up in navigation state, tags, and emphasis.',
       darkModeNotes: 'Dark Mode Notes',
       layeredSlateSurfacesReplaceThePreviousGlossyLookHint:
-        'Layered slate surfaces replace the previous glossy look.',
+        'The active theme supplies a complete dark palette.',
       cardsStayLiftedThroughBordersAndPanelContrastNotHint:
-        'Cards stay lifted through borders and panel contrast, not blur.',
+        'Borders and background contrast separate neighboring surfaces.',
       textHierarchyStaysConsistentBetweenLightAndDarkThemesHint:
         'Text hierarchy stays consistent between light and dark themes.',
-      presentationStylingUpdated: 'Presentation Styling Updated',
+      presentationStylingUpdated: 'Presentation Layers',
       toastsAlertsAndSheetsNowInheritTheSameFlatterHint:
-        'Toasts, alerts, and sheets now inherit the same flatter chrome as the rest of the app.',
+        'Toasts, alerts, and sheets use shared theme tokens for styling and motion.',
       great: 'Great',
-      dashboardStylingPreview: 'Dashboard Styling Preview',
+      dashboardStylingPreview: 'The Portal Experience',
       backToDashboard: 'Back To Dashboard',
       restyledSystem: 'Restyled System',
       fromGlossyPrototypeToACalmerDashboardProductSurface:
         'From Glossy Prototype To A Calmer Dashboard Product Surface.',
       thisRouteShowsTheNewDirectionAcrossHeroContentHint:
-        'This route shows the new direction across hero content, operational panels, accent behavior, and overlay styling without drifting away from the existing application architecture.',
+        'Explore the design system behind Portal. Try presentation controls and see how shared patterns carry across the workspace.',
       flatCardLanguage: 'Flat Card Language',
       layeredDarkMode: 'Layered Dark Mode',
       sharedSystemTokens: 'Shared System Tokens',
       enterPortal: 'Enter Portal',
       exploreTheSystem: 'Explore The System',
-      previewSurface: 'Preview Surface',
-      liveDashboardMock: 'Live Dashboard Mock',
+      previewSurface: 'Sample Data',
+      liveDashboardMock: 'Workspace Analytics',
       active: 'Active',
       conversion: 'Conversion',
       tickets: 'Tickets',
@@ -1169,34 +1201,31 @@ export const strings = {
       trafficOverview: 'Traffic Overview',
       last7Days: 'Last 7 Days',
       systemDirection: 'System Direction',
-      aFlatDashboardLanguageLayeredOnTopOfArchitecture:
-        'A Flat Dashboard Language Layered On Top Of Architecture-Safe Defaults.',
+      aFlatDashboardLanguageLayeredOnTopOfArchitecture: 'Explore The Design System',
       theRestyleKeepsYourAppStructureDataContractsAndHint:
-        'The restyle keeps your app structure, data contracts, and interaction model intact while giving the whole product a more credible admin UI feel.',
+        'Open a preview to see how shared surfaces, accent colors, and overlays behave.',
       value0: '0',
       openPreview: 'Open Preview',
-      theVisualUpdateStillRespectsTheSystemUnderneath:
-        'The Visual Update Still Respects The System Underneath.',
+      theVisualUpdateStillRespectsTheSystemUnderneath: 'From Setup To Workspace',
       routesStayThinServicesKeepOrchestrationAndPresentationFlowsHint:
-        'Routes stay thin, services keep orchestration, and presentation flows remain centralized. The redesign focuses on the product layer, not the ownership model.',
+        'Choose a workspace configuration, apply a theme, and build with shared controls.',
       themeChoicePropagatesThroughOneSemanticTokenLayerHint:
         'Theme choice propagates through one semantic token layer.',
       sharedUiPrimitivesKeepDetailPagesAlignedAutomaticallyHint:
         'Shared UI primitives keep detail pages aligned automatically.',
-      whatChanged: 'What Changed',
+      whatChanged: 'Shared Foundations',
       surfaces: 'Surfaces',
       reducedBlurRemovedGlossyCardsAndStandardizedWhiteOrHint:
-        'Reduced blur, removed glossy cards, and standardized white or slate panels.',
+        'Semantic backgrounds and borders separate work surfaces.',
       navigation: 'Navigation',
       sidebarAndTopChromeNowMatchTheFlatterDashboardHint:
-        'Sidebar and top chrome now match the flatter dashboard reference instead of a floating glass shell.',
+        'The configured workspace order drives navigation.',
       darkMode: 'Dark Mode',
       panelsStayDistinctThroughLayeringBordersAndShadowRestraintHint:
         'Panels stay distinct through layering, borders, and shadow restraint.',
-      theSameDesignLanguageScalesFromHeroSectionsTo:
-        'The Same Design Language Scales From Hero Sections To Operational Widgets.',
+      theSameDesignLanguageScalesFromHeroSectionsTo: 'Analytics And Activity',
       dashboardPreview: 'Dashboard Preview',
-      neutralCanvasSelectiveAccent: 'Neutral Canvas, Selective Accent',
+      neutralCanvasSelectiveAccent: 'Channel Breakdown',
       preview: 'Preview',
       revenueMix: 'Revenue Mix',
       topChannels: 'Top Channels',
@@ -1205,12 +1234,9 @@ export const strings = {
       growth: 'Growth',
       text: '%',
       recentActivity: 'Recent Activity',
-      sidebarChromeUpdatedToFlatterCardTreatmentHint:
-        'Sidebar chrome updated to flatter card treatment.',
-      tablesNowUseSofterRowHoverAndCleanerSeparatorsHint:
-        'Tables now use softer row hover and cleaner separators.',
-      themeAccentsDriveSelectedStateWithoutFloodingSurfacesHint:
-        'Theme accents drive selected state without flooding surfaces.',
+      sidebarChromeUpdatedToFlatterCardTreatmentHint: 'Workspace navigation configured.',
+      tablesNowUseSofterRowHoverAndCleanerSeparatorsHint: 'Record table reviewed.',
+      themeAccentsDriveSelectedStateWithoutFloodingSurfacesHint: 'Theme preferences updated.',
       activeStateNowLivesInNavigationPillsAndPrimaryHint:
         'Active state now lives in navigation, pills, and primary controls.',
       cardsRelyOnBorderContrastAndSpacingMoreThanHint:
@@ -1220,10 +1246,9 @@ export const strings = {
       featurePagesInheritTheNewSystemThroughSharedPrimitivesHint:
         'Feature pages inherit the new system through shared primitives.',
       presentationMotion: 'Presentation Motion',
-      motionIsStillConfigurableButTheChromeAroundIt:
-        'Motion Is Still Configurable, But The Chrome Around It Is Cleaner.',
+      motionIsStillConfigurableButTheChromeAroundIt: 'Try Presentation Motion',
       useTheSameControlsAsBeforeToChangeToastHint:
-        'Use the same controls as before to change toast, alert, and sheet timing while previewing the updated flat styling.',
+        'Preview toast, alert, and sheet timing on this page.',
       fastMotionPreset: 'Fast Motion Preset',
       presentationOverlaysNowAnimateAtASnappierPaceHint:
         'Presentation overlays now animate at a snappier pace.',
@@ -1242,8 +1267,7 @@ export const strings = {
       done: 'Done',
       dismiss: 'Dismiss',
       resetDefaults: 'Reset Defaults',
-      mockHandoffDetailsInTheSameDashboardVisualSystem:
-        'Mock Handoff Details In The Same Dashboard Visual System.',
+      mockHandoffDetailsInTheSameDashboardVisualSystem: 'Sample Contact',
       contactDetails: 'Contact Details',
       ariBennett: 'Ari Bennett',
       founderSemanticStudio: 'Founder, Semantic Studio',
@@ -1253,7 +1277,7 @@ export const strings = {
       monThu900Am600PmPt: 'Mon-Thu: 9:00 AM - 6:00 PM PT',
       fri900Am300PmPt: 'Fri: 9:00 AM - 3:00 PM PT',
       responseSlaUnder1BusinessDay: 'Response SLA: Under 1 Business Day',
-      mockAddress: 'Mock Address',
+      mockAddress: 'Sample Address',
       value410MarketStreet: '410 Market Street',
       sanFranciscoCa: 'San Francisco, CA',
       builtForFrontendBackendSemanticParityHint:
@@ -1280,7 +1304,7 @@ export const strings = {
       privacy: 'Privacy',
       accentAwareStates: 'Accent-Aware States',
       promptFirstSetupStillDrivesShellAndRouteDecisionsHint:
-        'Prompt-first setup still drives shell and route decisions.',
+        'Choose active modules and their navigation order in the project configuration.',
     },
 
     // Shared Components And Feedback
@@ -1787,6 +1811,7 @@ export const portalChatStrings = {
   description: 'A little closer to the people you work with.',
   inbox: 'Inbox', archived: 'Archived', all: 'All Conversations', direct: 'Direct Message', group: 'Group', newConversation: 'New Conversation',
   searchPlaceholder: 'Find a conversation…', messageSearchPlaceholder: 'Search this conversation…', clear: 'Clear Search',
+  searchConversationAction: 'Search This Conversation',
   people: 'People', members: 'Members', details: 'Conversation Details', close: 'Close Details', back: 'Back To Conversations',
   name: 'Group Name', namePlaceholder: 'Give your group a name…', descriptionLabel: 'Description', descriptionPlaceholder: 'What is this group for?',
   choosePeople: 'Choose People', peoplePlaceholder: 'Select people…', selection: (count: number) => `${count} Selected`, clearPeople: 'Clear People',
@@ -2153,13 +2178,13 @@ export const portalPublishingStrings = {
     },
     publicEyebrow: 'The Journal',
     publicDescription:
-      'Thoughtful reads, lived experiences, and practical ideas for your next project.',
+      'Explore stories, ideas, and practical guides from the editorial team.',
     publicMetadataTitle: 'The Journal',
     allArticles: 'All Articles',
     backToJournal: 'Back To The Journal',
     readArticle: 'Read Article',
     searchLabel: 'Search Articles',
-    searchPlaceholder: 'Find a little clarity…',
+    searchPlaceholder: 'Search by title, topic, or author…',
     clearSearch: 'Clear Search',
     categoryLabel: 'Topic',
     allCategories: 'All Topics',
@@ -2183,32 +2208,32 @@ export const portalPublishingStrings = {
     authorByline: (author: string) => `By ${author}`,
     readingTime: (minutes: number) => `${minutes} Min Read`,
     coverAlt: (title: string) => `Illustration for “${title}”`,
-    relatedTitle: 'More Along The Path',
-    articleUnavailableTitle: 'This Read Is Taking A Moment',
+    relatedTitle: 'Related Articles',
+    articleUnavailableTitle: 'Journal Unavailable',
     articleUnavailableDescription:
       'We could not load the journal. Please try again in a moment.',
     retry: 'Try Again',
     loadingTitle: 'Opening The Journal',
     loadingDescription: 'Gathering thoughtful reads for your work.',
-    notFoundTitle: 'This Article Is Not Here',
+    notFoundTitle: 'Article Not Found',
     notFoundDescription:
       'It may have moved or is not currently published. There are more reads waiting in the journal.',
     adminTitle: 'Publishing',
     adminDescription:
-      'Make room for thoughtful stories. Write, preview, and publish articles at your own pace.',
-    newArticle: 'Write An Article',
-    newTitle: 'A New Chapter',
+      'Manage drafts and published articles in the public journal.',
+    newArticle: 'New Article',
+    newTitle: 'New Article',
     editTitle: 'Edit Article',
     formDescription:
-      'A clear, considered read can help readers understand an idea.',
-    articleDetails: 'The First Impression',
+      'Write the article, preview the reader’s view, and publish when it’s ready.',
+    articleDetails: 'Article Details',
     articleDetailsDescription:
-      'Give your article a clear title, a useful introduction, and a topic that helps readers find it.',
+      'Set the headline, introduction, and information readers see in the journal.',
     bodyTitle: 'The Story',
     bodyDescription:
       'Use headings, quotes, and ordered or bulleted lists to give your article a comfortable rhythm. Preview before publishing.',
     titleLabel: 'Article Title',
-    titlePlaceholder: 'A small moment worth sharing',
+    titlePlaceholder: 'Enter an article title',
     slugLabel: 'Article Address',
     slugHint:
       'Use lowercase letters, numbers, and hyphens. This becomes the public link.',
@@ -2221,7 +2246,7 @@ export const portalPublishingStrings = {
     contentHint:
       'Write in Markdown. Headings, quotes, ordered lists, bullets, and links are supported.',
     preview: 'Preview Article',
-    previewTitle: 'A Reader’s View',
+    previewTitle: 'Article Preview',
     previewDescription:
       'This private preview shows the current form. Save your changes before sharing a public link.',
     previewEmptyHint: 'Your story will appear here as you write.',
@@ -2314,7 +2339,7 @@ export const portalPublishingStrings = {
     paletteTitle: 'Choose A Block',
     paletteDescription: 'Choose what comes next in your story.',
     closePalette: 'Close Block Choices',
-    emptyTitle: 'Make Room For Your Story',
+    emptyTitle: 'No Content Blocks Yet',
     emptyDescription:
       'Start with a heading, a few words, or an image. Add and arrange more blocks as you go.',
     contentLabel: 'Article Blocks',

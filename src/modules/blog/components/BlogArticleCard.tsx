@@ -22,33 +22,26 @@ export function BlogArticleCard({
   const Heading = headingLevel;
   return (
     <article
-      className={`${styles.articleCard}${variant === 'related' ? ` ${styles.relatedArticleCard}` : ''}`}
-      data-cover={article.cover}
+      className={styles.articleCard}
+      data-variant={variant}
     >
       {isBlogImageUrl(article.cover) && (
-        <Link
-          href={`/blog/${article.slug}`}
-          className={styles.cardImage}
-          tabIndex={-1}
-          aria-hidden="true"
-          data-cover={article.cover}
-        >
+        <div className={styles.cardImage}>
           <Image
             src={blogCoverSource(article.cover)}
             unoptimized
             alt={copy.decorativeAlt}
-            width={640}
+            width={960}
             height={480}
             sizes={
-              variant === 'related'
-                ? '(max-width: 767px) 100vw, 45vw'
-                : '(max-width: 600px) 32vw, (max-width: 1000px) 28vw, 19vw'
+              variant === 'lead'
+                ? '(max-width: 767px) 100vw, 66vw'
+                : '(max-width: 639px) 100vw, (max-width: 959px) 50vw, 33vw'
             }
           />
-        </Link>
+        </div>
       )}
       <div className={styles.cardCopy}>
-        <p className={styles.topic}>{blogCategoryLabel(article.category)}</p>
         <Heading>
           <Link className={styles.cardOpen} href={`/blog/${article.slug}`}>
             {article.title}
@@ -56,14 +49,15 @@ export function BlogArticleCard({
         </Heading>
         <p className={styles.description}>{article.description}</p>
         <div className={styles.byline}>
-          <span>{article.author}</span>
+          <span className={styles.topic}>{blogCategoryLabel(article.category)}</span>
+          <span>{copy.authorByline(article.author)}</span>
           <BlogDate value={article.publishedAt || article.updatedAt} />
         </div>
       </div>
-      <Link href={`/blog/${article.slug}`} className={styles.readLink}>
+      <span className={styles.readLink} aria-hidden="true">
         {copy.readArticle}
         <UiIcon name="arrowRight" />
-      </Link>
+      </span>
     </article>
   );
 

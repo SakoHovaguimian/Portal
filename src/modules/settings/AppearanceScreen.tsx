@@ -7,6 +7,7 @@ import {
   Page,
   PageHeader,
   PageSection,
+  SectionStack,
   SplitSection,
   UiIcon,
 } from '@/components/ui';
@@ -17,6 +18,7 @@ import { strings, portalOverlayMotionStrings } from '@/strings';
 
 import { OverlayMotionControls } from './components/OverlayMotionControls';
 import { ThemeControls } from './components/ThemeControls';
+import styles from './components/ThemeStudio.module.css';
 
 export function AppearanceScreen() {
 
@@ -29,40 +31,41 @@ export function AppearanceScreen() {
         description={strings.designSystem.themeStudio.description}
         action={devSettingsEnabled && (
           <Button asChild variant="secondary">
-            <Link href="/dev-settings/components">
+            <Link href="/dev-settings#component-library">
               <UiIcon name="code" />
               {strings.designSystem.openLibrary}
             </Link>
           </Button>
         )}
       />
-      <PageSection
-        id="theme"
-        title={strings.designSystem.themeStudio.title}
-        description={strings.designSystem.themeHint}
-      >
-        <ThemeControls />
-      </PageSection>
-      <PageSection
-        id="overlay-motion"
-        title={portalOverlayMotionStrings.title}
-        description={portalOverlayMotionStrings.description}
-      >
-        <OverlayMotionControls />
-      </PageSection>
-      <SplitSection
-        id="notifications"
-        title={strings.notifications.title}
-        description={strings.notifications.availableHint}
-      >
-        <NotificationControls />
-      </SplitSection>
-      <SplitSection
-        id="privacy"
-        title={strings.privacy.title}
-      >
-        <CookieConsentControls settings />
-      </SplitSection>
+      <SectionStack>
+        <PageSection
+          id="theme"
+          title={strings.designSystem.themeStudio.title}
+          description={strings.designSystem.themeHint}
+        >
+          <ThemeControls />
+        </PageSection>
+        <SplitSection
+          bare
+          id="overlay-motion"
+          title={portalOverlayMotionStrings.title}
+          description={portalOverlayMotionStrings.description}
+        >
+          <OverlayMotionControls />
+        </SplitSection>
+        <div className={styles.devicePreferences}>
+          <div id="notifications" className={styles.browserNotifications}>
+            <NotificationControls />
+          </div>
+          <section id="privacy" aria-labelledby="appearance-privacy-title" className={styles.analyticsPreferences}>
+            <h2 id="appearance-privacy-title" className="m-0 text-base font-semibold">
+              {strings.privacy.title}
+            </h2>
+            <CookieConsentControls settings />
+          </section>
+        </div>
+      </SectionStack>
     </Page>
   );
 
